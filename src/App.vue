@@ -54,6 +54,10 @@ const handleLogout = () => {
           >註冊</RouterLink
         >
       </template>
+      <RouterLink
+          to="/chat"
+          class="p-6 text-lg transition hover:text-gray-300"
+      >聊天室</RouterLink>
     </nav>
   </header>
   <main class="max-w-[1000px] mx-auto mt-24">

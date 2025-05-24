@@ -6,9 +6,10 @@ export const useUserStore = defineStore("user", {
   // 初始化 從 localStorage 中拿出儲存的 token (如果有的話)
   state: () => ({
     accessToken: localStorage.getItem("accessToken") || "",
-    refreshToken: localStorage.getItem("refeshToken") || "",
+    refreshToken: localStorage.getItem("refreshToken") || "",
     // 在 state 中定義 username 這樣vue模板才吃得到值
     username: localStorage.getItem("username") || "",
+    userId: localStorage.getItem("userId") || "",
   }),
   actions: {
     // 註冊
@@ -39,19 +40,22 @@ export const useUserStore = defineStore("user", {
       try {
         const res = await axios.post("/api/login", {
           username,
-          password
+          password,
         });
         // console.log(res);
         // console.log(res.data);
         this.accessToken = res.data.accessToken;
         this.refreshToken = res.data.refreshToken;
         // 把資料寫入 pinia 的 state => 這樣 Vue 模板中的畫面才會 立即更新
-        this.username = username;
+        this.username = res.data.username;
+        // 為了知道是哪個使用者在聊天 接住從後端回傳的userId
+        this.userId = res.data.userId;
 
         localStorage.setItem("accessToken", this.accessToken);
         localStorage.setItem("refreshToken", this.refreshToken);
         // 在 login() 成功後 順便把 username 記下來
-        localStorage.setItem("username",username);
+        localStorage.setItem("username", this.username);
+        localStorage.setItem("userId", this.userId)
       } catch (error) {
         if (
           error.response &&

@@ -37,8 +37,10 @@
   "dependencies": {
     "@tailwindcss/postcss": "^4.1.7",
     "@tailwindcss/vite": "^4.1.6",
+    "2025-kizuna-frontend": "file:",
     "axios": "^1.9.0",
     "pinia": "^3.0.1",
+    "socket.io-client": "^4.8.1",
     "vue": "^3.5.13",
     "vue-router": "^4.5.0"
   }
