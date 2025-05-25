@@ -2,8 +2,6 @@
 // 所有 API 請求放在獨立的模組，store 呼叫後再更新狀態
 import axios from "@/api/axios";
 
-//  Pinia store 裡引用並呼叫 fetchProfile()，把資料存進 userProfile
-//  在元件裡使用 Pinia 的 getProfile() 方法來觸發
 // GET 取得使用者個人資料
 export const fetchProfile = async () => {
   try {
