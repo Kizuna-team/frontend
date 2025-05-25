@@ -54,8 +54,12 @@ export const useUserStore = defineStore("user", {
         localStorage.setItem("accessToken", this.accessToken);
         localStorage.setItem("refreshToken", this.refreshToken);
         // 在 login() 成功後 順便把 username 記下來
+<<<<<<< HEAD
         localStorage.setItem("username", this.username);
         localStorage.setItem("userId", this.userId);
+=======
+        localStorage.setItem("username", username);
+>>>>>>> 0355753 (feat: update and fetch user profile with database integration)
       } catch (error) {
         if (
           error.response &&
@@ -98,6 +102,7 @@ export const useUserStore = defineStore("user", {
       this.accessToken = res.data.accessToken;
       localStorage.setItem("accessToken", this.accessToken);
     },
+<<<<<<< HEAD
     // 用 Google 登入
     async loginWithGoogle(idToken) {
       try {
@@ -116,5 +121,21 @@ export const useUserStore = defineStore("user", {
         console.error("Google登入失敗", error.message);
       }
     },
+=======
+  },
+  // 用 Google 登入
+  async loginWithGoogle(idToken) {
+    try {
+      const res = await axios.post("/api/auth/google", { idToken });
+
+      // 更新 store 中的各個資料的狀態
+      this.accessToken = res.data.accessToken;
+      this.refreshToken = res.data.refreshToken;
+      // 假設後端有回傳使用者名稱(gmail帳號)
+      this.username = res.data.username;
+    } catch (error) {
+      console.error("Google登入失敗", error.message);
+    }
+>>>>>>> 0355753 (feat: update and fetch user profile with database integration)
   },
 });
