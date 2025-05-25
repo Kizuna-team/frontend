@@ -7,8 +7,10 @@ import HomeView from "@/views/HomeView.vue";
 import BrandView from "@/views/BrandView.vue";
 import ProfileView from "@/views/ProfileView.vue";
 import ChatRoomView from "@/views/ChatRoomView.vue";
-import MatchView from "../views/MatchView.vue";
+import MatchView from "@/views/MatchView.vue";
 import ActivityList from "@/components/ActivityList.vue";
+import EditProfileView from "../views/EditProfileView.vue";
+// import TestView from "../views/TestView.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -62,6 +64,12 @@ const router = createRouter({
       path: "/activities",
       name: "Activities",
       component: ActivityList,
+    },
+    // 加入編輯個人檔案頁面route
+    {
+      path: "/edit-profile",
+      name: "EditProfile",
+      component: EditProfileView,
     },
   ],
 });
