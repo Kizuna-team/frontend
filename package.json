@@ -1,12 +1,13 @@
 {
   "name": "2025-kizuna-frontend",
   "version": "1.0.0",
-  "description": "交友軟體Web版(前端)",
+  "description": "kizuna(frontend)",
   "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "lint": "eslint . --fix"
   },
   "repository": {
     "type": "git",
