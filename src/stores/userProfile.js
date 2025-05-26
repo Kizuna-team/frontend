@@ -3,7 +3,7 @@
 // 對於跨頁共享的資料，用 ref + .value 比 reactive明確好控
 import { defineStore } from "pinia";
 import { ref } from "vue";
-import { fetchProfile } from "@/api/editProfile";
+import { fetchProfile, updateProfileApi } from "@/api/editProfile";
 
 export const useUserProfileStore = defineStore("userProfile", () => {
   // 保存使用者個人資料狀態 userProfile
@@ -39,7 +39,7 @@ export const useUserProfileStore = defineStore("userProfile", () => {
   // 更新個人資料
   const updateProfile = async (newData) => {
     try {
-      const data = await apiUpdateProfile(newData);
+      const data = await updateProfileApi(newData);
       setProfile(data.user); // 用最新資料覆蓋狀態
     } catch (err) {
       console.error("更新使用者資料失敗", err);
