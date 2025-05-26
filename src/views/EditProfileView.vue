@@ -1,40 +1,3 @@
-<!-- <script setup>
-import { ref, onMounted } from "vue";
-import { fetchProfile } from "@/api/editProfile.js";
-const profile = ref(null);
-const loading = ref(false);
-const error = ref(null);
-
-const loadProfile = async () => {
-  loading.value = true;
-  error.value = null;
-  try {
-    profile.value = await fetchProfile();
-  } catch (err) {
-    error.value = "載入資料失敗";
-    console.error(err);
-  } finally {
-    loading.value = false;
-  }
-};
-
-onMounted(() => {
-  loadProfile();
-});
-</script>
-
-<template>
-  <div>
-    <div v-if="loading">載入中...</div>
-    <div v-if="error" style="color: red">{{ error }}</div>
-    <div v-if="profile">
-      <p>姓名：{{ profile.user.name }}</p>
-      <p>年紀：{{ profile.user.age }}</p>
-      <p>自介：{{ profile.user.bio }}</p>
-      <!-- 其他個人資料欄位 -->
-<!-- </div>
-  </div>
-</template> -->
 <script setup>
 import { ref, reactive, onMounted } from "vue";
 import { useUserProfileStore } from "@/stores/userProfile";
@@ -196,7 +159,7 @@ const foldToggle = (index) => {
               ? 'bg-[#5b86b0] text-white'
               : 'bg-gray-100 text-gray-500'
           "
-          class="px-4 py-1 rounded-md font-semibold"
+          class="px-4 py-1 font-semibold rounded-md"
           @click="tab = 'intro'"
         >
           INTRO
@@ -207,7 +170,7 @@ const foldToggle = (index) => {
               ? 'bg-[#5b86b0] text-white'
               : 'bg-gray-100 text-gray-500'
           "
-          class="px-4 py-1 rounded-md font-semibold"
+          class="px-4 py-1 font-semibold rounded-md"
           @click="tab = 'photo'"
         >
           Photo
@@ -217,11 +180,11 @@ const foldToggle = (index) => {
         <!-- 個人資料表單 -->
         <ProfileForm :formData="formData" />
         <!-- 星座 / MBTI / 工作選單 / 興趣 -->
-        <div class="space-y-3 mb-6">
+        <div class="mb-6 space-y-3">
           <div
             v-for="(item, index) in cards"
             :key="index"
-            class="border rounded-xl shadow-sm"
+            class="border shadow-sm rounded-xl"
           >
             <!--  折疊卡標題  -->
             <button
@@ -230,7 +193,7 @@ const foldToggle = (index) => {
             >
               <span>{{ item.title }}</span>
               <i
-                class="fas fa-chevron-right transform transition-transform duration-300"
+                class="transition-transform duration-300 transform fas fa-chevron-right"
                 :class="{ 'rotate-90': activeIndex === index }"
               ></i>
             </button>
@@ -241,7 +204,7 @@ const foldToggle = (index) => {
               class="px-4 overflow-hidden transition-[max-height,padding] duration-700 ease-in-out text-sm text-gray-600"
               :class="activeIndex === index ? 'max-h-64 py-3' : 'max-h-0 py-0'"
             >
-              <div class="overflow-y-auto max-h-60 w-full">
+              <div class="w-full overflow-y-auto max-h-60">
                 <MultiSelect
                   v-if="index === 0"
                   v-model="formData.zodiac"
