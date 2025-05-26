@@ -22,7 +22,7 @@ export const useUserProfileStore = defineStore("userProfile", () => {
     interest: [],
   });
 
-  // 暫存資料表單編 (不會存後端)
+  // 暫存資料表單 (不會存後端)
   const showFormData = ref({ ...userProfile.value });
 
   // 資料載入中狀態、錯誤狀態提示

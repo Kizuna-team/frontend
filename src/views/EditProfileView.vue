@@ -9,7 +9,6 @@ import ProfilePhotos from "@/components/ProfilePhotos.vue";
 
 const tab = ref("intro");
 const userProfileStore = useUserProfileStore();
-const tempSelected = userProfileStore.showFormData;
 
 const cards = [
   { title: "星座" },
@@ -152,32 +151,32 @@ const foldToggle = (index) => {
               <div class="w-full overflow-y-auto max-h-60">
                 <MultiSelect
                   v-if="index === 0"
-                  v-model="tempSelected.zodiac"
+                  v-model="userProfileStore.showFormData.zodiac"
                   :options="zodiacOptions"
                   labelKey="name"
                   valueKey="name"
                   :multiple="false"
-                  :cols="4"
+                  :cols="3"
                 />
                 <MultiSelect
                   v-if="index === 1"
-                  v-model="tempSelected.mbti"
+                  v-model="userProfileStore.showFormData.mbti"
                   :options="mbtiOptions"
-                  :multiple="false"
-                  :cols="4"
-                />
-                <MultiSelect
-                  v-if="index === 2"
-                  v-model="tempSelected.job"
-                  :options="jobOptions"
-                  labelKey="jobName"
-                  valueKey="jobId"
                   :multiple="false"
                   :cols="3"
                 />
                 <MultiSelect
+                  v-if="index === 2"
+                  v-model="userProfileStore.showFormData.job"
+                  :options="jobOptions"
+                  labelKey="jobName"
+                  valueKey="jobId"
+                  :multiple="false"
+                  :cols="5"
+                />
+                <MultiSelect
                   v-if="index === 3"
-                  v-model="tempSelected.interest"
+                  v-model="userProfileStore.showFormData.interest"
                   :options="interestOptions"
                   :multiple="true"
                   :cols="3"
