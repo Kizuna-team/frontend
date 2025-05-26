@@ -3,7 +3,7 @@ import ProductView from "@/views/ProductView.vue";
 import CartView from "@/views/CartView.vue";
 import LoginView from "@/views/LoginView.vue";
 import RegisterView from "@/views/RegisterView.vue";
-import HomeView from '@/views/HomeView.vue';
+import HomeView from "@/views/HomeView.vue";
 import ProfileView from "@/views/ProfileView.vue";
 import ChatRoomView from "@/views/ChatRoomView.vue";
 
@@ -31,17 +31,17 @@ const router = createRouter({
       component: CartView,
     },
     {
-      path: '/login',
+      path: "/login",
       name: "Login",
       component: LoginView,
     }, 
     {
-      path: '/register',
+      path: "/register",
       name: "Register",
       component: RegisterView,
     },
     {
-      path: '/chat',
+      path: "/chat",
       name: "ChatRoom",
       component: ChatRoomView,
     }

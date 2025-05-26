@@ -14,4 +14,4 @@ export const userChatStore = defineStore("chat",{
             this.messages = msgs;
         }
     }
-})
+});
