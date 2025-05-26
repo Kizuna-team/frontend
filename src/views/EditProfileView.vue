@@ -1,27 +1,15 @@
 <script setup>
-import { ref, reactive, onMounted } from "vue";
+import { ref, onMounted } from "vue";
 import { useUserProfileStore } from "@/stores/userProfile";
 import { fetchProfile, updateProfileApi } from "@/api/editProfile.js";
 
-import ProfileForm from "../components/ProfileForm.vue";
-import MultiSelect from "../components/MultiSelect.vue";
-import ProfilePhotos from "../components/ProfilePhotos.vue";
+import ProfileForm from "@/components/ProfileForm.vue";
+import MultiSelect from "@/components/MultiSelect.vue";
+import ProfilePhotos from "@/components/ProfilePhotos.vue";
 
 const tab = ref("intro");
-const { userProfile, setProfile, getProfile } = useUserProfileStore();
-// 完整表單資料物件
-const formData = reactive({
-  name: "",
-  gender: "",
-  bio: "",
-  orientation: "",
-  age: null,
-  location: "",
-  zodiac: "",
-  mbti: "",
-  job: "",
-  interest: [],
-});
+const userProfileStore = useUserProfileStore();
+const tempSelected = userProfileStore.showFormData;
 
 const cards = [
   { title: "星座" },
@@ -83,58 +71,18 @@ const interestOptions = [
   "閱讀",
 ];
 
-// 載入資料相關狀態（錯誤、讀取）
-// 初始化為正在讀取中並且清除前次錯誤狀態
-const error = ref(null);
-const loading = ref(false);
-
-const loadProfile = async () => {
-  loading.value = true;
-  error.value = null;
-  try {
-    const result = await fetchProfile();
-
-    //  這會把沒回傳的欄位覆蓋掉
-    // Object.assign(formData, result.user); // user 是資料庫回傳的資料結構
-
-    // 更安全地更新表單資料
-    const keys = Object.keys(formData);
-    keys.forEach((key) => {
-      if (result.user.hasOwnProperty(key)) {
-        formData[key] = result.user[key];
-      }
-    });
-
-    // 同步更新存入 Pinia 的 userProfile
-    setProfile(result.user);
-  } catch (err) {
-    error.value = "載入資料失敗";
-    console.error(err);
-  } finally {
-    loading.value = false;
-  }
-};
-
-// 載入畫面初始資料，初始表單要有「現有資料」才能顯示
+// 載入初始資料
 onMounted(() => {
-  loadProfile();
+  userProfileStore.getProfile();
 });
 
-// 送出時模擬等待，再更新全局狀態
+// 更新按鈕點擊事件
 const updateHandler = async () => {
-  loading.value = true;
-  try {
-    // 送出資料到後端 呼叫API
-    const result = await updateProfileApi(formData);
-    // 用後端回傳的最新資料覆蓋 Pinia 狀態
-    setProfile(result.user);
-    // await getProfile(); //重新載入最新資料、同步
-    alert("更新成功！");
-  } catch (error) {
-    alert("更新失敗");
-    console.error(error);
-  } finally {
-    loading.value = false;
+  await userProfileStore.updateProfile();
+  if (!userProfileStore.error) {
+    alert("更新成功");
+  } else {
+    alert(userProfileStore.error);
   }
 };
 
@@ -143,9 +91,6 @@ const activeIndex = ref(null);
 const foldToggle = (index) => {
   activeIndex.value = activeIndex.value === index ? null : index;
 };
-
-// 表單用 v-model 綁定 formData.key
-// 送出按鈕 @click="handleSubmit"
 </script>
 
 <template>
@@ -178,7 +123,7 @@ const foldToggle = (index) => {
       </div>
       <div v-if="tab === 'intro'">
         <!-- 個人資料表單 -->
-        <ProfileForm :formData="formData" />
+        <ProfileForm :tempFormData="userProfileStore.showFormData" />
         <!-- 星座 / MBTI / 工作選單 / 興趣 -->
         <div class="mb-6 space-y-3">
           <div
@@ -207,7 +152,7 @@ const foldToggle = (index) => {
               <div class="w-full overflow-y-auto max-h-60">
                 <MultiSelect
                   v-if="index === 0"
-                  v-model="formData.zodiac"
+                  v-model="tempSelected.zodiac"
                   :options="zodiacOptions"
                   labelKey="name"
                   valueKey="name"
@@ -216,23 +161,23 @@ const foldToggle = (index) => {
                 />
                 <MultiSelect
                   v-if="index === 1"
-                  v-model="formData.mbti"
+                  v-model="tempSelected.mbti"
                   :options="mbtiOptions"
                   :multiple="false"
                   :cols="4"
                 />
                 <MultiSelect
                   v-if="index === 2"
-                  v-model="formData.job"
+                  v-model="tempSelected.job"
                   :options="jobOptions"
                   labelKey="jobName"
                   valueKey="jobId"
                   :multiple="false"
-                  :cols="2"
+                  :cols="3"
                 />
                 <MultiSelect
                   v-if="index === 3"
-                  v-model="formData.interest"
+                  v-model="tempSelected.interest"
                   :options="interestOptions"
                   :multiple="true"
                   :cols="3"
@@ -241,16 +186,24 @@ const foldToggle = (index) => {
             </div>
           </div>
         </div>
-
-        <!-- 編輯檔案更新按鈕 -->
-        <button
-          @click="updateHandler"
-          :disabled="loading"
-          class="w-full bg-[#789fc6] hover:bg-[#5b86b0] text-white font-semibold py-2 rounded-lg transition"
-        >
-          <span v-if="loading">檔案更新中...</span>
-          <span v-else>儲存變更</span>
-        </button>
+        <!-- 表單按鈕們 -->
+        <div class="flex justify-end gap-4 mt-6">
+          <button
+            @click="userProfileStore.resetFormData()"
+            class="w-full text-[#5b86b0] border-2 border-[#5b86b0] bg-white hover:bg-[#5b86b0] hover:text-white font-semibold py-2 rounded-lg transition"
+          >
+            還原編輯
+          </button>
+          <!-- 檔案更新按 -->
+          <button
+            @click="updateHandler"
+            :disabled="userProfileStore.loading"
+            class="w-full bg-[#789fc6] hover:bg-[#5b86b0] text-white font-semibold py-2 rounded-lg transition"
+          >
+            <span v-if="userProfileStore.loading">檔案更新中...</span>
+            <span v-else>儲存變更</span>
+          </button>
+        </div>
       </div>
       <!-- PHOTO 頁面內容 -->
       <div v-else-if="tab === 'photo'">
