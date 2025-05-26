@@ -68,7 +68,7 @@ const loginWithGoogle = () => {
       <a href="#" class="text-center block text-[#3E6588] font-bold text-l"
         >忘記密碼?</a
       >
-      <!-- 方登入 -->
+      <!-- 第三方登入 -->
       <a
         href="#"
         class="block mt-3 w-[500px] p-3 bg-white rounded-[10px]"

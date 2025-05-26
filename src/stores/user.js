@@ -15,7 +15,7 @@ export const useUserStore = defineStore("user", {
     // 註冊
     async register(username, password) {
       try {
-        const res = await axios.post("/api/register", { username, password });
+        const res = await axios.post("/auth/register", { username, password });
         // 只有當後端真的回傳成功才算註冊成功
         if (res.status === 200) {
           // console.log("註冊成功", res.data);
@@ -38,7 +38,7 @@ export const useUserStore = defineStore("user", {
     // 3 同步儲存到瀏覽器的 localStorage (這樣重新整理也能保留登入狀態)
     async login(username, password) {
       try {
-        const res = await axios.post("/api/login", {
+        const res = await axios.post("/auth/login", {
           username,
           password,
         });
@@ -55,7 +55,7 @@ export const useUserStore = defineStore("user", {
         localStorage.setItem("refreshToken", this.refreshToken);
         // 在 login() 成功後 順便把 username 記下來
         localStorage.setItem("username", this.username);
-        localStorage.setItem("userId", this.userId)
+        localStorage.setItem("userId", this.userId);
       } catch (error) {
         if (
           error.response &&
@@ -77,9 +77,13 @@ export const useUserStore = defineStore("user", {
     async logout() {
       this.accessToken = "";
       this.refreshToken = "";
+      this.username = "";
+      this.userId = "";
 
       localStorage.removeItem("accessToken");
       localStorage.removeItem("refreshToken");
+      localStorage.removeItem("username");
+      localStorage.removeItem("userId");
     },
     // 用 refreshToken 取得新的 accessToken
     // refresh做三件事:
@@ -87,30 +91,30 @@ export const useUserStore = defineStore("user", {
     // 2 更新 store 中的 accessToken
     // 3 更新 localStorage 中的 accessToken
     async refresh() {
-      const res = await axios.post("/api/refresh", {
+      const res = await axios.post("/refresh", {
         refreshToken: this.refreshToken,
       });
 
       this.accessToken = res.data.accessToken;
       localStorage.setItem("accessToken", this.accessToken);
     },
-  },
-  // 用 Google 登入
-  async loginWithGoogle(idToken){
-    try{
-      const res = await axios.post("/api/auth/google",{idToken});
+    // 用 Google 登入
+    async loginWithGoogle(idToken) {
+      try {
+        const res = await axios.post("/auth/google", { idToken });
 
-      // 更新 store 中的各個資料的狀態
-      this.accessToken = res.data.accessToken;
-      this.refreshToken = res.data.refreshToken;
-      // 假設後端有回傳使用者名稱(gmail帳號)
-      this.username = res.data.username;
+        // 更新 store 中的各個資料的狀態
+        this.accessToken = res.data.accessToken;
+        this.refreshToken = res.data.refreshToken;
+        // 假設後端有回傳使用者名稱(gmail帳號)
+        this.username = res.data.username;
 
-
-      
-    }catch(error){
-      console.error("Google登入失敗", error.message);
-    }
+        localStorage.setItem("accessToken", this.accessToken);
+        localStorage.setItem("refreshToken", this.refreshToken);
+        localStorage.setItem("username", this.username);
+      } catch (error) {
+        console.error("Google登入失敗", error.message);
+      }
+    },
   },
 });
-

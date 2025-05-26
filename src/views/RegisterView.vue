@@ -18,6 +18,11 @@ const handleRegister = async () => {
     return;
   }
 
+  if ( !/[a-zA-Z]/.test(password.value) || !/[0-9]/.test(password.value) || password.value.length <= 6){
+    alert("密碼長度必須大於7，且包含英文及數字");
+    return;
+  }
+
   const res = await store.register(username.value, password.value);
   // debug
   // console.log(res);
