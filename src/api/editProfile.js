@@ -17,12 +17,12 @@ export const fetchProfile = async () => {
 //  在元件裡使用 Pinia 的 getProfile() 方法來觸發
 
 // PUT 更新使用者個人資料
-export const updateProfile = async (newData) => {
+export const updateProfileApi = async (newData) => {
   try {
     const res = await axios.put("/api/edit-profile", newData);
     return res.data; // 只回傳user資料，不操作 store
   } catch (error) {
-    console.error("updateProfile 錯誤:", error);
+    console.error("updateProfileApi 錯誤:", error);
     throw error;
   }
 };

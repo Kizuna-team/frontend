@@ -1,7 +1,7 @@
 <script setup>
 import { ref, reactive, onMounted } from "vue";
 import { useUserProfileStore } from "@/stores/userProfile";
-import { fetchProfile, updateProfile } from "@/api/editProfile.js";
+import { fetchProfile, updateProfileApi } from "@/api/editProfile.js";
 
 import ProfileForm from "../components/ProfileForm.vue";
 import MultiSelect from "../components/MultiSelect.vue";
@@ -125,7 +125,7 @@ const updateHandler = async () => {
   loading.value = true;
   try {
     // 送出資料到後端 呼叫API
-    const result = await updateProfile(formData);
+    const result = await updateProfileApi(formData);
     // 用後端回傳的最新資料覆蓋 Pinia 狀態
     setProfile(result.user);
     // await getProfile(); //重新載入最新資料、同步
