@@ -1,19 +1,12 @@
+<!-- 按儲存時你才會把 tempFormData 的內容覆蓋回 Store -->
 <script setup>
-import { reactive } from "vue";
-const props = defineProps({
-  formData: Object,
-});
-// 取出來用（讓你不用一直寫 props.formData）
-const formData = props.formData;
+// import { useUserProfileStore } from "@/stores/userProfile.js";
+// const userProfileStore = useUserProfileStore();
+// const tempFormData = userProfileStore.showFormData;
 
-// const formData = reactive({
-//   name: "",
-//   gender: "",
-//   bio: "",
-//   orientation: "",
-//   age: null,
-//   location: "",
-// });
+const props = defineProps({
+  tempFormData: Object,
+});
 
 // label 顯示給使用者，value 送後端或存資料庫
 const genderOptions = [
@@ -38,7 +31,7 @@ const orientationOptions = [
     <label class="font-bold block text-[#1c3b5a] mb-1">暱稱</label>
     <input
       type="text"
-      v-model="formData.name"
+      v-model="tempFormData.name"
       class="w-full px-4 py-2 border border-blue-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300"
       placeholder="請輸入暱稱"
     />
@@ -51,7 +44,7 @@ const orientationOptions = [
         type="radio"
         :value="option.value"
         name="gender"
-        v-model="formData.gender"
+        v-model="tempFormData.gender"
         :id="option.value"
         class="mx-2 border border-blue-200 rounded-lg focus:outline-none"
       />
@@ -67,7 +60,7 @@ const orientationOptions = [
         type="radio"
         :value="option.value"
         name="orientation"
-        v-model="formData.orientation"
+        v-model="tempFormData.orientation"
         :id="option.value"
         class="mx-2 border border-blue-200 rounded-lg focus:outline-none"
       />
@@ -79,7 +72,7 @@ const orientationOptions = [
   <div class="mb-4">
     <label class="font-bold block text-[#1c3b5a] mb-1">自我介紹</label>
     <textarea
-      v-model="formData.bio"
+      v-model="tempFormData.bio"
       class="w-full px-4 py-2 border border-blue-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300"
       rows="3"
       placeholder="寫一些關於你..."
@@ -90,7 +83,7 @@ const orientationOptions = [
     <label class="font-bold block text-[#1c3b5a] mb-1">年齡</label>
     <input
       type="number"
-      v-model.number="formData.age"
+      v-model.number="tempFormData.age"
       class="w-full px-4 py-2 border border-blue-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300"
       placeholder="請輸入年紀"
       min="18"
@@ -101,7 +94,7 @@ const orientationOptions = [
   <div class="mb-6">
     <label class="font-bold block text-[#1c3b5a] mb-1">居住地</label>
     <select
-      v-model="formData.location"
+      v-model="tempFormData.location"
       class="w-full px-4 py-2 border border-blue-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300"
     >
       <option disabled value="">請選擇地區</option>

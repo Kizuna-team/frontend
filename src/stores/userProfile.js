@@ -25,16 +25,16 @@ export const useUserProfileStore = defineStore("userProfile", () => {
   // 暫存資料表單編 (不會存後端)
   const showFormData = ref({ ...userProfile.value });
 
-  // 資料載入中狀態、清除前次錯誤狀態
+  // 資料載入中狀態、錯誤狀態提示
   const loading = ref(false);
   const error = ref(null);
 
-  // 覆蓋更新原始資料、保留沒傳回來的欄位 的 最新正式資料
+  // 保留沒傳回來的欄位，再覆蓋被編輯的
   const setProfile = (data) => {
     userProfile.value = { ...userProfile.value, ...data };
   };
 
-  // 避免誤把未儲存的資料當成正式資料使用，同步畫面上看到的表單值
+  // 避免誤把未儲存的資料當成正式資料使用，還原
   const resetFormData = () => {
     showFormData.value = { ...userProfile.value };
   };
@@ -57,11 +57,11 @@ export const useUserProfileStore = defineStore("userProfile", () => {
   };
 
   // 更新個人資料
-  const updateProfile = async (newData) => {
+  const updateProfile = async () => {
     loading.value = true;
     error.value = null;
     try {
-      const data = await updateProfileApi(newData);
+      const data = await updateProfileApi(showFormData.value);
       setProfile(data.user); // 用最新資料覆蓋狀態
       resetFormData();
     } catch (err) {
