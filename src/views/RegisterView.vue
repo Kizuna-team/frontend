@@ -28,7 +28,9 @@ const handleRegister = async () => {
   // console.log(res);
   if (res.success) {
     alert(res.message || "註冊成功，請登入");
-    router.push("/login"); // 註冊完成後 導回登入頁
+    // router.push("/login"); // 註冊完成後 導回登入頁
+    // 需要先請使用者註冊完後填寫個人檔案基本資料
+    router.push("/edit-profile");
   } else {
     alert(`${res.message}${res.reason ? `\n原因:${res.reason}` : ""}`);
   }
