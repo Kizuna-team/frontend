@@ -1,4 +1,4 @@
-import {defineStore} from "pinia";
+import { defineStore } from "pinia";
 
 export const userChatStore = defineStore("chat",{
     state:()=>({
@@ -7,7 +7,9 @@ export const userChatStore = defineStore("chat",{
     actions:{
         // 單獨加入訊息( 傳訊息按送出時使用 )
         addMessage(msg){
-            this.messages.push(msg);
+            // 現在是誰在發送訊息
+            console.log(msg.sender_id);
+            this.messages.push(msg.content);
         },
         // 聊天室初始化( 批量更新聊天訊息 )、切換聊天室時清空或重設訊息列表
         setMessage(msgs){
