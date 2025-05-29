@@ -6,21 +6,23 @@ const cartStore = useCartStore();
 </script>
 
 <template>
-  <h1 class="text-2xl">購買禮物</h1>
-  <br />
+  <h1 class="text-2xl">
+    購物車
+  </h1>
+  <br>
   <div class="grid grid-cols-5 border-b">
     <p class="col-span-2">商品資訊</p>
     <p>價格 (含稅)</p>
     <p>數量</p>
   </div>
-  <br />
+  <br>
   <div v-if="cartStore.cartItems.length > 0">
     <CartCard v-for="item in cartStore.cartItems" :key="item.id" :item="item" />
-    <br />
+    <br>
     <div class="text-right">
       <button
-        @click="cartStore.clearCart()"
         class="px-4 py-1 text-white bg-blue-600 rounded w-fit hover:bg-blue-700"
+        @click="cartStore.clearCart()"
       >
         清空購物車
       </button>
