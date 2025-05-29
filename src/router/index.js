@@ -4,6 +4,7 @@ import CartView from "@/views/CartView.vue";
 import LoginView from "@/views/LoginView.vue";
 import RegisterView from "@/views/RegisterView.vue";
 import HomeView from "@/views/HomeView.vue";
+import BrandView from '@/views/BrandView.vue';
 import ProfileView from "@/views/ProfileView.vue";
 import ChatRoomView from "@/views/ChatRoomView.vue";
 
@@ -44,6 +45,11 @@ const router = createRouter({
       path: "/chat",
       name: "ChatRoom",
       component: ChatRoomView,
+    },
+    {
+      path: '/brand/:id',
+      name: "Brand",
+      component: BrandView,
     }
   ],
 });

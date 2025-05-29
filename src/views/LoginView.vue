@@ -1,7 +1,7 @@
 <!-- 登入頁面 -->
 <script setup>
 import { ref } from "vue";
-import { useUserStore } from "@/stores/user";
+import { useUserStore } from "../stores/user";
 
 const store = useUserStore();
 const username = ref("");

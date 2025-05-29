@@ -1,5 +1,5 @@
 // 使用 Pinia 管理 user 的狀態 實現 login logout refresh token 的動作
-import axios from "@/api/axios";
+import axios from "../api/axios";
 import { defineStore } from "pinia";
 
 export const useUserStore = defineStore("user", {

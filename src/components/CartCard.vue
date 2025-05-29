@@ -1,6 +1,6 @@
 <script setup>
-import { useCartStore } from "@/stores/cart.js";
-import { useProductStore } from "@/stores/products.js";
+import { useCartStore } from "../stores/cart.js";
+import { useProductStore } from "../stores/products.js";
 const cartStore = useCartStore();
 const productStore = useProductStore();
 // 傳資料
