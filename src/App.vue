@@ -33,10 +33,8 @@ const handleLogout = () => {
         >
           登出
         </button>
-        <div
-          class="p-6 text-lg transition hover:text-gray-300"
-        >
-          目前登入帳號為 : 
+        <div class="p-6 text-lg transition hover:text-gray-300">
+          目前登入帳號為 :
           <!-- ml-2表示 margin-left加上0.5rem的間距 -->
           <span class="ml-2">{{ store.username }}</span>
         </div>
@@ -54,10 +52,12 @@ const handleLogout = () => {
           >註冊</RouterLink
         >
       </template>
-      <RouterLink
-          to="/chat"
-          class="p-6 text-lg transition hover:text-gray-300"
-      >聊天室</RouterLink>
+      <RouterLink to="/chat" class="p-6 text-lg transition hover:text-gray-300"
+        >聊天室</RouterLink
+      >
+      <RouterLink to="/match" class="p-6 text-lg transition hover:text-gray-300"
+        >配對池</RouterLink
+      >
     </nav>
   </header>
   <main class="max-w-[1000px] mx-auto mt-24">
