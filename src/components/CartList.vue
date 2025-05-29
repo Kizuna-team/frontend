@@ -11,13 +11,19 @@ const cartStore = useCartStore();
   </h1>
   <br>
   <div class="grid grid-cols-5 border-b">
-    <p class="col-span-2">商品資訊</p>
+    <p class="col-span-2">
+      商品資訊
+    </p>
     <p>價格 (含稅)</p>
     <p>數量</p>
   </div>
   <br>
   <div v-if="cartStore.cartItems.length > 0">
-    <CartCard v-for="item in cartStore.cartItems" :key="item.id" :item="item" />
+    <CartCard 
+      v-for="item in cartStore.cartItems" 
+      :key="item.id" 
+      :item="item"
+    />
     <br>
     <div class="text-right">
       <button
