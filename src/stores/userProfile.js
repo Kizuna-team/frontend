@@ -5,11 +5,16 @@
 
 import { defineStore } from "pinia";
 import { ref } from "vue";
-import { fetchProfile, updateProfileApi } from "@/api/editProfile";
+import {
+  fetchProfile,
+  updateProfileApi,
+  createProfileApi,
+} from "@/api/editProfile";
 
 export const useUserProfileStore = defineStore("userProfile", () => {
   // 使用者的存檔資料（後端同步）
   const userProfile = ref({
+    id: null,
     name: "",
     gender: "",
     bio: "",
@@ -37,6 +42,12 @@ export const useUserProfileStore = defineStore("userProfile", () => {
   // 避免誤把未儲存的資料當成正式資料使用，還原
   const resetFormData = () => {
     showFormData.value = { ...userProfile.value };
+    console.log("resetFormData showFormData.value:", showFormData.value);
+    console.log(
+      "interest 型別",
+      typeof showFormData.value.interest,
+      Array.isArray(showFormData.value.interest)
+    );
   };
 
   // 從後端取得個人資料，顯示「載入中」將錯誤狀態清空，最後都結束在載入中
@@ -51,6 +62,26 @@ export const useUserProfileStore = defineStore("userProfile", () => {
     } catch (err) {
       error.value = "取得資料失敗";
       console.error("取得使用者資料失敗", err);
+    } finally {
+      loading.value = false;
+    }
+  };
+
+  // 建立個人資料 (送出 showFormData 的值給後端)
+  const createProfile = async () => {
+    loading.value = true;
+    error.value = null;
+    const data = await createProfileApi(showFormData.value);
+
+    try {
+      console.log("送出的資料:", data);
+
+      const res = await createProfileApi(data);
+      setProfile(data.user); // user.id 現在是資料庫產生的 id
+      resetFormData(); // 畫面和狀態同步
+    } catch (err) {
+      error.value = "建立個人資料失敗";
+      console.error("建立個人資料失敗", err);
     } finally {
       loading.value = false;
     }
@@ -80,6 +111,7 @@ export const useUserProfileStore = defineStore("userProfile", () => {
     resetFormData,
     setProfile,
     getProfile,
+    createProfile,
     updateProfile,
   };
 });
