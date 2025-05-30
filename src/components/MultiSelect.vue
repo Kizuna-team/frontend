@@ -7,7 +7,7 @@
       v-for="option in options"
       :key="optionKey(option)"
       @click="toggle(option)"
-      class="rounded-lg border-2 px-2 py-1 text-sm font-semibold transition"
+      class="px-2 py-1 text-sm font-semibold transition border-2 rounded-lg"
       :class="
         isSelected(option)
           ? 'bg-green-100 border-green-500 text-green-600'
@@ -43,13 +43,13 @@ const props = defineProps({
 });
 const emit = defineEmits(["update:modelValue"]);
 
-// 取得選項值
+// 取得選項值 選項是物件
 const getOptionValue = (option) => {
   return props.valueKey && typeof option === "object"
     ? option[props.valueKey]
     : option;
 };
-
+// 選項是基本型別
 const optionLabel = (option) => {
   return props.labelKey && typeof option === "object"
     ? option[props.labelKey] //只有物件才會有屬性可以用
@@ -60,16 +60,23 @@ const optionKey = (option) => {
   return getOptionValue(option);
 };
 
-// 判斷是否被選中（陣列中包含）
+// 先 getOptionValue 取得選項「值」
+// 多選：判斷 modelValue 是陣列才用 includes，避免錯誤
+// 單選：直接判斷相等就是被選中
 const isSelected = (option) => {
   const val = getOptionValue(option);
-  return props.modelValue.includes(val);
+  if (props.multiple) {
+    if (!Array.isArray(props.modelValue)) return false; // 防呆
+    return props.modelValue.includes(val);
+  } else {
+    return props.modelValue === val;
+  }
 };
 
 // 根據多選、單選，加進陣列 或 直接取代
 const toggle = (option) => {
   const val = getOptionValue(option);
-
+  // 如果是陣列
   if (props.multiple) {
     const newValue = Array.isArray(props.modelValue)
       ? [...props.modelValue]

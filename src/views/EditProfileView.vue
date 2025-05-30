@@ -1,7 +1,8 @@
+<!-- 避免淺拷貝導致的型別問題 -->
 <script setup>
 import { ref, onMounted } from "vue";
 import { useUserProfileStore } from "@/stores/userProfile";
-import { fetchProfile, updateProfileApi } from "@/api/editProfile.js";
+// import { fetchProfile, updateProfileApi } from "@/api/editProfile.js";
 
 import ProfileForm from "@/components/ProfileForm.vue";
 import MultiSelect from "@/components/MultiSelect.vue";
@@ -16,6 +17,7 @@ const cards = [
   { title: "工作" },
   { title: "興趣" },
 ];
+
 // 傳入 MultiSelect 元件的「選項資料」
 const zodiacOptions = [
   { name: "牡羊座" },
@@ -71,17 +73,25 @@ const interestOptions = [
 ];
 
 // 載入初始資料
-onMounted(() => {
-  userProfileStore.getProfile();
+onMounted(async () => {
+  try {
+    await userProfileStore.getProfile();
+  } catch (error) {
+    console.error("載入使用者資料失敗", error);
+  }
 });
 
-// 更新按鈕點擊事件
 const updateHandler = async () => {
-  await userProfileStore.updateProfile();
-  if (!userProfileStore.error) {
+  try {
+    // 沒有id就是第一次建立用post
+    if (!userProfileStore.userProfile.id) {
+      await userProfileStore.createProfile();
+    } else {
+      await userProfileStore.updateProfile();
+    }
     alert("更新成功");
-  } else {
-    alert(userProfileStore.error);
+  } catch (error) {
+    alert(userProfileStore.error || "更新失敗");
   }
 };
 
@@ -142,8 +152,8 @@ const foldToggle = (index) => {
               ></i>
             </button>
 
-            <!-- 折疊內容（動畫 + 不撐開） -->
-            <!-- 根據 index 顯示不同 MultiSelect -->
+            <!-- 切換展開的區塊 -->
+            <!-- 根據 index 顯示 MultiSelect -->
             <div
               class="px-4 overflow-hidden transition-[max-height,padding] duration-700 ease-in-out text-sm text-gray-600"
               :class="activeIndex === index ? 'max-h-64 py-3' : 'max-h-0 py-0'"
@@ -169,8 +179,6 @@ const foldToggle = (index) => {
                   v-if="index === 2"
                   v-model="userProfileStore.showFormData.job"
                   :options="jobOptions"
-                  labelKey="jobName"
-                  valueKey="jobId"
                   :multiple="false"
                   :cols="5"
                 />
@@ -199,7 +207,7 @@ const foldToggle = (index) => {
             :disabled="userProfileStore.loading"
             class="w-full bg-[#789fc6] hover:bg-[#5b86b0] text-white font-semibold py-2 rounded-lg transition"
           >
-            <span v-if="userProfileStore.loading">檔案更新中...</span>
+            <span v-if="userProfileStore.loading">儲存中...</span>
             <span v-else>儲存變更</span>
           </button>
         </div>
