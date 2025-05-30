@@ -4,7 +4,7 @@ import CartView from "@/views/CartView.vue";
 import LoginView from "@/views/LoginView.vue";
 import RegisterView from "@/views/RegisterView.vue";
 import HomeView from "@/views/HomeView.vue";
-import BrandView from '@/views/BrandView.vue';
+import BrandView from "@/views/BrandView.vue";
 import ProfileView from "@/views/ProfileView.vue";
 import ChatRoomView from "@/views/ChatRoomView.vue";
 import MatchView from "../views/MatchView.vue";
@@ -53,10 +53,10 @@ const router = createRouter({
       component: MatchView,
     },
     {
-      path: '/brand/:id',
+      path: "/brand/:id",
       name: "Brand",
       component: BrandView,
-    }
+    },
   ],
 });
 
