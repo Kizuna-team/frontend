@@ -12,7 +12,7 @@ const handleLogout = () => {
 </script>
 
 <template>
-  <header class="text-white bg-blue-900 shadow-md">
+  <header class="text-white bg-primary-100 shadow-md">
     <nav class="flex justify-start">
       <RouterLink to="/" class="p-6 text-lg transition hover:text-gray-300"
         >首頁</RouterLink

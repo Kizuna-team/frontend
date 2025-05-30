@@ -1,12 +1,12 @@
 <script setup>
 import CartCard from "@/components/CartCard.vue";
-import { useCartStore } from "@/stores/cart.js";
+import { useCartStore } from "../stores/cart.js";
 const cartStore = useCartStore();
 //解構出來的東西不是響應式
 </script>
 
 <template>
-  <h1 class="text-2xl">購物車</h1>
+  <h1 class="text-2xl">購買禮物</h1>
   <br />
   <div class="grid grid-cols-5 border-b">
     <p class="col-span-2">商品資訊</p>

@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 import { ref, computed } from "vue";
-import { useProductStore } from "@/stores/products.js";
+import { useProductStore } from "./products.js";
 
 export const useCartStore = defineStore("cart", () => {
   // 來自商品列表的 store，要寫在裡面!!!!

@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useUserStore } from "@/stores/user.js";
+import { useUserStore } from "../stores/user.js";
 
 const instance = axios.create({
   baseURL: "http://localhost:3000",
