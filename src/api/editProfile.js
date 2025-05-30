@@ -2,6 +2,8 @@
 // 所有 API 請求放在獨立的模組，store 呼叫後再更新狀態
 import axios from "@/api/axios";
 
+//  Pinia store 裡引用並呼叫 fetchProfile()，把資料存進 userProfile
+//  在元件裡使用 Pinia 的 getProfile() 方法來觸發
 // GET 取得使用者個人資料
 export const fetchProfile = async () => {
   try {
@@ -13,13 +15,19 @@ export const fetchProfile = async () => {
   }
 };
 
-//  Pinia store 裡引用並呼叫 fetchProfile()，把資料存進 userProfile
-//  在元件裡使用 Pinia 的 getProfile() 方法來觸發
-
-// PUT 更新使用者個人資料
-export const updateProfileApi = async (newData) => {
+export const createProfileApi = async (data) => {
   try {
-    const res = await axios.put("/api/edit-profile", newData);
+    const res = await axios.post("/api/edit-profile", data);
+    return res.data;
+  } catch (error) {
+    console.error("createProfileApi 錯誤:", error);
+    throw error;
+  }
+};
+// Patch 更新使用者個人資料
+export const updateProfileApi = async (data) => {
+  try {
+    const res = await axios.patch("/api/edit-profile", data);
     return res.data; // 只回傳user資料，不操作 store
   } catch (error) {
     console.error("updateProfileApi 錯誤:", error);
