@@ -9,14 +9,14 @@ const showModal = ref(false);
 const searchKeyword = ref("");
 
 onMounted(async () => {
-  console.log(userStore.userId);
+  // console.log(userStore.userId);
   try {
     const myUserId = userStore.userId;
     // 到資料庫撈自己的 profile
     const res = await axios.get(`/profile/${myUserId}`);
     const myProfile = res.data;
 
-    console.log("我的 profile:", myProfile);
+    // console.log("我的 profile:", myProfile);
 
     // 把從資料庫抓到的資訊塞進 pinia 集中管理
     userStore.getProfile({
