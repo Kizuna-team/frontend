@@ -12,7 +12,7 @@ const handleLogout = () => {
 </script>
 
 <template>
-  <header class="text-white bg-primary-100 shadow-md">
+  <header class="text-white shadow-md bg-primary-100">
     <nav class="flex justify-start">
       <RouterLink to="/" class="p-6 text-lg transition hover:text-gray-300"
         >首頁</RouterLink
@@ -57,6 +57,9 @@ const handleLogout = () => {
       >
       <RouterLink to="/match" class="p-6 text-lg transition hover:text-gray-300"
         >配對池</RouterLink
+      >
+      <RouterLink to="/activities" class="p-6 text-lg transition hover:text-gray-300"
+        >活動</RouterLink
       >
     </nav>
   </header>
