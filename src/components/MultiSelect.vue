@@ -1,24 +1,3 @@
-<!-- 支援多選功能 -->
-<template>
-  <!-- 動態決定 grid 欄數 -->
-  <div :class="`grid gap-4 px-4 py-2 grid-cols-${cols}`">
-    <!-- 產生多個標籤按鈕 -->
-    <button
-      v-for="option in options"
-      :key="optionKey(option)"
-      @click="toggle(option)"
-      class="px-2 py-1 text-sm font-semibold transition border-2 rounded-lg"
-      :class="
-        isSelected(option)
-          ? 'bg-green-100 border-green-500 text-green-600'
-          : 'border-gray-300 text-gray-500'
-      "
-    >
-      {{ optionLabel(option) }}
-    </button>
-  </div>
-</template>
-
 <script setup>
 // 父傳入使用者選中的選項: 你現在要顯示這些選項 props 唯讀不能被改寫
 const props = defineProps({
@@ -95,3 +74,24 @@ const toggle = (option) => {
   }
 };
 </script>
+
+<!-- 支援多選功能 -->
+<template>
+  <!-- 動態決定 grid 欄數 -->
+  <div :class="`grid gap-4 px-4 py-2 grid-cols-${cols}`">
+    <!-- 產生多個標籤按鈕 -->
+    <button
+      v-for="option in options"
+      :key="optionKey(option)"
+      @click="toggle(option)"
+      class="px-2 py-1 text-sm font-semibold transition border-2 rounded-lg"
+      :class="
+        isSelected(option)
+          ? 'bg-green-100 border-green-500 text-green-600'
+          : 'border-gray-300 text-gray-500'
+      "
+    >
+      {{ optionLabel(option) }}
+    </button>
+  </div>
+</template>
