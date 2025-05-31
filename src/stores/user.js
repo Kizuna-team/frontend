@@ -1,120 +1,146 @@
-// 使用 Pinia 管理 user 的狀態 實現 login logout refresh token 的動作
+// 使用 Pinia 管理 user 的狀態，Composition API 寫法
 import axios from "../api/axios";
 import { defineStore } from "pinia";
+import { ref, reactive } from "vue";
 
-export const useUserStore = defineStore("user", {
-  // 初始化 從 localStorage 中拿出儲存的 token (如果有的話)
-  state: () => ({
-    accessToken: localStorage.getItem("accessToken") || "",
-    refreshToken: localStorage.getItem("refreshToken") || "",
-    // 在 state 中定義 username 這樣vue模板才吃得到值
-    username: localStorage.getItem("username") || "",
-    userId: localStorage.getItem("userId") || "",
-  }),
-  actions: {
-    // 註冊
-    async register(username, password) {
-      try {
-        const res = await axios.post("/auth/register", { username, password });
-        // 只有當後端真的回傳成功才算註冊成功
-        if (res.status === 200) {
-          // console.log("註冊成功", res.data);
-          return { success: true, message: res.data.message };
-        } else {
-          console.warn("非 200 回應", res);
-          return { success: false, message: "伺服器未回應成功" };
-        }
-      } catch (error) {
-        const msg = error.response?.data?.message || "註冊失敗";
-        const reason = error.response?.data?.reason;
-        console.error(msg, reason);
-        return { success: false, message: msg, reason };
-      }
-    },
-    // 發送POST請求到指定的API網址 代入帳號&密碼 後端會回傳JWT Token
-    // login()方法總共做3件事:
-    // 1 打API(POST 新增這個使用者)
-    // 2 將 res 的 accessToken 和 refreshToken 存到 Pinia 的 state
-    // 3 同步儲存到瀏覽器的 localStorage (這樣重新整理也能保留登入狀態)
-    async login(username, password) {
-      try {
-        const res = await axios.post("/auth/login", {
-          username,
-          password,
-        });
-        // console.log(res);
-        // console.log(res.data);
-        this.accessToken = res.data.accessToken;
-        this.refreshToken = res.data.refreshToken;
-        // 把資料寫入 pinia 的 state => 這樣 Vue 模板中的畫面才會 立即更新
-        this.username = res.data.username;
-        // 為了知道是哪個使用者在聊天 接住從後端回傳的userId
-        this.userId = res.data.userId;
+export const useUserStore = defineStore("user", () => {
+  // 初始化
+  const accessToken = ref(localStorage.getItem("accessToken") || "");
+  const refreshToken = ref(localStorage.getItem("refreshToken") || "");
+  const username = ref(localStorage.getItem("username") || "");
+  const userId = ref(localStorage.getItem("userId") || "");
 
-        localStorage.setItem("accessToken", this.accessToken);
-        localStorage.setItem("refreshToken", this.refreshToken);
-        // 在 login() 成功後 順便把 username 記下來
-        localStorage.setItem("username", this.username);
-        localStorage.setItem("userId", this.userId);
-      } catch (error) {
-        if (
-          error.response &&
-          error.response.data &&
-          error.response.data.message
-        ) {
-          console.error("登入失敗", error.response.data.message);
-          alert("登入失敗：" + error.response.data.message);
-        } else {
-          console.error("登入失敗", error.message);
-          alert("登入失敗：登入請求失敗：" + error.message);
-        }
-      }
-    },
-    // 清除 token
-    // logout做兩件事:
-    // 1 將 store 中的 token 清除
-    // 2 清空 localStorage ( 避免刷新後仍為登入狀態 )
-    async logout() {
-      this.accessToken = "";
-      this.refreshToken = "";
-      this.username = "";
-      this.userId = "";
+  const profile = reactive({
+    gender: "",
+    age: null,
+    location: "",
+    bio: "",
+    interests: [],
+  });
 
-      localStorage.removeItem("accessToken");
-      localStorage.removeItem("refreshToken");
-      localStorage.removeItem("username");
-      localStorage.removeItem("userId");
-    },
-    // 用 refreshToken 取得新的 accessToken
-    // refresh做三件事:
-    // 1 再打一次API 帶上目前的 refreshToken 發送POST請求到 /api/refresh 要求新的 accessToken
-    // 2 更新 store 中的 accessToken
-    // 3 更新 localStorage 中的 accessToken
-    async refresh() {
-      const res = await axios.post("/refresh", {
-        refreshToken: this.refreshToken,
+  // 從資料庫抓 profile
+  function getProfile(profileDate){
+    profile.gender = profileDate.gender;
+    profile.age = profileDate.age;
+    profile.location = profileDate.location;
+    profile.bio = profileDate.bio;
+    profile.interests = profileDate.interests;
+  }
+
+  // 註冊
+  const register = async (usernameInput, passwordInput) => {
+    try {
+      const res = await axios.post("/auth/register", {
+        username: usernameInput,
+        password: passwordInput,
       });
 
-      this.accessToken = res.data.accessToken;
-      localStorage.setItem("accessToken", this.accessToken);
-    },
-    // 用 Google 登入
-    async loginWithGoogle(idToken) {
-      try {
-        const res = await axios.post("/auth/google", { idToken });
-
-        // 更新 store 中的各個資料的狀態
-        this.accessToken = res.data.accessToken;
-        this.refreshToken = res.data.refreshToken;
-        // 假設後端有回傳使用者名稱(gmail帳號)
-        this.username = res.data.username;
-
-        localStorage.setItem("accessToken", this.accessToken);
-        localStorage.setItem("refreshToken", this.refreshToken);
-        localStorage.setItem("username", this.username);
-      } catch (error) {
-        console.error("Google登入失敗", error.message);
+      if (res.status === 200) {
+        return { success: true, message: res.data.message };
+      } else {
+        console.warn("非 200 回應", res);
+        return { success: false, message: "伺服器未回應成功" };
       }
-    },
-  },
+    } catch (error) {
+      const msg = error.response?.data?.message || "註冊失敗";
+      const reason = error.response?.data?.reason;
+      console.error(msg, reason);
+      return { success: false, message: msg, reason };
+    }
+  };
+
+  // 登入
+  const login = async (usernameInput, passwordInput) => {
+    try {
+      const res = await axios.post("/auth/login", {
+        username: usernameInput,
+        password: passwordInput,
+      });
+
+      // console.log(res.data);
+      accessToken.value = res.data.accessToken;
+      refreshToken.value = res.data.refreshToken;
+      username.value = res.data.username;
+      userId.value = res.data.userId;
+
+      localStorage.setItem("accessToken", accessToken.value);
+      localStorage.setItem("refreshToken", refreshToken.value);
+      localStorage.setItem("username", username.value);
+      localStorage.setItem("userId", userId.value);
+    } catch (error) {
+      // console.log("進入 catch 區塊");
+      if (
+        error.response &&
+        error.response.data &&
+        error.response.data.message
+      ) {
+        console.error("登入失敗", error.response.data.message);
+        alert("登入失敗：" + error.response.data.message);
+      } else {
+        console.error("登入失敗", error.message);
+        alert("登入失敗：登入請求失敗：" + error.message);
+      }
+    }
+  };
+
+  // 登出
+  const logout = async () => {
+    accessToken.value = "";
+    refreshToken.value = "";
+    username.value = "";
+    userId.value = null;
+    profile.age= null;
+    profile.gender = "";
+    profile.location = "";
+    profile.bio = "";
+    profile.interests = [];
+
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("refreshToken");
+    localStorage.removeItem("username");
+    localStorage.removeItem("userId");
+
+  };
+
+  // 用 refreshToken 取得新的 accessToken
+  const refresh = async () => {
+    const res = await axios.post("/refresh", {
+      refreshToken: refreshToken.value,
+    });
+
+    accessToken.value = res.data.accessToken;
+    localStorage.setItem("accessToken", accessToken.value);
+  };
+
+  // Google 登入
+  const loginWithGoogle = async (idToken) => {
+    try {
+      const res = await axios.post("/auth/google", { idToken });
+
+      accessToken.value = res.data.accessToken;
+      refreshToken.value = res.data.refreshToken;
+      username.value = res.data.username;
+
+      localStorage.setItem("accessToken", accessToken.value);
+      localStorage.setItem("refreshToken", refreshToken.value);
+      localStorage.setItem("username", username.value);
+    } catch (error) {
+      console.error("Google登入失敗", error.message);
+    }
+  };
+
+  // 最後 return 出來
+  return {
+    accessToken,
+    refreshToken,
+    username,
+    userId,
+    profile,
+    getProfile,
+    register,
+    login,
+    logout,
+    refresh,
+    loginWithGoogle,
+  };
 });

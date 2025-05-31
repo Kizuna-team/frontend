@@ -14,9 +14,9 @@
   },
   "plugins": ["vue"],
   "rules": {
-    "no-unused-vars": "warn",
-    "vue/multi-word-component-names": "off",
-    "semi": ["warn", "always"],
-    "quotes": ["warn", "double"]
+    // "no-unused-vars": "warn",
+    // "vue/multi-word-component-names": "off",
+    // "semi": ["warn", "always"],
+    // "quotes": ["warn", "double"]
   }
 }
