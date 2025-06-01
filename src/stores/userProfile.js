@@ -14,7 +14,7 @@ import {
 export const useUserProfileStore = defineStore("userProfile", () => {
   // 使用者的存檔資料（後端同步）
   const userProfile = ref({
-    id: null,
+    userId: null,
     name: "",
     gender: "",
     bio: "",
@@ -24,7 +24,7 @@ export const useUserProfileStore = defineStore("userProfile", () => {
     zodiac: "",
     mbti: "",
     job: "",
-    interest: [],
+    interests: [],
   });
 
   // 暫存資料表單 (不會存後端)
@@ -42,12 +42,6 @@ export const useUserProfileStore = defineStore("userProfile", () => {
   // 避免誤把未儲存的資料當成正式資料使用，還原
   const resetFormData = () => {
     showFormData.value = { ...userProfile.value };
-    console.log("resetFormData showFormData.value:", showFormData.value);
-    console.log(
-      "interest 型別",
-      typeof showFormData.value.interest,
-      Array.isArray(showFormData.value.interest)
-    );
   };
 
   // 從後端取得個人資料，顯示「載入中」將錯誤狀態清空，最後都結束在載入中
@@ -71,13 +65,14 @@ export const useUserProfileStore = defineStore("userProfile", () => {
   const createProfile = async () => {
     loading.value = true;
     error.value = null;
-    const data = await createProfileApi(showFormData.value);
 
     try {
-      console.log("送出的資料:", data);
+      console.log("送出的資料:", showFormData.value);
+      // 使用者填的資料（只有按按鈕才會執行這段）
+      const res = await createProfileApi(showFormData.value);
+      console.log("後端回傳:", res);
 
-      const res = await createProfileApi(data);
-      setProfile(data.user); // user.id 現在是資料庫產生的 id
+      setProfile(res.user); // 存進狀態或 Pinia
       resetFormData(); // 畫面和狀態同步
     } catch (err) {
       error.value = "建立個人資料失敗";
