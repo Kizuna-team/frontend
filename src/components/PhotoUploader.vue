@@ -14,6 +14,7 @@
       <img
         v-if="img.preview"
         :src="img.preview"
+        :key="img.preview"
         class="object-cover w-full h-full"
       />
 
@@ -72,7 +73,7 @@ const removePhoto = async (index) => {
     console.error("❌ 圖片刪除失敗", err);
   }
 };
-
+// 上傳後需要同步更新key，沒有把後端回傳的資訊存入photoList
 const uploadAll = async () => {
   const uploadPromises = [];
 
@@ -81,23 +82,39 @@ const uploadAll = async () => {
       const formData = new FormData();
       formData.append("image", item.file);
 
-      const promise = axios
-        .post("http://localhost:3000/api/upload", formData, {
-          headers: { "Content-Type": "multipart/form-data" },
-        })
-        .then((res) => {
-          console.log(`第 ${index + 1} 張上傳成功`, res.data);
-        })
-        .catch((err) => {
-          console.error(`第 ${index + 1} 張上傳失敗`, err);
-        });
+      const uploadPromise = (async () => {
+        try {
+          const res = await axios.post(
+            "http://localhost:3000/api/upload",
+            formData,
+            {
+              headers: { "Content-Type": "multipart/form-data" },
+            }
+          );
+          // 成功時更新資料
 
-      uploadPromises.push(promise);
+          photoList.value[index] = {
+            file: null,
+            preview: res.data.url, // 用後端網址
+            key: res.data.key,
+          };
+          // 強制重新渲染畫面
+          photoList.value = [...photoList.value];
+          console.log(`第 ${index + 1} 張上傳成功`, res.data);
+        } catch (err) {
+          console.error(`第 ${index + 1} 張上傳失敗`, err);
+        }
+      })();
+      uploadPromises.push(uploadPromise);
     }
   });
 
-  await Promise.all(uploadPromises);
-  alert("✅ 所有已選圖片都已上傳完成");
+  try {
+    await Promise.all(uploadPromises);
+    alert("✅ 所有已選圖片都已上傳完成");
+  } catch (err) {
+    console.error("上傳過程發生錯誤", err);
+  }
 };
 
 // 讓外部元件可以呼叫 uploadAll
