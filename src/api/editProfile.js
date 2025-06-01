@@ -1,11 +1,18 @@
 // 純 API 工具方法，從 store 裡主動「呼叫」它，接收資料並存起來
 // 所有 API 請求放在獨立的模組，store 呼叫後再更新狀態
-import axios from "@/api/axios";
+// 名字叫 axios（實際上是 instance）
+import axios from "@/api/axios.js";
 
 // GET 取得使用者個人資料
 export const fetchProfile = async () => {
   try {
-    const res = await axios.get("/api/edit-profile");
+    const res = await axios.get("/api/profile");
+    // const token = localStorage.getItem("token");
+    // const res = await axios.get("/api/profile", {
+    //   headers: {
+    //     Authorization: `Bearer ${token}`, // 帶上 token
+    //   },
+    // });
     return res.data;
   } catch (error) {
     console.error("fetchProfile 錯誤:", error);
