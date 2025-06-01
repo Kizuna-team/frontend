@@ -2,11 +2,10 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import { useUserProfileStore } from "@/stores/userProfile";
-// import { fetchProfile, updateProfileApi } from "@/api/editProfile.js";
 
 import ProfileForm from "@/components/ProfileForm.vue";
 import MultiSelect from "@/components/MultiSelect.vue";
-import ProfilePhotos from "@/components/ProfilePhotos.vue";
+import PhotoUploader from "@/components/PhotoUploader.vue";
 
 const tab = ref("intro");
 const userProfileStore = useUserProfileStore();
@@ -99,6 +98,12 @@ const updateHandler = async () => {
 const activeIndex = ref(null);
 const foldToggle = (index) => {
   activeIndex.value = activeIndex.value === index ? null : index;
+};
+
+// 照片區
+const photoUploaderRef = ref(null);
+const handleUpload = () => {
+  photoUploaderRef.value?.uploadAll();
 };
 </script>
 
@@ -214,7 +219,15 @@ const foldToggle = (index) => {
       </div>
       <!-- PHOTO 頁面內容 -->
       <div v-else-if="tab === 'photo'">
-        <ProfilePhotos />
+        <!-- <ProfilePhotos /> -->
+        <button
+          @click="handleUpload"
+          class="px-4 py-1 font-bold text-white bg-orange-400 rounded hover:bg-orange-500"
+        >
+          完成
+        </button>
+
+        <PhotoUploader ref="photoUploaderRef" />
       </div>
     </div>
   </div>
