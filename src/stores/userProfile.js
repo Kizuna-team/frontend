@@ -9,7 +9,7 @@ import {
   fetchProfile,
   updateProfileApi,
   createProfileApi,
-} from "@/api/editProfile";
+} from "@/api/profile";
 
 export const useUserProfileStore = defineStore("userProfile", () => {
   // 使用者的存檔資料（後端同步）
