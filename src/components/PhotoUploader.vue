@@ -1,3 +1,100 @@
+<script setup>
+import { ref, onMounted, defineExpose } from "vue";
+import { getPhotos, uploadPhoto, deletePhoto } from "@/api/photos";
+
+const photoList = ref([
+  { file: null, preview: "" },
+  { file: null, preview: "" },
+  { file: null, preview: "" },
+  { file: null, preview: "" },
+  { file: null, preview: "" },
+  { file: null, preview: "" },
+]);
+
+const handleFileChange = (event, index) => {
+  const file = event.target.files[0];
+  if (!file) return;
+
+  const previewUrl = URL.createObjectURL(file);
+  photoList.value[index].file = file;
+  photoList.value[index].preview = previewUrl;
+  event.target.value = "";
+};
+
+const removePhoto = async (index) => {
+  const imageKey = photoList.value[index].key;
+
+  if (!imageKey) {
+    photoList.value[index].file = null;
+    photoList.value[index].preview = "";
+    return;
+  }
+
+  try {
+    await deletePhoto(`http://localhost:3000/api/photos/${imageKey}`);
+    photoList.value[index].file = null;
+    photoList.value[index].preview = "";
+    photoList.value[index].key = "";
+    console.log("✅ 圖片刪除成功");
+  } catch (err) {
+    console.error("❌ 圖片刪除失敗", err);
+  }
+};
+
+// 上傳後需要同步更新key，沒有把後端回傳的資訊存入photoList
+const uploadAll = async () => {
+  const uploadPromises = [];
+
+  photoList.value.forEach((item, index) => {
+    if (item.file) {
+      const uploadPromise = (async () => {
+        try {
+          const data = await uploadPhoto(item.file);
+
+          photoList.value[index] = {
+            file: null,
+            preview: data.url,
+            key: data.key,
+          };
+
+          photoList.value = [...photoList.value];
+          console.log(`第 ${index + 1} 張上傳成功`, data);
+        } catch (err) {
+          console.error(`第 ${index + 1} 張上傳失敗`, err);
+        }
+      })();
+      uploadPromises.push(uploadPromise);
+    }
+  });
+
+  try {
+    await Promise.all(uploadPromises);
+    alert("✅ 所有已選圖片都已上傳完成");
+  } catch (err) {
+    console.error("上傳過程發生錯誤", err);
+  }
+};
+
+// 讓外部元件可以呼叫 uploadAll
+defineExpose({ uploadAll });
+
+onMounted(async () => {
+  try {
+    // const res = await axios.get("http://localhost:3000/api/photos");
+    // const images = res.data;
+    const images = await getPhotos();
+    images.forEach((item, index) => {
+      if (index < photoList.value.length) {
+        photoList.value[index].preview = item.image_url;
+        photoList.value[index].key = item.image_key;
+      }
+    });
+  } catch (err) {
+    console.error("圖片載入失敗", err);
+  }
+});
+</script>
+
 <template>
   <div class="grid grid-cols-3 gap-4">
     <div
@@ -30,109 +127,3 @@
     </div>
   </div>
 </template>
-
-<script setup>
-import { ref, onMounted, defineExpose } from "vue";
-import axios from "axios";
-
-const photoList = ref([
-  { file: null, preview: "" },
-  { file: null, preview: "" },
-  { file: null, preview: "" },
-  { file: null, preview: "" },
-  { file: null, preview: "" },
-  { file: null, preview: "" },
-]);
-
-const handleFileChange = (event, index) => {
-  const file = event.target.files[0];
-  if (!file) return;
-
-  const previewUrl = URL.createObjectURL(file);
-  photoList.value[index].file = file;
-  photoList.value[index].preview = previewUrl;
-  event.target.value = "";
-};
-
-const removePhoto = async (index) => {
-  const imageKey = photoList.value[index].key;
-
-  if (!imageKey) {
-    photoList.value[index].file = null;
-    photoList.value[index].preview = "";
-    return;
-  }
-
-  try {
-    await axios.delete(`http://localhost:3000/api/photos/${imageKey}`);
-    photoList.value[index].file = null;
-    photoList.value[index].preview = "";
-    photoList.value[index].key = "";
-    console.log("✅ 圖片刪除成功");
-  } catch (err) {
-    console.error("❌ 圖片刪除失敗", err);
-  }
-};
-// 上傳後需要同步更新key，沒有把後端回傳的資訊存入photoList
-const uploadAll = async () => {
-  const uploadPromises = [];
-
-  photoList.value.forEach((item, index) => {
-    if (item.file) {
-      const formData = new FormData();
-      formData.append("image", item.file);
-
-      const uploadPromise = (async () => {
-        try {
-          const res = await axios.post(
-            "http://localhost:3000/api/upload",
-            formData,
-            {
-              headers: { "Content-Type": "multipart/form-data" },
-            }
-          );
-          // 成功時更新資料
-
-          photoList.value[index] = {
-            file: null,
-            preview: res.data.url, // 用後端網址
-            key: res.data.key,
-          };
-          // 強制重新渲染畫面
-          photoList.value = [...photoList.value];
-          console.log(`第 ${index + 1} 張上傳成功`, res.data);
-        } catch (err) {
-          console.error(`第 ${index + 1} 張上傳失敗`, err);
-        }
-      })();
-      uploadPromises.push(uploadPromise);
-    }
-  });
-
-  try {
-    await Promise.all(uploadPromises);
-    alert("✅ 所有已選圖片都已上傳完成");
-  } catch (err) {
-    console.error("上傳過程發生錯誤", err);
-  }
-};
-
-// 讓外部元件可以呼叫 uploadAll
-defineExpose({ uploadAll });
-
-onMounted(async () => {
-  try {
-    const res = await axios.get("http://localhost:3000/api/photos");
-    const images = res.data;
-
-    images.forEach((item, index) => {
-      if (index < photoList.value.length) {
-        photoList.value[index].preview = item.image_url;
-        photoList.value[index].key = item.image_key;
-      }
-    });
-  } catch (err) {
-    console.error("圖片載入失敗", err);
-  }
-});
-</script>
