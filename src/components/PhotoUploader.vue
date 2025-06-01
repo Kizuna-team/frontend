@@ -31,7 +31,8 @@ const removePhoto = async (index) => {
   }
 
   try {
-    await deletePhoto(`http://localhost:3000/api/photos/${imageKey}`);
+    // 後端路由顯示方式這裡不可用完整網址，並傳編碼過的檔名
+    await deletePhoto(encodeURIComponent(imageKey));
     photoList.value[index].file = null;
     photoList.value[index].preview = "";
     photoList.value[index].key = "";
