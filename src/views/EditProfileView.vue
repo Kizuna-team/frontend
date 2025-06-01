@@ -83,14 +83,24 @@ onMounted(async () => {
 const updateHandler = async () => {
   try {
     // 沒有id就是第一次建立用post
-    if (!userProfileStore.userProfile.id) {
+    if (!userProfileStore.userProfile.userId) {
       await userProfileStore.createProfile();
     } else {
       await userProfileStore.updateProfile();
     }
     alert("更新成功");
   } catch (error) {
-    alert(userProfileStore.error || "更新失敗");
+    // 如果錯誤是因為已存在（409），改用更新資料
+    if (error.response && error.response.status === 409) {
+      try {
+        await userProfileStore.updateProfile();
+        alert("更新成功");
+      } catch (updateError) {
+        alert(updateError.message || "更新失敗");
+      }
+    } else {
+      alert(userProfileStore.error || "更新失敗");
+    }
   }
 };
 
@@ -189,7 +199,7 @@ const handleUpload = () => {
                 />
                 <MultiSelect
                   v-if="index === 3"
-                  v-model="userProfileStore.showFormData.interest"
+                  v-model="userProfileStore.showFormData.interests"
                   :options="interestOptions"
                   :multiple="true"
                   :cols="3"
