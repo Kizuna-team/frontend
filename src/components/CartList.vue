@@ -3,12 +3,11 @@ import { ref } from "vue";
 import axios from "../api/axios";
 import CartCard from "@/components/CartCard.vue";
 import { useCartStore } from "../stores/cart.js";
-import { useUserStore} from "../stores/user.js";
+// import { useUserStore} from "../stores/user.js";
 const cartStore = useCartStore();
-const userStore = useUserStore();
+// const userStore = useUserStore();
 
 const message = ref("");
-const error = ref("");
 
 const sendOrder = async () => {
   try{
@@ -18,21 +17,20 @@ const sendOrder = async () => {
         quantity: item.quantity
     }));
     
+    console.log(items);
+    
     const res = await axios.post("/order/gift-orders", {
-      sender_id: userStore.userId,
-      // 之後從資料庫中的朋友表單撈
+      // 寫死測試
+      sender_id: 2,
       receiver_id: 10,
       items: items
     });
 
-    message.value = `送出成功，訂單編號:${res.data.id}`
-    error.value = "";
+    message.value = `送出成功，訂單編號:${res.data.id}`;
     
     cartStore.clearCart();
   }catch(err){
     console.error(err);
-    message.value = "";
-    error.value = err.response?.data?.error || "送出失敗";
   }
 };
 
