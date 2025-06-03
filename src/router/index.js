@@ -9,6 +9,7 @@ import ProfileView from "@/views/ProfileView.vue";
 import ChatRoomView from "@/views/ChatRoomView.vue";
 import MatchView from "../views/MatchView.vue";
 import ActivityList from "@/components/ActivityList.vue"
+import ActivityView from "@/components/ActivityForm.vue"
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -62,6 +63,16 @@ const router = createRouter({
       path: "/activities",
       name: "Activities",
       component: ActivityList,
+    },
+    {
+      path: "/activities/new",
+      name: "activityCreate",
+      component: ActivityView,
+    },
+    {
+      path: "/activities/edit/:id",
+      name: "activityEdit",
+      component: ActivityView,
     },
   ],
 });

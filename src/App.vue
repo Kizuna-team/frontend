@@ -61,6 +61,11 @@ const handleLogout = () => {
       <RouterLink to="/activities" class="p-6 text-lg transition hover:text-gray-300"
         >活動</RouterLink
       >
+      <RouterLink to="/activities/new" class="p-6 text-lg transition hover:text-gray-300"
+        >活動表單</RouterLink
+      >
+      <RouterLink to="/activities/edit/:id" class="p-6 text-lg transition hover:text-gray-300"
+        >活動編輯</RouterLink>
     </nav>
   </header>
   <main class="max-w-[1000px] mx-auto mt-24">
