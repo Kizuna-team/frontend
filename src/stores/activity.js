@@ -7,6 +7,7 @@ export const useActivityStore = defineStore("activity", () => {
   const loading = ref(false);
   const error = ref(null);
   const selectedActivity = ref(null); 
+  
 
   const fetchActivities = async () => {
     loading.value = true;
@@ -36,12 +37,27 @@ export const useActivityStore = defineStore("activity", () => {
     }
   };
 
+  const updateActivity = async (id, updatedData) => {
+  loading.value = true;
+  try {
+    const response = await axios.put(`/activities/${id}`, updatedData);
+    console.log("更新成功:", response.data);
+  } catch (err) {
+    error.value = err;
+    console.log("更新失敗:", err);
+  } finally {
+    loading.value = false;
+  }
+};
+
+
   return {
     selectedActivity,
     activities,
     loading,
     error,
     fetchActivities,
-    fetchActivityById
+    fetchActivityById,
+    updateActivity
   };
 });

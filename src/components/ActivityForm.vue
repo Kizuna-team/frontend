@@ -5,7 +5,7 @@ import { useRoute } from "vue-router";
 import { storeToRefs } from "pinia";
 const store = useActivityStore();
 const { loading, error, selectedActivity } = storeToRefs(store);
-const { fetchActivityById } = store;
+const { fetchActivityById, updateActivity } = store;
 
 const route = useRoute();
 
@@ -50,9 +50,16 @@ watch(
   { immediate: true }
 );
 
-function handleSubmit() {
+async function handleSubmit() {
   if (isEditMode.value) {
-    alert("送出更新活動");
+    try {
+      const id = parseInt(route.params.id);
+      await store.updateActivity(id, form.value); 
+      alert("活動已更新！");
+    } catch (err) {
+      console.error("更新活動時發生錯誤", err);
+      alert("更新失敗，請稍後再試");
+    }
   } else {
     alert("送出新增活動");
     // 呼叫新增 API
