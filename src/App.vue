@@ -38,7 +38,14 @@ const handleLogout = () => {
           <!-- ml-2表示 margin-left加上0.5rem的間距 -->
           <span class="ml-2">{{ store.username }}</span>
         </div>
+        <!-- 要登入才能看到個人檔案頁面 -->
+        <RouterLink
+          to="/edit-profile"
+          class="p-6 text-lg transition hover:text-gray-300"
+          >編輯個人檔案區</RouterLink
+        >
       </template>
+
       <!-- 沒有token 請先登入或註冊新帳號 -->
       <template v-else>
         <RouterLink

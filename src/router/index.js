@@ -10,6 +10,7 @@ import ChatRoomView from "@/views/ChatRoomView.vue";
 import MatchView from "../views/MatchView.vue";
 import ActivityList from "@/components/ActivityList.vue"
 import ActivityView from "@/components/ActivityForm.vue"
+import EditProfileView from "@/views/EditProfileView.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -73,6 +74,12 @@ const router = createRouter({
       path: "/activities/edit/:id",
       name: "activityEdit",
       component: ActivityView,
+    },
+    // 加入編輯個人檔案頁面route
+    {
+      path: "/edit-profile",
+      name: "EditProfile",
+      component: EditProfileView,
     },
   ],
 });

@@ -1,7 +1,9 @@
 <template>
   <div :class="bubblePosition">
     <div :class="['inline-block', 'my-3','px-4', 'py-2', 'rounded-2xl', 'shadow', bubbleColor, 'max-w-xs', 'break-words']">
-      <p class="">{{ msg.content }}</p>
+      <p class="">
+        {{ msg.content }}
+      </p>
     </div>
   </div>
 </template>
