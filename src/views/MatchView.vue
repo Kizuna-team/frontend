@@ -5,6 +5,8 @@ import UserCard from "@/components/UserCard.vue";
 import MatchBtn from "@/components/MatchBtn.vue";
 import UserIntro from "@/components/UserIntro.vue";
 
+
+
 // user假資料
 const users = ref([
   {
@@ -22,38 +24,6 @@ const users = ref([
     mbti: "INTJ",
     interests: ["攝影", "爬山", "音樂"],
     intro: "嗨，我是西西，期待認識新朋友。",
-  },
-  {
-    id: 2,
-    name: "小花",
-    age: 25,
-    location: "台中市",
-    zodiac: "處女座",
-    photos: [
-      "https://image1.gamme.com.tw/news2/2022/10/07/rJyWnaOWkaOcr6c.jpg",
-      "https://image1.gamme.com.tw/news2/2022/10/07/rJyWnaOWkaOcr6g.jpg",
-      "https://a.ksd-i.com/s/480x_86400_583f780f8611ab72028feb102bfe29f4/static.koreastardaily.com/2018-10-05/109958-662192.jpg",
-    ],
-    bio: "喜歡閱讀和烹飪，平常喜歡安靜的午後時光。",
-    mbti: "ENfJ",
-    interests: ["閱讀", "烹飪", "瑜伽"],
-    intro: "嗨，我是小花，希望找到志同道合的朋友。",
-  },
-  {
-    id: 3,
-    name: "小玉",
-    age: 25,
-    location: "新竹市",
-    zodiac: "處女座",
-    photos: [
-      "https://assets.juksy.com/files/articles/63508/58c17ded2aaf9.jpg",
-      "https://assets.juksy.com/files/articles/63508/58c17ddb98814.jpg",
-      "https://assets.juksy.com/files/articles/63508/58c17ea5e111d.jpg",
-    ],
-    bio: "安靜安靜安靜安靜安靜安靜。",
-    mbti: "ISTJ",
-    interests: ["閱讀", "安靜", "安靜"],
-    intro: "嗨，我是小玉，希望找到志同道合的朋友。",
   },
 ]);
 

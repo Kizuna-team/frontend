@@ -1,9 +1,9 @@
 <template>
   <div 
   v-for="activity in activities" :key="activity.id">
-    <h2>{{ activity.title }}</h2>
-    <p>{{ activity.location }}</p>
-    <p>{{ activity.description }}</p>
+    <h2>活動名稱 : {{ activity.title }}</h2>
+    <p>地點 :{{ activity.location }}</p>
+    <p>活動資訊 :{{ activity.description }}</p>
     <p>建立者：{{ activity.createdBy }}</p>
     <p>{{ activity.createdAt }}</p>
   </div>
