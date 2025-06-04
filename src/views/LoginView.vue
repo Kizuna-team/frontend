@@ -1,19 +1,17 @@
 <!-- 登入頁面 -->
 <script setup>
-import { ref } from "vue";
 import { useUserStore } from "../stores/user";
+import ProfileView from "./ProfileView.vue";
 
 const store = useUserStore();
-const username = ref("");
-const password = ref("");
 
 const handleLogin = async () => {
-  if (!username.value || !password.value) {
+  if (!store.username || !store.password) {
     alert("請輸入帳號和密碼");
     return;
   }
   try {
-    await store.login(username.value, password.value);
+    await store.login(store.username, store.password);
     alert("登入成功");
   } catch (error) {
     console.error("登入失敗", error);
@@ -44,19 +42,19 @@ const loginWithGoogle = () => {
         >帳號</label
       >
       <input
-        v-model="username"
+        v-model="store.username"
         type=""
         placeholder="常用 Email"
         class="w-[500px] block py-1.5 pr-3 pl-3 text-lg border border-gray-300 text-gray-900 rounded-[10px] placeholder:text-gray-400 focus:outline-none sm:text-sm/6"
-      />
+      >
       <!-- 密碼輸入框 -->
       <label class="block text-[#3E6588] font-bold text-l my-2">密碼</label>
       <input
-        v-model="password"
+        v-model="store.password"
         type="password"
         placeholder="6位數以上英數組合"
         class="w-[500px] block py-1.5 pr-3 pl-3 text-lg border border-gray-300 text-gray-900 rounded-[10px] placeholder:text-gray-400 focus:outline-none sm:text-sm/6"
-      />
+      >
       <!-- 登入按鈕 -->
       <button
         @click="handleLogin"
@@ -65,9 +63,9 @@ const loginWithGoogle = () => {
         登入
       </button>
       <!-- 忘記密碼 之後加功能 先切版 -->
-      <a href="#" class="text-center block text-[#3E6588] font-bold text-l"
-        >忘記密碼?</a
-      >
+      <a href="#" class="text-center block text-[#3E6588] font-bold text-l">
+        忘記密碼?
+      </a>
       <!-- 第三方登入 -->
       <a href="#" class="block mt-3 w-[500px] p-3 bg-white rounded-[10px]">
         <div class="flex">
@@ -106,6 +104,7 @@ const loginWithGoogle = () => {
       </a>
     </div>
   </div>
+  <ProfileView v-if="store.userId" />
 </template>
 
 <style></style>

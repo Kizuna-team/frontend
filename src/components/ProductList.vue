@@ -11,12 +11,11 @@ const { filteredBrands, changeCurrentCategory } = brandStore;
 const handleClick = (cat) => {
   changeCurrentCategory(cat);
 };
-// 記得要解構
 </script>
 
 <template>
-  <div class="mx-auto bg-primary-200 rounded-lg max-w-full shadow-lg">
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 px-10">
+  <div class="max-w-full mx-auto rounded-lg shadow-lg bg-primary-200">
+    <div class="grid grid-cols-1 gap-6 px-10 sm:grid-cols-2 lg:grid-cols-4">
       <a
         class="flex justify-center hover:bg-primary-100 hover:text-stone-50 text-stone-950 p-[10px] mt-[20px] rounded-lg"
         href="#"
@@ -44,7 +43,7 @@ const handleClick = (cat) => {
     </div>
 
     <div
-      class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-6 px-10 py-10"
+      class="grid grid-cols-1 gap-6 px-10 py-10 sm:grid-cols-2 lg:grid-cols-2"
     >
       <router-link
         class="bg-white h-[80px] rounded-lg hover:shadow-lg flex items-center gap-6"
@@ -53,7 +52,7 @@ const handleClick = (cat) => {
         :to="`/brand/${brand.id}`"
       >
         <img
-          class="rounded-lg max-h-full max-w-full object-contain"
+          class="object-contain max-w-full max-h-full rounded-lg"
           :src="brand.imgUrl"
           :alt="brand.name"
         />
@@ -64,13 +63,12 @@ const handleClick = (cat) => {
 
   <h2 class="flex justify-center p-10 text-4xl">探索更多禮物</h2>
 
-  <a href="#" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+  <a href="#" class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
     <ProductCard
       v-for="product in products"
       :key="product.id"
       :product="product"
     />
-    <!-- 記得可以直接傳物件 -->
   </a>
 </template>
 
