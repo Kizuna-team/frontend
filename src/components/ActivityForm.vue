@@ -5,7 +5,7 @@ import { useRoute } from "vue-router";
 import { storeToRefs } from "pinia";
 const store = useActivityStore();
 const { loading, error, selectedActivity } = storeToRefs(store);
-const { fetchActivityById, updateActivity } = store;
+const { fetchActivityById, updateActivity,createActivity,deleteActivity } = store;
 
 const route = useRoute();
 
@@ -54,16 +54,32 @@ async function handleSubmit() {
   if (isEditMode.value) {
     try {
       const id = parseInt(route.params.id);
-      await store.updateActivity(id, form.value); 
+      await updateActivity(id, form.value); 
       alert("活動已更新！");
     } catch (err) {
-      console.error("更新活動時發生錯誤", err);
+      console.log("更新活動時發生錯誤", err);
       alert("更新失敗，請稍後再試");
     }
   } else {
-    alert("送出新增活動");
-    // 呼叫新增 API
+    try {
+    await createActivity(form.value);
+    alert("活動已建立！");
+  } catch (err) {
+    console.log("建立活動時發生錯誤", err);
+    alert("建立失敗，請稍後再試");
   }
+  }
+}
+
+async function handleDelete(){
+    try {
+      const id = parseInt(route.params.id);
+      await deleteActivity(id, form.value); 
+      alert("活動已刪除！");
+    } catch (err) {
+      console.log("刪除活動失敗", err);
+      alert("刪除失敗，請稍後再試");
+    }
 }
 </script>
 
@@ -100,6 +116,9 @@ async function handleSubmit() {
     </div>
     <button type="submit">
       {{ isEditMode ? "更新活動" : "建立活動" }}
+    </button>
+    <button v-if="isEditMode" @click="handleDelete" type="button">
+      刪除活動
     </button>
   </form>
 </template>
