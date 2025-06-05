@@ -1,23 +1,47 @@
-<!-- 按儲存時你才會把 tempFormData 的內容覆蓋回 Store -->
+<!-- 按儲存 tempFormData 的內容覆蓋回 Store -->
+<!-- 顯示表單、處理輸入資料，不接觸 API -->
 <script setup>
-// import { useUserProfileStore } from "@/stores/userProfile.js";
-// const userProfileStore = useUserProfileStore();
-// const tempFormData = userProfileStore.showFormData;
+import { ref, watch } from "vue";
 
 const props = defineProps({
-  tempFormData: Object,
+  modelValue: Object,
 });
 
+const emit = defineEmits(["update:modelValue"]);
+
+// 避免直接修改props
+const tempFormData = ref({ ...props.modelValue });
+
+// props 更新 就 自動更新暫存資料
+// 初始化時也會執行一次
+watch(
+  () => props.modelValue,
+  (newVal) => {
+    tempFormData.value = { ...(newVal || {}) };
+  },
+  { deep: true, immediate: true }
+);
+
+// 表單暫存資料改變 emit 父元件同步資料
+watch(
+  tempFormData,
+  (newVal) => {
+    if (JSON.stringify(newVal) !== JSON.stringify(props.modelValue)) {
+      emit("update:modelValue", newVal);
+    }
+  },
+  { deep: true }
+);
 // label 顯示給使用者，value 送後端或存資料庫
 const genderOptions = [
   { label: "我是男生", value: "male" },
   { label: "我是女生", value: "female" },
-  { label: "泛性戀", value: "both" },
+  { label: "我不確定", value: "both" },
 ];
 const orientationOptions = [
-  { label: "我想找男生", value: "findMale" },
-  { label: "我想找女生", value: "findFemale" },
-  { label: "我都可以", value: "findBoth" },
+  { label: "異性戀", value: 0 },
+  { label: "同性戀", value: 1 },
+  { label: "雙性戀", value: 2 },
 ];
 </script>
 
