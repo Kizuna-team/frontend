@@ -46,6 +46,7 @@ const removePhoto = async (index) => {
 // 上傳後需要同步更新key，沒有把後端回傳的資訊存入photoList
 const uploadAll = async () => {
   const uploadPromises = [];
+  const uploadedResults = [];
 
   photoList.value.forEach((item, index) => {
     if (item.file) {
@@ -53,13 +54,15 @@ const uploadAll = async () => {
         try {
           const data = await uploadPhoto(item.file);
 
-          photoList.value[index] = {
+          const newPhoto = {
             file: null,
             preview: data.url,
             key: data.key,
           };
 
+          photoList.value[index] = newPhoto;
           photoList.value = [...photoList.value];
+          uploadedResults.push(newPhoto); // 收集成功結果
           console.log(`第 ${index + 1} 張上傳成功`, data);
         } catch (err) {
           console.error(`第 ${index + 1} 張上傳失敗`, err);
@@ -72,6 +75,7 @@ const uploadAll = async () => {
   try {
     await Promise.all(uploadPromises);
     alert("✅ 所有已選圖片都已上傳完成");
+    return uploadedResults; // 回傳上傳成功的結果
   } catch (err) {
     console.error("上傳過程發生錯誤", err);
   }
@@ -98,7 +102,7 @@ onMounted(async () => {
 </script>
 
 <template>
-  <h1 class="text-2xl font-bold text-center mb-6 text-[#1c3b5a]">上傳照片</h1>
+  <h1 class="mb-6 text-2xl font-bold text-center text-darkblue">上傳照片</h1>
   <div class="grid grid-cols-3 gap-4">
     <div
       v-for="(img, index) in photoList"

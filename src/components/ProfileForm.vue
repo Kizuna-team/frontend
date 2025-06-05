@@ -72,13 +72,15 @@ const orientationOptions = [
         :id="option.value"
         class="mx-2 border border-blue-200 rounded-lg focus:outline-none"
       />
-      <label :for="option.value">{{ option.label }}</label>
+      <label :for="option.value" class="text-darkblue">{{
+        option.label
+      }}</label>
     </div>
   </div>
 
   <!-- 性取向 -->
   <div class="mb-4">
-    <label class="font-bold block text-[#1c3b5a] mb-1">性取向</label>
+    <label class="block mb-1 font-bold text-darkblue">性取向</label>
     <div v-for="option in orientationOptions" :key="option.value" class="mb-2">
       <input
         type="radio"
@@ -86,9 +88,11 @@ const orientationOptions = [
         name="orientation"
         v-model="tempFormData.orientation"
         :id="option.value"
-        class="mx-2 border border-blue-200 rounded-lg focus:outline-none"
+        class="mx-2 ml-2 font-medium border border-blue-200 rounded-lg focus:outline-none text-darkblue"
       />
-      <label :for="option.value">{{ option.label }}</label>
+      <label :for="option.value" class="text-darkblue">
+        {{ option.label }}
+      </label>
     </div>
   </div>
 
