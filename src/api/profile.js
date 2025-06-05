@@ -8,7 +8,7 @@ import axios from "@/api/axios.js";
 // GET 取得使用者個人資料
 export const fetchProfile = async () => {
   try {
-    const res = await axios.get("/api/profile");
+    const res = await axios.get("/profile");
     return res.data;
   } catch (error) {
     console.error("fetchProfile 錯誤:", error);
@@ -18,7 +18,7 @@ export const fetchProfile = async () => {
 
 export const createProfileApi = async (data) => {
   try {
-    const res = await axios.post("/api/profile", data);
+    const res = await axios.post("/profile", data);
     return res.data;
   } catch (error) {
     console.error("createProfileApi 錯誤:", error);
@@ -28,7 +28,7 @@ export const createProfileApi = async (data) => {
 // Patch 更新使用者個人資料
 export const updateProfileApi = async (data) => {
   try {
-    const res = await axios.patch("/api/profile", data);
+    const res = await axios.patch("/profile", data);
     return res.data; // 只回傳user資料，不操作 store
   } catch (error) {
     console.error("updateProfileApi 錯誤:", error);
