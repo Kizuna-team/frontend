@@ -12,6 +12,8 @@ import ActivityList from "@/components/ActivityList.vue"
 import ActivityView from "@/components/ActivityForm.vue"
 import EditProfileView from "@/views/EditProfileView.vue";
 
+import { useUserStore } from "@/stores/user.js";
+
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -20,6 +22,7 @@ const router = createRouter({
       name: "Home",
       component: HomeView,
     },
+    // (0605 目前無用先註解 by蕭)
     // {
     //   path: "/profile",
     //   name: "googleProfile",
@@ -80,8 +83,23 @@ const router = createRouter({
       path: "/edit-profile",
       name: "EditProfile",
       component: EditProfileView,
+      meta: { requiresAuth: true },
     },
   ],
+});
+
+// 避免未登入直接進頁面
+router.beforeEach((to, from, next) => {
+  const userStore = useUserStore();
+
+  // 強制轉成布林值 判斷是否有token
+  const isLoggedIn = !!userStore.accessToken;
+
+  if (to.meta.requiresAuth && !isLoggedIn) {
+    next({ name: "Login" }); // 沒登入就導登入頁
+  } else {
+    next(); // 其他狀況放行
+  }
 });
 
 export default router;
