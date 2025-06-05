@@ -62,6 +62,7 @@ export const useUserProfileStore = defineStore("userProfile", () => {
       // 使用者填的資料（只有按按鈕才會執行這段）
       const res = await createProfileApi(newUserData);
       setProfile(res.user); // 存進狀態或 Pinia
+      return res.user; //回傳建立好的使用者
     } catch (err) {
       error.value = "建立個人資料失敗";
       console.error("建立個人資料失敗", err);
@@ -77,6 +78,7 @@ export const useUserProfileStore = defineStore("userProfile", () => {
     try {
       const data = await updateProfileApi(newUserData);
       setProfile(data.user); // 用最新資料覆蓋狀態
+      return data.user; //回傳最新資料給外部使用
     } catch (err) {
       error.value = "更新資料失敗";
       console.error("更新使用者資料失敗", err);
