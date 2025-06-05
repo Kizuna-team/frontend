@@ -9,12 +9,6 @@ import axios from "@/api/axios.js";
 export const fetchProfile = async () => {
   try {
     const res = await axios.get("/api/profile");
-    // const token = localStorage.getItem("token");
-    // const res = await axios.get("/api/profile", {
-    //   headers: {
-    //     Authorization: `Bearer ${token}`, // 帶上 token
-    //   },
-    // });
     return res.data;
   } catch (error) {
     console.error("fetchProfile 錯誤:", error);

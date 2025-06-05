@@ -1,4 +1,4 @@
-<!-- 避免淺拷貝導致的型別問題 -->
+<!-- 負責串接 Store 和子元件，處理送出邏輯 -->
 <script setup>
 import { ref, onMounted } from "vue";
 import { useUserProfileStore } from "@/stores/userProfile";
@@ -9,6 +9,7 @@ import PhotoUploader from "@/components/PhotoUploader.vue";
 
 const tab = ref("intro");
 const userProfileStore = useUserProfileStore();
+const userProfile = userProfileStore.userProfile;
 
 const cards = [
   { title: "星座" },
@@ -71,10 +72,29 @@ const interestOptions = [
   "閱讀",
 ];
 
-// 載入初始資料
+// 暫存資料表單 (不會存後端)
+// 初始值 為空或預設的暫存資料 淺拷貝巢狀物件問題
+const showFormData = ref({
+  ...userProfile.value,
+  interests: [...(userProfile.value.interests || [])], //以防興趣欄位沒填寫
+});
+
+// 還原、反悔成最後的儲存狀態
+const resetFormData = () => {
+  showFormData.value = {
+    ...userProfile.value,
+    interests: [...(userProfile.value.interests || [])],
+  };
+};
+
+// 載入初始資料、更新後的正式資料
 onMounted(async () => {
   try {
     await userProfileStore.getProfile();
+    showFormData.value = {
+      ...userProfile.value,
+      interests: [...(userProfile.value.interests || [])],
+    };
   } catch (error) {
     console.error("載入使用者資料失敗", error);
   }
@@ -82,25 +102,21 @@ onMounted(async () => {
 
 const updateHandler = async () => {
   try {
-    // 沒有id就是第一次建立用post
+    // 沒有id就是第一次建立用post，送出暫存資料更新正式資料
     if (!userProfileStore.userProfile.userId) {
-      await userProfileStore.createProfile();
+      await userProfileStore.createProfile(showFormData.value);
     } else {
-      await userProfileStore.updateProfile();
+      await userProfileStore.updateProfile(showFormData.value);
     }
+
+    // 更新成功 更新主資料同步暫存資料
+    showFormData.value = {
+      ...userProfile.value,
+      interests: [...(userProfile.value.interests || [])],
+    };
     alert("更新成功");
   } catch (error) {
-    // 如果錯誤是因為已存在（409），改用更新資料
-    if (error.response && error.response.status === 409) {
-      try {
-        await userProfileStore.updateProfile();
-        alert("更新成功");
-      } catch (updateError) {
-        alert(updateError.message || "更新失敗");
-      }
-    } else {
-      alert(userProfileStore.error || "更新失敗");
-    }
+    alert(userProfileStore.error || "更新失敗");
   }
 };
 
@@ -147,7 +163,7 @@ const handleUpload = () => {
       </div>
       <div v-if="tab === 'intro'">
         <!-- 個人資料表單 -->
-        <ProfileForm :tempFormData="userProfileStore.showFormData" />
+        <ProfileForm v-model="showFormData" />
         <!-- 星座 / MBTI / 工作選單 / 興趣 -->
         <div class="mb-6 space-y-3">
           <div
@@ -176,7 +192,7 @@ const handleUpload = () => {
               <div class="w-full overflow-y-auto max-h-60">
                 <MultiSelect
                   v-if="index === 0"
-                  v-model="userProfileStore.showFormData.zodiac"
+                  v-model="showFormData.zodiac"
                   :options="zodiacOptions"
                   labelKey="name"
                   valueKey="name"
@@ -185,21 +201,21 @@ const handleUpload = () => {
                 />
                 <MultiSelect
                   v-if="index === 1"
-                  v-model="userProfileStore.showFormData.mbti"
+                  v-model="showFormData.mbti"
                   :options="mbtiOptions"
                   :multiple="false"
                   :cols="3"
                 />
                 <MultiSelect
                   v-if="index === 2"
-                  v-model="userProfileStore.showFormData.job"
+                  v-model="showFormData.job"
                   :options="jobOptions"
                   :multiple="false"
                   :cols="5"
                 />
                 <MultiSelect
                   v-if="index === 3"
-                  v-model="userProfileStore.showFormData.interests"
+                  v-model="showFormData.interests"
                   :options="interestOptions"
                   :multiple="true"
                   :cols="3"
@@ -211,7 +227,7 @@ const handleUpload = () => {
         <!-- 表單按鈕們 -->
         <div class="flex justify-end gap-4 mt-6">
           <button
-            @click="userProfileStore.resetFormData()"
+            @click="resetFormData"
             class="w-full text-[#5b86b0] border-2 border-[#5b86b0] bg-white hover:bg-[#5b86b0] hover:text-white font-semibold py-2 rounded-lg transition"
           >
             還原編輯
