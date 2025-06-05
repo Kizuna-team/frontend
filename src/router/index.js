@@ -11,6 +11,7 @@ import MatchView from "../views/MatchView.vue";
 import ActivityList from "@/components/ActivityList.vue"
 import ActivityView from "@/components/ActivityForm.vue"
 import EditProfileView from "@/views/EditProfileView.vue";
+import GiftCheckoutView from "@/views/GiftCheckoutView.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -80,6 +81,11 @@ const router = createRouter({
       path: "/edit-profile",
       name: "EditProfile",
       component: EditProfileView,
+    },
+     {
+      path: "/gift-checkout",
+      name: "GiftCheckout",
+      component: GiftCheckoutView,
     },
   ],
 });
