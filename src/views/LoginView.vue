@@ -1,7 +1,7 @@
 <!-- 登入頁面 -->
 <script setup>
 import { useUserStore } from "../stores/user";
-import ProfileView from "./ProfileView.vue";
+import ProfileTwoView from "./ProfileTwoView.vue";
 
 const store = useUserStore();
 
@@ -104,7 +104,7 @@ const loginWithGoogle = () => {
       </a>
     </div>
   </div>
-  <ProfileView v-if="store.userId" />
+  <ProfileTwoView v-if="store.userId" />
 </template>
 
 <style></style>
