@@ -16,6 +16,7 @@ import BlessingView from "@/views/BlessingView.vue";
 import GiftCheckoutView from "@/views/GiftCheckoutView.vue";
 import ProductAdminView from "@/views/ProductAdminView.vue";
 import { useUserStore } from "@/stores/user.js";
+import ProfileTwoView from "@/views/ProfileTwoView.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
