@@ -2,6 +2,7 @@
 import { RouterLink, RouterView } from "vue-router";
 import { useUserStore } from "./stores/user";
 import router from "./router";
+import { ref, onMounted } from "vue";
 const store = useUserStore();
 
 const handleLogout = () => {
