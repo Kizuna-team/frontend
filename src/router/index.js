@@ -5,7 +5,7 @@ import LoginView from "@/views/LoginView.vue";
 import RegisterView from "@/views/RegisterView.vue";
 import HomeView from "@/views/HomeView.vue";
 import BrandView from "@/views/BrandView.vue";
-import ProfileView from "@/views/ProfileView.vue";
+// import ProfileView from "@/views/ProfileView.vue";
 import ChatRoomView from "@/views/ChatRoomView.vue";
 import MatchView from "../views/MatchView.vue";
 import ActivityList from "@/components/ActivityList.vue"
@@ -20,11 +20,11 @@ const router = createRouter({
       name: "Home",
       component: HomeView,
     },
-    {
-      path: "/profile",
-      name: "googleProfile",
-      component: ProfileView,
-    },
+    // {
+    //   path: "/profile",
+    //   name: "googleProfile",
+    //   component: ProfileView,
+    // },
     {
       path: "/product",
       name: "Product",
