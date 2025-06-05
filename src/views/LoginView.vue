@@ -1,7 +1,7 @@
 <!-- 登入頁面 -->
 <script setup>
 import { useUserStore } from "../stores/user";
-// import ProfileView from "./ProfileView.vue";
+// import ProfileView from "./ProfileView.vue"; (0605 目前無用先註解 by蕭)
 
 const store = useUserStore();
 
