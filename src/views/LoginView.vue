@@ -1,7 +1,7 @@
 <!-- 登入頁面 -->
 <script setup>
 import { useUserStore } from "../stores/user";
-import ProfileView from "./ProfileView.vue";
+// import ProfileView from "./ProfileView.vue";
 
 const store = useUserStore();
 
@@ -46,7 +46,7 @@ const loginWithGoogle = () => {
         type=""
         placeholder="常用 Email"
         class="w-[500px] block py-1.5 pr-3 pl-3 text-lg border border-gray-300 text-gray-900 rounded-[10px] placeholder:text-gray-400 focus:outline-none sm:text-sm/6"
-      >
+      />
       <!-- 密碼輸入框 -->
       <label class="block text-[#3E6588] font-bold text-l my-2">密碼</label>
       <input
@@ -54,7 +54,7 @@ const loginWithGoogle = () => {
         type="password"
         placeholder="6位數以上英數組合"
         class="w-[500px] block py-1.5 pr-3 pl-3 text-lg border border-gray-300 text-gray-900 rounded-[10px] placeholder:text-gray-400 focus:outline-none sm:text-sm/6"
-      >
+      />
       <!-- 登入按鈕 -->
       <button
         @click="handleLogin"

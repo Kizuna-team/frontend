@@ -7,7 +7,7 @@ import ProfileForm from "@/components/ProfileForm.vue";
 import MultiSelect from "@/components/MultiSelect.vue";
 import ProfilePhotos from "@/components/ProfilePhotos.vue";
 
-const tab = ref("intro");
+const tab = ref("INTRO");
 const userProfileStore = useUserProfileStore();
 // const userProfile = userProfileStore.userProfile 地雷
 
@@ -134,8 +134,10 @@ const handleUpload = async () => {
 </script>
 
 <template>
-  <div class="flex items-center justify-center min-h-screen bg-darkblue">
-    <div class="w-full p-12 m-4 bg-white shadow-xl rounded-2xl">
+  <div
+    class="flex items-center justify-center min-h-screen p-3 bg-darkblue rounded-2xl"
+  >
+    <div class="w-full p-12 m-4 bg-white shadow-xl rounded-2xl min-h-[1100px]">
       <!-- 分頁按鈕（卡片左上角） -->
       <div class="flex gap-2 mb-4">
         <button
@@ -228,7 +230,7 @@ const handleUpload = async () => {
         <div class="flex justify-end gap-4 mt-6">
           <button
             @click="resetFormData"
-            class="w-full text-[#5b86b0] border-2 border-[#5b86b0] bg-white hover:bg-[#5b86b0] hover:text-white font-semibold py-2 rounded-lg transition"
+            class="w-full py-2 font-semibold transition border-2 rounded-lg text-primary-100 border-darkblue hover:bg-darkblue hover:text-white"
           >
             還原編輯
           </button>
@@ -236,7 +238,7 @@ const handleUpload = async () => {
           <button
             @click="updateHandler"
             :disabled="userProfileStore.loading"
-            class="w-full bg-[#789fc6] hover:bg-[#5b86b0] text-white font-semibold py-2 rounded-lg transition"
+            class="w-full py-2 font-semibold transition border-2 rounded-lg text-primary-100 border-darkblue hover:bg-darkblue hover:text-white"
           >
             <span v-if="userProfileStore.loading">儲存中...</span>
             <span v-else>儲存變更</span>
@@ -249,7 +251,7 @@ const handleUpload = async () => {
         <ProfilePhotos ref="profilePhotosRef" />
         <button
           @click="handleUpload"
-          class="px-4 py-1 my-4 font-bold text-gray-500 bg-gray-100 rounded hover:bg-secondary hover:text-white"
+          class="w-full py-2 mx-2 my-5 font-semibold transition border-2 rounded-lg text-primary-100 border-darkblue hover:bg-darkblue hover:text-white"
         >
           完成
         </button>
