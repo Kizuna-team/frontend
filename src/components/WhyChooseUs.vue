@@ -44,13 +44,13 @@ const cards = [
 
     <!-- 右側卡片區 -->
     <div
-      class="relative flex flex-col items-start w-full max-w-lg py-20 space-y-10 md:w-1/2 md:-ml-2"
+      class="relative flex flex-col items-center w-full max-w-lg py-20 space-y-10 md:w-1/2 md:-ml-2"
     >
       <!-- 卡片們 -->
       <div
         v-for="(card, index) in cards"
         :key="card.title"
-        class="relative z-10 flex flex-col items-center w-[90%] -ml-11 max-w-md p-6 text-center transition-all duration-500 border shadow-md bg-white/80 border-darkblue/20 rounded-xl hover:bg-primary/10 hover:shadow-xl hover:scale-105 hover:-translate-y-2 md:items-start md:text-left fade-in-up"
+        class="relative z-10 flex flex-col items-center w-[90%] md:-ml-11 max-w-md p-6 text-center transition-all duration-500 border shadow-md bg-white/80 border-darkblue/20 rounded-xl hover:bg-primary/10 hover:shadow-xl hover:scale-105 hover:-translate-y-2 md:items-start md:text-left fade-in-up"
         :style="{ animationDelay: `${index * 0.3}s` }"
       >
         <h3 class="text-xl font-bold text-darkblue">{{ card.title }}</h3>
