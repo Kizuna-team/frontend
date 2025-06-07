@@ -2,6 +2,10 @@
 import axios from "../api/axios";
 import { defineStore } from "pinia";
 import { ref, reactive } from "vue";
+import { useToast } from "vue-toastification";
+
+const toast = useToast();
+
 
 export const useUserStore = defineStore("user", () => {
   // 初始化
@@ -75,10 +79,10 @@ export const useUserStore = defineStore("user", () => {
         error.response.data.message
       ) {
         console.error("登入失敗", error.response.data.message);
-        alert("登入失敗：" + error.response.data.message);
+        toast("登入失敗：" + error.response.data.message);
       } else {
         console.error("登入失敗", error.message);
-        alert("登入失敗：登入請求失敗：" + error.message);
+        toast("登入失敗：登入請求失敗：" + error.message);
       }
     }
   };

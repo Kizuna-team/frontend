@@ -1,5 +1,9 @@
 import axios from "axios";
 import { useUserStore } from "../stores/user.js";
+import { useToast } from "vue-toastification";
+
+const toast = useToast();
+
 
 const instance = axios.create({
   baseURL: "http://localhost:3000",
@@ -40,7 +44,7 @@ instance.interceptors.response.use(
         return instance(error.config);
       } catch (refreshError) {
         userStore.logout();
-        alert("請重新登入");
+        toast("請重新登入");
         return Promise.reject(refreshError);
       }
     }

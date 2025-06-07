@@ -6,6 +6,10 @@ import { useUserProfileStore } from "@/stores/userProfile";
 import ProfileForm from "@/components/ProfileForm.vue";
 import MultiSelect from "@/components/MultiSelect.vue";
 import PhotoUploader from "@/components/PhotoUploader.vue";
+import { useToast } from "vue-toastification";
+
+const toast = useToast();
+
 
 const tab = ref("intro");
 const userProfileStore = useUserProfileStore();
@@ -88,18 +92,18 @@ const updateHandler = async () => {
     } else {
       await userProfileStore.updateProfile();
     }
-    alert("更新成功");
+    toast("更新成功");
   } catch (error) {
     // 如果錯誤是因為已存在（409），改用更新資料
     if (error.response && error.response.status === 409) {
       try {
         await userProfileStore.updateProfile();
-        alert("更新成功");
+        toast("更新成功");
       } catch (updateError) {
-        alert(updateError.message || "更新失敗");
+        toast(updateError.message || "更新失敗");
       }
     } else {
-      alert(userProfileStore.error || "更新失敗");
+      toast(userProfileStore.error || "更新失敗");
     }
   }
 };

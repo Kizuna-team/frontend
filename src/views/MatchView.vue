@@ -4,7 +4,9 @@ import { ref, computed } from "vue";
 import UserCard from "@/components/UserCard.vue";
 import MatchBtn from "@/components/MatchBtn.vue";
 import UserIntro from "@/components/UserIntro.vue";
+import { useToast } from "vue-toastification";
 
+const toast = useToast();
 
 
 // user假資料
@@ -55,7 +57,7 @@ const nextUser = () => {
   if (currentIndex.value < maxIndex) {
     currentIndex.value++;
   } else {
-    alert("已經沒有更多使用者了！");
+    toast("已經沒有更多使用者了！");
   }
 };
 

@@ -7,6 +7,9 @@ import { computed, ref, onMounted } from "vue";
 import LoadingScreen from "./components/LoadingScreen.vue"; // 新增匯入
 
 
+import { useToast } from "vue-toastification";
+
+const toast = useToast();
 
 const store = useUserStore();
 // 拿到當前路由
@@ -18,7 +21,7 @@ const mainClass = computed(() => {
 
 const handleLogout = () => {
   store.logout();
-  alert("已登出");
+  toast("已登出");
   router.push("/login");
 };
 

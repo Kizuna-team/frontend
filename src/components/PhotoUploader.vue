@@ -1,6 +1,10 @@
 <script setup>
 import { ref, onMounted, defineExpose } from "vue";
 import { getPhotos, uploadPhoto, deletePhoto } from "@/api/photos";
+import { useToast } from "vue-toastification";
+
+const toast = useToast();
+
 
 const photoList = ref([
   { file: null, preview: "" },
@@ -70,7 +74,7 @@ const uploadAll = async () => {
 
   try {
     await Promise.all(uploadPromises);
-    alert("✅ 所有已選圖片都已上傳完成");
+    toast("✅ 所有已選圖片都已上傳完成");
   } catch (err) {
     console.error("上傳過程發生錯誤", err);
   }

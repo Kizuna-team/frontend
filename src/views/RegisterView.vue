@@ -2,6 +2,9 @@
 import { ref } from "vue";
 import { useUserStore } from "../stores/user";
 import { useRouter } from "vue-router";
+import { useToast } from "vue-toastification";
+
+const toast = useToast();
 
 const store = useUserStore();
 const router = useRouter();
@@ -14,7 +17,7 @@ const handleRegister = async () => {
   // debug
   // console.log('開始註冊', username.value);
   if (!username.value || !password.value) {
-    alert("請輸入帳號或密碼");
+    toast("請輸入帳號或密碼");
     return;
   }
 
@@ -23,7 +26,7 @@ const handleRegister = async () => {
     !/[0-9]/.test(password.value) ||
     password.value.length <= 6
   ) {
-    alert("密碼長度必須大於7，且包含英文及數字");
+    toast("密碼長度必須大於7，且包含英文及數字");
     return;
   }
 
@@ -31,10 +34,10 @@ const handleRegister = async () => {
   // debug
   // console.log(res);
   if (res.success) {
-    alert(res.message || "註冊成功，請登入");
+    toast(res.message || "註冊成功，請登入");
     router.push("/login"); // 註冊完成後 導回登入頁
   } else {
-    alert(`${res.message}${res.reason ? `\n原因:${res.reason}` : ""}`);
+    toast(`${res.message}${res.reason ? `\n原因:${res.reason}` : ""}`);
   }
 };
 </script>

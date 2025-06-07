@@ -2,22 +2,25 @@
 <script setup>
 import { useUserStore } from "../stores/user";
 import ProfileView from "./ProfileView.vue";
+import { useToast } from "vue-toastification";
+
+const toast = useToast();
 
 const store = useUserStore();
 
 const handleLogin = async () => {
   if (!store.username || !store.password) {
-    alert("請輸入帳號和密碼");
+    toast("請輸入帳號和密碼");
     return;
   }
   try {
     await store.login(store.username, store.password);
-    alert("登入成功");
+    toast("登入成功");
   } catch (error) {
     console.error("登入失敗", error);
     const msg = error.response?.data?.message || "登入請求失敗";
     const reason = error.response?.data?.reason || error.message;
-    alert(`登入失敗 失敗原因：${msg}:${reason}`);
+    toast(`登入失敗 失敗原因：${msg}:${reason}`);
   }
 };
 
