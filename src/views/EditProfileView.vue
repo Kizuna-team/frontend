@@ -1,14 +1,15 @@
-<!-- 避免淺拷貝導致的型別問題 -->
+<!-- 負責串接 Store 和子元件，處理送出邏輯 -->
 <script setup>
 import { ref, onMounted } from "vue";
 import { useUserProfileStore } from "@/stores/userProfile";
 
 import ProfileForm from "@/components/ProfileForm.vue";
 import MultiSelect from "@/components/MultiSelect.vue";
-import PhotoUploader from "@/components/PhotoUploader.vue";
+import ProfilePhotos from "@/components/ProfilePhotos.vue";
 
-const tab = ref("intro");
+const tab = ref("INTRO");
 const userProfileStore = useUserProfileStore();
+// const userProfile = userProfileStore.userProfile 地雷
 
 const cards = [
   { title: "星座" },
@@ -71,36 +72,43 @@ const interestOptions = [
   "閱讀",
 ];
 
-// 載入初始資料
+// 暫存資料表單 (不會存後端)
+// 初始值 為空或預設的暫存資料 淺拷貝巢狀物件問題
+const showFormData = ref({ ...userProfileStore.userProfile });
+
+// 還原、反悔成最後的儲存狀態
+const resetFormData = () => {
+  showFormData.value = { ...userProfileStore.userProfile };
+};
+
+// 載入初始資料、更新後的正式資料，更新完再同步回暫存資料
 onMounted(async () => {
-  try {
-    await userProfileStore.getProfile();
-  } catch (error) {
-    console.error("載入使用者資料失敗", error);
-  }
+  await userProfileStore.getProfile();
+  resetFormData();
 });
 
 const updateHandler = async () => {
   try {
-    // 沒有id就是第一次建立用post
+    let updatedUser;
+
+    // 沒有id就是第一次建立用post，送出暫存資料更新正式資料
     if (!userProfileStore.userProfile.userId) {
-      await userProfileStore.createProfile();
+      updatedUser = await userProfileStore.createProfile(showFormData.value);
     } else {
-      await userProfileStore.updateProfile();
+      updatedUser = await userProfileStore.updateProfile(showFormData.value);
     }
-    alert("更新成功");
+    // 更新資料後 需要把後端儲存成功的資料重新設回表單
+    // 拿的是普通物件，不是 ref .value 是 undefined
+    // await userProfileStore.getProfile(); 這行可能導致舊資料重新覆蓋
+    // resetFormData();
+    // 用最新資料更新畫面表單
+
+    console.log("updatedUser:", updatedUser); //  確認這邊不是 undefined
+    showFormData.value = { ...updatedUser };
+    alert("編輯成功");
   } catch (error) {
-    // 如果錯誤是因為已存在（409），改用更新資料
-    if (error.response && error.response.status === 409) {
-      try {
-        await userProfileStore.updateProfile();
-        alert("更新成功");
-      } catch (updateError) {
-        alert(updateError.message || "更新失敗");
-      }
-    } else {
-      alert(userProfileStore.error || "更新失敗");
-    }
+    console.error("updateHandler 發生錯誤：", error);
+    alert(userProfileStore.error || "更新失敗");
   }
 };
 
@@ -111,43 +119,53 @@ const foldToggle = (index) => {
 };
 
 // 照片區
-const photoUploaderRef = ref(null);
-const handleUpload = () => {
-  photoUploaderRef.value?.uploadAll();
+const profilePhotosRef = ref(null);
+const handleUpload = async () => {
+  try {
+    // const uploadedPhotos = await profilePhotosRef.value?.uploadAll();
+    // 上傳成功的資料更新進表單或送後端
+    profilePhotosRef.value?.uploadAll();
+    console.log(" 圖片上傳完成，更新進表單");
+  } catch (err) {
+    console.error("❌ 上傳失敗", err);
+    alert("圖片上傳失敗，請稍後再試");
+  }
 };
 </script>
 
 <template>
-  <div class="min-h-screen flex items-center justify-center bg-[#d1e3f5]">
-    <div class="bg-white p-12 rounded-2xl shadow-xl w-full m-4 min-h-[1100px]">
+  <div
+    class="flex items-center justify-center min-h-screen p-3 bg-darkblue rounded-2xl"
+  >
+    <div class="w-full p-12 m-4 bg-white shadow-xl rounded-2xl min-h-[1100px]">
       <!-- 分頁按鈕（卡片左上角） -->
       <div class="flex gap-2 mb-4">
         <button
           :class="
-            tab === 'intro'
-              ? 'bg-[#5b86b0] text-white'
+            tab === 'INTRO'
+              ? 'bg-accent text-white'
               : 'bg-gray-100 text-gray-500'
           "
           class="px-4 py-1 font-semibold rounded-md"
-          @click="tab = 'intro'"
+          @click="tab = 'INTRO'"
         >
           INTRO
         </button>
         <button
           :class="
-            tab === 'photo'
-              ? 'bg-[#5b86b0] text-white'
+            tab === 'PHOTO'
+              ? 'bg-accent text-white'
               : 'bg-gray-100 text-gray-500'
           "
           class="px-4 py-1 font-semibold rounded-md"
-          @click="tab = 'photo'"
+          @click="tab = 'PHOTO'"
         >
-          Photo
+          PHOTO
         </button>
       </div>
-      <div v-if="tab === 'intro'">
+      <div v-if="tab === 'INTRO'">
         <!-- 個人資料表單 -->
-        <ProfileForm :tempFormData="userProfileStore.showFormData" />
+        <ProfileForm v-model="showFormData" />
         <!-- 星座 / MBTI / 工作選單 / 興趣 -->
         <div class="mb-6 space-y-3">
           <div
@@ -176,7 +194,7 @@ const handleUpload = () => {
               <div class="w-full overflow-y-auto max-h-60">
                 <MultiSelect
                   v-if="index === 0"
-                  v-model="userProfileStore.showFormData.zodiac"
+                  v-model="showFormData.zodiac"
                   :options="zodiacOptions"
                   labelKey="name"
                   valueKey="name"
@@ -185,21 +203,21 @@ const handleUpload = () => {
                 />
                 <MultiSelect
                   v-if="index === 1"
-                  v-model="userProfileStore.showFormData.mbti"
+                  v-model="showFormData.mbti"
                   :options="mbtiOptions"
                   :multiple="false"
                   :cols="3"
                 />
                 <MultiSelect
                   v-if="index === 2"
-                  v-model="userProfileStore.showFormData.job"
+                  v-model="showFormData.job"
                   :options="jobOptions"
                   :multiple="false"
                   :cols="5"
                 />
                 <MultiSelect
                   v-if="index === 3"
-                  v-model="userProfileStore.showFormData.interests"
+                  v-model="showFormData.interests"
                   :options="interestOptions"
                   :multiple="true"
                   :cols="3"
@@ -211,8 +229,8 @@ const handleUpload = () => {
         <!-- 表單按鈕們 -->
         <div class="flex justify-end gap-4 mt-6">
           <button
-            @click="userProfileStore.resetFormData()"
-            class="w-full text-[#5b86b0] border-2 border-[#5b86b0] bg-white hover:bg-[#5b86b0] hover:text-white font-semibold py-2 rounded-lg transition"
+            @click="resetFormData"
+            class="w-full py-2 font-semibold transition border-2 rounded-lg text-primary-100 border-darkblue hover:bg-darkblue hover:text-white"
           >
             還原編輯
           </button>
@@ -220,24 +238,23 @@ const handleUpload = () => {
           <button
             @click="updateHandler"
             :disabled="userProfileStore.loading"
-            class="w-full bg-[#789fc6] hover:bg-[#5b86b0] text-white font-semibold py-2 rounded-lg transition"
+            class="w-full py-2 font-semibold transition border-2 rounded-lg text-primary-100 border-darkblue hover:bg-darkblue hover:text-white"
           >
             <span v-if="userProfileStore.loading">儲存中...</span>
             <span v-else>儲存變更</span>
           </button>
         </div>
       </div>
+
       <!-- PHOTO 頁面內容 -->
-      <div v-else-if="tab === 'photo'">
-        <!-- <ProfilePhotos /> -->
+      <div v-else-if="tab === 'PHOTO'" class="flex flex-col">
+        <ProfilePhotos ref="profilePhotosRef" />
         <button
           @click="handleUpload"
-          class="px-4 py-1 font-bold text-white bg-orange-400 rounded hover:bg-orange-500"
+          class="w-full py-2 mx-2 my-5 font-semibold transition border-2 rounded-lg text-primary-100 border-darkblue hover:bg-darkblue hover:text-white"
         >
           完成
         </button>
-
-        <PhotoUploader ref="photoUploaderRef" />
       </div>
     </div>
   </div>
