@@ -55,7 +55,7 @@ const events = [
 
 <template>
   <!-- 整體包裹區塊 -->
-  <section class="px-4 py-8 text-center text-gray-800 md:py-10">
+  <section class="px-4 py-8 text-center md:py-10">
     <!-- 標題區 -->
     <div
       class="flex flex-col items-center justify-center flex-1 px-4 pt-16 md:pt-18"
