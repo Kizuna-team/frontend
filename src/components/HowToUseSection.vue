@@ -1,79 +1,90 @@
 <template>
-  <section
-    class="flex flex-col items-center justify-between w-full min-h-[500px] md:min-h-[700px] gap-12 px-6 bg-white md:flex-row py-20 md:py-28 text-darkblue"
-  >
-    <!-- 左側圖片區 -->
-    <div class="w-full max-w-full py-20 md:w-1/2 md:px-16">
-      <img
-        src=""
-        alt="Kizuna Guide Illustration"
-        class="w-full max-w-md shadow-xl rounded-2xl"
-      />
-    </div>
-
-    <!-- 右側文字區 -->
-    <div class="w-full px-6 space-y-10 text-left md:w-1/2 md:px-28">
-      <h2
-        class="text-4xl font-extrabold leading-tight tracking-tight text-gray-900 md:text-6xl"
-      >
-        Get started with Kizuna
-        <span
-          class="block pt-2 pb-2 mt-4 text-3xl font-semibold text-secondary md:text-5xl"
-        >
-          展開你的人際探索之旅
-        </span>
-      </h2>
-
-      <p class="text-lg text-gray-700 md:text-xl">
-        第一次來？沒問題！三個步驟輕鬆展開探索旅程。
-        <br />
-        <span class="italic text-secondary">
+  <section class="bg-white py-14">
+    <div class="max-w-6xl px-6 mx-auto">
+      <!-- 副標 -->
+      <div class="mb-10 text-center">
+        <p class="text-xl font-medium text-gray-800 md:text-2xl">
+          第一次來？沒問題！三個步驟輕鬆展開探索旅程
+        </p>
+        <p class="mt-2 text-lg italic font-bold text-accent md:text-xl">
           New here? Let’s get you started in 3 simple steps!
-        </span>
-      </p>
+        </p>
+      </div>
 
-      <ul class="space-y-10 text-lg text-left">
-        <li class="flex items-start">
-          <span class="mr-4 text-2xl text-secondary" aria-label="建立個人檔案"
-            >👤</span
-          >
-          <div>
-            <p class="text-xl font-semibold text-gray-800">1. 展現真實自我</p>
-            <p class="mt-1 text-base text-gray-600">
+      <!-- 步驟區塊 -->
+      <div class="space-y-16">
+        <!-- Step 1 -->
+        <div
+          class="flex flex-col gap-8 pb-8 border-b border-gray-200 md:flex-row-reverse md:items-start md:justify-between"
+        >
+          <!-- Number -->
+          <div class="flex justify-center w-full md:w-1/2 md:justify-end">
+            <div class="text-[160px] font-bold leading-none text-primary">
+              01
+            </div>
+          </div>
+          <!-- 內容 -->
+          <div class="w-full max-w-md md:w-1/2">
+            <h4 class="text-2xl font-bold text-darkblue md:text-3xl">
+              展現真實自我
+            </h4>
+            <p class="mt-4 text-lg text-gray-700 md:text-xl">
               建立你的個人檔案，分享興趣與故事，讓他人認識真實的你。
             </p>
-            <p class="mt-1 text-sm italic text-gray-400">
+            <p class="mt-2 text-base italic text-secondary md:text-lg">
               Create a profile that reflects who you truly are.
             </p>
           </div>
-        </li>
+        </div>
 
-        <li class="flex items-start">
-          <span class="mr-4 text-2xl text-secondary">🎯</span>
-          <div>
-            <p class="text-xl font-semibold text-gray-800">2. 找到你的興趣圈</p>
-            <p class="mt-1 text-base text-gray-600">
+        <!-- Step 2 -->
+        <div
+          class="flex flex-col gap-8 pb-8 border-b border-gray-200 md:flex-row md:items-start md:justify-between"
+        >
+          <!-- Number -->
+          <div class="flex justify-center w-full md:w-1/2 md:justify-start">
+            <div class="text-[160px] font-bold leading-none text-secondary">
+              02
+            </div>
+          </div>
+          <!-- 內容 -->
+          <div class="w-full md:w-1/2">
+            <h4 class="text-2xl font-bold text-darkblue md:text-3xl">
+              找到你的興趣圈
+            </h4>
+            <p class="mt-4 text-lg text-gray-700 md:text-xl">
               探索活動、加入聚會，或自己發起一場精彩的聚會。
             </p>
-            <p class="mt-1 text-sm italic text-gray-400">
+            <p class="mt-2 text-base italic text-secondary md:text-lg">
               Discover events that match your vibe — or host your own.
             </p>
           </div>
-        </li>
+        </div>
 
-        <li class="flex items-start">
-          <span class="mr-4 text-2xl text-secondary">💬</span>
-          <div>
-            <p class="text-xl font-semibold text-gray-800">3. 開啟真實互動</p>
-            <p class="mt-1 text-base text-gray-600">
+        <!-- Step 3 -->
+        <div
+          class="flex flex-col gap-8 md:flex-row-reverse md:items-start md:justify-between"
+        >
+          <!-- Number -->
+          <div class="flex justify-center w-full md:w-1/2 md:justify-end">
+            <div class="text-[160px] font-bold leading-none text-accent">
+              03
+            </div>
+          </div>
+          <!-- 內容 -->
+          <div class="w-full md:w-1/2">
+            <h4 class="text-2xl font-bold text-darkblue md:text-3xl">
+              開啟真實互動
+            </h4>
+            <p class="mt-4 text-lg text-gray-700 md:text-xl">
               不只傳訊息，更讓對話延伸成真實連結。
             </p>
-            <p class="mt-1 text-sm italic text-gray-400">
+            <p class="mt-2 text-base italic text-secondary md:text-lg">
               Start real conversations that go beyond the screen.
             </p>
           </div>
-        </li>
-      </ul>
+        </div>
+      </div>
     </div>
   </section>
 </template>
