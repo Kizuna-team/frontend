@@ -36,6 +36,10 @@ const sendOrder = async () => {
     }
     // TODO : 付款完成後 (callback confirm) 才清空
     cartStore.clearCart();
+
+    console.log("跳轉到linepay掃描頁面，網址：", res.data.paymentUrl);
+    // 這行超重要：跳轉到 LINE Pay 頁面
+    window.location.href = res.data.paymentUrl;
   }catch(err){
     console.error("送禮失敗 請稍後再試 失敗原因:", err);
   }
