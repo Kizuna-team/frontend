@@ -1,31 +1,59 @@
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, computed } from "vue";
 import axios from "../api/axios.js";
 import { useCartStore } from "../stores/cart.js";
 
 const cartStore = useCartStore();
-
 const { addCart } = cartStore;
 
 const products = ref([]);
+const selectedCategory = ref("咖啡");
+const categories = ref(["全部", "咖啡", "飲料", "甜點"]);
+const searchKeyword = ref("");
 
+const filteredProducts = computed(() => {
+  let filtered = products.value;
+
+  //分類篩選
+  if (selectedCategory.value !== "全部") {
+    filtered = filtered.filter(
+      (product) => product.category === selectedCategory.value
+    );
+  }
+
+  return filtered;
+});
 onMounted(async () => {
   try {
     const res = await axios.get("/products");
     products.value = res.data;
   } catch (err) {
-    console.error("讀取商品失敗", err);
+    console.log("讀取商品失敗", err);
   }
 });
 </script>
 
 <template>
+  <div class="flex gap-4 mb-4">
+    <button
+      v-for="category in categories"
+      :key="category"
+      @click="selectedCategory = category"
+      :class="{
+        'bg-yellow-300': selectedCategory === category,
+        'bg-gray-200': selectedCategory !== category,
+      }"
+      class="px-4 py-2 rounded"
+    >
+      {{ category }}
+    </button>
+  </div>
   <input type="text" placeholder="輸入關鍵字搜尋商品" />
   <div>
     <h1 class="mb-4 text-xl font-bold text-center text-[#023047]">商品列表</h1>
     <div class="grid grid-cols-3 gap-4">
       <div
-        v-for="product in products"
+        v-for="product in filteredProducts"
         :key="product.id"
         class="p-4 mb-2 transition-transform shadow-xl hover:scale-105 hover:shadow-2xl rounded-[10px]"
       >
