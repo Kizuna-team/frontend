@@ -164,7 +164,5 @@ onUnmounted(() => {
 </template>
 
 <style>
-div {
-  /* position: ; */
-}
+
 </style>
