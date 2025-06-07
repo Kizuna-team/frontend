@@ -104,7 +104,7 @@ const loginWithGoogle = () => {
       </a>
     </div>
   </div>
-  <ProfileView v-if="store.userId" />
+  <!-- <ProfileView v-if="store.userId" /> (0607 目前無用先註解 by蕭)-->
 </template>
 
 <style></style>
