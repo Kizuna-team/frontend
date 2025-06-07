@@ -27,8 +27,12 @@ const sendOrder = async () => {
     });
 
     message.value = `送出成功，訂單編號:${res.data.id}`;
-    
+    console.log(message.value);
     cartStore.clearCart();
+
+    console.log("跳轉到linepay掃描頁面，網址：", res.data.paymentUrl);
+    // 這行超重要：跳轉到 LINE Pay 頁面
+    window.location.href = res.data.paymentUrl;
   }catch(err){
     console.error(err);
   }
@@ -59,7 +63,7 @@ const sendOrder = async () => {
         清空購物車
       </button>
       <p>總計: {{ cartStore.totalPrice }} 元</p>
-      <p>總計: {{ cartStore.totalQuantity }} 元</p>
+      <p>總計: {{ cartStore.totalQuantity }} 件商品</p>
     </div>
     <div class="text-right">
       <button
