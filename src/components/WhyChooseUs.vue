@@ -2,18 +2,19 @@
 const cards = [
   {
     title: "有趣的活動",
-    desc: "找不到想參加的活動？沒關係，自己發起也行！和同好一起展開精彩聚會。",
-    image: "/images/activity.svg",
+    descZh:
+      "找不到想參加的活動？沒關係，自己發起也行！和同好一起展開精彩聚會。",
+    descEn: "Can't find events? Start your own and meet like-minded people.",
   },
   {
     title: "即時聊天",
-    desc: "配對成功後立刻開啟專屬聊天室，輕鬆交流、不再錯過緣分。",
-    image: "/images/chat.svg",
+    descZh: "配對成功後立刻開啟專屬聊天室，輕鬆交流、不再錯過緣分。",
+    descEn: "Chat instantly after matching, never miss a connection.",
   },
   {
     title: "智能配對",
-    desc: "依你的興趣與行為推薦合適對象，主動邀請你互動、建立連結。",
-    image: "/images/match.svg",
+    descZh: "依你的興趣與行為推薦合適對象，主動邀請你互動、建立連結。",
+    descEn: "Get smart matches based on your interests and behavior.",
   },
 ];
 </script>
@@ -46,7 +47,6 @@ const cards = [
     <div
       class="relative flex flex-col items-center w-full max-w-lg py-20 space-y-10 md:w-1/2 md:-ml-2"
     >
-      <!-- 卡片們 -->
       <div
         v-for="(card, index) in cards"
         :key="card.title"
@@ -54,40 +54,9 @@ const cards = [
         :style="{ animationDelay: `${index * 0.3}s` }"
       >
         <h3 class="text-xl font-bold text-darkblue">{{ card.title }}</h3>
-        <p class="mt-2 text-sm text-gray-800">{{ card.desc }}</p>
+        <p class="mt-2 text-sm text-gray-800">{{ card.descZh }}</p>
+        <p class="mt-1 text-xs italic text-gray-500">{{ card.descEn }}</p>
       </div>
     </div>
   </section>
 </template>
-
-<style scoped>
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.fade-in-up {
-  opacity: 0;
-  animation: fadeInUp 0.8s ease-out forwards;
-}
-
-@keyframes float {
-  0%,
-  100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-10px);
-  }
-}
-
-.floating {
-  animation: float 3s ease-in-out infinite;
-}
-</style>
