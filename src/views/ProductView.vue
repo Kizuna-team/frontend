@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted, computed } from "vue";
+import { ref, onMounted,watch } from "vue";
 import axios from "../api/axios.js";
 import { useCartStore } from "../stores/cart.js";
 
@@ -7,11 +7,18 @@ const cartStore = useCartStore();
 const { addCart } = cartStore;
 
 const products = ref([]);
-const selectedCategory = ref("咖啡");
+const displayedProducts = ref([]);
+const selectedCategory = ref();
 const categories = ref(["全部", "咖啡", "飲料", "甜點"]);
 const searchKeyword = ref("");
+const isLoading = ref(false); // 加入 loading 狀態
+const searchMessage = ref(""); // 錯誤或提示訊息
 
-const filteredProducts = computed(() => {
+watch(selectedCategory, () => {
+  search();
+});
+
+const search = () => {
   let filtered = products.value;
 
   //分類篩選
@@ -21,39 +28,79 @@ const filteredProducts = computed(() => {
     );
   }
 
-  return filtered;
-});
+  //搜尋關鍵字
+  if (searchKeyword.value.trim() !== "") {
+    const keyword = searchKeyword.value.trim().toLowerCase();
+    filtered = filtered.filter(
+      (product) =>
+        product.name.toLowerCase().includes(keyword) ||
+        product.description.toLowerCase().includes(keyword)
+    );
+  }
+
+  return displayedProducts.value=filtered;
+};
+
 onMounted(async () => {
   try {
+    isLoading.value = true;
     const res = await axios.get("/products");
     products.value = res.data;
+    displayedProducts.value=res.data
   } catch (err) {
     console.log("讀取商品失敗", err);
+  } finally {
+    isLoading.value = false;
   }
 });
 </script>
 
 <template>
-  <div class="flex gap-4 mb-4">
+  <div class="flex justify-center gap-4 mb-4">
     <button
       v-for="category in categories"
       :key="category"
-      @click="selectedCategory = category"
+      @mouseover="selectedCategory = category"
       :class="{
-        'bg-yellow-300': selectedCategory === category,
-        'bg-gray-200': selectedCategory !== category,
+        'relative after:block after:h-[2px] after:bg-[#219ebc] after:w-[100%] after:absolute after:bottom-0 after:left-0 text-gray-600':
+          selectedCategory === category,
+        'text-gray-400': selectedCategory !== category,
       }"
-      class="px-4 py-2 rounded"
+      class="px-4 py-2 font-semibold rounded"
     >
       {{ category }}
     </button>
   </div>
-  <input type="text" placeholder="輸入關鍵字搜尋商品" />
+  <div class="flex items-center justify-center gap-2 my-10">
+    <input
+      type="text"
+      placeholder="輸入關鍵字搜尋商品"
+      v-model="searchKeyword"
+      @keyup.enter="search"
+      class="border border-gray-400 rounded-[20px] p-2 max-w-[600px] w-full outline-[#219ebc]"
+    />
+    <button @click="search">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke-width="1.5"
+        stroke="#219ebc"
+        class="size-8"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"
+        />
+      </svg>
+    </button>
+  </div>
   <div>
     <h1 class="mb-4 text-xl font-bold text-center text-[#023047]">商品列表</h1>
     <div class="grid grid-cols-3 gap-4">
       <div
-        v-for="product in filteredProducts"
+        v-for="product in displayedProducts"
         :key="product.id"
         class="p-4 mb-2 transition-transform shadow-xl hover:scale-105 hover:shadow-2xl rounded-[10px]"
       >
