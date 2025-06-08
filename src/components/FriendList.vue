@@ -1,16 +1,22 @@
 <script setup>
-import { ref, computed, watch, onMounted} from "vue"
+import { ref, computed, watch, onMounted } from "vue";
 import axios from "@/api/axios";
-const emit = defineEmits(["update:selected"])
 
-const searchText = ref("")
-const selected = ref([])
+const emit = defineEmits(["update:selected"]);
+
+const searchText = ref("");
+const selected = ref([]);
 const friends = ref([]);
+
+const userId = 1; 
 
 onMounted(async () => {
   try {
-    const res = await axios.get("/api/friends");
-    friends.value = res.data;
+    const res = await axios.get(`/api/friends?userId=${userId}`);
+    // 把 friend_name → name
+    friends.value = res.data.map((f) => ({
+      name: f.friend_name,
+    }));
   } catch (err) {
     console.error("❌ 撈好友失敗", err);
   }
@@ -18,14 +24,18 @@ onMounted(async () => {
 
 const filteredFriends = computed(() =>
   friends.value.filter((f) => f.name.includes(searchText.value))
-)
+);
 
-watch(selected, () => emit("update:selected", selected.value), { immediate: true })
+watch(
+  selected,
+  () => emit("update:selected", selected.value),
+  { immediate: true }
+);
 
 const toggleSelect = (i) => {
-  const idx = selected.value.indexOf(i)
-  idx === -1 ? selected.value.push(i) : selected.value.splice(idx, 1)
-}
+  const idx = selected.value.indexOf(i);
+  idx === -1 ? selected.value.push(i) : selected.value.splice(idx, 1);
+};
 </script>
 
 <template>
@@ -48,7 +58,11 @@ const toggleSelect = (i) => {
       'bg-white': !selected.includes(i)
     }"
   >
-    <img :src="friend.img" class="object-cover w-12 h-12 rounded-full" />
+    <!-- <img
+      :src="friend.image_url"
+      alt="頭像"
+      class="object-cover w-12 h-12 rounded-full"
+    /> -->
     <span class="ml-4 font-medium text-gray-800">{{ friend.name }}</span>
     <span
       v-if="selected.includes(i)"
