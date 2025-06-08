@@ -1,16 +1,20 @@
 <script setup>
-import { ref, computed, watch } from "vue"
+import { ref, computed, watch, onMounted} from "vue"
+import axios from "@/api/axios";
 const emit = defineEmits(["update:selected"])
 
 const searchText = ref("")
 const selected = ref([])
+const friends = ref([]);
 
-const friends = ref([
-  { name: "林小美", img: "https://placehold.co/50" },
-  { name: "陳阿明", img: "https://placehold.co/50" },
-  { name: "張大偉", img: "https://placehold.co/50" },
-  { name: "李小強", img: "https://placehold.co/50" },
-])
+onMounted(async () => {
+  try {
+    const res = await axios.get("/api/friends");
+    friends.value = res.data;
+  } catch (err) {
+    console.error("❌ 撈好友失敗", err);
+  }
+});
 
 const filteredFriends = computed(() =>
   friends.value.filter((f) => f.name.includes(searchText.value))
