@@ -17,6 +17,9 @@ import GiftCheckoutView from "@/views/GiftCheckoutView.vue";
 import ProductAdminView from "@/views/ProductAdminView.vue";
 import { useUserStore } from "@/stores/user.js";
 import ProfileTwoView from "@/views/ProfileTwoView.vue";
+import SubscriptionView from "@/views/SubscriptionView.vue";
+import MemberView from "@/views/MemberView.vue";
+
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -32,6 +35,20 @@ const router = createRouter({
     //   name: "googleProfile",
     //   component: ProfileView,
     // },
+    {
+      path: "/subscribe",
+      name: "Subscribe",
+      component: SubscriptionView,
+    },
+    {
+      path: "/member",
+      name: "Member",
+      component: MemberView,
+    },
+    {
+      path: "/profile",
+      component: ProfileTwoView,
+    },
     {
       path: "/product",
       name: "Product",
