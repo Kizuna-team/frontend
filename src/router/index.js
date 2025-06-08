@@ -81,6 +81,12 @@ const router = createRouter({
       name: "EditProfile",
       component: EditProfileView,
     },
+    {
+      path: "/:pathMatch(.*)*",
+      name: "NotFound",
+      component: () => import("@/views/NotFound.vue"),
+    },
+
   ],
 });
 
