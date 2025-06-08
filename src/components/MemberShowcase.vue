@@ -62,6 +62,7 @@ const members = [
 </template>
 
 <style scoped>
+/* 設定無限滑動動畫 */
 @keyframes slide {
   0% {
     transform: translateX(0%);

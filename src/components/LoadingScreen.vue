@@ -45,7 +45,7 @@
   background-size: 600% 600%;
   animation: gradient-move 10s ease infinite, mask-reveal 4s ease forwards,
     slide-up-fade-out 1s ease forwards;
-  animation-delay: 0s, 0s, 6s;
+  animation-delay: 0s, 0s, 4.2s;
   animation-fill-mode: forwards;
 
   /* 加遮罩漸變效果 */
@@ -86,9 +86,9 @@
   fill: transparent;
   stroke-dasharray: 1200;
   stroke-dashoffset: 1200;
-  animation: draw-stroke 4s ease forwards, scale-up 1s ease forwards,
-    fill-in 1s ease forwards;
-  animation-delay: 0s, 4s, 5s;
+  animation: draw-stroke 2.5s ease forwards, scale-up 0.8s ease forwards,
+    fill-in 0.6s ease forwards;
+  animation-delay: 0s, 2.5s, 3.3s;
   animation-fill-mode: forwards;
   transform-origin: center;
 }
