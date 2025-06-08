@@ -4,8 +4,8 @@ import { ref, computed } from "vue";
 import UserCard from "@/components/UserCard.vue";
 import MatchBtn from "@/components/MatchBtn.vue";
 import UserIntro from "@/components/UserIntro.vue";
-
-
+import { sendLike } from "@/api/like.js";
+import { sendSuperLike } from "@/api/superLike.js";
 
 // user假資料
 const users = ref([
@@ -59,21 +59,59 @@ const nextUser = () => {
   }
 };
 
-const likeFlag = (userId) => {
-  console.log("我喜歡對方：", userId);
-  nextUser(); // 自動切換到下一位
+// 配對成功 > Modal 顯示
+// 發送super like 成功 顯示剩餘次數
+const mutualLike = ref(false);
+const restSuperLikes = ref(null);
+
+const likeFlag = async (userId) => {
+  try {
+    const { matched, message } = await sendLike(userId);
+    if (matched) {
+      mutualLike.value = true;
+    }
+    alert(message); // 要換成動畫
+    nextUser(); // 自動切換到下一位
+  } catch (error) {
+    console.error("送出like發生錯誤", error);
+  }
 };
 
-const dislikeFlag = (userId) => {
-  console.log("我不喜歡對方：", userId);
-  nextUser(); // 一樣切換到下一位
+const dislikeFlag = async (userId) => {
+  try {
+    await sendLike(userId, 0);
+    nextUser();
+  } catch (error) {
+    console.error("使用者送出dislike發生錯誤", error);
+  }
+};
+
+const superLikeFlag = async (targetId) => {
+  try {
+    const { matched, remainingCount, message } = await sendSuperLike(targetId);
+    if (matched) {
+      mutualLike.value = true;
+      alert(message); // 要換成動畫
+    }
+    // 更新剩餘次數的 UI 或狀態
+    if (remainingCount !== undefined) {
+      restSuperLikes.value = remainingCount;
+      alert(`剩下${restSuperLikes.value}次`);
+    }
+    alert(message);
+    nextUser();
+  } catch (error) {
+    console.error("使用者送出super like發生錯誤", error);
+  }
 };
 
 // 待新增 const isMatchLocked = ref(false)
 </script>
 
 <template>
-  <main class="bg-[#E0E0E0] pt-6 flex items-center justify-around flex-col">
+  <main
+    class="rounded-lg bg-[#E0E0E0] pt-6 flex items-center justify-around flex-col"
+  >
     <!-- 顯示對象滑滑區 -->
     <UserCard
       :target-photos="currentUser.photos"
@@ -85,6 +123,7 @@ const dislikeFlag = (userId) => {
       :target-user="currentUser.id"
       @like="likeFlag"
       @dislike="dislikeFlag"
+      @superLike="superLikeFlag"
     />
 
     <!-- 個人資訊頁面收合區 -->
@@ -107,19 +146,19 @@ const dislikeFlag = (userId) => {
 <style scoped>
 .slide-fade-enter-active,
 .slide-fade-leave-active {
-  transition: max-height 0.4s ease, opacity 0.4s ease;
-  overflow: hidden;
+  transition: all 0.3s ease;
+  transform-origin: top;
 }
 
 .slide-fade-enter-from,
 .slide-fade-leave-to {
-  max-height: 0;
   opacity: 0;
+  transform: scaleY(0.95);
 }
 
 .slide-fade-enter-to,
 .slide-fade-leave-from {
-  max-height: 1000px; /* 根據內容估一個夠大的值即可 */
   opacity: 1;
+  transform: scaleY(1);
 }
 </style>

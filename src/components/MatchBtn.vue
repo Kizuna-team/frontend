@@ -6,13 +6,17 @@ const { targetUser } = defineProps({
     required: true,
   },
 });
-const emit = defineEmits(["like", "dislike"]);
+const emit = defineEmits(["like", "dislike", "superLike"]);
 const likeHandler = () => {
   emit("like", targetUser);
 };
 
 const dislikeHandler = () => {
   emit("dislike", targetUser);
+};
+
+const superLikeHandler = () => {
+  emit("superLike", targetUser);
 };
 </script>
 
@@ -36,7 +40,12 @@ const dislikeHandler = () => {
         />
       </svg>
     </button>
-    <button type="button" class="circle-wrap bg-[#f8f9fa] hover:bg-[#2c3e50]">
+
+    <button
+      type="button"
+      @click="superLikeHandler"
+      class="circle-wrap bg-[#f8f9fa] hover:bg-[#2c3e50]"
+    >
       <svg
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 24 24"
