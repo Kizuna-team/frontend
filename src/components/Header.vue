@@ -70,20 +70,6 @@ onUnmounted(() => {
         </RouterLink>
 
         <RouterLink
-          to="/chat"
-          class="p-4 text-lg leading-none transition hover:text-gray-300"
-          >聊天室</RouterLink
-        >
-
-        <RouterLink
-          to="/cart"
-          class="p-4 text-lg leading-none transition hover:text-gray-300"
-        >
-        
-          購物車
-        </RouterLink>
-
-        <RouterLink
           to="/activities"
           class="p-4 text-lg leading-none transition hover:text-gray-300"
           >活動</RouterLink
@@ -114,10 +100,46 @@ onUnmounted(() => {
           class="p-4 text-lg leading-none transition hover:text-gray-300"
           >註冊</RouterLink
         >
+        <!-- 聊天室 -->
+        <RouterLink
+          to="/chat"
+          class="p-2 text-lg leading-none transition hover:text-gray-300"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="currentColor"
+            class="size-7"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M4.804 21.644A6.707 6.707 0 0 0 6 21.75a6.721 6.721 0 0 0 3.583-1.029c.774.182 1.584.279 2.417.279 5.322 0 9.75-3.97 9.75-9 0-5.03-4.428-9-9.75-9s-9.75 3.97-9.75 9c0 2.409 1.025 4.587 2.674 6.192.232.226.277.428.254.543a3.73 3.73 0 0 1-.814 1.686.75.75 0 0 0 .44 1.223ZM8.25 10.875a1.125 1.125 0 1 0 0 2.25 1.125 1.125 0 0 0 0-2.25ZM10.875 12a1.125 1.125 0 1 1 2.25 0 1.125 1.125 0 0 1-2.25 0Zm4.875-1.125a1.125 1.125 0 1 0 0 2.25 1.125 1.125 0 0 0 0-2.25Z"
+              clip-rule="evenodd"
+            />
+          </svg>
+        </RouterLink>
+
+        <!-- 購物車 -->
+        <RouterLink
+          to="/cart"
+          class="p-4 text-lg leading-none transition hover:text-gray-300"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="currentColor"
+            class="size-7"
+          >
+            <path
+              d="M2.25 2.25a.75.75 0 0 0 0 1.5h1.386c.17 0 .318.114.362.278l2.558 9.592a3.752 3.752 0 0 0-2.806 3.63c0 .414.336.75.75.75h15.75a.75.75 0 0 0 0-1.5H5.378A2.25 2.25 0 0 1 7.5 15h11.218a.75.75 0 0 0 .674-.421 60.358 60.358 0 0 0 2.96-7.228.75.75 0 0 0-.525-.965A60.864 60.864 0 0 0 5.68 4.509l-.232-.867A1.875 1.875 0 0 0 3.636 2.25H2.25ZM3.75 20.25a1.5 1.5 0 1 1 3 0 1.5 1.5 0 0 1-3 0ZM16.5 20.25a1.5 1.5 0 1 1 3 0 1.5 1.5 0 0 1-3 0Z"
+            />
+          </svg>
+        </RouterLink>
       </template>
 
       <!-- 已登入顯示：帳號名稱 + 頭像選單 -->
-      <div class="flex items-center space-x-4" v-if="store.accessToken">
+      <div class="flex items-center space-x-4">
+        <!--v-if="store.accessToken" -->
         <div class="relative">
           <div
             class="flex items-center justify-center w-12 h-12 text-sm font-bold bg-[#ddedff] rounded-full text-[#7395BA] hover:bg-slate-300"
@@ -135,22 +157,63 @@ onUnmounted(() => {
             </div>
             <RouterLink
               to="/edit-profile"
-              class="block px-4 py-4 text-gray-600 border-b border-gray-300 hover:bg-gray-100"
+              class="flex items-center gap-2 px-4 py-4 text-gray-600 border-b border-gray-300 hover:bg-gray-100"
               @click="isDropdownOpen = false"
             >
-              <font-awesome-icon :icon="['fas', 'user-pen']" />
-              編輯個人檔案
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="1.5"
+                stroke="currentColor"
+                class="size-6"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10"
+                />
+              </svg>
+
+              <span class="whitespace-nowrap">編輯個人檔案</span>
             </RouterLink>
             <a
               href="#"
-              class="block px-4 py-4 text-gray-600 border-b border-gray-300 hover:bg-gray-100"
-              ><font-awesome-icon :icon="['fas', 'star']" /> 升級方案</a
+              class="flex items-center gap-2 px-4 py-4 text-gray-600 border-b border-gray-300 hover:bg-gray-100"
+              ><svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                stroke-width="1.5"
+                stroke="currentColor"
+                class="size-6"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M11.48 3.499a.562.562 0 0 1 1.04 0l2.125 5.111a.563.563 0 0 0 .475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 0 0-.182.557l1.285 5.385a.562.562 0 0 1-.84.61l-4.725-2.885a.562.562 0 0 0-.586 0L6.982 20.54a.562.562 0 0 1-.84-.61l1.285-5.386a.562.562 0 0 0-.182-.557l-4.204-3.602a.562.562 0 0 1 .321-.988l5.518-.442a.563.563 0 0 0 .475-.345L11.48 3.5Z"
+                />
+              </svg>
+              升級方案</a
             >
             <a
               href="#"
-              class="block px-4 py-4 text-gray-600 border-b border-gray-300 hover:bg-gray-100"
+              class="flex items-center gap-2 px-4 py-4 text-gray-600 border-b border-gray-300 hover:bg-gray-100"
               @click="handleLogout"
-              ><font-awesome-icon :icon="['fas', 'right-to-bracket']" /> 登出</a
+              ><svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="1.5"
+                stroke="currentColor"
+                class="size-5"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M8.25 9V5.25A2.25 2.25 0 0 1 10.5 3h6a2.25 2.25 0 0 1 2.25 2.25v13.5A2.25 2.25 0 0 1 16.5 21h-6a2.25 2.25 0 0 1-2.25-2.25V15m-3 0-3-3m0 0 3-3m-3 3H15"
+                />
+              </svg>
+              登出</a
             >
           </div>
         </div>
@@ -163,5 +226,4 @@ onUnmounted(() => {
   </main>
 </template>
 
-<style>
-</style>
+<style></style>
