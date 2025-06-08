@@ -9,6 +9,8 @@ export const useUserStore = defineStore("user", () => {
   const refreshToken = ref(localStorage.getItem("refreshToken") || "");
   const username = ref(localStorage.getItem("username") || "");
   const userId = ref(localStorage.getItem("userId") || "");
+  // 設定使用者的訂閱計畫
+  const subscriptionPlan = ref(localStorage.getItem("subscriptionPlan") || "free");
 
   const profile = reactive({
     gender: "",
@@ -129,6 +131,11 @@ export const useUserStore = defineStore("user", () => {
     }
   };
 
+   const setSubscription = (plan) => {
+      subscriptionPlan.value = plan;
+      localStorage.setItem("subscriptionPlan", plan);
+    };
+
   // 最後 return 出來
   return {
     accessToken,
@@ -142,5 +149,6 @@ export const useUserStore = defineStore("user", () => {
     logout,
     refresh,
     loginWithGoogle,
+    setSubscription,
   };
 });
