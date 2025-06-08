@@ -139,7 +139,7 @@ onUnmounted(() => {
 
       <!-- 已登入顯示：帳號名稱 + 頭像選單 -->
       <div class="flex items-center space-x-4">
-        <!--v-if="store.accessToken" -->
+        <!--v-if="store.accessToken" (顯示已登入)-->
         <div class="relative">
           <div
             class="flex items-center justify-center w-12 h-12 text-sm font-bold bg-[#ddedff] rounded-full text-[#7395BA] hover:bg-slate-300"
