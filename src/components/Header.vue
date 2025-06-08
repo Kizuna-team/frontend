@@ -221,9 +221,9 @@ onUnmounted(() => {
     </nav>
   </header>
 
-  <main class="max-w-[1000px] mx-auto mt-32">
+  <!-- <main class="max-w-[1000px] mx-auto mt-32">
     <RouterView />
-  </main>
+  </main> -->
 </template>
 
 <style></style>
