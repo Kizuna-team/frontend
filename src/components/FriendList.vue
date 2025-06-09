@@ -8,17 +8,28 @@ const searchText = ref("");
 const selected = ref([]);
 const friends = ref([]);
 
-const userId = 1; 
+const userId = localStorage.getItem("userId");
+console.log("✅ userId =", userId);
 
 onMounted(async () => {
+  if (!userId) {
+    alert(" 沒找到userId");
+    return;
+  }
+
   try {
     const res = await axios.get(`/api/friends?userId=${userId}`);
-    // 把 friend_name → name
     friends.value = res.data.map((f) => ({
       name: f.friend_name,
     }));
+
+    // ✅ 額外：撈邀請列表（被邀請才會看到）
+    const inviteRes = await axios.get(`/api/friends/requests?userId=${userId}`);
+    if (inviteRes.data.length > 0) {
+      alert("📬 你有新的好友邀請！");
+    }
   } catch (err) {
-    console.error("❌ 撈好友失敗", err);
+    console.error("❌ 撈好友或邀請失敗", err);
   }
 });
 
@@ -58,11 +69,6 @@ const toggleSelect = (i) => {
       'bg-white': !selected.includes(i)
     }"
   >
-    <!-- <img
-      :src="friend.image_url"
-      alt="頭像"
-      class="object-cover w-12 h-12 rounded-full"
-    /> -->
     <span class="ml-4 font-medium text-gray-800">{{ friend.name }}</span>
     <span
       v-if="selected.includes(i)"
