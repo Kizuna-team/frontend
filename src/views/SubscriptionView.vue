@@ -1,5 +1,6 @@
 <script setup>
-import SubscriptionCard from "@/components/SubscriptionCard.vue";
+import SubscribePlan from '@/components/SubscribePlan.vue'
+import Subscription from "@/components/SubscriptionCard.vue";
 import { UserIcon, FireIcon } from "@heroicons/vue/24/outline";
 </script>
 
