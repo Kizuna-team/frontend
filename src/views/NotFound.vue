@@ -4,7 +4,7 @@ import { RouterLink } from "vue-router";
 
 <template>
   <div
-    class="flex flex-col items-center justify-center min-h-screen text-center px-4"
+    class="flex flex-col items-center justify-center  text-center px-4"
   >
     <img
       src="@/assets/404.jpg"

@@ -7,10 +7,17 @@ import { computed, ref, onMounted } from "vue";
 import LoadingScreen from "./components/LoadingScreen.vue"; // 新增匯入
 
 
+// 拿到當前路由
+const route = useRoute();
 
 const store = useUserStore();
-// 拿到當前路由
-const route = useRoute()
+
+// 根據 meta 控制 404 頁面 Header 是否顯示
+const showHeader = computed(() => {
+  return !route.meta.hideHeader;
+});
+
+
 
 const mainClass = computed(() => {
   return route.path === '/' ? 'w-full' : 'max-w-[1000px] mx-auto mt-32'
@@ -37,8 +44,8 @@ onMounted(() => {
 
 
   <div>
-    <!-- Header 不需固定寬度，放在外層 -->
-    <Header />
+    <!-- Header：根據路由條件顯示 --> 
+     <Header v-if="showHeader" />
 
     <!-- Loading 畫面 -->
     <LoadingScreen v-if="isLoading" />
