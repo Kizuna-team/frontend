@@ -3,11 +3,12 @@ import { ref, onMounted, onUnmounted } from "vue";
 import { RouterLink, RouterView } from "vue-router";
 import { useUserStore } from "@/stores/user";
 import router from "@/router";
+import Toast from "../plugins/toast";
 const store = useUserStore();
 
 const handleLogout = () => {
   store.logout();
-  alert("已登出");
+  toast("已登出");
   router.push("/login");
 };
 
