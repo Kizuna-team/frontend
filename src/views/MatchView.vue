@@ -1,11 +1,12 @@
 <!-- 父組件 控制配對流程與切換使用者 -->
 <script setup>
-import { ref, computed } from "vue";
+import { ref, computed, onUnmounted } from "vue";
 import UserCard from "@/components/UserCard.vue";
 import MatchBtn from "@/components/MatchBtn.vue";
 import UserIntro from "@/components/UserIntro.vue";
 import { sendLike } from "@/api/like.js";
 import { sendSuperLike } from "@/api/superLike.js";
+import ConfirmModal from "../components/ConfirmModal.vue";
 
 const users = ref([
   {
@@ -168,54 +169,6 @@ const users = ref([
     interests: ["動物", "閱讀", "園藝"],
     intro: "嗨，我是小曼，歡迎一起聊寵物。",
   },
-  {
-    id: 11,
-    name: "小芸",
-    age: 27,
-    location: "基隆市",
-    zodiac: "水瓶座",
-    photos: [
-      "https://randomuser.me/api/portraits/women/65.jpg",
-      "https://randomuser.me/api/portraits/women/66.jpg",
-      "https://randomuser.me/api/portraits/women/67.jpg",
-    ],
-    bio: "喜歡下廚與手作甜點。",
-    mbti: "ESFJ",
-    interests: ["烘焙", "甜點", "手作"],
-    intro: "嗨，我是小芸，愛分享美味。",
-  },
-  {
-    id: 12,
-    name: "小涵",
-    age: 28,
-    location: "新竹縣",
-    zodiac: "天蠍座",
-    photos: [
-      "https://randomuser.me/api/portraits/women/68.jpg",
-      "https://randomuser.me/api/portraits/women/69.jpg",
-      "https://randomuser.me/api/portraits/women/70.jpg",
-    ],
-    bio: "熱愛旅遊，喜歡探索新地方。",
-    mbti: "ISTP",
-    interests: ["旅遊", "攝影", "美食"],
-    intro: "嗨，我是小涵，旅行是我的靈魂。",
-  },
-  {
-    id: 13,
-    name: "小莉",
-    age: 26,
-    location: "宜蘭縣",
-    zodiac: "摩羯座",
-    photos: [
-      "https://randomuser.me/api/portraits/women/71.jpg",
-      "https://randomuser.me/api/portraits/women/72.jpg",
-      "https://randomuser.me/api/portraits/women/73.jpg",
-    ],
-    bio: "喜歡運動與戶外活動。",
-    mbti: "ENTJ",
-    interests: ["運動", "健身", "瑜伽"],
-    intro: "嗨，我是小莉，運動讓我充滿活力。",
-  },
 ]);
 
 // 基本可顯示的使用者數量限制
@@ -233,6 +186,9 @@ const infoToggle = () => {
   infoBtnTxt.value = isShow.value ? "Hide Info" : "Show More";
 };
 
+const isCovering = ref(false);
+const confirmMessage = ref("");
+
 // 切換到上一位使用者
 const prevUser = () => {
   currentIndex.value =
@@ -246,36 +202,43 @@ const nextUser = () => {
   if (currentIndex.value < maxIndex) {
     currentIndex.value++;
   } else {
-    alert("滑完嚕 升級解鎖更多使用者");
+    isCovering.value = true;
+    startCountdown();
   }
 };
 
-// onMounted(async () => {
-//   try {
-//     const res = await fetch("/api/like");
-//     const data = await res.json();
-//     users.value = data;
-//   } catch (err) {
-//     console.error("無法取得使用者資料", err);
-//   }
-// });
+const closeCover = () => {
+  isCovering.value = false;
+  stopCountdown();
+};
+
+// 清理定時器
+onUnmounted(() => {
+  stopCountdown();
+});
 
 // 配對成功 > Modal 顯示
 // 發送super like 成功 顯示剩餘次數
 const mutualLike = ref(false);
 const restSuperLikes = ref(null);
-
+const confirmModal = ref(false);
 const likeFlag = async (userId) => {
   try {
     const { matched, message } = await sendLike(userId);
     if (matched) {
       mutualLike.value = true;
+      confirmModal.value = true;
+    } else {
+      alert(message); // 其他提示
     }
-    alert(message); // 要換成動畫
-    nextUser(); // 自動切換到下一位
   } catch (error) {
     console.error("送出like發生錯誤", error);
   }
+};
+
+const onConfirm = () => {
+  confirmModal.value = false;
+  nextUser();
 };
 
 const dislikeFlag = async (userId) => {
@@ -308,7 +271,33 @@ const superLikeFlag = async (targetId) => {
   }
 };
 
-// 待新增 const isMatchLocked = ref(false)
+const countdownText = ref("");
+let countdownInterval = null;
+
+const timeSetting = () => {
+  const now = new Date();
+  const tomorrow = new Date();
+  tomorrow.setDate(now.getDate() + 1);
+  tomorrow.setHours(0, 0, 0, 0);
+
+  const restTime = tomorrow - now;
+  const hours = String(Math.floor(restTime / 1000 / 60 / 60)).padStart(2, "0");
+  const minutes = String(Math.floor((restTime / 1000 / 60) % 60)).padStart(
+    2,
+    "0"
+  );
+  const seconds = String(Math.floor((restTime / 1000) % 60)).padStart(2, "0");
+  countdownText.value = `${hours}:${minutes}:${seconds}`;
+};
+
+const startCountdown = () => {
+  timeSetting();
+  countdownInterval = setInterval(timeSetting, 1000);
+};
+
+const stopCountdown = () => {
+  clearInterval(countdownInterval);
+};
 </script>
 
 <template>
@@ -328,7 +317,13 @@ const superLikeFlag = async (targetId) => {
       @dislike="dislikeFlag"
       @superLike="superLikeFlag"
     />
-
+    <!-- 只有成功配對時才顯示 Modal -->
+    <ConfirmModal
+      v-if="confirmModal"
+      :message="confirmMessage"
+      @confirm="onConfirm"
+      @cancel="confirmModal = false"
+    />
     <!-- 個人資訊頁面收合區 -->
     <section class="w-full pt-4 mt-4">
       <button
@@ -344,6 +339,18 @@ const superLikeFlag = async (targetId) => {
       </transition>
     </section>
   </main>
+  <!-- 滑完出現遮罩 -->
+  <div
+    v-if="isCovering"
+    class="absolute inset-0 z-50 flex flex-col items-center justify-center text-xl text-white bg-black bg-opacity-60"
+    @click="closeCover"
+  >
+    <p class="mb-4">滑完囉！解鎖倒數</p>
+    <p class="mb-4 text-lg">{{ countdownText }}</p>
+    <button class="px-4 py-2 text-black bg-white rounded hover:bg-[#ffb703]">
+      升級解鎖更多使用者
+    </button>
+  </div>
 </template>
 
 <style scoped>
