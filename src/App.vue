@@ -4,7 +4,6 @@ import { useUserStore } from "./stores/user";
 import router from "./router";
 import Header from "./components/Header.vue";
 import { computed, ref, onMounted } from "vue";
-import LoadingScreen from "./components/LoadingScreen.vue"; // 新增匯入
 
 const store = useUserStore();
 // 拿到當前路由
@@ -19,14 +18,6 @@ const handleLogout = () => {
   alert("已登出");
   router.push("/login");
 };
-
-const isLoading = ref(true);
-
-onMounted(() => {
-  setTimeout(() => {
-    isLoading.value = false;
-  }, 4500);
-});
 </script>
 
 <template>
@@ -101,10 +92,7 @@ onMounted(() => {
     </nav>
   </header>
 
-  <!-- LoadingScreen 元件 -->
-  <LoadingScreen v-if="isLoading" />
-
-  <main v-else>
+  <main>
     <RouterView />
   </main>
 </template>
