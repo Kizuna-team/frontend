@@ -8,8 +8,8 @@ import BrandView from "@/views/BrandView.vue";
 import ProfileView from "@/views/ProfileView.vue";
 import ChatRoomView from "@/views/ChatRoomView.vue";
 import MatchView from "../views/MatchView.vue";
-import ActivityList from "@/components/ActivityList.vue"
-import ActivityView from "@/components/ActivityForm.vue"
+import ActivityList from "@/components/ActivityList.vue";
+import ActivityView from "@/components/ActivityForm.vue";
 import EditProfileView from "@/views/EditProfileView.vue";
 
 const router = createRouter({
@@ -85,8 +85,8 @@ const router = createRouter({
       path: "/:pathMatch(.*)*",
       name: "NotFound",
       component: () => import("@/views/NotFound.vue"),
+      meta: { layout: "none" },
     },
-
   ],
 });
 

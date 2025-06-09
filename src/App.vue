@@ -100,4 +100,7 @@ onMounted(() => {
   <main v-else>
     <RouterView />
   </main>
+
+
+  
 </template>
