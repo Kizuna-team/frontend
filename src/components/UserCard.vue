@@ -17,14 +17,14 @@ const nextUser = () => emit("goNext");
     <!-- 上一輪按鈕 -->
     <button
       type="button"
-      class="opacity-50 circle-wrap bg-[#f8f9fa] hover:bg-[#fff] hover:shadow-lg"
+      class="bg-gray-200 bg-opacity-50 circle-wrap hover:bg-white hover:shadow-lg"
       @click="prevUser"
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"
         fill="none"
         viewBox="0 0 24 24"
-        stroke-width="2"
+        stroke-width="4"
         stroke="currentColor"
         class="size-6 text-primary"
       >
@@ -36,7 +36,7 @@ const nextUser = () => emit("goNext");
       </svg>
     </button>
     <!-- 使用者卡片區 -->
-    <div class="flex flex-wrap gap-3">
+    <div class="flex flex-wrap justify-center gap-3">
       <div
         v-for="photo in props.targetPhotos"
         :key="photo"
@@ -52,14 +52,14 @@ const nextUser = () => emit("goNext");
     <!-- 下一輪按鈕 -->
     <button
       type="button"
-      class="opacity-50 circle-wrap bg-[#f8f9fa] hover:bg-[#fff] hover:shadow-lg"
+      class="bg-gray-200 bg-opacity-50 circle-wrap hover:bg-white hover:shadow-lg"
       @click="nextUser"
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"
         fill="none"
         viewBox="0 0 24 24"
-        stroke-width="2"
+        stroke-width="4"
         stroke="currentColor"
         class="size-6 text-primary"
       >

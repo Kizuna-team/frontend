@@ -1,4 +1,6 @@
 <script setup>
+import { ref, nextTick } from "vue";
+
 // 傳入對方的 userId，接著對對方 貼上喜歡/不喜歡的標籤 通知給父組件
 const { targetUser } = defineProps({
   targetUser: {
@@ -6,17 +8,32 @@ const { targetUser } = defineProps({
     required: true,
   },
 });
+
 const emit = defineEmits(["like", "dislike", "superLike"]);
+const likeActive = ref(false);
+const dislikeActive = ref(false);
+const superLikeActive = ref(false);
+
 const likeHandler = () => {
+  likeActive.value = false;
   emit("like", targetUser);
 };
 
 const dislikeHandler = () => {
+  dislikeActive.value = false;
   emit("dislike", targetUser);
 };
 
-const superLikeHandler = () => {
+const superLikeHandler = async () => {
+  console.log("clicked");
+  superLikeActive.value = false;
+  await nextTick(); // 等待 DOM 移除動畫 class
+  superLikeActive.value = true;
   emit("superLike", targetUser);
+
+  setTimeout(() => {
+    superLikeActive.value = false; // 動畫結束後移除 class
+  }, 800);
 };
 </script>
 
@@ -25,7 +42,7 @@ const superLikeHandler = () => {
     <button
       type="button"
       @click="dislikeHandler"
-      class="circle-wrap bg-[#c0d7ec] transform hover:scale-125"
+      class="circle-wrap bg-[#E8E8E8] transform hover:scale-125"
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -40,28 +57,28 @@ const superLikeHandler = () => {
         />
       </svg>
     </button>
-
-    <button
-      type="button"
-      @click="superLikeHandler"
-      class="circle-wrap bg-[#f8f9fa] hover:bg-[#2c3e50]"
-    >
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        viewBox="0 0 24 24"
-        fill="currentColor"
-        class="w-10 h-10 text-pink-300"
+    <div :class="{ 'puff-out-center': superLikeActive }">
+      <button
+        type="button"
+        @click="superLikeHandler"
+        class="circle-wrap bg-[#fff]"
       >
-        <path
-          d="m11.645 20.91-.007-.003-.022-.012a15.247 15.247 0 0 1-.383-.218 25.18 25.18 0 0 1-4.244-3.17C4.688 15.36 2.25 12.174 2.25 8.25 2.25 5.322 4.714 3 7.688 3A5.5 5.5 0 0 1 12 5.052 5.5 5.5 0 0 1 16.313 3c2.973 0 5.437 2.322 5.437 5.25 0 3.925-2.438 7.111-4.739 9.256a25.175 25.175 0 0 1-4.244 3.17 15.247 15.247 0 0 1-.383.219l-.022.012-.007.004-.003.001a.752.752 0 0 1-.704 0l-.003-.001Z"
-        />
-      </svg>
-    </button>
-
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+          fill="currentColor"
+          class="w-10 h-10 text-pink-400"
+        >
+          <path
+            d="m11.645 20.91-.007-.003-.022-.012a15.247 15.247 0 0 1-.383-.218 25.18 25.18 0 0 1-4.244-3.17C4.688 15.36 2.25 12.174 2.25 8.25 2.25 5.322 4.714 3 7.688 3A5.5 5.5 0 0 1 12 5.052 5.5 5.5 0 0 1 16.313 3c2.973 0 5.437 2.322 5.437 5.25 0 3.925-2.438 7.111-4.739 9.256a25.175 25.175 0 0 1-4.244 3.17 15.247 15.247 0 0 1-.383.219l-.022.012-.007.004-.003.001a.752.752 0 0 1-.704 0l-.003-.001Z"
+          />
+        </svg>
+      </button>
+    </div>
     <button
       type="button"
       @click="likeHandler"
-      class="circle-wrap bg-[#c0d7ec] transform hover:scale-125"
+      class="circle-wrap bg-[#E8E8E8] transform hover:scale-125"
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -92,5 +109,43 @@ const superLikeHandler = () => {
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+/* superLike的彈跳動畫 */
+.puff-out-center {
+  -webkit-animation: puff-out-center 1s ease-in alternate forwards;
+  animation: puff-out-center 1s ease-in alternate forwards;
+}
+@-webkit-keyframes puff-out-center {
+  0% {
+    -webkit-transform: scale(1);
+    transform: scale(1);
+    -webkit-filter: blur(1px);
+    filter: blur(0px);
+    opacity: 1;
+  }
+  100% {
+    -webkit-transform: scale(2);
+    transform: scale(2);
+    -webkit-filter: blur(2px);
+    filter: blur(4px);
+    opacity: 0;
+  }
+}
+@keyframes puff-out-center {
+  0% {
+    -webkit-transform: scale(1);
+    transform: scale(1);
+    -webkit-filter: blur(1px);
+    filter: blur(0px);
+    opacity: 1;
+  }
+  100% {
+    -webkit-transform: scale(2);
+    transform: scale(2);
+    -webkit-filter: blur(2px);
+    filter: blur(4px);
+    opacity: 0;
+  }
 }
 </style>
