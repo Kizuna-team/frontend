@@ -36,7 +36,8 @@ onMounted(async () => {
     if (user.subscription_plan !== 1 && user.paid_at) {
       const paidAt = new Date(user.paid_at);
       const expire = new Date(paidAt);
-      expire.setTime(paidAt.getTime() + 30 * 24 * 60 * 60 * 1000); //才能算到時、分
+      // 測試用兩分鐘
+      expire.setTime(paidAt.getTime() + 2 * 60 * 1000);
       const yyyy = expire.getFullYear();
       const MM = String(expire.getMonth() + 1).padStart(2, "0");
       const dd = String(expire.getDate()).padStart(2, "0");
