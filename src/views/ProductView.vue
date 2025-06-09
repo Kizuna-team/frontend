@@ -2,10 +2,6 @@
 import { ref, onMounted, watch, computed } from "vue";
 import axios from "../api/axios.js";
 import { useCartStore } from "../stores/cart.js";
-import { Swiper, SwiperSlide } from "swiper/vue";
-import { Navigation } from "swiper/modules";
-import "swiper/css";
-import "swiper/css/navigation";
 import spinner from "../assets/spinner.svg";
 
 const cartStore = useCartStore();
@@ -13,13 +9,18 @@ const { addCart } = cartStore;
 
 const products = ref([]);
 const displayedProducts = ref([]);
-const selectedCategory = ref();
+const selectedCategory = ref("全部");
 const categories = ref(["全部", "咖啡", "飲料", "甜點"]);
 const searchKeyword = ref("");
 const isLoading = ref(true);
 
 watch(selectedCategory, () => {
   search();
+});
+
+const animationDuration = computed(() => {
+  const speedPerItem = 6; 
+  return topSellingProducts.value.length * speedPerItem;
 });
 
 const topSellingProducts = computed(() => {
@@ -98,34 +99,37 @@ onMounted(async () => {
       />
     </svg>
   </div>
-  <Swiper
-    :modules="[Navigation]"
-    :slides-per-view="4"
-    :space-between="20"
-    navigation
-    class="mb-6 mySwiper"
-  >
-    <SwiperSlide v-for="product in topSellingProducts" :key="product.id">
-      <div class="p-4 transition rounded-lg shadow-md hover:shadow-xl">
-        <img
-          :src="product.image_url"
-          class="object-cover w-full h-48 mb-2 rounded-lg"
-        />
-        <p class="mb-2 font-semibold text-center text-[#023047]">
-          {{ product.name }}
-        </p>
-        <p class="text-center text-[#219ebc] font-bold mb-2">
-          價格：{{ product.price }}
-        </p>
-        <p
-          class="mb-2 text-center w-40 py-1 bg-[#219ebc] text-white rounded-[20px] mx-auto"
-        >
-          銷售量：{{ product.sales }}
-        </p>
-      </div>
-    </SwiperSlide>
-  </Swiper>
-  <div class="flex justify-center gap-4 mb-4">
+  <div class="w-full mt-12 overflow-hidden">
+    <div
+    class="flex gap-6 w-max animate-slide"
+    :style="{ animationDuration: animationDuration + 's' }"
+    >
+    
+      <template v-for="repeat in 2" :key="repeat">
+        <div
+        v-for="(product, index) in topSellingProducts"
+        :key="`${repeat}-${index}`"
+        class="flex-shrink-0 w-52 ">
+          <div class="p-4 transition border rounded-lg">
+            <img
+              :src="product.image_url"
+              class="object-cover w-full h-[176px] mb-2 rounded-lg"
+            />
+            <p class="mb-2 font-semibold text-center text-[#023047]">
+              {{ product.name }}
+            </p>
+            <p class="text-center text-[#219ebc] font-bold mb-4">
+              價格：{{ product.price }}
+            </p>
+            <p class="text-center w-40 py-1 bg-[#219ebc] text-white rounded-[20px] mx-auto">
+              銷售量：{{ product.sales }}
+            </p>
+          </div>
+        </div>
+      </template>
+    </div>
+  </div>
+  <div class="flex justify-center gap-4 mt-4 mb-4">
     <button
       v-for="category in categories"
       :key="category"
@@ -173,9 +177,9 @@ onMounted(async () => {
       <div
         v-for="product in displayedProducts"
         :key="product.id"
-        class="p-4 mb-2 transition-transform shadow-xl hover:scale-105 hover:shadow-2xl rounded-[10px]"
+        class="p-4 mb-2 transition-transform shadow-xl hover:scale-105 hover:shadow-2xl rounded-[10px] "
       >
-        <div class="flex flex-col justify-between h-full">
+        <div class="flex flex-col justify-between h-full ">
           <!-- 上半部: 圖片 + 描述 -->
           <div class="mb-2">
             <img
@@ -271,5 +275,18 @@ onMounted(async () => {
 
 .loading-overlay {
   @apply fixed top-0 left-0 w-screen h-screen bg-black/30 flex items-center justify-center z-10;
+}
+
+@keyframes slide {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-slide {
+  animation: slide linear infinite;
 }
 </style>
