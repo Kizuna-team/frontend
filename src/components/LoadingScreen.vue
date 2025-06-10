@@ -41,10 +41,11 @@
 
 /* loading 畫面主樣式 */
 .loading-screen {
-  background: linear-gradient(-45deg, #023047, #219ebc, #8ecae6, #ffb703);
+  background: linear-gradient(-45deg, #000000, #023047, #1b2b34, #0f0f0f);
   background-size: 600% 600%;
-  animation: gradient-move 10s ease infinite, slide-up-fade-out 1s ease forwards;
-  animation-delay: 0s, 6s; /* 第一個是背景，第二個是離場 */
+  animation: gradient-move 10s ease infinite, mask-reveal 4s ease forwards,
+    slide-up-fade-out 1s ease forwards;
+  animation-delay: 0s, 0s, 4.2s;
   animation-fill-mode: forwards;
 
   /* 加遮罩漸變效果 */
@@ -59,9 +60,6 @@
   -webkit-mask-size: 200% 100%;
   -webkit-mask-position: 0% 0%;
   -webkit-mask-repeat: no-repeat;
-  animation: gradient-move 10s ease infinite, mask-reveal 4s ease forwards,
-    slide-up-fade-out 1s ease forwards;
-  animation-delay: 0s, 0s, 6s;
 }
 
 /* 文字動畫 */
@@ -88,14 +86,14 @@
   fill: transparent;
   stroke-dasharray: 1200;
   stroke-dashoffset: 1200;
-  animation: draw-stroke 4s ease forwards, scale-up 1s ease forwards,
-    fill-in 1s ease forwards;
-  animation-delay: 0s, 4s, 5s;
+  animation: draw-stroke 2.5s ease forwards, scale-up 0.8s ease forwards,
+    fill-in 0.6s ease forwards;
+  animation-delay: 0s, 2.5s, 3.3s;
   animation-fill-mode: forwards;
   transform-origin: center;
 }
 
-/* 畫面淡出 + 上滑動畫 */
+/* 淡出 + 上滑 */
 @keyframes slide-up-fade-out {
   0% {
     opacity: 1;
@@ -107,7 +105,7 @@
   }
 }
 
-/* 遮罩動畫 */
+/* 遮罩 reveal */
 @keyframes mask-reveal {
   0% {
     -webkit-mask-position: 0% 0%;
@@ -117,13 +115,13 @@
   }
 }
 
-/* 文字放大動畫 */
+/* 放大動畫 */
 @keyframes scale-up {
   0% {
     transform: scale(1);
   }
   100% {
-    transform: scale(1.15); /* 放大15% */
+    transform: scale(1.15);
   }
 }
 </style>

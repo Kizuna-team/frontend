@@ -1,4 +1,8 @@
 <script setup>
+import AOS from "aos";
+import "aos/dist/aos.css";
+import { onMounted } from "vue";
+
 const cards = [
   {
     title: "有趣的活動",
@@ -17,6 +21,14 @@ const cards = [
     descEn: "Get smart matches based on your interests and behavior.",
   },
 ];
+
+onMounted(() => {
+  AOS.init({
+    duration: 600,
+    easing: "ease-out",
+    once: false,
+  });
+});
 </script>
 
 <template>
@@ -24,7 +36,10 @@ const cards = [
     class="flex flex-col items-center justify-between w-full min-h-screen gap-12 px-6 bg-white md:flex-row py-36 text-darkblue"
   >
     <!-- 左側文字區 -->
-    <div class="w-full px-6 space-y-8 text-left md:w-1/2 md:px-28">
+    <div
+      class="w-full px-6 space-y-8 text-left md:w-1/2 md:px-28"
+      data-aos="fade-up"
+    >
       <h2 class="text-4xl font-bold tracking-tight md:text-6xl">
         為什麼選擇我們？
         <br />
@@ -50,8 +65,9 @@ const cards = [
       <div
         v-for="(card, index) in cards"
         :key="card.title"
-        class="relative z-10 flex flex-col items-center w-[90%] md:-ml-11 max-w-md p-6 text-center transition-all duration-500 border shadow-md bg-white/80 border-darkblue/20 rounded-xl hover:bg-primary/10 hover:shadow-xl hover:scale-105 hover:-translate-y-2 md:items-start md:text-left fade-in-up"
-        :style="{ animationDelay: `${index * 0.3}s` }"
+        class="relative z-10 flex flex-col items-center w-[90%] md:-ml-11 max-w-md p-6 text-center border shadow-md bg-white/80 border-darkblue/20 rounded-xl transform transition-all duration-300 hover:bg-primary/10 hover:scale-105"
+        data-aos="zoom-in"
+        :data-aos-delay="index * 300"
       >
         <h3 class="text-xl font-bold text-darkblue">{{ card.title }}</h3>
         <p class="mt-2 text-sm text-gray-800">{{ card.descZh }}</p>
