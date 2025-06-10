@@ -1,9 +1,10 @@
 <script setup>
 import { ref, onMounted, onUnmounted } from "vue";
-import { RouterLink, RouterView } from "vue-router";
+import { RouterLink, RouterView  } from "vue-router";
 import { useUserStore } from "@/stores/user";
 import router from "@/router";
 const store = useUserStore();
+
 
 const handleLogout = () => {
   store.logout();
@@ -220,10 +221,8 @@ onUnmounted(() => {
       </div>
     </nav>
   </header>
+  
 
-  <!-- <main class="max-w-[1000px] mx-auto mt-32">
-    <RouterView />
-  </main> -->
 </template>
 
 <style></style>
