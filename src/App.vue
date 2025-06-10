@@ -9,6 +9,11 @@ const store = useUserStore();
 // 拿到當前路由
 const route = useRoute();
 
+// 根據 meta 控制 404 頁面 Header 是否顯示
+const showHeader = computed(() => {
+  return !route.meta.hideHeader;
+});
+
 const mainClass = computed(() => {
   return route.path === "/" ? "w-full" : "max-w-[1000px] mx-auto mt-32";
 });
@@ -22,8 +27,8 @@ const handleLogout = () => {
 
 <template>
   <div>
-    <!-- Header 不需固定寬度，放在外層 -->
-    <Header />
+    <!-- Header：根據路由條件顯示 -->
+    <Header v-if="showHeader" />
 
     <!-- 根據路由決定是否要限制寬度 -->
     <main :class="mainClass">
