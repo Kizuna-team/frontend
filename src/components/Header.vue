@@ -6,9 +6,8 @@ import router from "@/router";
 import LiquidNavLink from "@/components/LiquidGlass.vue";
 import { useCartStore } from '@/stores/cart.js';
 const cartStore = useCartStore();
-const route = useRoute();
 const store = useUserStore();
-
+const route = useRoute();
 
 // 判斷是否為非fixed頁面（聊天頁面）
 const isSpecialPage = computed(() => {
@@ -16,6 +15,7 @@ const isSpecialPage = computed(() => {
   // 如果有多個頁面需要非 fixed，可以這樣寫：
   // return ['/chat', '/special-page'].includes(route.path);
 });
+
 
 const handleLogout = () => {
   store.logout();
