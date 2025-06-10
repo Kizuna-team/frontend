@@ -11,7 +11,7 @@ import MatchView from "../views/MatchView.vue";
 import ActivityList from "@/components/ActivityList.vue";
 import ActivityView from "@/components/ActivityForm.vue";
 import EditProfileView from "@/views/EditProfileView.vue";
-
+import MatchCardView from "@/views/MatchCardView.vue";
 import { useUserStore } from "@/stores/user.js";
 
 const router = createRouter({
@@ -52,6 +52,12 @@ const router = createRouter({
       path: "/chat",
       name: "ChatRoom",
       component: ChatRoomView,
+    },
+    // 測試 MatchCardView
+    {
+      path: "/match-card",
+      name: "MatchCard",
+      component: MatchCardView,
     },
     {
       path: "/match",
