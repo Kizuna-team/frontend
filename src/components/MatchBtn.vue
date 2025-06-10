@@ -26,14 +26,13 @@ const dislikeHandler = () => {
 
 const superLikeHandler = async () => {
   superLikeActive.value = false;
+  await nextTick();
+  superLikeActive.value = true;
 
-  nextTick(() => {
-    superLikeActive.value = true;
-    setTimeout(() => {
-      superLikeActive.value = false; // 動畫結束後移除 class
-    }, 800);
-  });
-  emit("superLike", targetUser);
+  setTimeout(() => {
+    superLikeActive.value = false;
+    emit("superLike", targetUser); // 動畫結束後通知父組件
+  }, 800);
 };
 </script>
 
