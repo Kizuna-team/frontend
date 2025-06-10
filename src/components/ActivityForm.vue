@@ -5,9 +5,11 @@ import { useRoute } from "vue-router";
 import { storeToRefs } from "pinia";
 const store = useActivityStore();
 const { loading, error, selectedActivity } = storeToRefs(store);
-const { fetchActivityById, updateActivity,createActivity,deleteActivity } = store;
+const { fetchActivityById, updateActivity, createActivity, deleteActivity } =
+  store;
 
 const route = useRoute();
+const activityId = route.params.id;
 
 const isEditMode = computed(() => route.name === "activityEdit"); //computed
 const formTitle = computed(() => (isEditMode.value ? "編輯活動" : "新增活動"));
@@ -20,7 +22,13 @@ const form = ref({
 });
 
 const today = new Date().toISOString().split("T")[0];
+const imageFile = ref(null);
 
+// 處理使用者選檔案
+function handleFileChange(event) {
+  const file = event.target.files[0];
+  imageFile.value = file;
+}
 
 watch(
   () => route.name,
@@ -54,41 +62,48 @@ watch(
 );
 
 async function handleSubmit() {
-  if (isEditMode.value) {
-    try {
-      const id = parseInt(route.params.id);
-      await updateActivity(id, form.value); 
-      alert("活動已更新！");
-    } catch (err) {
-      console.log("更新活動時發生錯誤", err);
-      alert("更新失敗，請稍後再試");
-    }
-  } else {
-    try {
-    await createActivity(form.value);
-    alert("活動已建立！");
-  } catch (err) {
-    console.log("建立活動時發生錯誤", err);
-    alert("建立失敗，請稍後再試");
+  // 1. 建立 FormData 物件
+  const formData = new FormData();
+  formData.append("title", form.value.title);
+  formData.append("location", form.value.location);
+  formData.append("date", form.value.date);
+  formData.append("description", form.value.description);
+  formData.append("createdBy", form.value.createdBy);
+  if (imageFile.value) {
+    formData.append("image", imageFile.value); // 圖片也放進去
   }
+
+  try {
+    if (isEditMode.value) {
+      const id = parseInt(route.params.id);
+      await updateActivity(id, formData); // 要用 FormData
+      alert("活動已更新！");
+    } else {
+      await createActivity(formData); // 要用 FormData
+      alert("活動已建立！");
+    }
+  } catch (err) {
+    console.log("提交活動時發生錯誤", err);
+    alert(isEditMode.value ? "更新失敗" : "建立失敗");
   }
 }
 
-async function handleDelete(){
-    try {
-      const id = parseInt(route.params.id);
-      await deleteActivity(id, form.value); 
-      alert("活動已刪除！");
-    } catch (err) {
-      console.log("刪除活動失敗", err);
-      alert("刪除失敗，請稍後再試");
-    }
+async function handleDelete() {
+  try {
+    const id = parseInt(route.params.id);
+    await deleteActivity(id, form.value);
+    alert("活動已刪除！");
+  } catch (err) {
+    console.log("刪除活動失敗", err);
+    alert("刪除失敗，請稍後再試");
+  }
 }
 </script>
 
 <template>
   <p>{{ formTitle }}</p>
   <form @submit.prevent="handleSubmit">
+      <!-- 主辦人：<span class="text-gray-400">{{ userStore.username }}</span> -->
     <div>
       <label for="createdBy">主辦人：</label>
       <input id="createdBy" v-model="form.createdBy" placeholder="請輸入名字" />
@@ -96,6 +111,15 @@ async function handleDelete(){
     <div>
       <label for="title">活動標題：</label>
       <input id="title" v-model="form.title" placeholder="請輸入活動標題" />
+    </div>
+    <div>
+      <label for="image">活動圖片：</label>
+      <input
+        id="image"
+        type="file"
+        @change="handleFileChange"
+        accept="image/*"
+      />
     </div>
     <div>
       <label for="location">活動地點：</label>
@@ -107,7 +131,7 @@ async function handleDelete(){
     </div>
     <div>
       <label for="date">活動日期：</label>
-      <input id="date" v-model="form.date" type="date" :min="today"/>
+      <input id="date" v-model="form.date" type="date" :min="today" />
     </div>
     <div>
       <label for="description">活動描述：</label>
