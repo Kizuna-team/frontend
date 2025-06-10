@@ -1,35 +1,3 @@
-<template>
-  <div class="card-container">
-    <div
-      v-for="(card, index) in visibleCards"
-      :key="card.id"
-      class="card"
-      :style="cardStyle(index)"
-      @pointerdown="startDrag($event, index)"
-    >
-      <img
-        :src="`/matchCard/${card.image}`"
-        class="card-image"
-        draggable="false"
-      />
-    </div>
-
-    <!-- 右滑的 Lottie 動畫效果 -->
-    <DotLottieVue
-      v-if="showLikeAnimation"
-      class="like-animation"
-      style="height: 200px; width: 200px"
-      autoplay
-      loop
-      src="https://path-to-lottie.lottie"
-    />
-
-    <p v-if="visibleCards.length === 0" class="mt-5 text-center text-gray-500">
-      卡片已用完 🎉
-    </p>
-  </div>
-</template>
-
 <script>
 import { ref } from "vue";
 import { DotLottieVue } from "@lottiefiles/dotlottie-vue";
@@ -45,7 +13,6 @@ export default {
       { id: 5, image: "matchCard5.jpg" },
       { id: 6, image: "matchCard6.jpg" },
       { id: 7, image: "matchCard7.jpg" },
-      // 更多卡片……
     ]);
 
     const visibleCards = ref([...allCards.value]);
@@ -53,9 +20,14 @@ export default {
     const offsetX = ref(0);
     const isDragging = ref(false);
     const showLikeAnimation = ref(false);
+    const showDislikeAnimation = ref(false);
+
+    const onAnimationComplete = () => {
+      showLikeAnimation.value = false;
+    };
 
     const startDrag = (event, index) => {
-      event.preventDefault(); // 阻止預設拖曳行為
+      event.preventDefault();
       activeIndex.value = index;
       offsetX.value = 0;
       isDragging.value = true;
@@ -71,25 +43,42 @@ export default {
       };
 
       const releaseCard = (direction) => {
-        offsetX.value = direction * 1000; // 飛出螢幕的距離
+        // 播動畫
+        if (direction === 1) {
+          showLikeAnimation.value = true;
+        } else {
+          showDislikeAnimation.value = true;
+        }
+
         isDragging.value = false;
+
         setTimeout(() => {
-          visibleCards.value.splice(index, 1);
+          visibleCards.value.splice(activeIndex.value, 1);
           activeIndex.value = null;
           offsetX.value = 0;
+
+          // 隱藏動畫（動畫時間約 800ms 可依實際調整）
           showLikeAnimation.value = false;
-        }, 500); // 500ms 的飛出動畫
+          showDislikeAnimation.value = false;
+        }, 800);
       };
 
       const onEnd = () => {
         cardEl.releasePointerCapture(pointerId);
-        const threshold = 80; // 降低滑動換卡的閥值
+        const threshold = 80;
         if (Math.abs(offsetX.value) > threshold) {
           const direction = offsetX.value > 0 ? 1 : -1;
           if (direction === 1) {
             showLikeAnimation.value = true;
+            setTimeout(() => {
+              releaseCard(direction);
+            }, 300);
+          } else {
+            showDislikeAnimation.value = true;
+            setTimeout(() => {
+              releaseCard(direction);
+            }, 300);
           }
-          releaseCard(direction);
         } else {
           isDragging.value = false;
           offsetX.value = 0;
@@ -142,47 +131,68 @@ export default {
       offsetX,
       isDragging,
       showLikeAnimation,
+      showDislikeAnimation,
       startDrag,
       cardStyle,
+      onAnimationComplete,
     };
   },
 };
 </script>
 
-<style scoped>
-.card-container {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 320px;
-  height: 520px;
-  user-select: none; /* 禁止選取 */
-}
-.card {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  border-radius: 20px;
-  background-color: white;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: grab;
-}
-.card-image {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  border-radius: 20px;
-  pointer-events: none; /* 防止圖片自身拖曳 */
-}
-.like-animation {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  pointer-events: none;
-}
-</style>
+<template>
+  <div
+    class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 h-[520px] select-none"
+  >
+    <!-- 卡片 -->
+    <div
+      v-for="(card, index) in visibleCards"
+      :key="card.id"
+      class="absolute w-full h-full rounded-[20px] bg-white shadow-md flex items-center justify-center cursor-grab"
+      :style="cardStyle(index)"
+      @pointerdown="startDrag($event, index)"
+    >
+      <img
+        :src="`/matchCard/${card.image}`"
+        class="w-full h-full object-cover rounded-[20px] pointer-events-none"
+        draggable="false"
+      />
+    </div>
+
+    <!-- 喜歡動畫（右滑） -->
+    <DotLottieVue
+      v-if="showLikeAnimation"
+      autoplay
+      loop="false"
+      class="absolute z-50 pointer-events-none"
+      style="
+        width: 80%;
+        height: 80%;
+        /* top: 20%; */
+        left: 50%;
+        transform: translateX(-50%);
+      "
+      src="https://lottie.host/cbc45ccd-9052-4345-a7ed-a06054e3c59a/80ofaH0avC.lottie"
+    />
+
+    <!-- 不喜歡動畫（左滑） -->
+    <DotLottieVue
+      v-if="showDislikeAnimation"
+      autoplay
+      loop="false"
+      class="absolute z-50 pointer-events-none"
+      style="
+        width: 30%;
+        height: 30%;
+        top: 25%;
+        left: 50%;
+        transform: translateX(-50%);
+      "
+      src="https://lottie.host/d1683488-202e-4128-9001-b9592d93aaad/zoqyNJxq9B.lottie"
+    />
+
+    <p v-if="visibleCards.length === 0" class="mt-5 text-center text-gray-500">
+      今日滑滑次數已達上限！
+    </p>
+  </div>
+</template>
