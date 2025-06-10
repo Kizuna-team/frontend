@@ -29,6 +29,7 @@ const handleLogout = () => {
 </script>
 
 <template>
+  
   <div>
     <!-- Header：根據路由條件顯示 -->
     <Header v-if="showHeader" />

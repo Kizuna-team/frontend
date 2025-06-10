@@ -1,10 +1,17 @@
 <script setup>
-import { ref, onMounted, onUnmounted } from "vue";
-import { RouterLink, RouterView  } from "vue-router";
+import { ref, onMounted, onUnmounted ,computed } from "vue";
+import { RouterLink, RouterView, useRoute } from "vue-router";
 import { useUserStore } from "@/stores/user";
 import router from "@/router";
 const store = useUserStore();
+const route = useRoute();
 
+// 判斷是否為非fixed頁面（聊天頁面）
+const isSpecialPage = computed(() => {
+  return route.path === "/chat_new" || route.name === "chat";
+  // 如果有多個頁面需要非 fixed，可以這樣寫：
+  // return ['/chat', '/special-page'].includes(route.path);
+});
 
 const handleLogout = () => {
   store.logout();
@@ -40,7 +47,11 @@ onUnmounted(() => {
 
 <template>
   <header
-    class="fixed top-0 left-0 w-full h-20 z-50 text-[#515151] bg-white/50 backdrop-blur-sm shadow"
+    :class="{
+      'fixed top-0 left-0': !isSpecialPage,
+      'relative': isSpecialPage,
+    }"
+    class="w-full h-20 z-50 text-[#515151] bg-white/50 backdrop-blur-sm shadow"
     style="
       box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1),
         inset -1px -1px 1px rgba(255, 255, 255, 0.35);
@@ -221,8 +232,6 @@ onUnmounted(() => {
       </div>
     </nav>
   </header>
-  
-
 </template>
 
 <style></style>
