@@ -1,5 +1,6 @@
 <script setup>
-import { ref, nextTick } from "vue";
+import { ref, nextTick, onMounted } from "vue";
+import { fetchSuperLikeStatus } from "@/api/like.js";
 
 // 傳入對方的 userId，接著對對方 貼上喜歡/不喜歡的標籤 通知給父組件
 const { targetUser } = defineProps({
@@ -9,10 +10,38 @@ const { targetUser } = defineProps({
   },
 });
 
-const emit = defineEmits(["like", "dislike", "superLike"]);
+const emit = defineEmits(["like", "dislike", "superLike", "superLikeStatus"]);
 const likeActive = ref(false);
 const dislikeActive = ref(false);
 const superLikeActive = ref(false);
+
+const isMember = ref(false);
+const totalCount = ref(0);
+const isDisabled = ref(true);
+const msg = ref("");
+
+const superLikeStatus = async () => {
+  try {
+    const data = await fetchSuperLikeStatus();
+    isMember.value = data.isMember;
+    totalCount.value = data.remainingCount;
+    isDisabled.value = !isMember.value || totalCount.value <= 0;
+    msg.value = !isMember.value ? "尚未開啟高級會員功能" : "已經是高級會員了";
+
+    emit("superLikeStatus", {
+      isMember: isMember.value,
+      totalCount: totalCount.value,
+      isDisabled: isDisabled.value,
+      msg: msg.value,
+    });
+  } catch (error) {
+    console.error("取得 Super Like 狀態失敗", error);
+  }
+};
+
+onMounted(() => {
+  superLikeStatus();
+});
 
 const likeHandler = () => {
   likeActive.value = false;
@@ -31,7 +60,7 @@ const superLikeHandler = async () => {
 
   setTimeout(() => {
     superLikeActive.value = false;
-    emit("superLike", targetUser); // 動畫結束後通知父組件
+    emit("superLike", targetUser);
   }, 800);
 };
 </script>

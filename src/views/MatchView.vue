@@ -257,6 +257,18 @@ const dislikeFlag = async (userId) => {
   }
 };
 
+const isMember = ref(false);
+const totalSuperLike = ref(0);
+const isSuperLikeDisabled = ref(true);
+const superLikeMsg = ref("");
+
+const handleSuperLikeStatus = (status) => {
+  isMember.value = status.isMember;
+  totalSuperLike.value = status.totalCount;
+  isSuperLikeDisabled.value = status.isDisabled;
+  superLikeMsg.value = status.msg;
+};
+
 const superLikeFlag = async (targetId) => {
   try {
     const { matched, remainingCount, message } = await sendSuperLike(targetId);
@@ -275,6 +287,10 @@ const superLikeFlag = async (targetId) => {
     if (error.response && error.response.status === 409) {
       alert(error.response.data.message || "已表達 等待對方回應");
       nextUser();
+    }
+    if (error.response && error.response.status === 403) {
+      alert(error.response.data.message || "今日使用次數已達上限");
+      restSuperLikes.value = 0; // 重要！把剩餘數量設為0禁用按鈕
     }
     console.error("使用者送出super like發生錯誤", error);
   }
@@ -332,6 +348,7 @@ const stopCountdown = () => {
       @like="likeFlag"
       @dislike="dislikeFlag"
       @superLike="superLikeFlag"
+      @superLikeStatus="handleSuperLikeStatus"
     />
     <!-- 只有成功配對時才顯示 Modal -->
     <!-- 傳自己的名字 和 配對對象的名字給子元件 -->
