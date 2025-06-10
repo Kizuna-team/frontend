@@ -25,15 +25,15 @@ const dislikeHandler = () => {
 };
 
 const superLikeHandler = async () => {
-  console.log("clicked");
   superLikeActive.value = false;
-  await nextTick(); // 等待 DOM 移除動畫 class
-  superLikeActive.value = true;
-  emit("superLike", targetUser);
 
-  setTimeout(() => {
-    superLikeActive.value = false; // 動畫結束後移除 class
-  }, 800);
+  nextTick(() => {
+    superLikeActive.value = true;
+    setTimeout(() => {
+      superLikeActive.value = false; // 動畫結束後移除 class
+    }, 800);
+  });
+  emit("superLike", targetUser);
 };
 </script>
 

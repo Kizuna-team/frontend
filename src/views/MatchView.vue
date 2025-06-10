@@ -4,9 +4,13 @@ import { ref, computed, onUnmounted } from "vue";
 import UserCard from "@/components/UserCard.vue";
 import MatchBtn from "@/components/MatchBtn.vue";
 import UserIntro from "@/components/UserIntro.vue";
+import MatchedDoneModal from "@/components/MatchedDoneModal.vue";
+
 import { sendLike } from "@/api/like.js";
 import { sendSuperLike } from "@/api/superLike.js";
-import ConfirmModal from "../components/ConfirmModal.vue";
+import { useUserProfileStore } from "@/stores/userProfile";
+
+const userProfileStore = useUserProfileStore();
 
 const users = ref([
   {
@@ -186,8 +190,9 @@ const infoToggle = () => {
   infoBtnTxt.value = isShow.value ? "Hide Info" : "Show More";
 };
 
+// 配對關閉 ｜ 彈跳配對視窗
 const isCovering = ref(false);
-const confirmMessage = ref("");
+const matchedDoneModal = ref(false);
 
 // 切換到上一位使用者
 const prevUser = () => {
@@ -222,6 +227,7 @@ onUnmounted(() => {
 const mutualLike = ref(false);
 const restSuperLikes = ref(null);
 const confirmModal = ref(false);
+
 const likeFlag = async (userId) => {
   try {
     const { matched, message } = await sendLike(userId);
@@ -230,15 +236,15 @@ const likeFlag = async (userId) => {
       confirmModal.value = true;
     } else {
       alert(message); // 其他提示
+      nextUser(); //如果要改成動畫提示訊息的話這邊要用setTimeout 等動畫跑完
     }
   } catch (error) {
+    if (error.response && error.response.status === 409) {
+      alert(error.response.data.message || "已表達 等待對方回應");
+      nextUser();
+    }
     console.error("送出like發生錯誤", error);
   }
-};
-
-const onConfirm = () => {
-  confirmModal.value = false;
-  nextUser();
 };
 
 const dislikeFlag = async (userId) => {
@@ -246,6 +252,7 @@ const dislikeFlag = async (userId) => {
     await sendLike(userId, 0);
     nextUser();
   } catch (error) {
+    alert("對象重複"); // 其他提示
     console.error("使用者送出dislike發生錯誤", error);
   }
 };
@@ -255,22 +262,31 @@ const superLikeFlag = async (targetId) => {
     const { matched, remainingCount, message } = await sendSuperLike(targetId);
     if (matched) {
       mutualLike.value = true;
+      confirmModal.value = true;
       alert(message); // 要換成動畫
     }
     // 更新剩餘次數的 UI 或狀態
     if (remainingCount !== undefined) {
       restSuperLikes.value = remainingCount;
-      alert(`剩下${restSuperLikes.value}次`); // 要換成動畫
+      alert(`已送出Super like 剩下${restSuperLikes.value}次`); // 要換成動畫
     }
     nextUser();
   } catch (error) {
     if (error.response && error.response.status === 409) {
       alert(error.response.data.message || "已表達 等待對方回應");
-      console.error("使用者送出super like發生錯誤", error);
+      nextUser();
     }
+    console.error("使用者送出super like發生錯誤", error);
   }
 };
 
+// 關閉配對成功畫面
+const onConfirm = () => {
+  confirmModal.value = false;
+  nextUser();
+};
+
+// 倒數計時畫面
 const countdownText = ref("");
 let countdownInterval = null;
 
@@ -318,12 +334,16 @@ const stopCountdown = () => {
       @superLike="superLikeFlag"
     />
     <!-- 只有成功配對時才顯示 Modal -->
-    <ConfirmModal
-      v-if="confirmModal"
-      :message="confirmMessage"
+    <!-- 傳自己的名字 和 配對對象的名字給子元件 -->
+    <!-- 看父組件怎麼定義對象 -->
+    <MatchedDoneModal
+      v-if="matchedDoneModal"
+      :my-name="userProfileStore.userProfile.name"
+      :target-name="users.value.name"
       @confirm="onConfirm"
-      @cancel="confirmModal = false"
+      @cancel="matchedDoneModal = false"
     />
+
     <!-- 個人資訊頁面收合區 -->
     <section class="w-full pt-4 mt-4">
       <button
@@ -342,7 +362,7 @@ const stopCountdown = () => {
   <!-- 滑完出現遮罩 -->
   <div
     v-if="isCovering"
-    class="absolute inset-0 z-50 flex flex-col items-center justify-center text-xl text-white bg-black bg-opacity-60"
+    class="fixed inset-0 z-50 flex flex-col items-center justify-center text-xl text-white bg-black bg-opacity-60"
     @click="closeCover"
   >
     <p class="mb-4">滑完囉！解鎖倒數</p>
@@ -357,13 +377,13 @@ const stopCountdown = () => {
 .card-bg {
   position: relative;
   background-image: linear-gradient(to bottom, #c0d7ec 0%, #c0d7ec 20%),
-    /* 頂層 */ linear-gradient(to bottom, #7395ba 20%, #7395ba 35%),
-    /* 第二層 */ linear-gradient(to bottom, #8ecae6 35%, #8ecae6 55%),
-    /* 第三層 */ linear-gradient(to bottom, #219ebc 55%, #219ebc 75%),
-    /* 第四層 */ linear-gradient(to bottom, #fb8500 75%, #999999 100%); /* 底層 橘色到灰色漸變 */
-  background-size: 100% 40%; /* 每層高度約20% */
+    linear-gradient(to bottom, #7395ba 20%, #7395ba 35%),
+    linear-gradient(to bottom, #8ecae6 35%, #8ecae6 55%),
+    linear-gradient(to bottom, #219ebc 55%, #219ebc 75%),
+    linear-gradient(to bottom, #fb8500 75%, #999999 100%);
+  background-size: 100% 40%;
   background-repeat: no-repeat;
-  border-radius: 12px 12px 0 0; /* 頂部圓角 */
+  border-radius: 12px 12px 0 0;
 }
 
 .slide-fade-enter-active,
