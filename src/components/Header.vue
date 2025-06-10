@@ -1,5 +1,6 @@
 <script setup>
-import { ref, onMounted, onUnmounted, computed } from "vue";
+import { ref, onMounted, onUnmounted } from "vue";
+import { RouterLink, RouterView  } from "vue-router";
 import { useUserStore } from "@/stores/user";
 import { useRoute } from "vue-router";
 import router from "@/router";
@@ -8,6 +9,8 @@ import { useCartStore } from '@/stores/cart.js';
 const cartStore = useCartStore();
 const route = useRoute();
 const store = useUserStore();
+
+
 const handleLogout = () => {
   store.logout();
   alert("已登出");
