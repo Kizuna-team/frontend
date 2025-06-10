@@ -10,7 +10,8 @@ import ChatRoomView from "@/views/ChatRoomView.vue";
 import MatchView from "../views/MatchView.vue";
 import ActivityList from "@/components/ActivityList.vue";
 import ActivityView from "@/components/ActivityForm.vue";
-import EditProfileView from "@/views/EditProfileView.vue";
+import EditProfileView from "@/views/EditProfileView.vue"
+import ChatRoomView_new from "@/views/ChatRoomView_new.vue"
 
 import { useUserStore } from "@/stores/user.js";
 
@@ -90,6 +91,13 @@ const router = createRouter({
       name: "NotFound",
       component: () => import("@/views/NotFound.vue"),
       meta: { hideHeader: true },
+    },
+    {
+      path: "/chat_new",
+      name: "ChatRoom_new",
+      component: ChatRoomView_new,
+      meta: { fullWidth: true }
+
     },
   ],
 });

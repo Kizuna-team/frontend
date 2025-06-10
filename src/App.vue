@@ -12,10 +12,13 @@ const route = useRoute();
 // 根據 meta 控制 404 頁面 Header 是否顯示
 const showHeader = computed(() => {
   return !route.meta.hideHeader;
-});
+})
 
+//根據 meta 判斷頁面是否全寬
 const mainClass = computed(() => {
-  return route.path === "/" ? "w-full" : "max-w-[1000px] mx-auto mt-32";
+  return route.meta.fullWidth
+    ? "w-full"
+    : "max-w-[1000px] mx-auto mt-32";
 });
 
 const handleLogout = () => {
