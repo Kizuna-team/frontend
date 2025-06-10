@@ -10,6 +10,7 @@ const route = useRoute();
 const store = useUserStore();
 
 
+
 // 判斷是否為非fixed頁面（聊天頁面）
 const isSpecialPage = computed(() => {
   return route.path === "/chat_new" || route.name === "chat";
