@@ -1,6 +1,6 @@
 <script setup>
-import { ref, onMounted, onUnmounted } from "vue";
-import { RouterLink, RouterView  } from "vue-router";
+import { ref, onMounted, onUnmounted ,computed } from "vue";
+import { RouterLink, RouterView, useRoute } from "vue-router";
 import { useUserStore } from "@/stores/user";
 import { useRoute } from "vue-router";
 import router from "@/router";
@@ -10,6 +10,13 @@ const cartStore = useCartStore();
 const route = useRoute();
 const store = useUserStore();
 
+
+// 判斷是否為非fixed頁面（聊天頁面）
+const isSpecialPage = computed(() => {
+  return route.path === "/chat_new" || route.name === "chat";
+  // 如果有多個頁面需要非 fixed，可以這樣寫：
+  // return ['/chat', '/special-page'].includes(route.path);
+});
 
 const handleLogout = () => {
   store.logout();
