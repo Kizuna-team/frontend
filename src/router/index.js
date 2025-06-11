@@ -130,6 +130,11 @@ const router = createRouter({
       path: "/super/products/inventory",
       name: "ProductAdmin",
       component: ProductAdminView,
+
+      path: "/chat_new",
+      name: "ChatRoom_new",
+      component: ChatRoomView_new,
+      
     },
     {
       path: "/chat_new",
