@@ -1,7 +1,7 @@
 // 使用 Pinia 管理 user 的狀態，Composition API 寫法
 import axios from "../api/axios";
 import { defineStore } from "pinia";
-import { ref, reactive } from "vue";
+import { ref, reactive, computed } from "vue"; // 加入 computed
 
 export const useUserStore = defineStore("user", () => {
   // 初始化
@@ -17,6 +17,25 @@ export const useUserStore = defineStore("user", () => {
     bio: "",
     interests: [],
   });
+
+  // 【新增】計算屬性 - 檢查是否已登入
+  const isLoggedIn = computed(() => {
+    return !!(accessToken.value && userId.value);
+  });
+
+  // 【新增】計算屬性 - 使用者顯示名稱
+  const displayName = computed(() => {
+    return username.value || `User${userId.value}` || "訪客";
+  });
+
+  // 【新增】計算屬性 - 完整使用者資訊（為了聊天室使用）
+  const user = computed(() => ({
+    id: userId.value,
+    name: username.value,
+    displayName: displayName.value,
+    profile: profile,
+    isLoggedIn: isLoggedIn.value
+  }));
 
   // 從資料庫抓 profile
   function getProfile(profileDate){
@@ -142,5 +161,9 @@ export const useUserStore = defineStore("user", () => {
     logout,
     refresh,
     loginWithGoogle,
+    // 【新增】計算屬性
+    isLoggedIn,
+    displayName,
+    user,
   };
 });
