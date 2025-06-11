@@ -1,3 +1,310 @@
+<script setup>
+import {
+  ref,
+  reactive,
+  nextTick,
+  onMounted,
+  onBeforeUnmount,
+  watch,
+  computed,
+} from "vue";
+import { io } from "socket.io-client";
+import { useUserStore } from "@/stores/user.js";
+import { userChatStore } from "@/stores/chat_new.js";
+
+// Socket.io 連接設定
+const socket = io("http://localhost:3000");
+
+// 響應式數據
+const currentRoom = ref("007");
+const newMessage = ref("");
+const messagesContainer = ref(null);
+
+// Store
+const userStore = useUserStore();
+const chatStore = userChatStore();
+const roomId = ref(1);
+
+// 當前使用者資訊
+const currentUser = computed(() => ({
+  id: userStore.userId,
+  name: userStore.username,
+  displayName: userStore.username || `User${userStore.userId}`,
+  profile: userStore.profile,
+}));
+const isUserLoggedIn = computed(
+  () => !!(userStore.accessToken && userStore.userId)
+);
+
+// 聊天室列表
+const chatRooms = reactive([
+  { id: 7, userName: "Alice Chen", day: "Wed", lastMessage: "message" },
+  { id: 8, userName: "Bob Wang", day: "Thu", lastMessage: "last message.." },
+  { id: 9, userName: "Charlie Li", day: "Fri", lastMessage: "last message.." },
+]);
+
+// 訊息接收處理
+function handleIncomingMessage(msg) {
+  console.log("=== 收到訊息 ===");
+  console.log("原始訊息:", msg);
+
+  // 格式化訊息
+  const formattedMessage = {
+    id: msg.id || Date.now(),
+    content: msg.content || msg.text,
+    senderId: msg.senderId,
+    senderName: msg.senderName || msg.username || `User${msg.senderId}`,
+    timestamp: msg.timestamp || new Date().toISOString(),
+    time: msg.time || formatTime(new Date(msg.timestamp || Date.now())),
+    roomId: msg.roomId || roomId.value,
+  };
+
+  console.log("格式化後的訊息:", formattedMessage);
+  console.log("準備加入到 chatStore...");
+
+  // 加入到 chatStore
+  chatStore.addMessage(formattedMessage);
+
+  console.log("加入後的所有訊息數量:", chatStore.messages.length);
+  console.log("chatStore.messages:", chatStore.messages);
+  console.log("=================");
+
+  // 自動滾動到底部
+  nextTick(() => {
+    if (messagesContainer.value) {
+      messagesContainer.value.scrollTop = messagesContainer.value.scrollHeight;
+    }
+  });
+}
+
+// 加入房間 & 綁定監聽器
+onMounted(() => {
+  console.log("組件已掛載");
+  console.log("當前使用者狀態:", {
+    userId: userStore.userId,
+    username: userStore.username,
+    isLoggedIn: isUserLoggedIn.value,
+  });
+
+  // 設置當前房間到 chatStore
+  chatStore.setCurrentRoom(roomId.value);
+
+  // 確保使用者已登入才連接
+  if (userStore.userId) {
+    connectToRoom();
+  } else {
+    console.log("使用者未登入，等待登入後連接");
+  }
+});
+
+// 連接到聊天室
+const connectToRoom = () => {
+  console.log("嘗試連接到房間:", roomId.value);
+  console.log("使用者資訊:", {
+    userId: userStore.userId,
+    username: userStore.username,
+  });
+
+  const joinData = {
+    roomId: roomId.value,
+    userId: userStore.userId,
+    userName: userStore.username || `User${userStore.userId}`,
+  };
+
+  console.log("加入房間資料:", joinData);
+  socket.emit("joinRoom", joinData);
+
+  console.log(
+    "✅ 加入聊天室 Room",
+    roomId.value,
+    "使用者:",
+    userStore.username || userStore.userId
+  );
+
+  // 只綁定一次監聽器
+  socket.off("chatMessage", handleIncomingMessage); // 先移除舊的
+  socket.on("chatMessage", handleIncomingMessage);
+
+  // 監聽用戶加入/離開事件
+  socket.on("userJoined", (data) => {
+    console.log("用戶加入:", data);
+    // 可以在這裡顯示用戶加入提示
+  });
+
+  socket.on("userLeft", (data) => {
+    console.log("用戶離開:", data);
+    // 可以在這裡顯示用戶離開提示
+  });
+
+  // 監聽連接狀態
+  socket.on("connect", () => {
+    console.log("✅ Socket 已連接");
+  });
+
+  socket.on("disconnect", () => {
+    console.log("❌ Socket 已斷開");
+  });
+};
+
+// 避免重複綁定：離開時移除 listener
+onBeforeUnmount(() => {
+  socket.off("chatMessage", handleIncomingMessage);
+  socket.off("userJoined");
+  socket.off("userLeft");
+  socket.emit("leaveRoom", {
+    roomId: roomId.value,
+    userId: userStore.userId,
+  });
+});
+
+// 發送訊息
+const sendMessage = async () => {
+  console.log("=== 開始發送訊息 ===");
+  console.log("輸入的訊息:", newMessage.value);
+  console.log("訊息是否為空:", !newMessage.value.trim());
+
+  if (!newMessage.value.trim()) {
+    console.log("❌ 訊息為空，取消發送");
+    return;
+  }
+
+  // 檢查使用者是否已登入
+  console.log("檢查登入狀態...");
+  console.log("userStore.userId:", userStore.userId);
+  console.log("userStore.username:", userStore.username);
+  console.log("userStore.accessToken:", userStore.accessToken);
+
+  if (!userStore.userId) {
+    console.log("❌ 使用者未登入");
+    alert("請先登入才能發送訊息");
+    return;
+  }
+
+  console.log("✅ 使用者已登入，準備發送訊息");
+  console.log("準備發送訊息:", newMessage.value);
+  console.log("使用者資訊:", {
+    userId: userStore.userId,
+    username: userStore.username,
+    roomId: roomId.value,
+  });
+
+  // 建立訊息物件
+  const messageData = {
+    roomId: roomId.value,
+    senderId: userStore.userId,
+    senderName: userStore.username || `User${userStore.userId}`,
+    content: newMessage.value,
+    timestamp: new Date().toISOString(),
+  };
+
+  console.log("發送的訊息資料:", messageData);
+
+  // 檢查 Socket 連接狀態
+  console.log("Socket 連接狀態:", socket.connected);
+  console.log("Socket ID:", socket.id);
+
+  if (!socket.connected) {
+    console.log("❌ Socket 未連接，嘗試重新連接...");
+    socket.connect();
+    // 等待連接
+    await new Promise((resolve) => {
+      socket.on("connect", resolve);
+      setTimeout(resolve, 2000); // 2秒超時
+    });
+  }
+
+  try {
+    console.log("🚀 發送 Socket 訊息...");
+    // 發送到 Socket.io 伺服器
+    socket.emit("chatMessage", messageData);
+    console.log("✅ Socket 訊息已發送");
+    // 清空輸入框
+    newMessage.value = "";
+
+    console.log("💾 本地顯示訊息:", localMessage);
+    console.log("chatStore:", chatStore);
+    console.log("chatStore.addMessage:", chatStore.addMessage);
+
+    if (chatStore && chatStore.addMessage) {
+      chatStore.addMessage(localMessage);
+      console.log("✅ 訊息已加入 chatStore");
+    } else {
+      console.error("❌ chatStore 或 addMessage 方法不存在");
+    }
+
+    newMessage.value = "";
+    console.log("✅ 輸入框已清空");
+
+    // 滾動到底部
+    await nextTick();
+    if (messagesContainer.value) {
+      messagesContainer.value.scrollTop = messagesContainer.value.scrollHeight;
+      console.log("✅ 已滾動到底部");
+    }
+  } catch (error) {
+    console.error("❌ 發送訊息時發生錯誤:", error);
+  }
+
+  console.log("=== 發送訊息完成 ===");
+};
+
+// 格式化時間
+const formatTime = (date) => {
+  return date.toLocaleTimeString("zh-TW", {
+    hour12: true,
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+};
+
+// 監聽 userId 變化，當用戶登入時自動連接聊天室
+watch(
+  () => userStore.userId,
+  (newUserId, oldUserId) => {
+    console.log("userId變化:", { old: oldUserId, new: newUserId });
+    if (newUserId && !oldUserId) {
+      // 用戶剛登入，連接到聊天室
+      connectToRoom();
+    } else if (!newUserId && oldUserId) {
+      // 用戶登出，斷開連接
+      socket.emit("leaveRoom", {
+        roomId: roomId.value,
+        userId: oldUserId,
+      });
+      // chatStore.clearMessages(); // 清空訊息（如果有這個方法的話）
+    }
+  }
+);
+
+// 監聽房間變化
+watch(
+  () => currentRoom.value,
+  (newRoom, oldRoom) => {
+    if (userStore.userId && newRoom !== oldRoom) {
+      // 離開舊房間
+      if (oldRoom) {
+        socket.emit("leaveRoom", {
+          roomId: parseInt(oldRoom),
+          userId: userStore.userId,
+        });
+      }
+
+      // 加入新房間
+      roomId.value = parseInt(newRoom);
+      socket.emit("joinRoom", {
+        roomId: roomId.value,
+        userId: userStore.userId,
+        userName: currentUser.value.name || `User${userStore.userId}`,
+      });
+
+      // 清空當前訊息（可選）
+      chatStore.clearMessages?.();
+      console.log("切換到房間:", newRoom);
+    }
+  }
+);
+</script>
+
 <template>
   <div class="bg-gray-100 h-screen overflow-hidden flex">
     <!-- 左側邊欄 -->
@@ -57,46 +364,78 @@
           </div>
           <div>
             <div class="font-medium text-gray-800">{{ currentRoom }}</div>
+            <div class="text-sm text-gray-500">
+              Room ID: {{ roomId }}
+              <span v-if="isUserLoggedIn" class="ml-2">
+                | {{ currentUser.name || `User${userStore.userId}` }}
+              </span>
+              <span v-else class="ml-2 text-red-500">| 未登入</span>
+            </div>
           </div>
         </div>
       </div>
 
       <!-- 聊天訊息區域 -->
-      <!-- 聊天背景顏色 -->
       <div
         class="flex-1 overflow-y-auto p-4 space-y-4 bg-gray-50"
         ref="messagesContainer"
       >
-        <!-- 判斷左右訊息框 -->
-        <div
-          v-for="msg in messages"
-          :key="msg.id"
-          :class="['flex', msg.isSelf ? 'justify-end' : 'justify-start']"
-        >
-        <!-- 訊息框顏色 -->
-          <div
-            :class="[
-              'rounded-2xl px-4 py-2 max-w-xs lg:max-w-md',
-              msg.isSelf
-                ? 'bg-white text-gray-800 shadow-sm '
-                : 'bg-[#f6ba42] text-white shadow-sm',
-            ]"
-          >
-            <!-- 訊息內容 -->
-            <p class="break-words">{{ msg.text }}</p>
+        <!-- 顯示來自 chatStore 的訊息 -->
+        <div v-if="!isUserLoggedIn" class="text-center py-8">
+          <div class="text-gray-500">請先登入才能使用聊天功能</div>
+        </div>
 
-            <!-- 時間 -->
+        <div
+          v-else-if="chatStore.messages.length === 0"
+          class="text-center py-8"
+        >
+          <div class="text-gray-500">還沒有訊息，開始聊天吧！</div>
+        </div>
+
+        <div
+          v-for="msg in chatStore.messages"
+          :key="msg.id || msg.timestamp"
+          :class="[
+            'flex',
+            msg.senderId === userStore.userId ? 'justify-end' : 'justify-start',
+          ]"
+        >
+          <div class="flex flex-col">
+            <!-- 顯示發送者名稱（如果不是自己的訊息） -->
+            <div
+              v-if="msg.senderId !== userStore.userId"
+              class="text-xs text-gray-600 mb-1 pl-2 font-medium "
+            >
+              {{ msg.senderName || `User${msg.senderId}` }}
+            </div>
+
             <div
               :class="[
-                'text-xs mt-1',
-                msg.isSelf ? 'text-gray-800 text-right' : 'text-white',
+                'rounded-2xl px-4 py-2 max-w-xs lg:max-w-md',
+                msg.senderId === userStore.userId
+                  ? 'bg-white text-gray-800 shadow-sm'
+                  : 'bg-[#f6ba42] text-white shadow-sm',
               ]"
             >
-              {{ msg.time }}
+              <!-- 訊息內容 -->
+              <p class="break-words">{{ msg.content || msg.text }}</p>
+
+              <!-- 時間 -->
+              <div
+                :class="[
+                  'text-xs mt-1',
+                  msg.senderId === userStore.userId
+                    ? 'text-gray-500 text-right'
+                    : 'text-white opacity-75',
+                ]"
+              >
+                {{ msg.time || formatTime(new Date(msg.timestamp)) }}
+              </div>
             </div>
           </div>
         </div>
       </div>
+      
 
       <!-- 輸入區域 -->
       <div class="bg-white border-t border-gray-200 p-4">
@@ -122,17 +461,29 @@
           <div class="flex-1">
             <input
               type="text"
-              placeholder="輸入訊息"
+              :placeholder="isUserLoggedIn ? '輸入訊息' : '請先登入'"
               v-model="newMessage"
               @keyup.enter="sendMessage"
-              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#f6ba42] focus:border-transparent outline-none"
+              :disabled="!isUserLoggedIn"
+              :class="[
+                'w-full px-4 py-2 border border-gray-300 rounded-lg outline-none transition-colors',
+                isUserLoggedIn
+                  ? 'focus:ring-2 focus:ring-[#f6ba42] focus:border-transparent'
+                  : 'bg-gray-100 cursor-not-allowed',
+              ]"
             />
           </div>
 
           <!-- 發送按鈕 -->
           <button
             @click="sendMessage"
-            class="bg-[#f6ba42] hover:bg-[#ed8b34] text-white px-4 py-2 rounded-lg font-medium transition-colors"
+            :disabled="!isUserLoggedIn || !newMessage.trim()"
+            :class="[
+              'px-4 py-2 rounded-lg font-medium transition-colors',
+              isUserLoggedIn && newMessage.trim()
+                ? 'bg-[#f6ba42] hover:bg-[#ed8b34] text-white'
+                : 'bg-gray-300 text-gray-500 cursor-not-allowed',
+            ]"
           >
             送出
           </button>
@@ -141,68 +492,6 @@
     </div>
   </div>
 </template>
-
-<script setup>
-import { ref, reactive, nextTick } from "vue";
-
-// 響應式數據
-const currentRoom = ref("007");
-const newMessage = ref("");
-const messagesContainer = ref(null);
-
-// 聊天室列表
-const chatRooms = reactive([
-  { id: "007", name: "007", day: "Wed", lastMessage: "message" },
-  { id: "008", name: "008", day: "Thu", lastMessage: "last message..." },
-  { id: "009", name: "009", day: "Fri", lastMessage: "last message..." },
-]);
-
-// 訊息列表
-const messages = reactive([
-  { id: 1, text: "HI", time: "下午07:01", isSelf: false },
-  {
-    id: 2,
-    text: "HI",
-    time: "下午07:01",
-    isSelf: true,
-  },
-]);
-
-// 發送訊息
-const sendMessage = async () => {
-  if (newMessage.value.trim()) {
-    const currentTime = new Date().toLocaleTimeString("zh-TW", {
-      hour12: true,
-      hour: "2-digit",
-      minute: "2-digit",
-    });
-
-    messages.push({
-      id: Date.now(),
-      text: newMessage.value,
-      time: currentTime,
-      isSelf: true,
-    });
-
-    newMessage.value = "";
-
-    // 滾動到底部
-    await nextTick();
-    if (messagesContainer.value) {
-      messagesContainer.value.scrollTop = messagesContainer.value.scrollHeight;
-    }
-  }
-};
-
-// 格式化時間
-const formatTime = (date) => {
-  return date.toLocaleTimeString("zh-TW", {
-    hour12: true,
-    hour: "2-digit",
-    minute: "2-digit",
-  });
-};
-</script>
 
 <style scoped>
 /* 自定義滾動條樣式 */
@@ -221,5 +510,6 @@ const formatTime = (date) => {
 
 .overflow-y-auto::-webkit-scrollbar-thumb:hover {
   background: #a8a8a8;
+  
 }
 </style>

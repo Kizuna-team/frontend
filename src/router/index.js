@@ -134,8 +134,8 @@ const router = createRouter({
 
       path: "/chat_new",
       name: "ChatRoom_new",
-      component: ChatRoomView_new,
-      
+      component: () => import("@/views/ChatRoomView_new.vue"),
+
     },
   ],
 });
