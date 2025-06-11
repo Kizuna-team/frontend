@@ -19,11 +19,11 @@ const onCancelClick = () => {
 };
 
 // 是空的就不會繼續執行發送動作
-const sendMessage = () => {
-  if (inputText.value.trim() === "") return;
-  emit("send", inputText.value);
-  inputText.value = "";
-};
+// const sendMessage = () => {
+//   if (inputText.value.trim() === "") return;
+//   emit("send", inputText.value);
+//   inputText.value = "";
+// };
 </script>
 
 <template>
@@ -37,7 +37,7 @@ const sendMessage = () => {
           alt="My Avatar"
           class="avatar"
         /> -->
-        <span>{{ pops.myName }}</span>
+        <span>{{ props.myName }}</span>
       </div>
       <div class="user-info">
         <!-- <img :src="props.targetAvatar" alt="Target Avatar" class="avatar" /> -->

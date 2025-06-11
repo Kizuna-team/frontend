@@ -69,8 +69,8 @@ const superLikeHandler = async () => {
   <div class="flex items-center justify-center w-48 gap-16 px-2">
     <button
       type="button"
-      @click="dislikeHandler"
       class="circle-wrap bg-[#E8E8E8] transform hover:scale-125"
+      @click="dislikeHandler"
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -88,8 +88,8 @@ const superLikeHandler = async () => {
     <div :class="{ 'puff-out-center': superLikeActive }">
       <button
         type="button"
-        @click="superLikeHandler"
         class="circle-wrap bg-[#fff]"
+        @click="superLikeHandler"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -105,8 +105,8 @@ const superLikeHandler = async () => {
     </div>
     <button
       type="button"
-      @click="likeHandler"
       class="circle-wrap bg-[#E8E8E8] transform hover:scale-125"
+      @click="likeHandler"
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"
