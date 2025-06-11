@@ -9,14 +9,18 @@ const store = useUserStore();
 // 拿到當前路由
 const route = useRoute();
 
+//有哪些頁面全寬
+const fullWidthPaths = ["/", "/chat_new" ];
+
+
 // 根據 meta 控制 404 頁面 Header 是否顯示
 const showHeader = computed(() => {
   return !route.meta.hideHeader;
 })
 
-//根據 meta 判斷頁面是否全寬
+//根據 mainClass 判斷頁面是否全寬
 const mainClass = computed(() => {
-  return route.meta.fullWidth
+  return fullWidthPaths.includes(route.path)
     ? "w-full"
     : "max-w-[1000px] mx-auto mt-32";
 });
