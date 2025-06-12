@@ -33,10 +33,10 @@ const showCartModal=ref(false);
 const openCartModal=()=>{
   showCartModal.value = true
 
-  // setTimeout(()=>{
-  //   showCartModal.value=false
-  //   },1000
-  // )
+  setTimeout(()=>{
+    showCartModal.value=false
+    },1000
+  )
 }
 
 const handleAddCart=(product)=> {
