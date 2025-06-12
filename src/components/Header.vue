@@ -100,11 +100,18 @@ onUnmounted(() => {
         <LiquidNavLink to="/activities/new" :colorMode="getNavTextColor"
           >活動表單</LiquidNavLink
         >
+<<<<<<< HEAD
         <LiquidNavLink to="/activities/edit/:id" :colorMode="getNavTextColor"
           >活動編輯</LiquidNavLink
         >
         <LiquidNavLink to="/activities/my" :colorMode="getNavTextColor"
           >我的活動</LiquidNavLink
+=======
+        <RouterLink
+          to="/activities/my"
+          class="p-4 text-lg leading-none transition hover:text-gray-300"
+          >我的活動</RouterLink
+>>>>>>> 5ffd6c4 (feat(activity): add getActivityById API and enhance activity form UI/UX and image preview)
         >
         <LiquidNavLink to="/edit-profile" :colorMode="getNavTextColor"
           >編輯個人檔案
