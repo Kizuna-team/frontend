@@ -3,6 +3,8 @@ import { ref, onMounted, watch, computed } from "vue";
 import axios from "../api/axios.js";
 import { useCartStore } from "../stores/cart.js";
 import spinner from "../assets/spinner.svg";
+import { Vue3Lottie } from "vue3-lottie";
+import addCartAnimation from "@/assets/add-cart.json";
 
 const cartStore = useCartStore();
 const { addCart } = cartStore;
@@ -26,6 +28,21 @@ const animationDuration = computed(() => {
 const topSellingProducts = computed(() => {
   return [...products.value].sort((a, b) => b.sales - a.sales).slice(0, 10);
 });
+
+const showCartModal=ref(false);
+const openCartModal=()=>{
+  showCartModal.value = true
+
+  // setTimeout(()=>{
+  //   showCartModal.value=false
+  //   },1000
+  // )
+}
+
+const handleAddCart=(product)=> {
+  addCart(product);
+  openCartModal();
+}
 
 const search = () => {
   let filtered = products.value;
@@ -65,6 +82,15 @@ onMounted(async () => {
 </script>
 
 <template>
+  <div v-if="showCartModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-70">
+    <div class="bg-white rounded-xl p-8 min-w-[320px] min-h-[180px] shadow-lg text-center flex flex-col items-center justify-center">
+
+      <div class="flex items-center justify-center w-24 h-24 mb-4 ">
+        <Vue3Lottie :animationData="addCartAnimation" :height="80" :width="80" />
+      </div>
+      <p class="text-lg font-bold text-secondary">已加入購物車 !</p>
+    </div>
+  </div>
   <div v-show="isLoading" class="loading-overlay">
     <img :src="spinner" alt="Loading" class="w-20 h-20" />
   </div>
@@ -83,7 +109,7 @@ onMounted(async () => {
         d="M21 11.25v8.25a1.5 1.5 0 0 1-1.5 1.5H5.25a1.5 1.5 0 0 1-1.5-1.5v-8.25M12 4.875A2.625 2.625 0 1 0 9.375 7.5H12m0-2.625V7.5m0-2.625A2.625 2.625 0 1 1 14.625 7.5H12m0 0V21m-8.625-9.75h18c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125h-18c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125Z"
       />
     </svg>
-    <h2 class="text-2xl font-bold text-center text-[#023047]">暢銷禮物</h2>
+    <h2 class="text-2xl font-bold text-center text-darkblue">暢銷禮物</h2>
     <svg
       xmlns="http://www.w3.org/2000/svg"
       fill="none"
@@ -115,15 +141,36 @@ onMounted(async () => {
               :src="product.image_url"
               class="object-cover w-full h-[176px] mb-2 rounded-lg"
             />
-            <p class="mb-2 font-semibold text-center text-[#023047]">
+            <p class="mb-2 text-lg font-bold text-center text-darkblue">
               {{ product.name }}
             </p>
-            <p class="text-center text-[#219ebc] font-bold mb-4">
-              價格：{{ product.price }}
-            </p>
-            <p class="text-center w-40 py-1 bg-[#219ebc] text-white rounded-[20px] mx-auto">
+            <p class="mb-4 font-semibold text-center text-secondary">
               銷售量：{{ product.sales }}
             </p>
+            <p class="mx-auto mb-4 text-center text-gray-500">
+              價格：{{ product.price }} 元
+            </p>
+
+            <button
+              @click="handleAddCart(product)"
+              class="mt-2 css-button-fully-rounded--blue"
+            >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              class="relative size-6 -top-0.5"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M15.75 10.5V6a3.75 3.75 0 1 0-7.5 0v4.5m11.356-1.993 1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 0 1-1.12-1.243l1.264-12A1.125 1.125 0 0 1 5.513 7.5h12.974c.576 0 1.059.435 1.119 1.007ZM8.625 10.5a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm7.5 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z"
+              />
+            </svg>
+            加入購物車
+          </button>
           </div>
         </div>
       </template>
@@ -135,7 +182,7 @@ onMounted(async () => {
       :key="category"
       @mouseover="selectedCategory = category"
       :class="{
-        'relative after:block after:h-[2px] after:bg-[#219ebc] after:w-[100%] after:absolute after:bottom-0 after:left-0 text-gray-600':
+        'relative after:block after:h-[2px] after:bg-secondary after:w-[100%] after:absolute after:bottom-0 after:left-0 text-darkblue':
           selectedCategory === category,
         'text-gray-400': selectedCategory !== category,
       }"
@@ -150,7 +197,7 @@ onMounted(async () => {
       placeholder="輸入關鍵字搜尋商品"
       v-model="searchKeyword"
       @keyup.enter="search"
-      class="border border-gray-400 rounded-[20px] p-2 max-w-[600px] w-full outline-[#219ebc]"
+      class="border border-gray-400 rounded-[20px] p-2 max-w-[600px] w-full outline-secondary"
     />
     <button @click="search">
       <svg
@@ -170,7 +217,7 @@ onMounted(async () => {
     </button>
   </div>
   <div>
-    <h1 class="mb-4 text-2xl font-bold text-center text-[#023047]">
+    <h1 class="mb-4 text-2xl font-bold text-center text-darkblue">
       {{ selectedCategory }}
     </h1>
     <div class="grid grid-cols-3 gap-4">
@@ -189,11 +236,11 @@ onMounted(async () => {
             />
           </div>
           <div class="flex flex-col h-full gap-2">
-            <p class="font-semibold text-center text-[#023047]">
+            <p class="text-lg font-semibold text-center text-darkblue">
               {{ product.name }}
             </p>
-            <p class="text-center text-[#219ebc] font-semibold">
-              價格：{{ product.price }}
+            <p class="font-semibold text-center text-secondary">
+              價格：{{ product.price }} 元
             </p>
             <p class="mx-12 text-center text-gray-500">
               {{ product.description }}
@@ -202,7 +249,7 @@ onMounted(async () => {
           <!-- 下半部 : 庫存 -->
           <!-- 這樣寫是因為商品描述長度不同 會導致庫存在不同水平線上 -->
           <div class="flex justify-center gap-4 mb-4">
-            <p class="py-1 text-[#023047] font-semibold">
+            <p class="py-1 font-semibold text-darkblue">
               庫存：{{ product.inventory }}
             </p>
             <div v-if="product.inventory <= 5">
@@ -212,7 +259,7 @@ onMounted(async () => {
             </div>
           </div>
           <button
-            @click="addCart(product)"
+            @click="handleAddCart(product)"
             class="css-button-fully-rounded--blue"
           >
             <svg
