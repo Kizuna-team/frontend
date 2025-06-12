@@ -5,6 +5,7 @@ import BrandView from "@/views/BrandView.vue";
 import BlessingView from "@/views/BlessingView.vue";
 import CartView from "@/views/CartView.vue";
 import ChatRoomView from "@/views/ChatRoomView.vue";
+import ActivityMyView from "@/views/ActivityMyView.vue";
 import EditProfileView from "@/views/EditProfileView.vue";
 import GiftCheckoutView from "@/views/GiftCheckoutView.vue";
 import HomeView from "@/views/HomeView.vue";
@@ -40,6 +41,11 @@ const router = createRouter({
       component: ActivityList,
     },
     {
+      path: "/activities/my",
+      name: "myActivity",
+      component: ActivityMyView,
+    },
+    {
       path: "/activities/new",
       name: "activityCreate",
       component: ActivityView,
@@ -69,6 +75,12 @@ const router = createRouter({
       name: "ChatRoom",
       component: ChatRoomView,
     },
+    {
+      path: "/events/:id",
+      name: "eventDetail",
+      component: () => import("@/views/EventCardByIdView.vue"), // ← 這個 view 自己命名
+    },
+    // 加入編輯個人檔案頁面route
     {
       path: "/edit-profile",
       name: "EditProfile",
