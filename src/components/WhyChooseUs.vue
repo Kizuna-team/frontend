@@ -7,17 +7,17 @@ const cards = [
   {
     title: "有趣的活動",
     descZh:
-      "找不到想參加的活動？沒關係，自己發起也行！和同好一起展開精彩聚會。",
+      "找不到想參加的活動？沒關係，自己發起也行！\n和同好一起展開精彩聚會",
     descEn: "Can't find events? Start your own and meet like-minded people.",
   },
   {
     title: "即時聊天",
-    descZh: "配對成功後立刻開啟專屬聊天室，輕鬆交流、不再錯過緣分。",
+    descZh: "配對成功後立刻開啟專屬聊天室，輕鬆交流、不再錯過緣分",
     descEn: "Chat instantly after matching, never miss a connection.",
   },
   {
     title: "智能配對",
-    descZh: "依你的興趣與行為推薦合適對象，主動邀請你互動、建立連結。",
+    descZh: "依你的興趣與行為推薦合適對象，主動邀請你互動、建立連結",
     descEn: "Get smart matches based on your interests and behavior.",
   },
 ];
@@ -54,7 +54,7 @@ onMounted(() => {
         that start from shared experiences.
       </p>
       <p class="text-base text-gray-600">
-        不知道從哪開始也沒關係，我們讓你輕鬆踏出第一步。加入有趣的活動、展開即時對話、認識對的人，讓每一次相遇都更有意義。
+        不知道從哪開始也沒關係，我們讓你輕鬆踏出第一步。加入有趣的活動、展開即時對話、認識對的人，讓每一次相遇都更有意義
       </p>
     </div>
 
@@ -69,8 +69,9 @@ onMounted(() => {
         data-aos="zoom-in"
         :data-aos-delay="index * 300"
       >
-        <h3 class="text-xl font-bold text-darkblue">{{ card.title }}</h3>
-        <p class="mt-2 text-sm text-gray-800">{{ card.descZh }}</p>
+        <h3 class="text-xl font-bold text-darkblue ">{{ card.title }}</h3>
+        <!-- 加上 whitespace-pre-line 讓 \n 換行符號生效  -->
+        <p class="mt-2 text-sm text-gray-800 whitespace-pre-line">{{ card.descZh }}</p>
         <p class="mt-1 text-xs italic text-gray-500">{{ card.descEn }}</p>
       </div>
     </div>
