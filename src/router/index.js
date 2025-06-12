@@ -103,10 +103,15 @@ const router = createRouter({
       path: "/login",
       name: "Login",
       component: LoginView,
+    },{
       path: "/:pathMatch(.*)*",
       name: "NotFound",
       component: NotFound,
       meta: { hideHeader: true },
+    },{
+      path: "/login",
+      name: "Login",
+      component: LoginView,
     },
     {
       path: "/match",
