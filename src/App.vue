@@ -26,12 +26,34 @@ const handleLogout = () => {
 </script>
 
 <template>
-  <div>
+  
+  <div :class="{ 'home-page': $route.path === '/' }">
     <!-- Header：根據路由條件顯示 -->
     <Header v-if="showHeader" />
-    
+      
     <main :class="mainClass">
       <RouterView />
     </main>
   </div>
 </template>
+
+<style>
+/* 首頁的Loading效果 */
+.home-page .navbar-header {
+  opacity: 0;
+  transform: translateY(-20px);
+  animation: navbar-appear 0.8s ease forwards;
+  animation-delay: 5.2s;
+}
+
+@keyframes navbar-appear {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+</style>
