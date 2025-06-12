@@ -11,8 +11,9 @@ import MatchView from "../views/MatchView.vue";
 import ActivityList from "@/components/ActivityList.vue";
 import ActivityView from "@/components/ActivityForm.vue";
 import EditProfileView from "@/views/EditProfileView.vue";
+import PaymentView from '@/views/PaymentView.vue';
+import BlessingView from "@/views/BlessingView.vue";
 import GiftCheckoutView from "@/views/GiftCheckoutView.vue";
-import PaymentView from '@/views/PaymentView.vue'
 import { useUserStore } from "@/stores/user.js";
 
 const router = createRouter({
@@ -98,6 +99,10 @@ const router = createRouter({
       meta: { hideHeader: true },
     },
     {
+      path: '/blessing',
+      name: 'Blessing',
+      component: BlessingView
+  }
       path: '/payment',      
       name: 'Payment',
       component: PaymentView
