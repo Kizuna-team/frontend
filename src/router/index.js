@@ -15,6 +15,7 @@ import PaymentView from '@/views/PaymentView.vue';
 import BlessingView from "@/views/BlessingView.vue";
 import GiftCheckoutView from "@/views/GiftCheckoutView.vue";
 import ProductAdminView from "@/views/ProductAdminView.vue";
+import TestchatView from "../views/TestchatView.vue";
 import { useUserStore } from "@/stores/user.js";
 import ProfileTwoView from "@/views/ProfileTwoView.vue";
 import SubscriptionView from "@/views/SubscriptionView.vue";
@@ -131,6 +132,11 @@ const router = createRouter({
       path: "/super/products/inventory",
       name: "ProductAdmin",
       component: ProductAdminView,
+    },
+    {
+      path: '/testchat',
+      name: '/Testchat',
+      component: TestchatView
     },
   ],
 });
