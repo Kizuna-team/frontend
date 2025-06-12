@@ -14,7 +14,7 @@
 
     <!-- 漸層遮罩 -->
     <div
-      class="absolute inset-0 bg-gradient-to-r from-black/60 to-transparent z-[1] opacity-0 animate-fade-in delay-300"
+      class="absolute inset-0 bg-gradient-to-r from-black/80 to-transparent z-[1] opacity-0 animate-fade-in delay-300"
     ></div>
 
     <!-- 文字區塊 -->
