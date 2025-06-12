@@ -11,6 +11,7 @@ import MatchView from "../views/MatchView.vue";
 import ActivityList from "@/components/ActivityList.vue";
 import ActivityView from "@/components/ActivityForm.vue";
 import EditProfileView from "@/views/EditProfileView.vue";
+import GiftCheckoutView from "@/views/GiftCheckoutView.vue";
 import PaymentView from '@/views/PaymentView.vue'
 import { useUserStore } from "@/stores/user.js";
 
@@ -84,6 +85,11 @@ const router = createRouter({
       name: "EditProfile",
       component: EditProfileView,
       meta: { requiresAuth: true },
+    },
+    {
+      path: "/gift-checkout",
+      name: "GiftCheckout",
+      component: GiftCheckoutView,
     },
     {
       path: "/:pathMatch(.*)*",
