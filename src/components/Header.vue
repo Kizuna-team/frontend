@@ -72,7 +72,7 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <header class="fixed top-0 left-0 w-full h-20 z-50">
+  <header class="navbar-header fixed top-0 left-0 w-full h-20 z-50">
     <nav class="flex items-center justify-between px-6 py-4">
       <!-- debug -->
       <div
@@ -235,6 +235,7 @@ onUnmounted(() => {
 </template>
 
 <style scoped>
+
 .group:hover .glow {
   opacity: 1;
 }
