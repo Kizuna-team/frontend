@@ -11,6 +11,7 @@ import MatchView from "../views/MatchView.vue";
 import ActivityList from "@/components/ActivityList.vue";
 import ActivityView from "@/components/ActivityForm.vue";
 import EditProfileView from "@/views/EditProfileView.vue";
+import BlessingView from "@/views/BlessingView.vue";
 
 import { useUserStore } from "@/stores/user.js";
 
@@ -91,6 +92,11 @@ const router = createRouter({
       component: () => import("@/views/NotFound.vue"),
       meta: { hideHeader: true },
     },
+    {
+      path: '/blessing',
+      name: 'Blessing',
+      component: BlessingView
+  }
   ],
 });
 
