@@ -197,6 +197,17 @@ const sendMessage = async () => {
     timestamp: new Date().toISOString(),
   };
 
+  // 👇 新增：建立本地顯示用的訊息格式
+  const localMessage = {
+    id: Date.now(),
+    content: newMessage.value,
+    senderId: userStore.userId,
+    senderName: userStore.username || `User${userStore.userId}`,
+    timestamp: new Date().toISOString(),
+    time: formatTime(new Date()),
+    roomId: roomId.value,
+  };
+
   console.log("發送的訊息資料:", messageData);
 
   // 檢查 Socket 連接狀態
@@ -225,12 +236,12 @@ const sendMessage = async () => {
     console.log("chatStore:", chatStore);
     console.log("chatStore.addMessage:", chatStore.addMessage);
 
-    if (chatStore && chatStore.addMessage) {
-      chatStore.addMessage(localMessage);
-      console.log("✅ 訊息已加入 chatStore");
-    } else {
-      console.error("❌ chatStore 或 addMessage 方法不存在");
-    }
+    // if (chatStore && chatStore.addMessage) {
+    //   chatStore.addMessage(localMessage);
+    //   console.log("✅ 訊息已加入 chatStore");
+    // } else {
+    //   console.error("❌ chatStore 或 addMessage 方法不存在");
+    // }
 
     newMessage.value = "";
     console.log("✅ 輸入框已清空");
