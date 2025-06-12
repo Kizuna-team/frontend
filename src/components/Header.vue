@@ -109,6 +109,11 @@ onUnmounted(() => {
         <LiquidNavLink to="/edit-profile" :colorMode="getNavTextColor"
           >編輯個人檔案
         </LiquidNavLink>
+        <RouterLink
+          to="/activities/my"
+          class="p-4 text-lg leading-none transition hover:text-gray-300"
+          >我的活動</RouterLink
+        >
       </div>
 
       <template v-if="!store.accessToken">
