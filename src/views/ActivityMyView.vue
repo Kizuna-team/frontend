@@ -28,28 +28,47 @@ const handleDelete = async (id) => {
 </script>
 
 <template>
-  <div>
-    <h2 class="mb-4 text-2xl">我的活動</h2>
-    <div v-if="loading">載入中...</div>
+  <div class="max-w-2xl p-4 mx-auto">
+    <h2 class="mb-4 text-2xl font-bold">我的活動</h2>
+    <div v-if="loading" class="py-8 text-center text-gray-500">載入中...</div>
     <div v-else-if="error" class="text-red-500">{{ error }}</div>
     <div v-else>
-      <div v-if="activities.length === 0">你還沒有建立任何活動</div>
+      <div v-if="activities.length === 0" class="text-center text-gray-400">你還沒有建立任何活動</div>
       <div
-     v-for="activity in activities"
+        v-for="activity in activities"
         :key="activity.id"
-        class="p-4 mb-4 border rounded"
+        class="flex flex-col items-start gap-4 p-4 mb-6 bg-white border shadow-md rounded-2xl md:flex-row"
       >
-        <h3>{{ activity.title }}</h3>
-        <p>日期：{{ activity.date }}</p>
-        <p>地點：{{ activity.location }}</p>
-        <p>描述：{{ activity.description }}</p>
-        <img v-if="activity.image_url" :src="activity.image_url" class="object-cover w-48 h-32" />
-        <p class="text-gray-500">建立時間：{{ activity.created_at }}</p>
-        <!-- 編輯、刪除按鈕 -->
-        <button @click="goEdit(activity.id)" class="mr-2">編輯</button>
-        <button @click="handleDelete(activity.id)" class="text-red-500">刪除</button>
+        <img
+          v-if="activity.image_url"
+          :src="activity.image_url"
+          class="object-cover w-full h-32 mb-2 md:w-48 rounded-xl md:mb-0"
+        />
+        <div class="flex-1">
+          <h3 class="mb-1 text-lg font-semibold">{{ activity.title }}</h3>
+          <p class="mb-1 text-gray-500">主辦人：{{ activity.created_by_username }}</p>
+          <p class="mb-1"><span class="font-semibold">日期：</span>{{ activity.date }}</p>
+          <p class="mb-1"><span class="font-semibold">地點：</span>{{ activity.location }}</p>
+          <p class="mb-1"><span class="font-semibold">描述：</span>{{ activity.description }}</p>
+          <p class="mt-2 text-xs text-gray-400">建立時間：{{ activity.created_at?.slice(0,10) }}</p>
+          <div class="flex gap-2 mt-3">
+            <button
+              @click="goEdit(activity.id)"
+              class="px-4 py-1 text-white transition bg-blue-500 rounded hover:bg-blue-600"
+            >
+              編輯
+            </button>
+            <button
+              @click="handleDelete(activity.id)"
+              class="px-4 py-1 text-white transition bg-red-500 rounded hover:bg-red-600"
+            >
+              刪除
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   </div>
 </template>
+
 
