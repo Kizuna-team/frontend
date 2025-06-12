@@ -102,8 +102,9 @@ const router = createRouter({
       path: '/blessing',
       name: 'Blessing',
       component: BlessingView
-  }
-      path: '/payment',      
+    },
+    {
+      path: '/payment',
       name: 'Payment',
       component: PaymentView
     }
