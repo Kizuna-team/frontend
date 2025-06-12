@@ -5,13 +5,14 @@ import { onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
 
 const store = useActivityStore();
-const { myActivity, loading, error } = storeToRefs(store);
+// 把 store 裡的變數都轉為 ref
+const { activities, loading, error } = storeToRefs(store);
 const router = useRouter();
-// const myActivities = ref([store.myActivity]);
-console.log("myActivities:", myActivity);
+console.log("myActivities:", activities);
 onMounted(() => {
   store.fetchMyActivities();
 });
+
 // 編輯（導到編輯頁面，傳 id）
 const goEdit = (id) => {
   router.push(`/activities/edit/${id}`);
@@ -32,21 +33,21 @@ const handleDelete = async (id) => {
     <div v-if="loading">載入中...</div>
     <div v-else-if="error" class="text-red-500">{{ error }}</div>
     <div v-else>
-      <!-- <div v-if="myActivities.length === 0">你還沒有建立任何活動</div> -->
+      <div v-if="activities.length === 0">你還沒有建立任何活動</div>
       <div
-     v-for="act in myActivities"
-        :key="act.id"
+     v-for="activity in activities"
+        :key="activity.id"
         class="p-4 mb-4 border rounded"
       >
-        <h3>{{ act.title }}</h3>
-        <p>日期：{{ act.date }}</p>
-        <p>地點：{{ act.location }}</p>
-        <p>描述：{{ act.description }}</p>
-        <img v-if="act.image_url" :src="act.image_url" class="object-cover w-48 h-32" />
-        <p class="text-gray-500">建立時間：{{ act.created_at }}</p>
+        <h3>{{ activity.title }}</h3>
+        <p>日期：{{ activity.date }}</p>
+        <p>地點：{{ activity.location }}</p>
+        <p>描述：{{ activity.description }}</p>
+        <img v-if="activity.image_url" :src="activity.image_url" class="object-cover w-48 h-32" />
+        <p class="text-gray-500">建立時間：{{ activity.created_at }}</p>
         <!-- 編輯、刪除按鈕 -->
-        <button @click="goEdit(act.id)" class="mr-2">編輯</button>
-        <button @click="handleDelete(act.id)" class="text-red-500">刪除</button>
+        <button @click="goEdit(activity.id)" class="mr-2">編輯</button>
+        <button @click="handleDelete(activity.id)" class="text-red-500">刪除</button>
       </div>
     </div>
   </div>
