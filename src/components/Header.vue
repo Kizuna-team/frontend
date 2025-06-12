@@ -1,9 +1,10 @@
 <script setup>
-import { ref, onMounted, onUnmounted } from "vue";
+import { ref, onMounted, onUnmounted, computed } from "vue";
 import { useUserStore } from "@/stores/user";
+import { useRoute } from "vue-router";
 import router from "@/router";
 import LiquidNavLink from "@/components/LiquidGlass.vue";
-
+const route = useRoute();
 const store = useUserStore();
 const handleLogout = () => {
   store.logout();
@@ -29,6 +30,17 @@ function handleScroll() {
   }
 }
 
+// 根據路由決定字體顏色
+const getNavTextColor = computed(() => {
+  // 如果是首頁，保持原本的滾動變色邏輯
+  if (route.path === "/") {
+    return textColorClass.value; // 使用原本的 textColorClass 變數
+  }
+
+  // 其他所有頁面都使用黑色
+  return "black";
+});
+
 // 控制下拉框的顯示與隱藏
 const isDropdownOpen = ref(false);
 
@@ -47,20 +59,16 @@ const closeDropdown = (event) => {
 // 在組件掛載時添加全局點擊事件監聽器
 onMounted(() => {
   window.addEventListener("click", closeDropdown);
+  window.addEventListener("scroll", handleScroll); 
 });
 
 // 組件卸載時移除事件監聽器
 onUnmounted(() => {
   window.removeEventListener("click", closeDropdown);
+  window.removeEventListener("scroll", handleScroll); 
 });
 
-onMounted(() => {
-  window.addEventListener("scroll", handleScroll);
-});
 
-onUnmounted(() => {
-  window.removeEventListener("scroll", handleScroll);
-});
 </script>
 
 <template>
@@ -70,44 +78,46 @@ onUnmounted(() => {
       <div
         class="absolute top-20 left-4 text-sm text-white bg-black px-2 py-1 rounded"
       >
-        scrollY in {{ debugY }}: {{ textColorClass }}
+        Route: {{ $route.path }} | scrollY: {{ debugY }} | Color:
+        {{ getNavTextColor }}
       </div>
-      <div class="flex items-center">
-        <LiquidNavLink to="/" :colorMode="textColorClass">Kizuna</LiquidNavLink>
+      <div class="flex items-center w-1/4">
+        <LiquidNavLink to="/" :colorMode="getNavTextColor">Kizuna</LiquidNavLink>
       </div>
 
       <div class="flex justify-center flex-1 space-x-4">
-        <LiquidNavLink to="/match" :colorMode="textColorClass"
+        <LiquidNavLink to="/match" :colorMode="getNavTextColor"
           >配對池</LiquidNavLink
         >
-        <LiquidNavLink to="/product" :colorMode="textColorClass"
+        <LiquidNavLink to="/product" :colorMode="getNavTextColor"
           >商品列表</LiquidNavLink
         >
-        <LiquidNavLink to="/activities" :colorMode="textColorClass"
+        <LiquidNavLink to="/activities" :colorMode="getNavTextColor"
           >活動</LiquidNavLink
         >
-        <LiquidNavLink to="/activities/new" :colorMode="textColorClass"
+        <LiquidNavLink to="/activities/new" :colorMode="getNavTextColor"
           >活動表單</LiquidNavLink
         >
-        <LiquidNavLink to="/activities/edit/:id" :colorMode="textColorClass"
+        <LiquidNavLink to="/activities/edit/:id" :colorMode="getNavTextColor"
           >活動編輯</LiquidNavLink
         >
       </div>
 
       <template v-if="!store.accessToken">
-        <LiquidNavLink to="/login" :colorMode="textColorClass"
-          >登入</LiquidNavLink
-        >
-        <LiquidNavLink to="/register" :colorMode="textColorClass"
-          >註冊</LiquidNavLink
-        >
-        
+        <div class="flex justify-end items-center space-x-4 w-1/4">
+          <LiquidNavLink to="/login" :colorMode="getNavTextColor"
+            >登入</LiquidNavLink
+          >
+          <LiquidNavLink to="/register" :colorMode="getNavTextColor"
+            >註冊</LiquidNavLink
+          >
+        </div>
       </template>
       <!-- 已登入狀態：顯示訊息、購物車和用戶選單 -->
       <template v-else>
-        <div class="flex items-center space-x-4">
-          <!-- 訊息 -->
-          <LiquidNavLink to="/chat" :colorMode="textColorClass">
+        <div class="flex justify-end items-center space-x-4 w-1/4">
+          <!-- 訊息icon -->
+          <LiquidNavLink to="/chat" :colorMode="getNavTextColor">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 24 24"
@@ -121,9 +131,9 @@ onUnmounted(() => {
               />
             </svg>
           </LiquidNavLink>
-          
-          <!-- 購物車 -->
-          <LiquidNavLink to="/cart" :colorMode="textColorClass">
+
+          <!-- 購物車icon -->
+          <LiquidNavLink to="/cart" :colorMode="getNavTextColor">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 24 24"
@@ -142,7 +152,9 @@ onUnmounted(() => {
               class="flex items-center justify-center w-12 h-12 text-sm font-bold bg-[#ddedff] rounded-full text-[#7395BA] hover:bg-slate-300 cursor-pointer"
               @click="toggleDropdown"
             >
-              {{ store.username ? store.username.charAt(0).toUpperCase() : 'U' }}
+              {{
+                store.username ? store.username.charAt(0).toUpperCase() : "U"
+              }}
             </div>
             <div
               v-if="isDropdownOpen"
