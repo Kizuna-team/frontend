@@ -11,11 +11,13 @@ import MatchView from "../views/MatchView.vue";
 import ActivityList from "@/components/ActivityList.vue";
 import ActivityView from "@/components/ActivityForm.vue";
 import EditProfileView from "@/views/EditProfileView.vue";
-import PaymentView from '@/views/PaymentView.vue';
+import PaymentView from "@/views/PaymentView.vue";
 import BlessingView from "@/views/BlessingView.vue";
 import GiftCheckoutView from "@/views/GiftCheckoutView.vue";
 import ProductAdminView from "@/views/ProductAdminView.vue";
 import { useUserStore } from "@/stores/user.js";
+import LoginNewView from "@/views/LoginNewView.vue";
+import RegisterNewView from "@/views/RegisterNewView.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -46,6 +48,18 @@ const router = createRouter({
       name: "Login",
       component: LoginView,
     },
+    //測試畫面
+    {
+      path: "/loginNew",
+      name: "LoginNew",
+      component: LoginNewView,
+    },
+    {
+      path: "/registerNew",
+      name: "RegisterNew",
+      component: RegisterNewView,
+    },
+
     {
       path: "/register",
       name: "Register",
@@ -100,9 +114,9 @@ const router = createRouter({
       meta: { hideHeader: true },
     },
     {
-      path: '/blessing',
-      name: 'Blessing',
-      component: BlessingView
+      path: "/blessing",
+      name: "Blessing",
+      component: BlessingView,
     },
     {
       path: '/payment',
