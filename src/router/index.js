@@ -12,9 +12,7 @@ import ActivityList from "@/components/ActivityList.vue";
 import ActivityView from "@/components/ActivityForm.vue";
 import EditProfileView from "@/views/EditProfileView.vue";
 import GiftCheckoutView from "@/views/GiftCheckoutView.vue";
-
-import { useUserStore } from "@/stores/user.js";
-
+import PaymentView from '@/views/PaymentView.vue'
 import { useUserStore } from "@/stores/user.js";
 
 const router = createRouter({
@@ -99,6 +97,11 @@ const router = createRouter({
       component: () => import("@/views/NotFound.vue"),
       meta: { hideHeader: true },
     },
+    {
+      path: '/payment',      
+      name: 'Payment',
+      component: PaymentView
+    }
   ],
 });
 
