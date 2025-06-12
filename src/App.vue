@@ -29,8 +29,7 @@ const handleLogout = () => {
   <div>
     <!-- Header：根據路由條件顯示 -->
     <Header v-if="showHeader" />
-
-    <!-- 根據路由決定是否要限制寬度 -->
+    
     <main :class="mainClass">
       <RouterView />
     </main>
