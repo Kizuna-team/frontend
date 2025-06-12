@@ -37,7 +37,7 @@ export const useUserStore = defineStore("user", () => {
     isLoggedIn: isLoggedIn.value
   }));
 
-  // 從資料庫抓 profile
+   // 從資料庫抓 profile
   function getProfile(profileDate){
     profile.gender = profileDate.gender;
     profile.age = profileDate.age;
