@@ -4,7 +4,7 @@ import axios from "@/api/axios.js";
 
 export const sendLike = async (targetId, status = 1) => {
   try {
-    const res = await axios.post("/like", {
+    const res = await axios.post("/like/", {
       targetId,
       status,
     });
@@ -29,7 +29,7 @@ export const sendLike = async (targetId, status = 1) => {
 
 export const sendSuperLike = async (targetId) => {
   try {
-    const res = await axios.post("/super-like", { targetId });
+    const res = await axios.post("like/super-like", { targetId });
 
     if (res.data.matched) {
       const matchedTargetId = res.data.matchedTargetId;
@@ -53,7 +53,7 @@ export const sendSuperLike = async (targetId) => {
 // { isMember, limit, remainingCount, isWithinLimit }
 export const fetchSuperLikeStatus = async () => {
   try {
-    const res = await axios.get("/super-like/status");
+    const res = await axios.get("like/super-like/status");
     return res.data;
   } catch (error) {
     console.error("取得該用戶的Super like 狀態失敗", error);
