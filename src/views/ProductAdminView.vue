@@ -54,7 +54,7 @@ const updateInventory = async (productId, newInventory) => {
           </td>
           <td class="p-2 border">
             <button
-              class="bg-blue-500 text-white px-3 py-1 rounded"
+              class="bg-blue-500 text-white px-3 py-1 rounded hover:bg-[darkblue]"
               @click="updateInventory(p.id, p.inventory)"
             >
               更新庫存

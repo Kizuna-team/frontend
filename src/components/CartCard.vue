@@ -25,7 +25,7 @@ defineProps({
     <input
       type="number"
       :value="item.quantity" min="1"
-      @change="cartStore.updateQuantity(item.id, $event.target.value)"
+      @change="cartStore.updateQuantity(item.id, Number($event.target.value))"
     />
     <button
       @click="cartStore.removeFromCart(item.id)"

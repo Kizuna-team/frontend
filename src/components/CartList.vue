@@ -66,7 +66,7 @@ const sendOrder = async () => {
         清空購物車
       </button>
       <p>總計: {{ cartStore.totalPrice }} 元</p>
-      <p>總計: {{ cartStore.totalQuantity }} 元</p>
+      <p>共計: {{ cartStore.totalQuantity }} 件商品</p>
     </div>
     <div class="text-right">
       <button

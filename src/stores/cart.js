@@ -71,7 +71,7 @@ export const useCartStore = defineStore("cart", () => {
 
       //itemQuantity是指購物車數量變化顯示出來的值，但實際值尚未更新
       item.quantity = newQuantity;
-
+      
       //根據數量變化更新庫存
       //買的變多，庫存變少
       if (diff > 0) {
