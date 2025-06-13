@@ -1,16 +1,46 @@
 <script setup>
 import { ref } from "vue";
+import { useUserStore } from "../stores/user";
+import { useRouter } from "vue-router";
 
-const email = ref("");
+const store = useUserStore();
+const router = useRouter();
+
+const username = ref("");
 const password = ref("");
-const rememberMe = ref(false);
 
-const handleRegister = () => {
-  console.log("Registering:", {
-    email: email.value,
-    password: password.value,
-    rememberMe: rememberMe.value,
-  });
+const handleRegister = async () => {
+  // debug
+  // console.log('開始註冊', username.value);
+  if (!username.value || !password.value) {
+    alert("請輸入帳號與密碼");
+    return;
+  }
+
+  if (
+    !/[a-zA-Z]/.test(password.value) ||
+    !/[0-9]/.test(password.value) ||
+    password.value.length <= 6
+  ) {
+    alert("密碼格式錯誤\n請輸入至少 7 碼以上，且包含英文字母與數字");
+    return;
+  }
+
+  const res = await store.register(username.value, password.value);
+  // debug
+  // console.log(res);
+  if (res.success) {
+    alert(res.message || "註冊成功，請登入");
+    router.push("/login"); // 註冊完成後 導回登入頁
+  } else {
+    alert(
+      `註冊失敗\n${res.message}${res.reason ? `\n原因：${res.reason}` : ""}`
+    );
+  }
+};
+
+const loginWithGoogle = () => {
+  window.location.href = "http://localhost:3000/auth/google";
 };
 </script>
 
@@ -102,8 +132,9 @@ const handleRegister = () => {
           <span class="flex-grow h-px bg-gray-300"></span>
         </div>
 
-        <!-- Google 註冊 -->
+        <!-- Google 登入 -->
         <button
+          @click="loginWithGoogle"
           class="flex items-center justify-center w-full gap-3 py-3 text-sm font-semibold rounded-full border border-gray-300 bg-white/80 backdrop-blur hover:bg-white hover:border-[#219ebc] transition-all duration-200"
         >
           <img
@@ -111,7 +142,7 @@ const handleRegister = () => {
             alt="Google"
             class="w-5 h-5"
           />
-          <span class="text-gray-800">使用 Google 註冊</span>
+          <span class="text-gray-800">使用 Google 登入</span>
         </button>
       </div>
     </div>

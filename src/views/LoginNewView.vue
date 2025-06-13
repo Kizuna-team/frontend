@@ -1,16 +1,31 @@
 <script setup>
 import { ref } from "vue";
+import { useUserStore } from "../stores/user";
+
+const store = useUserStore();
 
 const email = ref("");
 const password = ref("");
 const rememberMe = ref(false);
 
-const handleLogin = () => {
-  console.log("Logging in:", {
-    email: email.value,
-    password: password.value,
-    rememberMe: rememberMe.value,
-  });
+const handleLogin = async () => {
+  if (!store.username || !store.password) {
+    alert("請輸入帳號和密碼");
+    return;
+  }
+  try {
+    await store.login(store.username, store.password);
+    alert("登入成功，歡迎回來！");
+  } catch (error) {
+    console.error("登入失敗", error);
+    const msg = error.response?.data?.message || "伺服器無回應";
+    const reason = error.response?.data?.reason || error.message;
+    alert(`登入失敗\n原因：${msg}:${reason}`);
+  }
+};
+
+const loginWithGoogle = () => {
+  window.location.href = "http://localhost:3000/auth/google";
 };
 </script>
 
@@ -117,6 +132,7 @@ const handleLogin = () => {
 
         <!-- Google 登入 -->
         <button
+          @click="loginWithGoogle"
           class="flex items-center justify-center w-full gap-3 py-3 text-sm font-semibold rounded-full border border-gray-300 bg-white/80 backdrop-blur hover:bg-white hover:border-[#219ebc] transition-all duration-200"
         >
           <img
