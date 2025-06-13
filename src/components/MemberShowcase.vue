@@ -1,7 +1,7 @@
 <script setup>
 import MemberCard from "./MemberCard.vue";
 
-const animationDuration = 40; // 秒，越大越慢越柔順
+const animationDuration = 40;
 
 const members = [
   { photo: "/people.jpg", firstName: "Jhon", lastName: "Osteen" },
@@ -51,7 +51,7 @@ const members = [
       </div>
       <div class="mt-20">
         <button
-          class="py-[18px] text-2xl font-semibold text-white transition-all duration-300 origin-center rounded-full shadow-xl w-80 bg-gradient-to-r from-primary to-pink-300 hover:from-[#7bb8d9] hover:to-pink-400 hover:scale-110 hover:brightness-110 hover:animate-pulse"
+          class="py-[18px] text-2xl font-semibold text-white transition-all duration-300 origin-center rounded-full shadow-xl w-80 bg-gradient-to-r from-primary to-pink-300 hover:from-[#7bb8d9] hover:to-pink-400 hover:scale-110 hover:animate-pulse"
         >
           立即開始配對<br />
           <span class="text-xl font-normal">Let’s Match!</span>

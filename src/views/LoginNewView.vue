@@ -25,7 +25,7 @@ const handleLogin = async () => {
 };
 
 const loginWithGoogle = () => {
-  window.location.href = "http://localhost:3000/auth/google";
+  window.location.href = "http://localhost:3000/auth/google/callback";
 };
 </script>
 
