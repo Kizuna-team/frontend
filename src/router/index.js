@@ -14,6 +14,7 @@ import EditProfileView from "@/views/EditProfileView.vue";
 import PaymentView from '@/views/PaymentView.vue';
 import BlessingView from "@/views/BlessingView.vue";
 import GiftCheckoutView from "@/views/GiftCheckoutView.vue";
+import ProductAdminView from "@/views/ProductAdminView.vue";
 import { useUserStore } from "@/stores/user.js";
 
 const router = createRouter({
@@ -107,7 +108,12 @@ const router = createRouter({
       path: '/payment',
       name: 'Payment',
       component: PaymentView
-    }
+    },
+    {
+      path: "/super/products/inventory",
+      name: "ProductAdmin",
+      component: ProductAdminView,
+    },
   ],
 });
 
