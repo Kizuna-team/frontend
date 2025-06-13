@@ -35,12 +35,39 @@ const send = async () => {
   <div class="max-w-md h-[600px] mx-auto mt-10 p-4 border rounded shadow flex flex-col">
     <h1 class="mb-4 text-xl font-bold">AI 聊天測試</h1>
 
-    <div ref="chatBox" class="flex-1 p-2 mb-4 overflow-y-auto border rounded bg-gray-50">
-      <div v-for="(m, i) in messages" :key="i" class="mb-2">
-        <p :class="m.role === 'user' ? 'text-blue-600' : 'text-green-600'">
-          {{ m.role === 'user' ? '你：' : 'AI：' }}
-        </p>
-        <p>{{ m.content }}</p>
+    <div
+      ref="chatBox"
+      class="flex-1 p-2 mb-4 space-y-2 overflow-y-auto border rounded bg-gray-50"
+    >
+      <div
+        v-for="(m, i) in messages"
+        :key="i"
+        :class="[
+          'flex',
+          m.role === 'user' ? 'justify-end' : 'justify-start'
+        ]"
+      >
+        <div
+          :class="[
+            'max-w-[75%] p-2 rounded',
+            m.role === 'user'
+              ? 'bg-blue-100 text-blue-800 text-right'
+              : 'bg-green-100 text-green-800 text-left'
+          ]"
+        >
+          <p class="text-sm font-semibold">
+            {{ m.role === 'user' ? '你：' : 'AI：' }}
+          </p>
+          <div>
+            <p
+              v-for="(line, j) in m.content.split('\n')"
+              :key="j"
+              class="whitespace-pre-wrap"
+            >
+              {{ line }}
+            </p>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -53,3 +80,4 @@ const send = async () => {
     <button @click="send" class="py-2 text-white bg-blue-500 rounded">送出</button>
   </div>
 </template>
+
