@@ -26,11 +26,18 @@ const sendOrder = async () => {
       items: items
     });
 
-    message.value = `送出成功，訂單編號:${res.data.id}`;
-    
+   
+    if (res.data.success) {
+      console.log(res.data);
+      // 成功後跳轉 LINE Pay 頁面
+      window.location.href = res.data.paymentUrl;
+    } else {
+      message.value = "建立訂單失敗：" + res.data.message;
+    }
+    // TODO : 付款完成後 (callback confirm) 才清空
     cartStore.clearCart();
   }catch(err){
-    console.error(err);
+    console.error("送禮失敗 請稍後再試 失敗原因:", err);
   }
 };
 
