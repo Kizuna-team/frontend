@@ -197,7 +197,7 @@ const sendMessage = async () => {
     timestamp: new Date().toISOString(),
   };
 
-  // 👇 新增：建立本地顯示用的訊息格式
+  // 建立本地顯示用的訊息格式
   const localMessage = {
     id: Date.now(),
     content: newMessage.value,
@@ -308,7 +308,7 @@ watch(
         userName: currentUser.value.name || `User${userStore.userId}`,
       });
 
-      // 清空當前訊息（可選）
+      // 清空當前訊息
       chatStore.clearMessages?.();
       console.log("切換到房間:", newRoom);
     }
