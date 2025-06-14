@@ -10,17 +10,19 @@ export const sendLike = async (targetId, status = 1) => {
     });
 
     if (res.data.matched) {
-      const matchedTargetId = res.data.matchedTargetId;
-      // 用對方ID請求對方資料
-      const matchedTargetRes = await axios.get(`/profile/${matchedTargetId}`);
-      const matchedTarget = matchedTargetRes.data; // 沒有用user包
+      const matchedTargetData = res.data.targetProfile; // 後端回傳 整包對象的物件資料
 
       return {
         matched: true,
-        matchedTarget, // 剛從 /users/:id 拿到的
+        matchedTargetData,
+        message: res.data.message,
       };
     }
-    return { matched: false }; // 不是雙向喜歡
+    // 不是雙向喜歡
+    return {
+      matched: false,
+      message: res.data.message,
+    };
   } catch (err) {
     console.error("發送like失敗:", err);
     throw err;
@@ -29,20 +31,24 @@ export const sendLike = async (targetId, status = 1) => {
 
 export const sendSuperLike = async (targetId) => {
   try {
-    const res = await axios.post("like/super-like", { targetId });
+    const res = await axios.post("like/super-like", {
+      targetId,
+    });
 
     if (res.data.matched) {
-      const matchedTargetId = res.data.matchedTargetId;
-      const matchedTargetRes = await axios.get(`/profile/${matchedTargetId}`);
-      const matchedTarget = matchedTargetRes.data;
+      const matchedTargetData = res.data.targetProfile; // 後端回傳 整包對象的物件資料
 
       return {
         matched: true,
-        matchedTarget,
+        matchedTargetData,
+        message: res.data.message,
       };
     }
-
-    return { matched: false };
+    // 不是雙向喜歡
+    return {
+      matched: false,
+      message: res.data.message,
+    };
   } catch (error) {
     console.error("發送 super like 失敗:", error);
     throw error;
