@@ -38,6 +38,7 @@
     "2025-kizuna-frontend": "file:",
     "aos": "^2.3.4",
     "axios": "^1.9.0",
+    "lucide-vue-next": "^0.515.0",
     "pinia": "^3.0.1",
     "socket.io-client": "^4.8.1",
     "swiper": "^11.2.8",
