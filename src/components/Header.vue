@@ -2,7 +2,6 @@
 import { ref, onMounted, onUnmounted ,computed } from "vue";
 import { RouterLink, RouterView, useRoute } from "vue-router";
 import { useUserStore } from "@/stores/user";
-import { useRoute } from "vue-router";
 import router from "@/router";
 import LiquidNavLink from "@/components/LiquidGlass.vue";
 import { useCartStore } from '@/stores/cart.js';
