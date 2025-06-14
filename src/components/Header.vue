@@ -80,9 +80,10 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <header class="navbar-header fixed top-0 left-0 w-full h-20 z-50">
- 
-  >
+   <header :class="[
+    'navbar-header w-full h-20 z-50',
+    isSpecialPage ? 'relative' : 'fixed top-0 left-0'
+  ]">
     <nav class="flex items-center justify-between px-6 py-4">
       <!-- debug -->
       <div
