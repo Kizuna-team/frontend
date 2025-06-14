@@ -2,7 +2,6 @@
 import { ref, onMounted, onUnmounted ,computed } from "vue";
 import { RouterLink, RouterView, useRoute } from "vue-router";
 import { useUserStore } from "@/stores/user";
-import { useRoute } from "vue-router";
 import router from "@/router";
 import LiquidNavLink from "@/components/LiquidGlass.vue";
 const route = useRoute();
@@ -81,16 +80,8 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <header
-    :class="{
-      'fixed top-0 left-0': !isSpecialPage,
-      'relative': isSpecialPage,
-    }"
-    class="w-full h-20 z-50 text-[#515151] bg-white/50 backdrop-blur-sm shadow"
-    style="
-      box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1),
-        inset -1px -1px 1px rgba(255, 255, 255, 0.35);
-    "
+  <header class="navbar-header fixed top-0 left-0 w-full h-20 z-50">
+ 
   >
     <nav class="flex items-center justify-between px-6 py-4">
       <!-- debug -->
