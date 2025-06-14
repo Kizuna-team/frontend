@@ -4,6 +4,8 @@ import { useUserStore } from "@/stores/user";
 import { useRoute } from "vue-router";
 import router from "@/router";
 import LiquidNavLink from "@/components/LiquidGlass.vue";
+import { useCartStore } from '@/stores/cart.js';
+const cartStore = useCartStore();
 const route = useRoute();
 const store = useUserStore();
 const handleLogout = () => {
@@ -72,11 +74,11 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <header class="navbar-header fixed top-0 left-0 w-full h-20 z-50">
+  <header class="fixed top-0 left-0 z-50 w-full h-20 navbar-header">
     <nav class="flex items-center justify-between px-6 py-4">
       <!-- debug -->
       <div
-        class="absolute top-20 left-4 text-sm text-white bg-black px-2 py-1 rounded"
+        class="absolute px-2 py-1 text-sm text-white bg-black rounded top-20 left-4"
       >
         Route: {{ $route.path }} | scrollY: {{ debugY }} | Color:
         {{ getNavTextColor }}
@@ -104,7 +106,7 @@ onUnmounted(() => {
       </div>
 
       <template v-if="!store.accessToken">
-        <div class="flex justify-end items-center space-x-4 w-1/4">
+        <div class="flex items-center justify-end w-1/4 space-x-4">
           <LiquidNavLink to="/login" :colorMode="getNavTextColor"
             >登入</LiquidNavLink
           >
@@ -115,7 +117,7 @@ onUnmounted(() => {
       </template>
       <!-- 已登入狀態：顯示訊息、購物車和用戶選單 -->
       <template v-else>
-        <div class="flex justify-end items-center space-x-4 w-1/4">
+        <div class="flex items-center justify-end w-1/4 space-x-4">
           <!-- 訊息icon -->
           <LiquidNavLink to="/chat" :colorMode="getNavTextColor">
             <svg
@@ -134,16 +136,24 @@ onUnmounted(() => {
 
           <!-- 購物車icon -->
           <LiquidNavLink to="/cart" :colorMode="getNavTextColor">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
-              fill="currentColor"
-              class="size-7"
-            >
-              <path
-                d="M2.25 2.25a.75.75 0 0 0 0 1.5h1.386c.17 0 .318.114.362.278l2.558 9.592a3.752 3.752 0 0 0-2.806 3.63c0 .414.336.75.75.75h15.75a.75.75 0 0 0 0-1.5H5.378A2.25 2.25 0 0 1 7.5 15h11.218a.75.75 0 0 0 .674-.421 60.358 60.358 0 0 0 2.96-7.228.75.75 0 0 0-.525-.965A60.864 60.864 0 0 0 5.68 4.509l-.232-.867A1.875 1.875 0 0 0 3.636 2.25H2.25ZM3.75 20.25a1.5 1.5 0 1 1 3 0 1.5 1.5 0 0 1-3 0ZM16.5 20.25a1.5 1.5 0 1 1 3 0 1.5 1.5 0 0 1-3 0Z"
-              />
-            </svg>
+            <div class="relative">
+              <span
+                v-if="cartStore.totalQuantity > 0"
+                class="absolute flex items-center justify-center min-w-[20px] h-5 px-1 text-xs font-semibold text-white rounded-full -top-2 -right-3 bg-[#E44C9B]"
+                >
+                {{ cartStore.totalQuantity > 99 ? '99+' : cartStore.totalQuantity }}
+              </span>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+                class="size-7"
+              >
+                <path
+                  d="M2.25 2.25a.75.75 0 0 0 0 1.5h1.386c.17 0 .318.114.362.278l2.558 9.592a3.752 3.752 0 0 0-2.806 3.63c0 .414.336.75.75.75h15.75a.75.75 0 0 0 0-1.5H5.378A2.25 2.25 0 0 1 7.5 15h11.218a.75.75 0 0 0 .674-.421 60.358 60.358 0 0 0 2.96-7.228.75.75 0 0 0-.525-.965A60.864 60.864 0 0 0 5.68 4.509l-.232-.867A1.875 1.875 0 0 0 3.636 2.25H2.25ZM3.75 20.25a1.5 1.5 0 1 1 3 0 1.5 1.5 0 0 1-3 0ZM16.5 20.25a1.5 1.5 0 1 1 3 0 1.5 1.5 0 0 1-3 0Z"
+                />
+              </svg>
+            </div>
           </LiquidNavLink>
 
           <!-- 用戶選單 -->
