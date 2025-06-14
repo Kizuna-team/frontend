@@ -1,7 +1,6 @@
 import { createRouter, createWebHistory } from "vue-router";
 import ProductView from "@/views/ProductView.vue";
 import CartView from "@/views/CartView.vue";
-import LoginView from "@/views/LoginView.vue";
 import RegisterView from "@/views/RegisterView.vue";
 import HomeView from "@/views/HomeView.vue";
 import BrandView from "@/views/BrandView.vue";
@@ -16,7 +15,7 @@ import BlessingView from "@/views/BlessingView.vue";
 import GiftCheckoutView from "@/views/GiftCheckoutView.vue";
 import ProductAdminView from "@/views/ProductAdminView.vue";
 import { useUserStore } from "@/stores/user.js";
-import LoginNewView from "@/views/LoginNewView.vue";
+import LoginView from "@/views/LoginView.vue";
 import RegisterNewView from "@/views/RegisterNewView.vue";
 import OAuthSuccess from "@/views/OAuthSuccess.vue";
 
@@ -48,12 +47,6 @@ const router = createRouter({
       path: "/login",
       name: "Login",
       component: LoginView,
-    },
-    //測試畫面
-    {
-      path: "/loginNew",
-      name: "LoginNew",
-      component: LoginNewView,
     },
     {
       path: "/registerNew",
