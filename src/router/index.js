@@ -7,9 +7,9 @@ import HomeView from "@/views/HomeView.vue";
 import BrandView from "@/views/BrandView.vue";
 // import ProfileView from "@/views/ProfileView.vue";
 import ChatRoomView from "@/views/ChatRoomView.vue";
-import MatchView from "../views/MatchView.vue";
-import ActivityList from "@/components/ActivityList.vue"
-import ActivityView from "@/components/ActivityForm.vue"
+import MatchView from "@/views/MatchView.vue";
+import ActivityList from "@/components/ActivityList.vue";
+import ActivityView from "@/components/ActivityForm.vue";
 import EditProfileView from "@/views/EditProfileView.vue";
 
 import { useUserStore } from "@/stores/user.js";

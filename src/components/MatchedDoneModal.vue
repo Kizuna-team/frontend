@@ -3,9 +3,7 @@ import { ref } from "vue";
 
 const props = defineProps({
   myName: String,
-  // myAvatar: String,
-  targetName: String,
-  // targetAvatar: String,
+  targetData: Object,
 });
 
 const emit = defineEmits(["confirm", "cancel"]);

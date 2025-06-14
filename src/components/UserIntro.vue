@@ -1,12 +1,14 @@
 <script setup>
 // 抓父層傳來的 currentUser
-defineProps({
+const { targetUser } = defineProps({
   targetUser: Object,
 });
+
+console.log("UserIntro props:", targetUser);
 </script>
 
 <template>
-  <div class="bg-[#FFF] z-0 p-5">
+  <div v-if="targetUser" class="bg-[#FFF] z-0 p-5">
     <div class="flex items-center">
       <h3>{{ targetUser.name }}</h3>
       <p class="text-2xl font-semibold mx-2 text-[#219ebc]">

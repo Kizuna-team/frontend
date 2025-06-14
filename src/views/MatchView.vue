@@ -12,177 +12,29 @@ import { fetchAllProfiles } from "@/api/profile.js";
 
 const userProfileStore = useUserProfileStore();
 
-// const user = ref([
-//   {
-//     id: 1,
-//     name: "西西",
-//     age: 28,
-//     zodiac: "雙子座",
-//     location: "高雄市",
-//     photos: [
-//       "https://im.marieclaire.com.tw/s1200c675h100b0/aq/2015/04/16/201504131747183239.jpg",
-//       "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjZ6kIRmyQ8LFGVxKbivqcxwZWqoXBmy5ANTekmGdnDoahHUzSzPHbLQIeDuEV0L0dRjslUHBIg8kaQE4BU5xXoRBX4GBmUooaViZzQG44k8QURYiYcZNOqwRMnyXNw_8qzaLjeQywUmUM/s1600/emma-watson.jpg",
-//       "https://cdn.wowscreen.com.tw/uploadfile/202210/goods_028263_373336.png",
-//     ],
-//     bio: "我是一個熱愛旅遊的人，喜歡挑戰新事物。",
-//     mbti: "INTJ",
-//     interests: ["攝影", "爬山", "音樂"],
-//     intro: "嗨，我是西西，期待認識新朋友。",
-//   },
-//   {
-//     id: 2,
-//     name: "小花",
-//     age: 25,
-//     location: "台中市",
-//     zodiac: "處女座",
-//     photos: [
-//       "https://image1.gamme.com.tw/news2/2022/10/07/rJyWnaOWkaOcr6c.jpg",
-//       "https://image1.gamme.com.tw/news2/2022/10/07/rJyWnaOWkaOcr6g.jpg",
-//       "https://a.ksd-i.com/s/480x_86400_583f780f8611ab72028feb102bfe29f4/static.koreastardaily.com/2018-10-05/109958-662192.jpg",
-//     ],
-//     bio: "喜歡閱讀和烹飪，平常喜歡安靜的午後時光。",
-//     mbti: "ENfJ",
-//     interests: ["閱讀", "烹飪", "瑜伽"],
-//     intro: "嗨，我是小花，希望找到志同道合的朋友。",
-//   },
-//   {
-//     id: 3,
-//     name: "小玉",
-//     age: 25,
-//     location: "新竹市",
-//     zodiac: "處女座",
-//     photos: [
-//       "https://assets.juksy.com/files/articles/63508/58c17ded2aaf9.jpg",
-//       "https://assets.juksy.com/files/articles/63508/58c17ddb98814.jpg",
-//       "https://assets.juksy.com/files/articles/63508/58c17ea5e111d.jpg",
-//     ],
-//     bio: "安靜安靜安靜安靜安靜安靜。",
-//     mbti: "ISTJ",
-//     interests: ["閱讀", "安靜", "哈哈"],
-//     intro: "嗨，我是小玉，希望找到志同道合的朋友。",
-//   },
-//   {
-//     id: 4,
-//     name: "小美",
-//     age: 27,
-//     location: "台北市",
-//     zodiac: "天秤座",
-//     photos: [
-//       "https://randomuser.me/api/portraits/women/44.jpg",
-//       "https://randomuser.me/api/portraits/women/45.jpg",
-//       "https://randomuser.me/api/portraits/women/46.jpg",
-//     ],
-//     bio: "愛好美食，熱愛下廚與品嚐美味。",
-//     mbti: "ESFP",
-//     interests: ["美食", "烘焙", "旅行"],
-//     intro: "嗨，我是小美，期待一起探索世界美食。",
-//   },
-//   {
-//     id: 5,
-//     name: "佳佳",
-//     age: 30,
-//     location: "台南市",
-//     zodiac: "獅子座",
-//     photos: [
-//       "https://randomuser.me/api/portraits/women/47.jpg",
-//       "https://randomuser.me/api/portraits/women/48.jpg",
-//       "https://randomuser.me/api/portraits/women/49.jpg",
-//     ],
-//     bio: "熱愛運動，喜歡戶外活動。",
-//     mbti: "ENTP",
-//     interests: ["跑步", "健身", "登山"],
-//     intro: "嗨，我是佳佳，運動讓我快樂！",
-//   },
-//   {
-//     id: 6,
-//     name: "小安",
-//     age: 24,
-//     location: "台中市",
-//     zodiac: "巨蟹座",
-//     photos: [
-//       "https://randomuser.me/api/portraits/women/50.jpg",
-//       "https://randomuser.me/api/portraits/women/51.jpg",
-//       "https://randomuser.me/api/portraits/women/52.jpg",
-//     ],
-//     bio: "喜歡繪畫與藝術創作。",
-//     mbti: "INFP",
-//     interests: ["繪畫", "設計", "閱讀"],
-//     intro: "嗨，我是小安，藝術是我的生活。",
-//   },
-//   {
-//     id: 7,
-//     name: "婷婷",
-//     age: 29,
-//     location: "彰化縣",
-//     zodiac: "金牛座",
-//     photos: [
-//       "https://randomuser.me/api/portraits/women/53.jpg",
-//       "https://randomuser.me/api/portraits/women/54.jpg",
-//       "https://randomuser.me/api/portraits/women/55.jpg",
-//     ],
-//     bio: "熱愛音樂，擅長鋼琴。",
-//     mbti: "ISFP",
-//     interests: ["音樂", "鋼琴", "唱歌"],
-//     intro: "嗨，我是婷婷，音樂是我的靈魂。",
-//   },
-//   {
-//     id: 8,
-//     name: "小君",
-//     age: 26,
-//     location: "新北市",
-//     zodiac: "雙魚座",
-//     photos: [
-//       "https://randomuser.me/api/portraits/women/56.jpg",
-//       "https://randomuser.me/api/portraits/women/57.jpg",
-//       "https://randomuser.me/api/portraits/women/58.jpg",
-//     ],
-//     bio: "喜歡戶外攝影，享受自然。",
-//     mbti: "ENFP",
-//     interests: ["攝影", "旅行", "露營"],
-//     intro: "嗨，我是小君，喜歡用鏡頭記錄生活。",
-//   },
-//   {
-//     id: 9,
-//     name: "小晴",
-//     age: 23,
-//     location: "嘉義市",
-//     zodiac: "射手座",
-//     photos: [
-//       "https://randomuser.me/api/portraits/women/59.jpg",
-//       "https://randomuser.me/api/portraits/women/60.jpg",
-//       "https://randomuser.me/api/portraits/women/61.jpg",
-//     ],
-//     bio: "熱愛閱讀，喜歡安靜的咖啡廳。",
-//     mbti: "INFJ",
-//     interests: ["閱讀", "咖啡", "寫作"],
-//     intro: "嗨，我是小晴，歡迎一起分享故事。",
-//   },
-//   {
-//     id: 10,
-//     name: "小曼",
-//     age: 31,
-//     location: "桃園市",
-//     zodiac: "牡羊座",
-//     photos: [
-//       "https://randomuser.me/api/portraits/women/62.jpg",
-//       "https://randomuser.me/api/portraits/women/63.jpg",
-//       "https://randomuser.me/api/portraits/women/64.jpg",
-//     ],
-//     bio: "熱愛動物，家裡有兩隻貓。",
-//     mbti: "ESTJ",
-//     interests: ["動物", "閱讀", "園藝"],
-//     intro: "嗨，我是小曼，歡迎一起聊寵物。",
-//   },
-// ]);
-
-// 基本可顯示的使用者數量限制
-
 const allProfiles = ref([]);
 const limitUsers = 20;
 
 // 計算當前是第 X 位使用者
 const currentIndex = ref(0);
 const currentUser = computed(() => allProfiles.value[currentIndex.value]);
+
+// 未加入篩選邏輯 > 人選區
+const fetchAllUsers = async () => {
+  try {
+    const data = await fetchAllProfiles();
+    allProfiles.value = data.users;
+    return data;
+  } catch (error) {
+    console.error("載入使用者資料失敗", error);
+  }
+};
+
+onMounted(async () => {
+  await fetchAllUsers();
+  console.log("拿到資料：", allProfiles.value); // 現在可以看到 allProfiles 的值了
+  console.log("當前的使用者：", currentUser.value); // 資料載入後再印出
+});
 
 // 使用者資訊的開合
 const isShow = ref(false);
@@ -211,32 +63,21 @@ const nextUser = () => {
   }
 };
 
-// 未加入篩選邏輯 > 人選區
-const fetchAllUsers = async () => {
-  try {
-    const data = await fetchAllProfiles();
-    allProfiles.value = data.users;
-  } catch (error) {
-    console.error("載入使用者資料失敗", error);
-  }
-};
-
-onMounted(() => {
-  fetchAllUsers();
-});
-
 // 配對成功 > Modal 顯示與xxx配對成功
 // 發送super like 成功 顯示剩餘次數
 // 人數上限顯示遮罩
+const matchedTarget = ref(null); // // 存取配對成功對象一整包資料
 const mutualLike = ref(false); // 是否互相喜歡
 const restSuperLikes = ref(null);
+// 配對關閉 ｜ 彈跳配對視窗
+const isCovering = ref(false);
 const confirmModal = ref(false);
 
 const likeFlag = async (targetId) => {
   try {
-    const { matched, message } = await sendLike(targetId);
+    const { matched, message, matchedTargetData } = await sendLike(targetId);
     if (matched) {
-      matchedTarget.value = allProfiles.value.find((u) => u.id === targetId); // 找到被喜歡的使用者資料
+      matchedTarget.value = matchedTargetData; // 配對成功的對象
       mutualLike.value = true;
       confirmModal.value = true;
     } else {
@@ -251,6 +92,7 @@ const likeFlag = async (targetId) => {
     console.error("送出like發生錯誤", error);
   }
 };
+
 const dislikeFlag = async (targetId) => {
   try {
     await sendLike(targetId, 0);
@@ -273,15 +115,19 @@ const handleSuperLikeStatus = (status) => {
   isSuperLikeDisabled.value = status.isDisabled;
   superLikeMsg.value = status.msg;
 };
+
 const superLikeFlag = async (targetId) => {
   try {
-    const { matched, remainingCount, message } = await sendSuperLike(targetId);
+    const { matched, remainingCount, message, matchedTargetData } =
+      await sendSuperLike(targetId);
+
     if (matched) {
-      matchedTarget.value = allProfiles.value.find((u) => u.id === targetId); // 找到被喜歡的使用者資料
+      matchedTarget.value = matchedTargetData;
       mutualLike.value = true;
       confirmModal.value = true;
       alert(message); // 要換成動畫
     }
+
     // 更新剩餘次數的 UI 或狀態
     if (remainingCount !== undefined) {
       restSuperLikes.value = remainingCount;
@@ -289,21 +135,22 @@ const superLikeFlag = async (targetId) => {
     }
     nextUser();
   } catch (error) {
-    if (error.response && error.response.status === 409) {
-      alert(error.response.data.message || "已表達 等待對方回應");
-      nextUser();
-    }
-    if (error.response && error.response.status === 403) {
-      alert(error.response.data.message || "今日使用次數已達上限");
-      restSuperLikes.value = 0; // 重要！把剩餘數量設為0禁用按鈕
+    if (error.response) {
+      const status = error.response.status;
+
+      if (status === 409) {
+        alert(error.response.data.message || "已表達 等待對方回應");
+        nextUser();
+      }
+
+      if (status === 403) {
+        alert(error.response.data.message || "今日使用次數已達上限");
+        restSuperLikes.value = 0; // 把剩餘數量設為0禁用按鈕
+      }
     }
     console.error("使用者送出super like發生錯誤", error);
   }
 };
-
-// 配對關閉 ｜ 彈跳配對視窗
-const isCovering = ref(false);
-const matchedTarget = ref(null);
 
 // 關閉倒數遮罩
 const closeCover = () => {
@@ -365,6 +212,7 @@ const onCancel = () => {
     <!-- 顯示對象滑滑區 -->
 
     <UserCard
+      v-if="currentUser && currentUser.photos"
       :target-photos="currentUser.photos"
       @goPrev="prevUser"
       @goNext="nextUser"
@@ -372,19 +220,19 @@ const onCancel = () => {
     <!-- 配對按鈕區 -->
     <!-- 對象 user.id -->
     <MatchBtn
-      :target-user="currentUser.id"
+      v-if="typeof currentUser?.userId === 'number'"
+      :target-user="currentUser.userId"
       @like="likeFlag"
       @dislike="dislikeFlag"
       @superLike="superLikeFlag"
       @superLikeStatus="handleSuperLikeStatus"
     />
     <!-- 只有成功配對時才顯示 Modal -->
-    <!-- 傳給子元件 自己 pinia 的名字 和  當前對象名 matchedTarget.name 現在是假資料  -->
-    <!-- 看父組件怎麼定義對象 -->
+    <!-- 傳給子元件 自己 pinia 的名字 和  配對對象 名<template> 會自動解 ref 別.value  -->
     <MatchedDoneModal
       v-if="confirmModal"
       :my-name="userProfileStore.userProfile.name"
-      :target-name="currentUser.name"
+      :target-data="matchedTarget"
       @confirm="onConfirm"
       @cancel="onCancel"
     />

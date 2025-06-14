@@ -162,22 +162,26 @@ defineExpose({ uploadAll });
 
 <template>
   <!-- 大頭照圓形區塊 -->
-  <h2 class="mb-6 text-2xl font-bold text-center text-darkblue">上傳大頭照</h2>
+  <div class="flex flex-col items-center my-5">
+    <h2 class="mb-6 text-2xl font-bold text-center text-darkblue">
+      上傳大頭照
+    </h2>
 
-  <div
-    class="relative w-48 h-48 overflow-hidden bg-gray-100 border-8 border-white rounded-full shadow-xl cursor-pointer item-center"
-    @click="chooseAvatar"
-  >
-    <img
-      v-if="myAvatar"
-      :src="myAvatar.preview"
-      class="object-cover w-full h-full"
-    />
     <div
-      v-else
-      class="flex items-center justify-center w-full h-full text-xl text-gray-400"
+      class="relative flex items-center justify-center w-48 h-48 overflow-hidden bg-gray-100 border-8 border-white rounded-full shadow-xl cursor-pointer"
+      @click="chooseAvatar"
     >
-      尚無大頭貼
+      <img
+        v-if="myAvatar"
+        :src="myAvatar.preview"
+        class="object-cover w-full h-full"
+      />
+      <div
+        v-else
+        class="flex items-center justify-center w-full h-full text-xl text-gray-400"
+      >
+        尚無大頭貼
+      </div>
     </div>
   </div>
 
