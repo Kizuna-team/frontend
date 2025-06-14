@@ -11,6 +11,9 @@ import {
 import { io } from "socket.io-client";
 import { useUserStore } from "@/stores/user.js";
 import { userChatStore } from "@/stores/chat_new.js";
+import { useRoute } from 'vue-router';
+
+const route = useRoute();
 
 // Socket.io 連接設定
 const socket = io("http://localhost:3000");
@@ -122,7 +125,7 @@ const connectToRoom = () => {
   );
 
   // 只綁定一次監聽器
-  socket.off("chatMessage", handleIncomingMessage); // 先移除舊的
+  socket.off("chatMessage", handleIncomingMessage);
   socket.on("chatMessage", handleIncomingMessage);
 
   // 監聽用戶加入/離開事件
@@ -146,6 +149,37 @@ const connectToRoom = () => {
   });
 };
 
+watch(
+  () => route.path,
+  (newPath, oldPath) => {
+    if (newPath === '/chat_new') {
+      // 進入聊天頁面，禁用滾動
+      document.body.style.overflow = 'hidden';
+      document.documentElement.style.overflow = 'hidden';
+    } else if (oldPath === '/chat_new') {
+      // 離開聊天頁面，恢復滾動
+      document.body.style.overflow = 'auto';
+      document.documentElement.style.overflow = 'auto';
+    }
+  },
+  { immediate: true }
+);
+
+// 確保組件卸載時恢復滾動
+onBeforeUnmount(() => {
+  // 恢復頁面滾動
+  document.body.style.overflow = 'auto';
+  document.documentElement.style.overflow = 'auto';
+  
+  // 原有的清理邏輯
+  socket.off("chatMessage", handleIncomingMessage);
+  socket.off("userJoined");
+  socket.off("userLeft");
+  socket.emit("leaveRoom", {
+    roomId: roomId.value,
+    userId: userStore.userId,
+  });
+});
 // 避免重複綁定：離開時移除 listener
 onBeforeUnmount(() => {
   socket.off("chatMessage", handleIncomingMessage);
@@ -236,27 +270,23 @@ const sendMessage = async () => {
     console.log("chatStore:", chatStore);
     console.log("chatStore.addMessage:", chatStore.addMessage);
 
-    // if (chatStore && chatStore.addMessage) {
-    //   chatStore.addMessage(localMessage);
-    //   console.log("✅ 訊息已加入 chatStore");
-    // } else {
-    //   console.error("❌ chatStore 或 addMessage 方法不存在");
-    // }
+    if (chatStore && chatStore.addMessage) {
+      chatStore.addMessage(localMessage);
+      console.log("✅ 訊息已加入 chatStore");
+    } else {
+      console.error("❌ chatStore 或 addMessage 方法不存在");
+    }
 
     newMessage.value = "";
-    console.log("✅ 輸入框已清空");
 
     // 滾動到底部
     await nextTick();
     if (messagesContainer.value) {
       messagesContainer.value.scrollTop = messagesContainer.value.scrollHeight;
-      console.log("✅ 已滾動到底部");
     }
   } catch (error) {
     console.error("❌ 發送訊息時發生錯誤:", error);
   }
-
-  console.log("=== 發送訊息完成 ===");
 };
 
 // 格式化時間
@@ -317,7 +347,7 @@ watch(
 </script>
 
 <template>
-  <div class="bg-gray-100 h-screen overflow-hidden flex">
+  <div class="bg-gray-100 h-screen overflow-hidden flex chat-container">
     <!-- 左側邊欄 -->
     <div class="w-80 bg-white border-r border-gray-200 flex flex-col">
       <!-- 標題 -->
@@ -415,7 +445,7 @@ watch(
             <!-- 顯示發送者名稱（如果不是自己的訊息） -->
             <div
               v-if="msg.senderId !== userStore.userId"
-              class="text-xs text-gray-600 mb-1 pl-2 font-medium "
+              class="text-xs text-gray-600 mb-1 pl-2 font-medium"
             >
               {{ msg.senderName || `User${msg.senderId}` }}
             </div>
@@ -446,7 +476,6 @@ watch(
           </div>
         </div>
       </div>
-      
 
       <!-- 輸入區域 -->
       <div class="bg-white border-t border-gray-200 p-4">
@@ -505,6 +534,10 @@ watch(
 </template>
 
 <style scoped>
+.chat-container {
+  height: 100vh;
+}
+
 /* 自定義滾動條樣式 */
 .overflow-y-auto::-webkit-scrollbar {
   width: 6px;
@@ -521,6 +554,5 @@ watch(
 
 .overflow-y-auto::-webkit-scrollbar-thumb:hover {
   background: #a8a8a8;
-  
 }
 </style>
