@@ -18,6 +18,7 @@ import ProductAdminView from "@/views/ProductAdminView.vue";
 import { useUserStore } from "@/stores/user.js";
 import LoginNewView from "@/views/LoginNewView.vue";
 import RegisterNewView from "@/views/RegisterNewView.vue";
+import OAuthSuccess from "@/views/OAuthSuccess.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -58,6 +59,11 @@ const router = createRouter({
       path: "/registerNew",
       name: "RegisterNew",
       component: RegisterNewView,
+    },
+    {
+      path: "/oauth-success",
+      name: "OAuthSuccess",
+      component: OAuthSuccess,
     },
 
     {
