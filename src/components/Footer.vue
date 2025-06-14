@@ -1,48 +1,115 @@
+<script setup>
+import { ref } from "vue";
+
+const faqs = [
+  {
+    question: "如何開始使用 Kizuna？",
+    answer: "註冊帳號並完成個人檔案，即可開始探索與互動。",
+  },
+  {
+    question: "是否需要付費？",
+    answer: "基本功能免費，進階功能可透過訂閱升級。",
+  },
+];
+
+const activeFAQ = ref(null);
+
+function toggleFAQ(index) {
+  activeFAQ.value = activeFAQ.value === index ? null : index;
+}
+</script>
+
 <template>
-  <footer class="py-8 text-gray-100 bg-black">
+  <footer class="py-10 text-gray-100 bg-black">
     <div class="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
-      <h1
-        class="mb-6 font-serif text-5xl italic font-bold text-center md:text-5xl"
-      >
-        Kizuna
-      </h1>
-      <div>
-        <!-- 導覽區塊 -->
-        <div
-          class="flex flex-col space-y-10 md:flex-row md:space-y-0 md:space-x-8"
-        >
-          <nav
-            class="flex flex-col w-full gap-8 text-sm md:flex-row md:justify-between"
-          >
-            <ul class="flex-1 space-y-2">
-              <li class="font-bold">導覽 | EXPLORE</li>
+      <div class="flex flex-col gap-10 md:flex-row md:justify-between">
+        <!-- Logo + 標語 -->
+        <div class="text-center md:w-1/3 md:text-left">
+          <img
+            src="/logo.png"
+            alt="Kizuna logo"
+            class="h-10 mx-auto mb-4 md:mx-0"
+          />
+          <h1 class="font-serif text-3xl italic font-bold">Kizuna</h1>
+          <p class="mt-2 text-sm text-gray-400">連結每一段有溫度的相遇</p>
+        </div>
+
+        <div class="grid grid-cols-2 gap-8 text-sm md:grid-cols-4 md:w-2/3">
+          <!-- 認識 Kizuna -->
+          <div>
+            <h2 class="mb-3 font-bold text-white">關於我們</h2>
+            <ul class="space-y-2">
               <li>
-                <a href="#" class="hover:text-[#8ecae6]">為什麼選擇Kizuna</a>
+                <a href="#whyChooseUs" class="hover:text-[#8ecae6]"
+                  >為什麼選擇 Kizuna</a
+                >
               </li>
-              <li><a href="#" class="hover:text-[#8ecae6]">使用指南</a></li>
-              <li><a href="#" class="hover:text-[#8ecae6]">幫助中心</a></li>
-            </ul>
-
-            <ul class="flex-1 space-y-2">
-              <li class="font-bold">特色 | FEATURES</li>
               <li>
-                <a href="#" class="hover:text-[#8ecae6]">探索更多進階功能</a>
+                <a href="#howToUse" class="hover:text-[#8ecae6]">使用教學</a>
               </li>
-              <li><a href="#" class="hover:text-[#8ecae6]">選擇你的方案</a></li>
             </ul>
+          </div>
 
-            <ul class="flex-1 space-y-2">
-              <li class="font-bold">關注我們獲取最新動態</li>
+          <!-- 活動與訂閱 -->
+          <div>
+            <h2 class="mb-3 font-bold text-white">探索與互動</h2>
+            <ul class="space-y-2">
+              <li>
+                <a href="/activities" class="hover:text-[#8ecae6]">探索活動</a>
+              </li>
+              <li>
+                <a href="/match" class="hover:text-[#8ecae6]">瀏覽會員</a>
+              </li>
+              <li>
+                <a href="/subscription" class="hover:text-[#8ecae6]"
+                  >選擇訂閱方案</a
+                >
+              </li>
             </ul>
+          </div>
 
-            <ul class="flex-1 space-y-2">
-              <li class="font-bold">常見問答集</li>
+          <!-- FAQ 區塊 -->
+          <div>
+            <h2 class="mb-3 font-bold text-white">常見問答</h2>
+            <ul class="space-y-2 text-gray-400">
+              <li v-for="(item, index) in faqs" :key="index">
+                <button
+                  @click="toggleFAQ(index)"
+                  class="w-full font-medium text-left text-white focus:outline-none"
+                >
+                  {{ item.question }}
+                </button>
+                <transition name="fade">
+                  <p
+                    v-if="activeFAQ === index"
+                    class="mt-1 text-xs text-gray-300"
+                  >
+                    {{ item.answer }}
+                  </p>
+                </transition>
+              </li>
             </ul>
-          </nav>
+          </div>
+
+          <!-- 加入我們 -->
+          <div>
+            <h2 class="mb-3 font-bold text-white">加入我們</h2>
+            <ul class="space-y-2">
+              <li>
+                <router-link to="/register" class="hover:text-[#8ecae6]">
+                  立即註冊
+                </router-link>
+              </li>
+            </ul>
+          </div>
         </div>
       </div>
-      <hr class="my-6 border-t border-gray-400" />
-      <div class="mt-6 text-sm">&copy; 2025 Kizuna. 保留所有權利。</div>
+
+      <!-- 版權 -->
+      <hr class="my-8 border-gray-600" />
+      <p class="text-xs text-center text-gray-500">
+        &copy; 2025 Kizuna 保留所有權利
+      </p>
     </div>
   </footer>
 </template>
