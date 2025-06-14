@@ -1,22 +1,12 @@
 import axios from "@/api/axios";
 
+// 取我的所有照片
 export const getPhotos = async () => {
   try {
     const res = await axios.get("/photos/me");
     return res.data;
   } catch (err) {
     console.error("getPhotos 錯誤:", err);
-    throw err;
-  }
-};
-
-// 取我的指定某張
-export const getMyPhoto = async () => {
-  try {
-    const res = await axios.get("/users/photos/me");
-    return res.data;
-  } catch (err) {
-    console.error("getMyPhoto 錯誤:", err);
     throw err;
   }
 };
@@ -51,6 +41,19 @@ export const deletePhoto = async (key) => {
     await axios.delete(`/photos/me/${key}`);
   } catch (err) {
     console.error("deletePhoto 錯誤:", err);
+    throw err;
+  }
+};
+
+// 更換大頭照
+export const changeAvatar = async (imageKey) => {
+  try {
+    await axios.patch("/photos/me/avatar", {
+      key: imageKey,
+    });
+    alert(" 大頭貼已更新 ");
+  } catch (err) {
+    console.error("changeAvatar 錯誤", err);
     throw err;
   }
 };
