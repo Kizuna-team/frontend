@@ -8,14 +8,8 @@ import {
   changeAvatar,
 } from "@/api/photos";
 
-const photoList = ref([
-  { file: null, preview: "" },
-  { file: null, preview: "" },
-  { file: null, preview: "" },
-  { file: null, preview: "" },
-  { file: null, preview: "" },
-  { file: null, preview: "" },
-]);
+// 在refreshPhotos() 裡正式建立 6 格
+const photoList = ref([]);
 
 const myAvatar = ref(null);
 const showModal = ref(false);
@@ -35,17 +29,13 @@ const handleAvatarUpload = async (e) => {
   if (!file) return;
 
   try {
-    // 第一步：上傳圖片到 S3，取得 URL 和 key
-    const data = await uploadPhoto(file); // 你已定義好的 API
+    // 上傳圖片到 S3，取得 URL 和 key
+    const data = await uploadPhoto(file); // 上傳API
 
-    // 第二步：通知後端，這張圖要設為大頭貼
-    await changeAvatar(data.key); // 你已定義好的 API
-
-    // 第三步：前端同步更新畫面
-    myAvatar.value = {
-      preview: data.url, // 預覽圖片
-      key: data.key, // 傳給後端的 key
-    };
+    // 設為大頭貼
+    await changeAvatar(data.key); // 換頭貼 API
+    // 直接重抓所有圖片
+    await refreshPhotos();
 
     // 關閉 modal 並提示
     closeModal();
@@ -72,11 +62,6 @@ const handleFileChange = (event, index) => {
 // 移除照片、大頭照標記
 const removePhoto = async (index) => {
   const imageKey = photoList.value[index].key;
-
-  // 移除標記
-  if (photoList.value[index].isAvatar) {
-    photoList.value[index].isAvatar = false;
-  }
 
   // 如果照片還沒上傳過（沒有 key），直接清空資料
   if (!imageKey) {
@@ -135,27 +120,44 @@ const uploadAll = async () => {
   }
 };
 
-// 讓外部元件可以呼叫 uploadAll，editProfileView.view 有呼叫
-defineExpose({ uploadAll });
-
-onMounted(async () => {
+const refreshPhotos = async () => {
   try {
     const images = await getPhotos();
-    images.forEach((item, index) => {
+
+    // 清空資料
+    myAvatar.value = null;
+    photoList.value = Array(6)
+      .fill()
+      .map(() => ({
+        file: null,
+        preview: "",
+        key: null,
+      }));
+
+    // 分類圖片
+    let photoIndex = 0;
+    images.forEach((item) => {
       if (item.is_avatar) {
         myAvatar.value = {
           preview: item.image_url,
           key: item.image_key,
         };
-      } else if (index < photoList.value.length) {
-        photoList.value[index].preview = item.image_url;
-        photoList.value[index].key = item.image_key;
+      } else if (photoIndex < photoList.value.length) {
+        photoList.value[photoIndex].preview = item.image_url;
+        photoList.value[photoIndex].key = item.image_key;
+        photoIndex++;
       }
     });
   } catch (err) {
-    console.error("載入失敗", err);
+    console.error("載入圖片失敗", err);
   }
-});
+};
+
+// 讓外部元件可以呼叫 uploadAll，editProfileView.view 有呼叫
+
+onMounted(refreshPhotos);
+
+defineExpose({ uploadAll });
 </script>
 
 <template>
