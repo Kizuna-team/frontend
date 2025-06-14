@@ -123,7 +123,7 @@ const router = createRouter({
       component: BlessingView
     },
     {
-      path: '/payment',
+      path: '/order/confirm',
       name: 'Payment',
       component: PaymentView
     },
