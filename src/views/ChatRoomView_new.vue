@@ -270,12 +270,12 @@ const sendMessage = async () => {
     console.log("chatStore:", chatStore);
     console.log("chatStore.addMessage:", chatStore.addMessage);
 
-    // if (chatStore && chatStore.addMessage) {
-    //   chatStore.addMessage(localMessage);
-    //   console.log("✅ 訊息已加入 chatStore");
-    // } else {
-    //   console.error("❌ chatStore 或 addMessage 方法不存在");
-    // }
+    if (chatStore && chatStore.addMessage) {
+      chatStore.addMessage(localMessage);
+      console.log("✅ 訊息已加入 chatStore");
+    } else {
+      console.error("❌ chatStore 或 addMessage 方法不存在");
+    }
 
     newMessage.value = "";
 
@@ -476,7 +476,6 @@ watch(
           </div>
         </div>
       </div>
-      
 
       <!-- 輸入區域 -->
       <div class="bg-white border-t border-gray-200 p-4">
@@ -555,6 +554,5 @@ watch(
 
 .overflow-y-auto::-webkit-scrollbar-thumb:hover {
   background: #a8a8a8;
-  
 }
 </style>
