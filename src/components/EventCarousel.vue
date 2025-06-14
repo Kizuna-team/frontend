@@ -143,6 +143,7 @@ const events = [
   <section class="flex items-center justify-center w-full py-10">
     <router-link to="/activities">
       <button
+        type="button"
         class="relative w-80 py-5 text-2xl font-bold text-white rounded-full bg-[#023047] overflow-hidden group"
       >
         <span class="relative z-10 block text-white">

@@ -36,6 +36,7 @@
       </p>
       <router-link to="/register">
         <button
+          type="button"
           class="relative px-16 py-4 overflow-hidden text-xl font-semibold text-black transition duration-300 bg-white rounded-full opacity-0 group hover:scale-105 animate-bounce-in"
         >
           <!-- 中文＋英文 -->

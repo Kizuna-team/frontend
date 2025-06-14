@@ -74,6 +74,7 @@ function toggleFAQ(index) {
             <ul class="space-y-2 text-gray-400">
               <li v-for="(item, index) in faqs" :key="index">
                 <button
+                  type="button"
                   @click="toggleFAQ(index)"
                   class="w-full font-medium text-left text-white focus:outline-none"
                 >
