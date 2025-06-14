@@ -464,7 +464,6 @@ watch(
           </div>
         </div>
       </div>
-      
 
       <!-- 輸入區域 -->
       <div class="bg-white border-t border-gray-200 p-4 flex-shrink-0">
@@ -548,6 +547,5 @@ watch(
 
 .overflow-y-auto::-webkit-scrollbar-thumb:hover {
   background: #a8a8a8;
-  
 }
 </style>
