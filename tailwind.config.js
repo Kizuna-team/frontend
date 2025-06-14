@@ -30,6 +30,7 @@ export default {
       },
       animation: {
         "fade-in-up": "fade-in-up 0.8s ease-out both",
+        'spin-slow': 'spin 5s linear infinite',
       },
     },
   },
