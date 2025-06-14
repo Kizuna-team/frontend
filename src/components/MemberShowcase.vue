@@ -52,6 +52,7 @@ const members = [
       <div class="mt-20">
         <router-link to="/register">
           <button
+            type="button"
             class="py-[18px] text-2xl font-bold text-white transition-all duration-300 origin-center rounded-full shadow-xl w-80 bg-gradient-to-r from-secondary to-pink-500 hover:scale-110 hover:brightness-110 hover:animate-pulse"
           >
             立即開始配對<br />
