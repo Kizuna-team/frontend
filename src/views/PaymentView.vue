@@ -1,8 +1,16 @@
 <script setup>
 import { Vue3Lottie } from "vue3-lottie";
 import animation from "@/assets/payment.json";
-import { useRouter } from "vue-router";
+import { useRouter,useRoute } from "vue-router";
+
 const router = useRouter();
+const route = useRoute();
+
+const transactionId = route.query.transactionId;
+const orderId = route.query.orderId;
+
+console.log(transactionId, orderId);
+
 function goToProductList() {
   router.push("/product");
 }
