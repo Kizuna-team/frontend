@@ -88,9 +88,6 @@ onUnmounted(() => {
       </div>
 
       <div class="flex justify-center flex-1 space-x-4">
-        <LiquidNavLink to="/cart/form" :colorMode="getNavTextColor"
-          >測試(multi-form)</LiquidNavLink
-        >
         <LiquidNavLink to="/match" :colorMode="getNavTextColor"
           >配對池</LiquidNavLink
         >
