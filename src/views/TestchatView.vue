@@ -18,9 +18,15 @@ const send = async () => {
   messages.value.push({ role: "user", content: input.value })
 
   try {
-    const res = await axios.post("http://localhost:3000/api/chat", {
-      message: input.value,
-    })
+    const res = await axios.post(
+      "http://localhost:3000/api/chat",
+      { message: input.value },
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+        },
+      }
+    )
     messages.value.push({ role: "assistant", content: res.data.reply })
   } catch (err) {
     messages.value.push({ role: "assistant", content: "錯誤：" + err.message })
