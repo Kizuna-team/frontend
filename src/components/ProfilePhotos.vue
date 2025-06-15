@@ -24,6 +24,39 @@ const triggerAvatarInput = () => {
   }
 };
 
+const refreshPhotos = async () => {
+  try {
+    const images = await getPhotos();
+
+    // 清空資料
+    myAvatar.value = null;
+    photoList.value = Array(6)
+      .fill()
+      .map(() => ({
+        file: null,
+        preview: "",
+        key: null,
+      }));
+
+    // 分類圖片
+    let photoIndex = 0;
+    images.forEach((item) => {
+      if (item.is_avatar) {
+        myAvatar.value = {
+          preview: item.image_url,
+          key: item.image_key,
+        };
+      } else if (photoIndex < photoList.value.length) {
+        photoList.value[photoIndex].preview = item.image_url;
+        photoList.value[photoIndex].key = item.image_key;
+        photoIndex++;
+      }
+    });
+  } catch (err) {
+    console.error("載入圖片失敗", err);
+  }
+};
+
 const handleAvatarUpload = async (e) => {
   const file = e.target.files[0];
   if (!file) return;
@@ -117,39 +150,6 @@ const uploadAll = async () => {
     return uploadedResults; // 回傳上傳成功的結果
   } catch (err) {
     console.error("上傳過程發生錯誤", err);
-  }
-};
-
-const refreshPhotos = async () => {
-  try {
-    const images = await getPhotos();
-
-    // 清空資料
-    myAvatar.value = null;
-    photoList.value = Array(6)
-      .fill()
-      .map(() => ({
-        file: null,
-        preview: "",
-        key: null,
-      }));
-
-    // 分類圖片
-    let photoIndex = 0;
-    images.forEach((item) => {
-      if (item.is_avatar) {
-        myAvatar.value = {
-          preview: item.image_url,
-          key: item.image_key,
-        };
-      } else if (photoIndex < photoList.value.length) {
-        photoList.value[photoIndex].preview = item.image_url;
-        photoList.value[photoIndex].key = item.image_key;
-        photoIndex++;
-      }
-    });
-  } catch (err) {
-    console.error("載入圖片失敗", err);
   }
 };
 

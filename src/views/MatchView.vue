@@ -33,7 +33,7 @@ const fetchAllUsers = async () => {
 onMounted(async () => {
   await fetchAllUsers();
   console.log("拿到資料：", allProfiles.value); // 現在可以看到 allProfiles 的值了
-  console.log("當前的使用者：", currentUser.value); // 資料載入後再印出
+  console.log("當前的配對對象：", currentUser.value); // 資料載入後再印出
 });
 
 // 使用者資訊的開合
@@ -192,12 +192,6 @@ const stopCountdown = () => {
   clearInterval(countdownInterval);
 };
 
-// 關閉配對成功畫面，用戶確認配對成功
-const onConfirm = () => {
-  confirmModal.value = false;
-  nextUser();
-};
-
 // 用戶僅關閉配對成功畫面 不做其他事
 const onCancel = () => {
   confirmModal.value = false;
@@ -232,8 +226,8 @@ const onCancel = () => {
     <MatchedDoneModal
       v-if="confirmModal"
       :my-name="userProfileStore.userProfile.name"
+      :my
       :target-data="matchedTarget"
-      @confirm="onConfirm"
       @cancel="onCancel"
     />
 
