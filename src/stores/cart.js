@@ -28,9 +28,11 @@ export const useCartStore = defineStore("cart", () => {
       cartItems.value.push({
         id: product.id,
         name: product.name,
+        img: product.image_url,
         price: product.price,
         quantity: 1,
       });
+      console.log(cartItems.value);
     }
 
     productStore.decreaseInventory(product.id);
