@@ -3,6 +3,8 @@ import { onMounted, ref } from "vue";
 import { useUserStore } from "../stores/user";
 import { Mail, Lock } from "lucide-vue-next";
 import { useRouter } from "vue-router";
+import { useToast } from 'vue-toastification'
+const toast = useToast()
 
 const router = useRouter();
 const store = useUserStore();
@@ -14,17 +16,17 @@ const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
 const handleLogin = async () => {
   // 修改：使用 email 和 password 而不是 store.username, store.password
   if (!email.value || !password.value) {
-    alert("請輸入帳號和密碼");
+    toast.error("請輸入帳號和密碼");
     return;
   }
   try {
     await store.login(email.value, password.value);
-    alert("登入成功，歡迎回來！");
+    toast("登入成功，歡迎回來！");
   } catch (error) {
     console.error("登入失敗", error);
     const msg = error.response?.data?.message || "伺服器無回應";
     const reason = error.response?.data?.reason || error.message;
-    alert(`登入失敗\n原因：${msg}:${reason}`);
+    toast.error(`登入失敗\n原因：${msg}:${reason}`);
   }
 };
 
@@ -75,16 +77,16 @@ const handleGoogleResponse = async (res) => {
 
   const idToken = res.credential;
   if (!idToken) {
-    alert("登入失敗 無效的 Google 憑證");
+    toast("登入失敗 無效的 Google 憑證");
     return;
   }
   try {
     await store.loginWithGoogle(idToken);
-    alert("Google 登入成功！");
+    toast("Google 登入成功！");
     router.push("/");
   } catch (err) {
     console.error("Google 登入錯誤", err);
-    alert("Google 登入失敗，請稍後再試");
+    toast("Google 登入失敗，請稍後再試");
   }
 };
 </script>

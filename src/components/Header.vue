@@ -5,12 +5,15 @@ import { useRoute } from "vue-router";
 import router from "@/router";
 import LiquidNavLink from "@/components/LiquidGlass.vue";
 import { useCartStore } from '@/stores/cart.js';
+import { useToast } from 'vue-toastification'
+const toast = useToast()
+
 const cartStore = useCartStore();
 const route = useRoute();
 const store = useUserStore();
 const handleLogout = () => {
   store.logout();
-  alert("已登出");
+  toast("已登出");
   router.push("/login");
 };
 
