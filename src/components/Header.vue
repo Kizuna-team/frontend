@@ -78,11 +78,16 @@ onUnmounted(() => {
   window.removeEventListener("scroll", handleScroll); 
 });
 
+const headerClasses = computed(() => {
+  const baseClasses = 'top-0 left-0 z-50 w-full h-20 navbar-header';
+  const positionClass = isSpecialPage.value ? 'relative' : 'fixed';
+  return `${baseClasses} ${positionClass}`;
+});
 
 </script>
 
 <template>
-  <header class="fixed top-0 left-0 z-50 w-full h-20 navbar-header">
+  <header :class="headerClasses">
     <nav class="flex items-center justify-between px-6 py-4">
       <!-- debug -->
       <div
