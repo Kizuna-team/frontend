@@ -155,19 +155,6 @@ const handleSubmit = async () => {
   }
 };
 
-const resetForm = () => {
-    // 重置表單和狀態
-    currentStep.value = 0
-    isCompleted.value = false
-    Object.keys(formData).forEach(key => {
-        if (key === 'paymentMethod') {
-            formData[key] = 'credit-card'
-        } else {
-            formData[key] = ''
-        }
-    })
-}
-
 const getStepTitle = (title) => {
     switch (title) {
         case 'Recipient': return '選擇收件人'
@@ -177,15 +164,6 @@ const getStepTitle = (title) => {
     }
 }
 
-const getPlaceholder = (fieldName, label) => {
-    switch (fieldName) {
-        case 'recipientAddress': return '請輸入完整地址'
-        case 'cardNumber': return '1234 5678 9012 3456'
-        case 'expiryDate': return '12/25'
-        case 'cvv': return '123'
-        default: return `請輸入${label}`
-    }
-}
 </script>
 <template>
     <div class="min-h-screen bg-gradient-to-br from-purple-50 to-indigo-100 flex items-center justify-center p-4">
