@@ -5,8 +5,6 @@ import UserCard from "@/components/UserCard.vue";
 import MatchBtn from "@/components/MatchBtn.vue";
 import UserIntro from "@/components/UserIntro.vue";
 
-
-
 // user假資料
 const users = ref([
   {
@@ -105,21 +103,33 @@ const dislikeFlag = (userId) => {
 </template>
 
 <style scoped>
+.card-bg {
+  position: relative;
+  background-image: linear-gradient(to bottom, #c0d7ec 0%, #c0d7ec 20%),
+    linear-gradient(to bottom, #7395ba 20%, #7395ba 35%),
+    linear-gradient(to bottom, #8ecae6 35%, #8ecae6 55%),
+    linear-gradient(to bottom, #219ebc 55%, #219ebc 75%),
+    linear-gradient(to bottom, #fb8500 75%, #999999 100%);
+  background-size: 100% 40%;
+  background-repeat: no-repeat;
+  border-radius: 12px 12px 0 0;
+}
+
 .slide-fade-enter-active,
 .slide-fade-leave-active {
-  transition: max-height 0.4s ease, opacity 0.4s ease;
-  overflow: hidden;
+  transition: all 0.3s ease;
+  transform-origin: top;
 }
 
 .slide-fade-enter-from,
 .slide-fade-leave-to {
-  max-height: 0;
   opacity: 0;
+  transform: scaleY(0.95);
 }
 
 .slide-fade-enter-to,
 .slide-fade-leave-from {
-  max-height: 1000px; /* 根據內容估一個夠大的值即可 */
   opacity: 1;
+  transform: scaleY(1);
 }
 </style>
