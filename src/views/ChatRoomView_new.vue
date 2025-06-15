@@ -11,7 +11,7 @@ import {
 import { io } from "socket.io-client";
 import { useUserStore } from "@/stores/user.js";
 import { userChatStore } from "@/stores/chat_new.js";
-import { useRoute } from 'vue-router';
+import { useRoute } from "vue-router";
 
 const route = useRoute();
 
@@ -149,39 +149,29 @@ const connectToRoom = () => {
   });
 };
 
-watch(
-  () => route.path,
-  (newPath, oldPath) => {
-    if (newPath === '/chat_new') {
-      // 進入聊天頁面，禁用滾動
-      document.body.style.overflow = 'hidden';
-      document.documentElement.style.overflow = 'hidden';
-    } else if (oldPath === '/chat_new') {
-      // 離開聊天頁面，恢復滾動
-      document.body.style.overflow = 'auto';
-      document.documentElement.style.overflow = 'auto';
-    }
-  },
-  { immediate: true }
-);
+// watch(
+//   () => route.path,
+//   (newPath, oldPath) => {
+//     if (newPath === "/chat_new") {
+//       // 進入聊天頁面，禁用滾動
+//       document.body.style.overflow = "hidden";
+//       document.documentElement.style.overflow = "hidden";
+//     } else if (oldPath === "/chat_new") {
+//       // 離開聊天頁面，恢復滾動
+//       document.body.style.overflow = "auto";
+//       document.documentElement.style.overflow = "auto";
+//     }
+//   },
+//   { immediate: true }
+// );
 
 // 確保組件卸載時恢復滾動
 onBeforeUnmount(() => {
   // 恢復頁面滾動
-  document.body.style.overflow = 'auto';
-  document.documentElement.style.overflow = 'auto';
-  
+  document.body.style.overflow = "auto";
+  document.documentElement.style.overflow = "auto";
+
   // 原有的清理邏輯
-  socket.off("chatMessage", handleIncomingMessage);
-  socket.off("userJoined");
-  socket.off("userLeft");
-  socket.emit("leaveRoom", {
-    roomId: roomId.value,
-    userId: userStore.userId,
-  });
-});
-// 避免重複綁定：離開時移除 listener
-onBeforeUnmount(() => {
   socket.off("chatMessage", handleIncomingMessage);
   socket.off("userJoined");
   socket.off("userLeft");
@@ -263,15 +253,12 @@ const sendMessage = async () => {
     // 發送到 Socket.io 伺服器
     socket.emit("chatMessage", messageData);
     console.log("✅ Socket 訊息已發送");
-    // 清空輸入框
-    newMessage.value = "";
 
     console.log("💾 本地顯示訊息:", localMessage);
     console.log("chatStore:", chatStore);
     console.log("chatStore.addMessage:", chatStore.addMessage);
 
     if (chatStore && chatStore.addMessage) {
-      chatStore.addMessage(localMessage);
       console.log("✅ 訊息已加入 chatStore");
     } else {
       console.error("❌ chatStore 或 addMessage 方法不存在");
@@ -347,7 +334,7 @@ watch(
 </script>
 
 <template>
-  <div class="bg-gray-100 h-screen overflow-hidden flex chat-container">
+  <div class="bg-gray-100 h-screen flex chat-container">
     <!-- 左側邊欄 -->
     <div class="w-80 bg-white border-r border-gray-200 flex flex-col">
       <!-- 標題 -->
@@ -390,7 +377,7 @@ watch(
     </div>
 
     <!-- 右側主要聊天區域 -->
-    <div class="flex-1 flex flex-col">
+    <div class="flex-1 flex flex-col h-full">
       <!-- 聊天室標題欄 -->
       <div
         class="bg-white border-b border-gray-200 p-4 flex items-center justify-between"
@@ -418,8 +405,9 @@ watch(
 
       <!-- 聊天訊息區域 -->
       <div
-        class="flex-1 overflow-y-auto p-4 space-y-4 bg-gray-50"
+        class="overflow-y-auto p-4 space-y-4 bg-gray-50"
         ref="messagesContainer"
+        style="height: calc(100vh - 140px)"
       >
         <!-- 顯示來自 chatStore 的訊息 -->
         <div v-if="!isUserLoggedIn" class="text-center py-8">
@@ -478,7 +466,7 @@ watch(
       </div>
 
       <!-- 輸入區域 -->
-      <div class="bg-white border-t border-gray-200 p-4">
+      <div class="bg-white border-t border-gray-200 p-4 flex-shrink-0">
         <div class="flex items-end space-x-3">
           <!-- 左側工具按鈕 -->
           <button class="text-gray-400 hover:text-gray-600 mb-2">
@@ -543,6 +531,11 @@ watch(
   width: 6px;
 }
 
+/* 確保訊息容器能正確滾動 */
+.overflow-y-auto[ref="messagesContainer"] {
+  flex: 1;
+  min-height: 0;
+}
 .overflow-y-auto::-webkit-scrollbar-track {
   background: #f1f1f1;
 }
