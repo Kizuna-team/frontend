@@ -1,0 +1,39 @@
+import axios from "@/api/axios.js";
+import { useCartStore } from "../stores/cart.js"
+
+const sendOrder = async () => {
+  const cartStore = useCartStore();
+  
+  try{
+    // 組成要送給 API 的 items 格式
+    const items = cartStore.cartItems.map( item => ({
+        product_id: item.id,
+        quantity: item.quantity
+    }));
+    
+    console.log(items);
+    
+    const res = await axios.post("/order/gift-orders", {
+      // 寫死測試
+      sender_id: 2,
+      receiver_id: 10,
+      items: items
+    });
+
+   
+    if (res.data.success) {
+      console.log(res.data);
+      // 成功後跳轉 LINE Pay 頁面
+      window.location.href = res.data.paymentUrl;
+    } else {
+      message.value = "建立訂單失敗：" + res.data.message;
+    }
+    // console.log("跳轉到linepay掃描頁面，網址：", res.data.paymentUrl);
+    // // 這行超重要：跳轉到 LINE Pay 頁面
+    // window.location.href = res.data.paymentUrl;
+  }catch(err){
+    console.error("送禮失敗 請稍後再試 失敗原因:", err);
+  }
+};
+
+export default sendOrder;
