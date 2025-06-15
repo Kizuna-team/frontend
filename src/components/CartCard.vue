@@ -17,7 +17,7 @@ defineProps({
 <template>
   <div class="grid items-center grid-cols-5">
     <div class="col-span-2">
-      <img src="" alt="" />
+      <img :src="item.img" alt="" />
       <p>商品: {{ item.name }}</p>
     </div>
     <p>價格: {{ item.price }}</p>
