@@ -130,11 +130,11 @@ const router = createRouter({
       path: "/super/products/inventory",
       name: "ProductAdmin",
       component: ProductAdminView,
-
+    },
+    {
       path: "/chat_new",
       name: "ChatRoom_new",
       component: () => import("@/views/ChatRoomView_new.vue"),
-
     },
     {
       path: "/chat_new",
