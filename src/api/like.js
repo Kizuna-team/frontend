@@ -10,11 +10,11 @@ export const sendLike = async (targetId, status = 1) => {
     });
 
     if (res.data.matched) {
-      const matchedTargetData = res.data.targetProfile; // 後端回傳 整包對象的物件資料
-
+      console.log("👀 API 回傳:", res.data);
       return {
         matched: true,
-        matchedTargetData,
+        targetProfile: res.data.targetProfile,
+        myProfile: res.data.myProfile,
         message: res.data.message,
       };
     }
@@ -36,11 +36,11 @@ export const sendSuperLike = async (targetId) => {
     });
 
     if (res.data.matched) {
-      const matchedTargetData = res.data.targetProfile; // 後端回傳 整包對象的物件資料
-
+      console.log("👀 API 回傳:", res.data);
       return {
         matched: true,
-        matchedTargetData,
+        targetProfile: res.data.targetProfile,
+        myProfile: res.data.myProfile,
         message: res.data.message,
       };
     }

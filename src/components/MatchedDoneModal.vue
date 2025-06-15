@@ -29,7 +29,7 @@ const onCancelClick = () => {
     <div
       class="relative max-w-2xl p-12 mx-auto shadow-2xl rounded-2xl ring-1 ring-white/30 bg-[#ffd] backdrop-blur-md"
     >
-      <!-- ❌ 關閉 -->
+      <!--  關閉 -->
       <button
         class="absolute text-xl text-gray-500 top-4 right-6 hover:text-gray-700"
         title="關閉"
@@ -46,9 +46,9 @@ const onCancelClick = () => {
         >
           <div class="w-full bg-gray-200 rounded-sm h-44">
             <img
+              class="object-contain object-center w-full h-full"
               :src="props.myProfile.avatarUrl"
               alt="My Avatar"
-              class="avatar"
             />
           </div>
           <span class="mt-4 text-xl font-bold text-darkblue">{{
@@ -61,7 +61,7 @@ const onCancelClick = () => {
         >
           <div class="w-full bg-gray-200 rounded-sm h-44">
             <img
-              class="avatar"
+              class="object-contain object-center w-full h-full"
               :src="props.targetProfile.avatarUrl"
               alt="Target Avatar"
             />

@@ -69,20 +69,39 @@ const restSuperLikes = ref(null);
 const isCovering = ref(false);
 const confirmModal = ref(false);
 
+// const likeFlag = async () => {
+//   // 測試用：強制給資料，跳出彈窗
+//   matchedTarget.value = {
+//     name: "Tom",
+//     avatarUrl: "",
+//   };
+//   myOwnProfile.value = {
+//     name: "Melody",
+//     avatarUrl: "",
+//   };
+//   confirmModal.value = true;
+//   return; // 加這行避免繼續發送 API
+// };
+
 const likeFlag = async (targetId) => {
   try {
+    console.log("⚙️ sendLike 開始", targetId);
     const { matched, message, targetProfile, myProfile } = await sendLike(
       targetId
     );
+    console.log("✅ sendLike 結束", { matched, targetProfile, myProfile });
     if (matched) {
       matchedTarget.value = targetProfile;
       myOwnProfile.value = myProfile;
+
       mutualLike.value = true;
       confirmModal.value = true;
     } else {
       alert(message); // 其他提示
       nextUser(); //如果要改成動畫提示訊息的話這邊要用setTimeout 等動畫跑完
     }
+    console.log("📦 matchedTarget:", matchedTarget.value);
+    console.log("📦 myOwnProfile:", myOwnProfile.value);
   } catch (error) {
     if (error.response && error.response.status === 409) {
       alert(error.response.data.message || "已表達 等待對方回應");
