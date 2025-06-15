@@ -128,9 +128,9 @@ export const useUserStore = defineStore("user", () => {
       refreshToken.value = newFreshToken;
       username.value = user.username;
 
-      localStorage.setItem("accessToken", accessToken);
-      localStorage.setItem("refreshToken", refreshToken);
-      localStorage.setItem("username", username);
+      localStorage.setItem("accessToken", accessToken.value);
+      localStorage.setItem("refreshToken", refreshToken.value);
+      localStorage.setItem("username", username.value);
     } catch (error) {
       console.error("Google登入失敗", error.message);
     }
