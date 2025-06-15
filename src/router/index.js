@@ -71,12 +71,6 @@ const router = createRouter({
       component: RegisterNewView,
     },
     {
-      path: "/oauth-success",
-      name: "OAuthSuccess",
-      component: OAuthSuccess,
-    },
-
-    {
       path: "/register",
       name: "Register",
       component: RegisterView,
