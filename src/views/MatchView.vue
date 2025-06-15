@@ -7,10 +7,7 @@ import UserIntro from "@/components/UserIntro.vue";
 import MatchedDoneModal from "@/components/MatchedDoneModal.vue";
 
 import { sendLike, sendSuperLike } from "@/api/like.js";
-import { useUserProfileStore } from "@/stores/userProfile";
 import { fetchAllProfiles } from "@/api/profile.js";
-
-const userProfileStore = useUserProfileStore();
 
 const allProfiles = ref([]);
 const limitUsers = 20;
@@ -63,10 +60,9 @@ const nextUser = () => {
   }
 };
 
-// 配對成功 > Modal 顯示與xxx配對成功
-// 發送super like 成功 顯示剩餘次數
-// 人數上限顯示遮罩
-const matchedTarget = ref(null); // // 存取配對成功對象一整包資料
+// 配對Modal super-like剩餘次數 上限遮罩
+const myOwnProfile = ref(null); // 自己的一整包資料
+const matchedTarget = ref(null); // 存取配對成功對象一整包資料
 const mutualLike = ref(false); // 是否互相喜歡
 const restSuperLikes = ref(null);
 // 配對關閉 ｜ 彈跳配對視窗
@@ -75,9 +71,12 @@ const confirmModal = ref(false);
 
 const likeFlag = async (targetId) => {
   try {
-    const { matched, message, matchedTargetData } = await sendLike(targetId);
+    const { matched, message, targetProfile, myProfile } = await sendLike(
+      targetId
+    );
     if (matched) {
-      matchedTarget.value = matchedTargetData; // 配對成功的對象
+      matchedTarget.value = targetProfile;
+      myOwnProfile.value = myProfile;
       mutualLike.value = true;
       confirmModal.value = true;
     } else {
@@ -87,7 +86,9 @@ const likeFlag = async (targetId) => {
   } catch (error) {
     if (error.response && error.response.status === 409) {
       alert(error.response.data.message || "已表達 等待對方回應");
-      nextUser();
+      setTimeout(() => {
+        nextUser();
+      }, 1500);
     }
     console.error("送出like發生錯誤", error);
   }
@@ -118,11 +119,12 @@ const handleSuperLikeStatus = (status) => {
 
 const superLikeFlag = async (targetId) => {
   try {
-    const { matched, remainingCount, message, matchedTargetData } =
+    const { matched, remainingCount, message, targetProfile, myProfile } =
       await sendSuperLike(targetId);
 
     if (matched) {
-      matchedTarget.value = matchedTargetData;
+      matchedTarget.value = targetProfile;
+      myOwnProfile.value = myProfile;
       mutualLike.value = true;
       confirmModal.value = true;
       alert(message); // 要換成動畫
@@ -211,6 +213,16 @@ const onCancel = () => {
       @goPrev="prevUser"
       @goNext="nextUser"
     />
+
+    <!-- 只有成功配對時才顯示 Modal -->
+    <!-- 傳給子元件 自己 pinia 的名字 和  配對對象 名<template> 會自動解 ref 別.value  -->
+    <MatchedDoneModal
+      v-if="confirmModal"
+      :my-profile="myOwnProfile"
+      :target-profile="matchedTarget"
+      @cancel="onCancel"
+    />
+
     <!-- 配對按鈕區 -->
     <!-- 對象 user.id -->
     <MatchBtn
@@ -220,15 +232,6 @@ const onCancel = () => {
       @dislike="dislikeFlag"
       @superLike="superLikeFlag"
       @superLikeStatus="handleSuperLikeStatus"
-    />
-    <!-- 只有成功配對時才顯示 Modal -->
-    <!-- 傳給子元件 自己 pinia 的名字 和  配對對象 名<template> 會自動解 ref 別.value  -->
-    <MatchedDoneModal
-      v-if="confirmModal"
-      :my-name="userProfileStore.userProfile.name"
-      :my
-      :target-data="matchedTarget"
-      @cancel="onCancel"
     />
 
     <!-- 個人資訊頁面收合區 -->
