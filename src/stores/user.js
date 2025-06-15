@@ -117,15 +117,16 @@ export const useUserStore = defineStore("user", () => {
   // Google 登入
   const loginWithGoogle = async (idToken) => {
     try {
-      const res = await axios.post("/auth/google", { idToken });
+      console.log("google嘗試登入中 idToken", idToken);
 
-      accessToken.value = res.data.accessToken;
-      refreshToken.value = res.data.refreshToken;
-      username.value = res.data.username;
+      const res = await axios.post("/auth/google", { credential: idToken });
+      
+      const { accessToken, refreshToken, username } = res.data;
+      console.log("從後端傳回來的response:", res.data);
 
-      localStorage.setItem("accessToken", accessToken.value);
-      localStorage.setItem("refreshToken", refreshToken.value);
-      localStorage.setItem("username", username.value);
+      localStorage.setItem("accessToken", accessToken);
+      localStorage.setItem("refreshToken", refreshToken);
+      localStorage.setItem("username", username);
     } catch (error) {
       console.error("Google登入失敗", error.message);
     }
@@ -135,8 +136,6 @@ export const useUserStore = defineStore("user", () => {
       subscriptionPlan.value = plan;
       localStorage.setItem("subscriptionPlan", plan);
     };
-
-  // 最後 return 出來
   return {
     accessToken,
     refreshToken,

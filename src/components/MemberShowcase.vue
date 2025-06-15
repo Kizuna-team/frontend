@@ -1,7 +1,7 @@
 <script setup>
 import MemberCard from "./MemberCard.vue";
 
-const animationDuration = 40; // 秒，越大越慢越柔順
+const animationDuration = 40;
 
 const members = [
   { photo: "/people.jpg", firstName: "Jhon", lastName: "Osteen" },
@@ -20,11 +20,11 @@ const members = [
     <div class="max-w-6xl px-6 mx-auto text-center">
       <h1 class="text-4xl font-bold leading-tight text-gray-900 md:text-4xl">
         在
-        <span class="font-serif italic text-secondary">Kizuna</span>
-        開始你的連結旅程
+        <span class="font-semibold text-secondary">Kizuna</span
+        >，展開你的連結之旅
       </h1>
       <p class="mt-3 text-base italic text-gray-500 md:text-xl">
-        找到聊得來的夥伴，讓每一次配對更有意義。
+        找到聊得來的夥伴，讓每次配對都更有意義
       </p>
 
       <!-- 自動無限滑動區塊 -->

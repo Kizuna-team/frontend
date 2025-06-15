@@ -1,7 +1,6 @@
 import { createRouter, createWebHistory } from "vue-router";
 import ProductView from "@/views/ProductView.vue";
 import CartView from "@/views/CartView.vue";
-import LoginView from "@/views/LoginView.vue";
 import RegisterView from "@/views/RegisterView.vue";
 import HomeView from "@/views/HomeView.vue";
 import BrandView from "@/views/BrandView.vue";
@@ -11,11 +10,13 @@ import MatchView from "../views/MatchView.vue";
 import ActivityList from "@/components/ActivityList.vue";
 import ActivityView from "@/components/ActivityForm.vue";
 import EditProfileView from "@/views/EditProfileView.vue";
-import PaymentView from '@/views/PaymentView.vue';
+import PaymentView from "@/views/PaymentView.vue";
 import BlessingView from "@/views/BlessingView.vue";
 import GiftCheckoutView from "@/views/GiftCheckoutView.vue";
 import ProductAdminView from "@/views/ProductAdminView.vue";
 import { useUserStore } from "@/stores/user.js";
+import LoginView from "@/views/LoginView.vue";
+import RegisterNewView from "@/views/RegisterNewView.vue";
 import ProfileTwoView from "@/views/ProfileTwoView.vue";
 import SubscriptionView from "@/views/SubscriptionView.vue";
 import MemberView from "@/views/MemberView.vue";
@@ -64,6 +65,17 @@ const router = createRouter({
       name: "Login",
       component: LoginView,
     },
+    {
+      path: "/registerNew",
+      name: "RegisterNew",
+      component: RegisterNewView,
+    },
+    {
+      path: "/oauth-success",
+      name: "OAuthSuccess",
+      component: OAuthSuccess,
+    },
+
     {
       path: "/register",
       name: "Register",
@@ -118,9 +130,9 @@ const router = createRouter({
       meta: { hideHeader: true },
     },
     {
-      path: '/blessing',
-      name: 'Blessing',
-      component: BlessingView
+      path: "/blessing",
+      name: "Blessing",
+      component: BlessingView,
     },
     {
       path: '/order/confirm',
