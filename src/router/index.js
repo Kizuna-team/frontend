@@ -19,6 +19,7 @@ import RegisterView from "@/views/RegisterView.vue";
 import ProfileTwoView from "@/views/ProfileTwoView.vue";
 import SubscriptionView from "@/views/SubscriptionView.vue";
 import MemberView from "@/views/MemberView.vue";
+import MultiStepForm from "@/views/MultiStepForm.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -34,6 +35,11 @@ const router = createRouter({
     //   name: "googleProfile",
     //   component: ProfileView,
     // },
+    {
+      path: "/cart/form",
+      name: "MultiStepForm",
+      component: MultiStepForm,
+    },
     {
       path: "/subscribe",
       name: "Subscribe",
