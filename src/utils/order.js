@@ -19,7 +19,6 @@ const sendOrder = async () => {
       receiver_id: 10,
       items: items
     });
-
    
     if (res.data.success) {
       console.log(res.data);
