@@ -124,7 +124,6 @@ const router = createRouter({
       name: "Subscribe",
       component: SubscriptionView,
     },
-
     {
       path: "/:pathMatch(.*)*",
       name: "NotFound",
