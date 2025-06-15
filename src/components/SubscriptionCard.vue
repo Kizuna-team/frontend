@@ -32,9 +32,9 @@ const props = defineProps({
       class="relative z-10 flex flex-col items-center h-full px-6 py-8 text-center shadow-md rounded-xl bg-white/90 backdrop-blur-md"
     >
       <!-- 頂部 icon -->
-      <div class="mb-4 text-5xl text-secondary">
-        <component :is="icon" class="w-12 h-12" />
-      </div>
+      <div class="mb-4 text-5xl transition-colors group-hover:text-secondary">
+  <component :is="icon" class="w-12 h-12" />
+</div>
 
       <!-- 標題與說明文字 -->
       <h2 class="mb-1 text-2xl font-bold text-darkblue">{{ title }}</h2>
