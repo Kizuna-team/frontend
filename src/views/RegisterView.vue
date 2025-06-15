@@ -9,12 +9,11 @@ const router = useRouter();
 const username = ref("");
 const password = ref("");
 
-//
 const handleRegister = async () => {
   // debug
   // console.log('開始註冊', username.value);
   if (!username.value || !password.value) {
-    alert("請輸入帳號或密碼");
+    alert("請輸入帳號與密碼");
     return;
   }
 
@@ -23,7 +22,7 @@ const handleRegister = async () => {
     !/[0-9]/.test(password.value) ||
     password.value.length <= 6
   ) {
-    alert("密碼長度必須大於7，且包含英文及數字");
+    alert("密碼格式錯誤\n請輸入至少 7 碼以上，且包含英文字母與數字");
     return;
   }
 
@@ -34,53 +33,98 @@ const handleRegister = async () => {
     alert(res.message || "註冊成功，請登入");
     router.push("/login"); // 註冊完成後 導回登入頁
   } else {
-    alert(`${res.message}${res.reason ? `\n原因:${res.reason}` : ""}`);
+    alert(
+      `註冊失敗\n${res.message}${res.reason ? `\n原因：${res.reason}` : ""}`
+    );
   }
+};
+
+const loginWithGoogle = () => {
+  window.location.href = "http://localhost:3000/auth/google";
 };
 </script>
 
 <template>
-  <div class="w-[600px] h-[400px] bg-[#C0D7EC] bg-opacity-70 rounded-[20px]">
-    <div class="mx-auto w-[500px] py-10">
-      <!-- 註冊 + 已有帳號?登入 -->
-      <div class="flex justify-between">
-        <h2 class="text-[#3E6588] font-black text-2xl">註冊</h2>
-        <router-link to="/login" class="p-2 font-black text-[#3E6588]"
-          >已有帳號? 登入</router-link
-        >
-      </div>
-      <!-- 填寫註冊資訊 -->
-      <form @submit.prevent="handleRegister">
-        <!-- 帳號輸入框 -->
-        <label class="block text-[#3E6588] font-bold text-l my-2 rounded-[10px]"
-          >帳號</label
-        >
-        <input
-          v-model="username"
-          type=""
-          placeholder="常用 Email"
-          class="w-[500px] block py-1.5 pr-3 pl-3 text-lg border border-gray-300 text-gray-900 rounded-[10px] placeholder:text-gray-400 focus:outline-none sm:text-sm/6"
-        />
-        <!-- 密碼輸入框 -->
-        <label class="block text-[#3E6588] font-bold text-l my-2">密碼</label>
-        <input
-          v-model="password"
-          type="password"
-          placeholder="6位數以上英數組合"
-          class="w-[500px] block py-1.5 pr-3 pl-3 text-lg border border-gray-300 text-gray-900 rounded-[10px] placeholder:text-gray-400 focus:outline-none sm:text-sm/6"
-        />
-        <!-- 註冊按鈕 -->
-        <button
-          type="submit"
-          class="mt-5 mb-2 w-[500px] p-3 font-bold text-white bg-[#7395BA] rounded-[10px]"
-        >
-          註冊( 新增帳號 )
-        </button>
-      </form>
-      <!-- 授權 -->
-      <a href="#" class="text-center block text-[#3E6588] font-bold text-l"
-        >註冊即表示您同意 服務條款 與 隱私權政策</a
+  <div
+    class="fixed inset-0 overflow-hidden bg-gradient-to-br from-[#8ecae6]/70 via-white/50 to-pink-200/70"
+  >
+    <!-- 回登入按鈕 -->
+    <router-link
+      to="/login"
+      class="fixed z-50 bottom-6 left-6 md:top-1/2 md:left-6 md:bottom-auto md:translate-y-[-50%]"
+    >
+      <button
+        class="flex items-center justify-center transition-transform duration-200 transform border border-white rounded-full shadow-lg w-14 h-14 bg-white/80 backdrop-blur hover:scale-125"
+        title="回到登入"
       >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke-width="2"
+          stroke="currentColor"
+          class="w-6 h-6 text-[#219ebc]"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18"
+          />
+        </svg>
+      </button>
+    </router-link>
+
+    <div class="flex items-center justify-center w-full h-full px-4">
+      <div
+        class="relative w-full max-w-md p-10 bg-gradient-to-br from-white/90 to-white/70 ring-1 ring-white/40 backdrop-blur-xl hover:scale-[1.02] transition-transform duration-300 shadow-[0_10px_40px_rgba(0,0,0,0.15)]"
+      >
+        <div class="flex justify-center mb-2">
+          <img src="/logo.png" alt="Kizuna Logo" class="h-10" />
+        </div>
+        <!-- 標題 -->
+        <div class="mb-8 text-center">
+          <h1 class="text-4xl font-extrabold tracking-tight text-gray-800">
+            Join Kizuna
+          </h1>
+          <p class="mt-2 text-sm text-gray-600">請註冊帳號以開始使用</p>
+        </div>
+
+        <form @submit.prevent="handleRegister" class="space-y-6">
+          <!-- Email -->
+          <div>
+            <label class="relative flex items-center text-gray-700">
+              <Mail class="absolute w-5 h-5 text-gray-400 left-3" />
+              <input
+                type="email"
+                v-model="email"
+                placeholder="電子郵件"
+                class="w-full pl-10 pr-4 py-3 bg-white/80 backdrop-blur rounded-full border border-gray-300 focus:border-[#219ebc] focus:ring-2 focus:ring-[#219ebc] transition-all duration-200 outline-none text-gray-800"
+              />
+            </label>
+          </div>
+
+          <!-- Password -->
+          <div>
+            <label class="relative flex items-center text-gray-700">
+              <Lock class="absolute w-5 h-5 text-gray-400 left-3" />
+              <input
+                type="password"
+                v-model="password"
+                placeholder="密碼（至少 6 碼英數混合）"
+                class="w-full pl-10 pr-4 py-3 bg-white/80 backdrop-blur rounded-full border border-gray-300 focus:border-[#219ebc] focus:ring-2 focus:ring-[#219ebc] transition-all duration-200 outline-none text-gray-800"
+              />
+            </label>
+          </div>
+
+          <!-- 註冊按鈕 -->
+          <button
+            type="submit"
+            class="w-full py-3 text-white font-semibold rounded-full bg-gradient-to-r from-primary to-pink-300 hover:from-[#7bb8d9] hover:to-pink-400 shadow-lg hover:shadow-xl transition-all duration-200"
+          >
+            註冊
+          </button>
+        </form>
+      </div>
     </div>
   </div>
 </template>
