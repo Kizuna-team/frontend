@@ -1,24 +1,25 @@
 import { createRouter, createWebHistory } from "vue-router";
-import ProductView from "@/views/ProductView.vue";
-import CartView from "@/views/CartView.vue";
-import HomeView from "@/views/HomeView.vue";
-import BrandView from "@/views/BrandView.vue";
-// import ProfileView from "@/views/ProfileView.vue";
-import ChatRoomView from "@/views/ChatRoomView.vue";
-import MatchView from "../views/MatchView.vue";
 import ActivityList from "@/components/ActivityList.vue";
 import ActivityView from "@/components/ActivityForm.vue";
-import EditProfileView from "@/views/EditProfileView.vue";
-import PaymentView from "@/views/PaymentView.vue";
+import BrandView from "@/views/BrandView.vue";
 import BlessingView from "@/views/BlessingView.vue";
+import CartView from "@/views/CartView.vue";
+import ChatRoomView from "@/views/ChatRoomView.vue";
+import EditProfileView from "@/views/EditProfileView.vue";
 import GiftCheckoutView from "@/views/GiftCheckoutView.vue";
-import ProductAdminView from "@/views/ProductAdminView.vue";
-import { useUserStore } from "@/stores/user.js";
+import HomeView from "@/views/HomeView.vue";
 import LoginView from "@/views/LoginView.vue";
-import RegisterView from "@/views/RegisterView.vue";
-import ProfileTwoView from "@/views/ProfileTwoView.vue";
-import SubscriptionView from "@/views/SubscriptionView.vue";
+import MatchView from "../views/MatchView.vue";
 import MemberView from "@/views/MemberView.vue";
+import ProfileTwoView from "@/views/ProfileTwoView.vue";
+import ProductView from "@/views/ProductView.vue";
+// import ProfileView from "@/views/ProfileView.vue";
+import PaymentView from "@/views/PaymentView.vue";
+import ProductAdminView from "@/views/ProductAdminView.vue";
+import RegisterView from "@/views/RegisterView.vue";
+import SubscriptionView from "@/views/SubscriptionView.vue";
+
+import { useUserStore } from "@/stores/user.js";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
