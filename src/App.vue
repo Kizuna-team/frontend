@@ -26,7 +26,6 @@ const handleLogout = () => {
 </script>
 
 <template>
-  
   <div :class="{ 'home-page': $route.path === '/' }">
     <!-- Header：根據路由條件顯示 -->
     <Header v-if="showHeader" />

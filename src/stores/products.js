@@ -1,8 +1,6 @@
 import { defineStore } from "pinia";
 import { ref, computed } from "vue";
 export const useProductStore = defineStore("products", () => {
-  //商品列表
-  //price要是數字
   const products = ref([
     {
       id: 1,
@@ -13,30 +11,27 @@ export const useProductStore = defineStore("products", () => {
     },
   ]);
 
-
-  //取得所有可以購買的商品(庫存大於0) 記得計算要加computed!!!!
   const avaliableProducts = computed(() => {
     return products.value.filter((product) => product.inventory > 0);
   });
 
-  //減少庫存
-  const decreaseInventory = (ItemId) => {
-    const product = products.value.find((product) => product.id === ItemId);
-
-    if (product && product.inventory > 0) {
-      product.inventory--;
-    }
-  };
-
-  //增加庫存
-  const increaseInventory = (ItemId) => {
+  const decreaseInventory = (ItemId, amount = 1) => {
     const product = products.value.find((product) => product.id === ItemId);
 
     if (product) {
-      product.inventory++;
+    const safeAmount = Math.max(0, amount);
+    product.inventory = Math.max(product.inventory - safeAmount, 0);
+  }
+  };
+
+  const increaseInventory = (ItemId, amount = 1) => {
+    const product = products.value.find((product) => product.id === ItemId);
+
+    if (product) {
+      product.inventory += amount
     }
   };
-  return { products, avaliableProducts, decreaseInventory, increaseInventory }; //記得return
+  return { products, avaliableProducts, decreaseInventory, increaseInventory }; 
 });
 
 

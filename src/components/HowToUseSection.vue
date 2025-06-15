@@ -13,7 +13,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <section class="bg-white py-14">
+  <section id="howToUse" class="bg-white py-14">
     <div class="max-w-6xl px-6 mx-auto">
       <!-- 副標 -->
       <div class="mb-10 text-center" data-aos="fade-up">

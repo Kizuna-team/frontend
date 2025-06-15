@@ -34,20 +34,23 @@
         <span class="font-bold text-primary">Real connections,</span>
         <span class="font-bold text-accent"> heartfelt beginnings.</span>
       </p>
-      <button
-        class="relative px-16 py-4 overflow-hidden text-xl font-semibold text-black transition duration-300 bg-white rounded-full opacity-0 group hover:scale-105 animate-bounce-in"
-      >
-        <!-- 中文＋英文 -->
-        <span class="relative z-10 transition-colors duration-300">
-          開始旅程<br />
-          <small class="text-sm font-normal">Get Started</small>
-        </span>
+      <router-link to="/register">
+        <button
+          type="button"
+          class="relative px-16 py-4 overflow-hidden text-xl font-semibold text-black transition duration-300 bg-white rounded-full opacity-0 group hover:scale-105 animate-bounce-in"
+        >
+          <!-- 中文＋英文 -->
+          <span class="relative z-10 transition-colors duration-300">
+            開始旅程<br />
+            <small class="text-sm font-normal">Get Started</small>
+          </span>
 
-        <!-- 底色滑動層 -->
-        <span
-          class="absolute inset-0 bg-[#fb8500] translate-y-full transition-transform duration-500 ease-in-out rounded-full opacity-0 group-hover:translate-y-0 group-hover:opacity-100"
-        ></span>
-      </button>
+          <!-- 底色滑動層 -->
+          <span
+            class="absolute inset-0 bg-[#fb8500] translate-y-full transition-transform duration-500 ease-in-out rounded-full opacity-0 group-hover:translate-y-0 group-hover:opacity-100"
+          ></span>
+        </button>
+      </router-link>
     </div>
   </section>
 </template>

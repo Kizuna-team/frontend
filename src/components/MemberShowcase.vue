@@ -50,12 +50,15 @@ const members = [
         </div>
       </div>
       <div class="mt-20">
-        <button
-          class="py-[18px] text-2xl font-semibold text-white transition-all duration-300 origin-center rounded-full shadow-xl w-80 bg-gradient-to-r from-primary to-pink-300 hover:from-[#7bb8d9] hover:to-pink-400 hover:scale-110 hover:animate-pulse"
-        >
-          立即開始配對<br />
-          <span class="text-xl font-normal">Let’s Match!</span>
-        </button>
+        <router-link to="/register">
+          <button
+            type="button"
+            class="py-[18px] text-2xl font-bold text-white transition-all duration-300 origin-center rounded-full shadow-xl w-80 bg-gradient-to-r from-secondary to-pink-500 hover:scale-110 hover:brightness-110 hover:animate-pulse"
+          >
+            立即開始配對<br />
+            <span class="text-xl font-normal">Let’s Match!</span>
+          </button>
+        </router-link>
       </div>
     </div>
   </section>

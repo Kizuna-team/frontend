@@ -21,7 +21,6 @@ defineProps({
       <p>商品: {{ item.name }}</p>
     </div>
     <p>價格: {{ item.price }}</p>
-    <!-- 問題在這 -->
     <input
       type="number"
       :value="item.quantity" min="1"
