@@ -81,6 +81,7 @@ const handleAvatarUpload = async (e) => {
   }
 };
 
+// 更換照片檔案並產生預覽
 const handleFileChange = (event, index) => {
   const file = event.target.files[0];
   if (!file) return;
@@ -152,7 +153,6 @@ const uploadAll = async () => {
 
 // 讓外部元件可以呼叫 uploadAll，editProfileView.view 有呼叫
 defineExpose({ uploadAll });
-
 onMounted(refreshPhotos);
 </script>
 
@@ -262,7 +262,6 @@ onMounted(refreshPhotos);
       >
         ✕
       </button>
-
       <span v-else class="text-2xl text-gray-400">+</span>
     </div>
   </div>

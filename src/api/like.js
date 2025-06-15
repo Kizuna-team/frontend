@@ -10,7 +10,6 @@ export const sendLike = async (targetId, status = 1) => {
     });
 
     if (res.data.matched) {
-      console.log("👀 API 回傳:", res.data);
       return {
         matched: true,
         targetProfile: res.data.targetProfile,
@@ -36,7 +35,6 @@ export const sendSuperLike = async (targetId) => {
     });
 
     if (res.data.matched) {
-      console.log("👀 API 回傳:", res.data);
       return {
         matched: true,
         targetProfile: res.data.targetProfile,
