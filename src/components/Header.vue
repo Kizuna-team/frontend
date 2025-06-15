@@ -170,7 +170,7 @@ const headerClasses = computed(() => {
           </LiquidNavLink>
 
           <!-- 用戶選單 -->
-          <div class="relative">
+          <div class="relative ">
             <div
               class="flex items-center justify-center w-12 h-12 text-sm font-bold shadow-xl bg-[#ffffff] rounded-full text-[#000000] hover:bg-[#c5c5c5] cursor-pointer"
               @click="toggleDropdown"

@@ -21,7 +21,6 @@ import ProfileTwoView from "@/views/ProfileTwoView.vue";
 import SubscriptionView from "@/views/SubscriptionView.vue";
 import MemberView from "@/views/MemberView.vue";
 
-
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -129,19 +128,19 @@ const router = createRouter({
       component: BlessingView,
     },
     {
-      path: '/order/confirm',
-      name: 'Payment',
-      component: PaymentView
+      path: "/order/confirm",
+      name: "Payment",
+      component: PaymentView,
     },
     {
       path: "/super/products/inventory",
       name: "ProductAdmin",
       component: ProductAdminView,
-
+    },
+    {
       path: "/chat_new",
       name: "ChatRoom_new",
       component: () => import("@/views/ChatRoomView_new.vue"),
-
     },
   ],
 });
