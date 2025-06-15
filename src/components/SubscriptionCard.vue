@@ -15,10 +15,10 @@ const props = defineProps({
 
 <template>
   <div
-    class="group relative w-full max-w-sm overflow-hidden rounded-xl p-[1px] transition-all duration-300 ease-in-out cursor-pointer"
+    class="group relative w-full max-w-sm overflow-hidden rounded-xl p-[2px] transition-all duration-300 ease-in-out cursor-pointer"
     :class="[
       isHighlighted
-        ? 'bg-gradient-to-r from-primary via-secondary to-accent hover:scale-105'
+        ? 'bg-gradient-to-r from-primary via-secondary to-accent hover:scale-105 hover:shadow-2xl'
         : 'bg-gray-300',
     ]"
   >

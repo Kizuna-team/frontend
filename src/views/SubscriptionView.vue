@@ -1,6 +1,6 @@
 <script setup>
 import SubscribePlan from '@/components/SubscribePlan.vue'
-import Subscription from "@/components/SubscriptionCard.vue";
+import SubscriptionCard from "@/components/SubscriptionCard.vue";
 import { UserIcon, FireIcon } from "@heroicons/vue/24/outline";
 </script>
 
@@ -42,36 +42,6 @@ import { UserIcon, FireIcon } from "@heroicons/vue/24/outline";
           :isHighlighted="true"
         />
       </div>
-
-      <!-- 返回按鈕 -->
-
-      <div class="flex justify-center">
-        <button class="css-button-fully-rounded--sky">
-        返回
-      </button>
-      </div>
     </div>
   </section>
 </template>
-
-<style scoped>
-.css-button-fully-rounded--sky {
-  min-width: 200px;
-  height: 40px;
-  color: #fff;
-  padding: 5px 10px;
-  font-weight: bold;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  position: relative;
-  display: inline-block;
-  outline: none;
-  border-radius: 20px;
-  border: 2px solid #8ecae6;
-  background: #8ecae6;
-}
-.css-button-fully-rounded--sky:hover {
-  background: #fff;
-  color: #8ecae6
-}
-</style>
