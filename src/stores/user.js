@@ -121,8 +121,12 @@ export const useUserStore = defineStore("user", () => {
 
       const res = await axios.post("/auth/google", { credential: idToken });
       
-      const { accessToken, refreshToken, username } = res.data;
+      const { accessToken: newAccessToken, refreshToken: newFreshToken, user } = res.data;
       console.log("從後端傳回來的response:", res.data);
+
+      accessToken.value = newAccessToken;
+      refreshToken.value = newFreshToken;
+      username.value = user.username;
 
       localStorage.setItem("accessToken", accessToken);
       localStorage.setItem("refreshToken", refreshToken);
