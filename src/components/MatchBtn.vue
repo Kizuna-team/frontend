@@ -1,5 +1,5 @@
 <script setup>
-import { ref, nextTick, onMounted } from "vue";
+import { ref, onMounted } from "vue";
 import { fetchSuperLikeStatus } from "@/api/like.js";
 
 // 傳入對方的 userId，接著對對方 貼上喜歡/不喜歡的標籤 通知給父組件
@@ -23,17 +23,31 @@ const msg = ref("");
 const superLikeStatus = async () => {
   try {
     const data = await fetchSuperLikeStatus();
+    console.log("💡 API 回傳 SuperLike 狀態:", data);
+
     isMember.value = data.isMember;
     totalCount.value = data.remainingCount;
+    // 只要次數 <= 0 就要禁用
     isDisabled.value = totalCount.value <= 0;
 
+    // 解決可無限點的問題
     if (totalCount.value > 0) {
-      msg.value = `剩餘 ${totalCount.value} 次 Super Like`;
-    } else if (!isMember.value) {
-      msg.value = "尚未開啟高級會員功能";
+      msg.value = isMember.value
+        ? `剩餘 ${totalCount.value} 次 Super Like`
+        : `剩餘 ${totalCount.value} 次 Super Like (非會員專屬)`;
     } else {
-      msg.value = "今日 Super Like 次數已用完";
+      msg.value = isMember.value
+        ? "今日 Super Like 次數已用完"
+        : "尚未開啟高級會員功能 (今日次數已用完)";
     }
+
+    // if (totalCount.value > 0) {
+    //   msg.value = `剩餘 ${totalCount.value} 次 Super Like`;
+    // } else if (!isMember.value) {
+    //   msg.value = "尚未開啟高級會員功能";
+    // } else {
+    //   msg.value = "今日 Super Like 次數已用完";
+    // }
 
     emit("superLikeStatus", {
       isMember: isMember.value,
@@ -42,6 +56,8 @@ const superLikeStatus = async () => {
       msg: msg.value,
     });
   } catch (error) {
+    // 錯誤要禁用按鈕
+    isDisabled.value = true;
     console.error("取得 Super Like 狀態失敗", error);
   }
 };
@@ -65,11 +81,13 @@ const superLikeHandler = async () => {
   if (isDisabled.value) {
     alert(msg.value); // 改成 下方 emit 彈出 modal
     // emit("showSuperLikeModal", msg.value);
+    console.log("🛑 超級喜歡是否禁用:", isDisabled.value, msg.value);
+
     return;
   }
+  console.log("🛑 超級喜歡是否禁用:", isDisabled.value, msg.value);
 
   superLikeActive.value = false;
-  await nextTick();
   superLikeActive.value = true;
 
   setTimeout(() => {
@@ -101,6 +119,7 @@ const superLikeHandler = async () => {
     </button>
     <div :class="{ 'puff-out-center': superLikeActive }">
       <button
+        :disabled="isDisabled"
         type="button"
         class="circle-wrap bg-[#fff]"
         @click="superLikeHandler"

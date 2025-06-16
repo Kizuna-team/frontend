@@ -8,14 +8,14 @@ const props = defineProps({
 
 // 純展示 + emit 事件 | 上一位下一位
 const emit = defineEmits(["goPrev", "goNext"]);
-const prevUser = () => emit("goPrev");
+// const prevUser = () => emit("goPrev");
 const nextUser = () => emit("goNext");
 </script>
 
 <template>
   <section class="flex items-center gap-3 p-2 mb-4">
     <!-- 上一輪按鈕 -->
-    <button
+    <!-- <button
       type="button"
       class="bg-gray-200 bg-opacity-50 circle-wrap hover:bg-white hover:shadow-lg"
       @click="prevUser"
@@ -35,6 +35,7 @@ const nextUser = () => emit("goNext");
         />
       </svg>
     </button>
+     -->
     <!-- 使用者卡片區 -->
     <div class="flex flex-wrap justify-center gap-3">
       <div

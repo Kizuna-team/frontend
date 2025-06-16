@@ -154,9 +154,7 @@ const uploadAll = async () => {
 };
 
 // 讓外部元件可以呼叫 uploadAll，editProfileView.view 有呼叫
-
 onMounted(refreshPhotos);
-
 defineExpose({ uploadAll });
 </script>
 

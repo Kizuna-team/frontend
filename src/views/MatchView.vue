@@ -41,12 +41,12 @@ const infoToggle = () => {
   infoBtnTxt.value = isShow.value ? "Hide Info" : "Show More";
 };
 
-// 切換到上一位使用者
-const prevUser = () => {
-  currentIndex.value =
-    (currentIndex.value - 1 + allProfiles.value.length) %
-    allProfiles.value.length;
-};
+// // 切換到上一位使用者
+// const prevUser = () => {
+//   currentIndex.value =
+//     (currentIndex.value - 1 + allProfiles.value.length) %
+//     allProfiles.value.length;
+// };
 
 // 切換到下一位使用者
 // (防止顯示人數不達20位)從可配對者和限制的數量中，挑比較小的那一個
@@ -134,6 +134,8 @@ const handleSuperLikeStatus = (status) => {
   totalSuperLike.value = status.totalCount;
   isSuperLikeDisabled.value = status.isDisabled;
   superLikeMsg.value = status.msg;
+
+  console.log("here");
 };
 
 const superLikeFlag = async (targetId) => {
@@ -225,11 +227,10 @@ const onCancel = () => {
     class="flex flex-col items-center justify-around pt-6 card-bg rounded-3xl"
   >
     <!-- 顯示對象滑滑區 -->
-
+    <!-- @goPrev="prevUser" -->
     <UserCard
       v-if="currentUser && currentUser.photos"
       :target-photos="currentUser.photos"
-      @goPrev="prevUser"
       @goNext="nextUser"
     />
 
@@ -243,7 +244,6 @@ const onCancel = () => {
     />
 
     <!-- 配對按鈕區 -->
-    <!-- 對象 user.id -->
     <MatchBtn
       v-if="typeof currentUser?.userId === 'number'"
       :target-user="currentUser.userId"
