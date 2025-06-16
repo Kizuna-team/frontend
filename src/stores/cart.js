@@ -6,7 +6,6 @@ export const useCartStore = defineStore("cart", () => {
   const productStore = useProductStore();
 
   const cartItems = ref([]);
-  // { id: 1, name: '機械鍵盤', price: 2999, quantity: 1 }
 
   const totalPrice = computed(() => {
     return cartItems.value.reduce(
@@ -15,6 +14,7 @@ export const useCartStore = defineStore("cart", () => {
     );
   });
 
+  // header 中的購物車數字 icon 是吃這個值
   const totalQuantity = computed(() => {
     return cartItems.value.reduce((sum, item) => sum + item.quantity, 0);
   });
@@ -62,7 +62,6 @@ export const useCartStore = defineStore("cart", () => {
     }
   };
 
-
   const clearCart = () => {
     cartItems.value.forEach((item) => {
       for (let i = 0; i < item.quantity; i++) {
@@ -71,6 +70,7 @@ export const useCartStore = defineStore("cart", () => {
     });
     cartItems.value = [];
   };
+
   return {
     cartItems,
     totalPrice,
