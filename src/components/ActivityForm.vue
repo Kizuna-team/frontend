@@ -20,6 +20,7 @@ const form = ref({
   title: "",
   location: "",
   date: "",
+  time: "",
   description: "",
   createdBy: "",
 });
@@ -32,11 +33,11 @@ function handleFileChange(event) {
   const file = event.target.files[0];
   imageFile.value = file;
   if (file) {
-    previewUrl.value = URL.createObjectURL(file)
+    previewUrl.value = URL.createObjectURL(file);
   } else if (selectedActivity.value?.image_url) {
-    previewUrl.value = selectedActivity.value.image_url
+    previewUrl.value = selectedActivity.value.image_url;
   } else {
-    previewUrl.value = ""
+    previewUrl.value = "";
   }
 }
 
@@ -55,7 +56,7 @@ watch(
           description: selectedActivity.value?.description || "",
           createdBy: selectedActivity.value?.createdBy || "",
         };
-                // 如果有舊圖片就顯示，沒有就空字串
+        // 如果有舊圖片就顯示，沒有就空字串
         if (selectedActivity.value?.image_url) {
           previewUrl.value = selectedActivity.value.image_url;
         } else {
@@ -82,7 +83,7 @@ async function handleSubmit() {
   const formData = new FormData();
   formData.append("title", form.value.title);
   formData.append("location", form.value.location);
-  formData.append("date", form.value.date);
+  formData.append("date", `${form.value.date}T${form.value.time}:00`);
   formData.append("description", form.value.description);
   formData.append("createdBy", form.value.createdBy);
   if (imageFile.value) {
@@ -160,7 +161,9 @@ async function handleDelete() {
         />
       </div>
       <div>
-        <label for="location" class="block mb-1 font-semibold">活動地點：</label>
+        <label for="location" class="block mb-1 font-semibold"
+          >活動地點：</label
+        >
         <input
           id="location"
           v-model="form.location"
@@ -179,7 +182,18 @@ async function handleDelete() {
         />
       </div>
       <div>
-        <label for="description" class="block mb-1 font-semibold">活動描述：</label>
+        <label for="time" class="block mb-1 font-semibold">活動時間：</label>
+        <input
+          id="time"
+          type="time"
+          v-model="form.time"
+          class="w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
+        />
+      </div>
+      <div>
+        <label for="description" class="block mb-1 font-semibold"
+          >活動描述：</label
+        >
         <textarea
           id="description"
           v-model="form.description"
