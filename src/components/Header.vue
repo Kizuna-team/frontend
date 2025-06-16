@@ -5,6 +5,7 @@ import { useRoute, useRouter } from "vue-router";
 import LiquidNavLink from "@/components/LiquidGlass.vue";
 import { useCartStore } from '@/stores/cart.js';
 
+
 const route = useRoute();
 const router = useRouter();
 const store = useUserStore();
@@ -71,7 +72,7 @@ watch(route, () => {
 
 <template>
   <header
-    class="fixed top-0 left-0 z-50 w-full transition-colors duration-300 border-b-2"
+    class="fixed top-0 left-0 z-50 w-full transition-colors duration-300 border-b-2 navbar-header"
     :class="[
       isScrolled || isLightBgPage
         ? 'bg-white text-black border-[#219ebc]'
