@@ -18,11 +18,6 @@ import PaymentView from "@/views/PaymentView.vue";
 import ProductAdminView from "@/views/ProductAdminView.vue";
 import RegisterView from "@/views/RegisterView.vue";
 import SubscriptionView from "@/views/SubscriptionView.vue";
-<<<<<<< code-readability
-=======
-
-import { useUserStore } from "@/stores/user.js";
->>>>>>> dev
 
 import { useUserStore } from "@/stores/user.js";
 const router = createRouter({
@@ -111,7 +106,6 @@ const router = createRouter({
       component: ProductAdminView,
     },
     {
-<<<<<<< code-readability
       path: "/profile",
       component: ProfileTwoView,
     },
@@ -136,12 +130,11 @@ const router = createRouter({
       component: () => import("@/views/NotFound.vue"),
       meta: { hideHeader: true },
     },
-=======
+    {
       path: "/subscription",
       name: "Subscription",
       component: SubscriptionView,
     },
->>>>>>> dev
   ],
 });
 
