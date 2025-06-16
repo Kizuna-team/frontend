@@ -4,7 +4,7 @@ import { ref, computed, onUnmounted, onMounted } from "vue";
 import UserCard from "@/components/UserCard.vue";
 import MatchBtn from "@/components/MatchBtn.vue";
 import UserIntro from "@/components/UserIntro.vue";
-import MatchedDoneModal from "@/components/MatchedDoneModal.vue";
+import MatchedDoneModal from "@/components/MatchedDoneModel.vue";
 
 import { sendLike, sendSuperLike } from "@/api/like.js";
 import { fetchAllProfiles } from "@/api/profile.js";

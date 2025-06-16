@@ -51,10 +51,10 @@ const router = createRouter({
       component: ActivityView,
     },
     {
-  path: "/activities/:id",
-  name: "eventDetail",
-  component: () => import("@/views/EventCardByIdView.vue"),
-},
+      path: "/activities/:id",
+      name: "eventDetail",
+      component: () => import("@/views/EventCardByIdView.vue"),
+    },
     {
       path: "/activities/edit/:id",
       name: "activityEdit",
