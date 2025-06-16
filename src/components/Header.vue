@@ -196,9 +196,10 @@ onUnmounted(() => {
                 </svg>
                 <span class="whitespace-nowrap">編輯個人檔案</span>
               </RouterLink>
-              <a
-                href="#"
-                class="flex items-center gap-2 px-4 py-4 text-gray-600 border-b border-gray-300 hover:bg-gray-100"
+              <RouterLink
+              to="/subscription"
+              class="flex items-center gap-2 px-4 py-4 text-gray-600 border-b border-gray-300 hover:bg-gray-100"
+              @click="isDropdownOpen = false"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -214,7 +215,7 @@ onUnmounted(() => {
                   />
                 </svg>
                 升級方案
-              </a>
+              </RouterLink>
               <a
                 href="#"
                 class="flex items-center gap-2 px-4 py-4 text-gray-600 border-b border-gray-300 hover:bg-gray-100"
