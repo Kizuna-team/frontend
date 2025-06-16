@@ -7,19 +7,19 @@ import { useRouter } from "vue-router";
 const router = useRouter();
 const store = useUserStore();
 
-const email = ref("");
+const username = ref("");
 const password = ref("");
 const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
 
 const handleLogin = async () => {
-  // 修改：使用 email 和 password 而不是 store.username, store.password
-  if (!email.value || !password.value) {
+  if (!username.value || !password.value) {
     alert("請輸入帳號和密碼");
     return;
   }
   try {
-    await store.login(email.value, password.value);
+    await store.login(username.value, password.value);
     alert("登入成功，歡迎回來！");
+    router.push("/edit-profile");
   } catch (error) {
     console.error("登入失敗", error);
     const msg = error.response?.data?.message || "伺服器無回應";
@@ -135,14 +135,14 @@ const handleGoogleResponse = async (res) => {
         </div>
 
         <form @submit.prevent="handleLogin" class="space-y-6">
-          <!-- Email -->
+          <!-- 帳號 -->
           <div>
             <label class="relative flex items-center text-gray-700">
               <Mail class="absolute w-5 h-5 text-gray-400 left-3" />
               <input
-                type="email"
-                v-model="email"
-                placeholder="電子郵件"
+                type=""
+                v-model="username"
+                placeholder="使用者帳號"
                 class="w-full pl-10 pr-4 py-3 bg-white/80 backdrop-blur rounded-full border border-gray-300 focus:border-[#219ebc] focus:ring-2 focus:ring-[#219ebc] transition-all duration-200 outline-none text-gray-800"
               />
             </label>
@@ -170,7 +170,7 @@ const handleGoogleResponse = async (res) => {
           </button>
         </form>
 
-        <!-- 分隔 or -->
+        <!-- or -->
         <div class="flex items-center my-6 text-gray-500">
           <span class="flex-grow h-px bg-gray-300"></span>
           <span class="px-4 font-medium">or</span>

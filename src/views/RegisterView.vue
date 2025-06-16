@@ -31,16 +31,12 @@ const handleRegister = async () => {
   // console.log(res);
   if (res.success) {
     alert(res.message || "註冊成功，請登入");
-    router.push("/login"); // 註冊完成後 導回登入頁
+    router.push("/login");
   } else {
     alert(
       `註冊失敗\n${res.message}${res.reason ? `\n原因：${res.reason}` : ""}`
     );
   }
-};
-
-const loginWithGoogle = () => {
-  window.location.href = "http://localhost:3000/auth/google";
 };
 </script>
 
@@ -90,14 +86,14 @@ const loginWithGoogle = () => {
         </div>
 
         <form @submit.prevent="handleRegister" class="space-y-6">
-          <!-- Email -->
+          <!-- 帳號 -->
           <div>
             <label class="relative flex items-center text-gray-700">
               <Mail class="absolute w-5 h-5 text-gray-400 left-3" />
               <input
-                type="email"
-                v-model="email"
-                placeholder="電子郵件"
+                type=""
+                v-model="username"
+                placeholder="使用者帳號"
                 class="w-full pl-10 pr-4 py-3 bg-white/80 backdrop-blur rounded-full border border-gray-300 focus:border-[#219ebc] focus:ring-2 focus:ring-[#219ebc] transition-all duration-200 outline-none text-gray-800"
               />
             </label>
