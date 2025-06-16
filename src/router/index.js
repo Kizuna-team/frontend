@@ -2,7 +2,6 @@ import { createRouter, createWebHistory } from "vue-router";
 import ProductView from "@/views/ProductView.vue";
 import CartView from "@/views/CartView.vue";
 import HomeView from "@/views/HomeView.vue";
-import BrandView from "@/views/BrandView.vue";
 // import ProfileView from "@/views/ProfileView.vue";
 import ChatRoomView from "@/views/ChatRoomView.vue";
 import MatchView from "../views/MatchView.vue";
@@ -77,11 +76,6 @@ const router = createRouter({
       path: "/match",
       name: "Match",
       component: MatchView,
-    },
-    {
-      path: "/brand/:id",
-      name: "Brand",
-      component: BrandView,
     },
     {
       path: "/activities",
