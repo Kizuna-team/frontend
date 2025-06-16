@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory } from "vue-router";
 import ActivityList from "@/components/ActivityList.vue";
-import ActivityView from "@/components/ActivityForm.vue";
+import ActivityView from "@/views/ActivityView.vue";
 import BrandView from "@/views/BrandView.vue";
 import BlessingView from "@/views/BlessingView.vue";
 import CartView from "@/views/CartView.vue";
