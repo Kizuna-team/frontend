@@ -16,7 +16,6 @@ const isSpecialPage = computed(() => {
   // return ['/chat', '/special-page'].includes(route.path);
 });
 
-
 const handleLogout = () => {
   store.logout();
   alert("已登出");
