@@ -5,7 +5,6 @@ import { useRoute, useRouter } from "vue-router";
 import LiquidNavLink from "@/components/LiquidGlass.vue";
 import { useCartStore } from '@/stores/cart.js';
 
-
 const route = useRoute();
 const router = useRouter();
 const store = useUserStore();
@@ -79,7 +78,7 @@ watch(route, () => {
         : 'bg-transparent text-white border-transparent',
     ]"
   >
-    <nav class="flex items-center justify-between px-4 py-3 md:px-8">
+    <nav class="flex items-center justify-between px-4 py-3 custom-desktop-px-8">
       <!-- Logo -->
       <LiquidNavLink
         to="/"
@@ -89,8 +88,8 @@ watch(route, () => {
         Kizuna
       </LiquidNavLink>
 
-      <!-- 漢堡按鈕 -->
-      <button class="md:hidden" @click="toggleMobileMenu">
+      <!-- 漢堡按鈕 - 1064px 以下顯示 -->
+      <button class="custom-mobile-show" @click="toggleMobileMenu">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
@@ -108,37 +107,20 @@ watch(route, () => {
         </svg>
       </button>
 
-      <!-- 桌機導覽 -->
-      <div class="items-center justify-center flex-1 hidden space-x-4 md:flex">
-        <LiquidNavLink to="/match" :colorMode="getNavTextColor"
-          >配對池</LiquidNavLink
-        >
-        <LiquidNavLink to="/product" :colorMode="getNavTextColor"
-          >商品列表</LiquidNavLink
-        >
-        <LiquidNavLink to="/activities" :colorMode="getNavTextColor"
-          >活動</LiquidNavLink
-        >
-        <LiquidNavLink to="/activities/new" :colorMode="getNavTextColor"
-          >活動表單</LiquidNavLink
-        >
-        <LiquidNavLink to="/activities/edit/:id" :colorMode="getNavTextColor"
-          >活動編輯</LiquidNavLink
-        >
-        <LiquidNavLink to="/edit-profile" :colorMode="getNavTextColor"
-          >編輯個人檔案
-        </LiquidNavLink>
+      <!-- 桌機導覽 - 1064px 以上顯示 -->
+      <div class="items-center justify-center flex-1 space-x-4 custom-desktop-show">
+        <LiquidNavLink to="/match" :colorMode="getNavTextColor">配對池</LiquidNavLink>
+        <LiquidNavLink to="/product" :colorMode="getNavTextColor">商品列表</LiquidNavLink>
+        <LiquidNavLink to="/activities" :colorMode="getNavTextColor">活動</LiquidNavLink>
+        <LiquidNavLink to="/activities/new" :colorMode="getNavTextColor">活動表單</LiquidNavLink>
+        <LiquidNavLink to="/activities/edit/:id" :colorMode="getNavTextColor">活動編輯</LiquidNavLink>
       </div>
 
-      <!-- 使用者選單 -->
-      <div class="items-center justify-end hidden w-1/4 space-x-4 md:flex">
+      <!-- 使用者選單 - 1064px 以上顯示 -->
+      <div class="items-center justify-end w-1/4 space-x-4 custom-desktop-show">
         <template v-if="!store.accessToken">
-          <LiquidNavLink to="/login" :colorMode="getNavTextColor"
-            >登入</LiquidNavLink
-          >
-          <LiquidNavLink to="/register" :colorMode="getNavTextColor"
-            >註冊</LiquidNavLink
-          >
+          <LiquidNavLink to="/login" :colorMode="getNavTextColor">登入</LiquidNavLink>
+          <LiquidNavLink to="/register" :colorMode="getNavTextColor">註冊</LiquidNavLink>
         </template>
         <template v-else>
           <!-- 訊息icon -->
@@ -163,7 +145,7 @@ watch(route, () => {
               <span
                 v-if="cartStore.totalQuantity > 0"
                 class="absolute flex items-center justify-center min-w-[20px] h-5 px-1 text-xs font-semibold text-white rounded-full -top-2 -right-3 bg-[#E44C9B]"
-                >
+              >
                 {{ cartStore.totalQuantity > 99 ? '99+' : cartStore.totalQuantity }}
               </span>
               <svg
@@ -262,9 +244,9 @@ watch(route, () => {
       </div>
     </nav>
 
-    <!-- 手機版選單 - 新的毛玻璃設計 -->
+    <!-- 手機版選單 - 1064px 以下顯示 -->
     <div 
-      class="md:hidden transition-all duration-300 ease-in-out"
+      class="custom-mobile-show transition-all duration-300 ease-in-out"
       :class="[
         isMobileMenuOpen ? 'max-h-screen opacity-100' : 'max-h-0 opacity-0 overflow-hidden',
         isScrolled || isLightBgPage
@@ -279,8 +261,8 @@ watch(route, () => {
           class="block px-3 py-3 rounded-md text-base font-medium transition-all duration-200"
           :class="[
             isScrolled || isLightBgPage
-              ? 'hover:bg-gray-100'
-              : 'hover:bg-white/10'
+              ? 'bg-white/80 hover:bg-white hover:shadow-sm'
+              : 'bg-white/10 hover:bg-white/20'
           ]"
         >
           配對池
@@ -291,8 +273,8 @@ watch(route, () => {
           class="block px-3 py-3 rounded-md text-base font-medium transition-all duration-200"
           :class="[
             isScrolled || isLightBgPage
-              ? 'hover:bg-gray-100'
-              : 'hover:bg-white/10'
+              ? 'bg-white/80 hover:bg-white hover:shadow-sm'
+              : 'bg-white/10 hover:bg-white/20'
           ]"
         >
           商品列表
@@ -303,8 +285,8 @@ watch(route, () => {
           class="block px-3 py-3 rounded-md text-base font-medium transition-all duration-200"
           :class="[
             isScrolled || isLightBgPage
-              ? 'hover:bg-gray-100'
-              : 'hover:bg-white/10'
+              ? 'bg-white/80 hover:bg-white hover:shadow-sm'
+              : 'bg-white/10 hover:bg-white/20'
           ]"
         >
           活動
@@ -315,8 +297,8 @@ watch(route, () => {
           class="block px-3 py-3 rounded-md text-base font-medium transition-all duration-200"
           :class="[
             isScrolled || isLightBgPage
-              ? 'hover:bg-gray-100'
-              : 'hover:bg-white/10'
+              ? 'bg-white/80 hover:bg-white hover:shadow-sm'
+              : 'bg-white/10 hover:bg-white/20'
           ]"
         >
           活動表單
@@ -327,8 +309,8 @@ watch(route, () => {
           class="block px-3 py-3 rounded-md text-base font-medium transition-all duration-200"
           :class="[
             isScrolled || isLightBgPage
-              ? 'hover:bg-gray-100'
-              : 'hover:bg-white/10'
+              ? 'bg-white/80 hover:bg-white hover:shadow-sm'
+              : 'bg-white/10 hover:bg-white/20'
           ]"
         >
           活動編輯
@@ -341,8 +323,8 @@ watch(route, () => {
             class="block px-3 py-3 rounded-md text-base font-medium transition-all duration-200"
             :class="[
               isScrolled || isLightBgPage
-                ? 'hover:bg-gray-100'
-                : 'hover:bg-white/10'
+                ? 'bg-white/80 hover:bg-white hover:shadow-sm'
+                : 'bg-white/10 hover:bg-white/20'
             ]"
           >
             登入
@@ -353,8 +335,8 @@ watch(route, () => {
             class="block px-3 py-3 rounded-md text-base font-medium transition-all duration-200"
             :class="[
               isScrolled || isLightBgPage
-                ? 'hover:bg-gray-100'
-                : 'hover:bg-white/10'
+                ? 'bg-white/80 hover:bg-white hover:shadow-sm'
+                : 'bg-white/10 hover:bg-white/20'
             ]"
           >
             註冊
@@ -367,8 +349,8 @@ watch(route, () => {
             class="block px-3 py-3 rounded-md text-base font-medium transition-all duration-200"
             :class="[
               isScrolled || isLightBgPage
-                ? 'hover:bg-gray-100'
-                : 'hover:bg-white/10'
+                ? 'bg-white/80 hover:bg-white hover:shadow-sm'
+                : 'bg-white/10 hover:bg-white/20'
             ]"
           >
             訊息
@@ -379,8 +361,8 @@ watch(route, () => {
             class="block px-3 py-3 rounded-md text-base font-medium transition-all duration-200"
             :class="[
               isScrolled || isLightBgPage
-                ? 'hover:bg-gray-100'
-                : 'hover:bg-white/10'
+                ? 'bg-white/80 hover:bg-white hover:shadow-sm'
+                : 'bg-white/10 hover:bg-white/20'
             ]"
           >
             購物車
@@ -391,8 +373,8 @@ watch(route, () => {
             class="block px-3 py-3 rounded-md text-base font-medium transition-all duration-200"
             :class="[
               isScrolled || isLightBgPage
-                ? 'hover:bg-gray-100'
-                : 'hover:bg-white/10'
+                ? 'bg-white/80 hover:bg-white hover:shadow-sm'
+                : 'bg-white/10 hover:bg-white/20'
             ]"
           >
             編輯個人檔案
@@ -403,8 +385,8 @@ watch(route, () => {
             class="block px-3 py-3 rounded-md text-base font-medium transition-all duration-200 cursor-pointer"
             :class="[
               isScrolled || isLightBgPage
-                ? 'hover:bg-gray-100'
-                : 'hover:bg-white/10'
+                ? 'bg-white/80 hover:bg-white hover:shadow-sm'
+                : 'bg-white/10 hover:bg-white/20'
             ]"
           >
             登出
@@ -414,3 +396,45 @@ watch(route, () => {
     </div>
   </header>
 </template>
+
+<style scoped>
+/* 自定義 1064px 斷點 */
+@media (max-width: 1063px) {
+  /* 手機版元素顯示 */
+  .custom-mobile-show {
+    display: block;
+  }
+  
+  /* 桌機版元素隱藏 */
+  .custom-desktop-show {
+    display: none !important;
+  }
+}
+
+@media (min-width: 1064px) {
+  /* 手機版元素隱藏 */
+  .custom-mobile-show {
+    display: none !important;
+  }
+  
+  /* 桌機版元素顯示 */
+  .custom-desktop-show {
+    display: flex !important;
+  }
+  
+  /* 桌機版更大的水平邊距 */
+  .custom-desktop-px-8 {
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+}
+
+/* 預設狀態 - 確保初始載入正確 */
+.custom-mobile-show {
+  display: block;
+}
+
+.custom-desktop-show {
+  display: none;
+}
+</style>
