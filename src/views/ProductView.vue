@@ -1,12 +1,13 @@
 <script setup>
 import { ref, onMounted, watch, computed } from "vue";
-import axios from "../api/axios.js";
 import { useCartStore } from "../stores/cart.js";
+import { useProductStore } from "../stores/product.js"
 import spinner from "../assets/spinner.svg";
 import { Vue3Lottie } from "vue3-lottie";
 import addCartAnimation from "@/assets/add-cart.json";
 
 const cartStore = useCartStore();
+const productStore = useProductStore();
 
 const products = ref([]);
 const displayedProducts = ref([]);
@@ -69,9 +70,8 @@ const search = () => {
 onMounted(async () => {
   try {
     isLoading.value = true;
-    const res = await axios.get("/products");
-    products.value = res.data;
-    displayedProducts.value = res.data;
+    await productStore.fetchProducts();
+    products.value = [...productStore.products];
   } catch (err) {
     console.log("讀取商品失敗", err);
   } finally {
@@ -137,7 +137,7 @@ onMounted(async () => {
         class="flex-shrink-0 w-52 ">
           <div class="p-4 transition border rounded-lg">
             <img
-              :src="product.image_url"
+              :src="product.img"
               class="object-cover w-full h-[176px] mb-2 rounded-lg"
             />
             <p class="mb-2 text-lg font-bold text-center text-darkblue">
@@ -229,7 +229,7 @@ onMounted(async () => {
           <!-- 上半部: 圖片 + 描述 -->
           <div class="mb-2">
             <img
-              :src="product.image_url"
+              :src="product.img"
               alt="Product Image"
               class="object-cover w-full h-[290px] b-2 rounded-[10px]"
             />

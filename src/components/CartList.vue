@@ -1,8 +1,10 @@
 <script setup>
 import { ref, reactive, computed } from 'vue'
 import { useCartStore } from "../stores/cart.js";
+import { useProductStore } from '../stores/product.js';
 import sendOrder from "@/utils/order.js";
 const cartStore = useCartStore();
+const productStore = useProductStore();
 
 // 響應式數據
 const currentStep = ref(0)
@@ -78,6 +80,13 @@ const progressPercentage = computed(() => {
 // 方法 - 使用 cartStore 的方法
 const updateQuantity = (id, newQuantity) => {
     if (newQuantity < 1) return
+    const product = productStore.products.find((p)=>p.id===id);
+    // 加入使用者不能購買超過庫存數量的限制
+    if (newQuantity > product.inventory) {
+    alert(`此商品最多只能購買 ${product.inventory} 件`);
+    return;
+    }
+
     cartStore.updateQuantity(id, newQuantity)
 }
 
@@ -258,6 +267,7 @@ const getStepTitle = (title) => {
                                                 </div>
                                                 <div class="flex items-center justify-between sm:justify-end space-x-3">
                                                     <div class="flex items-center space-x-2 sm:space-x-3">
+                                                        <!-- - 符號 -->
                                                         <button type="button"
                                                             @click="updateQuantity(item.id, item.quantity - 1)"
                                                             class="w-8 h-8 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center transition-colors">
@@ -268,6 +278,7 @@ const getStepTitle = (title) => {
                                                             </svg>
                                                         </button>
                                                         <span class="w-8 text-center font-medium">{{ item.quantity }}</span>
+                                                        <!-- + 符號 -->
                                                         <button type="button"
                                                             @click="updateQuantity(item.id, item.quantity + 1)"
                                                             class="w-8 h-8 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center transition-colors">
