@@ -6,6 +6,7 @@ import { onMounted } from "vue";
 import { useUserStore } from "@/stores/user";
 import { useFriendStore } from "@/stores/friend";
 
+import axios from "@/api/axios";
 const cartStore = useCartStore();
 const userStore = useUserStore();
 const friendStore = useFriendStore();
@@ -146,6 +147,32 @@ const handleSubmit = async () => {
       alert("訂單建立失敗，請稍後再試");
     }
     // PAYPAL
+  } else if (formData.paymentMethod === "PAYPAL") {
+    try {
+      const items = cartStore.cartItems.map((item) => ({
+        product_id: item.id,
+        quantity: item.quantity,
+      }));
+
+      console.log("發送到 PayPal API:", items);
+
+      const res = await axios.post("/paypal/create-order", {
+        sender_id: 2,
+        receiver_id: 10,
+        items: items,
+      });
+
+      console.log("PayPal API 回應:", res.data);
+
+      if (res.data.success && res.data.approveUrl) {
+        window.location.href = res.data.approveUrl;
+      } else {
+        alert("PayPal 訂單建立失敗");
+      }
+    } catch (err) {
+      console.error("PayPal 錯誤:", err);
+      alert("PayPal 付款失敗，請稍後再試");
+    }
   } else {
     // 處理其他付款方式
     const orderData = {
