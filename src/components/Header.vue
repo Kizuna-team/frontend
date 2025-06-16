@@ -4,7 +4,7 @@ import { useUserStore } from "@/stores/user";
 import { useRoute } from "vue-router";
 import router from "@/router";
 import LiquidNavLink from "@/components/LiquidGlass.vue";
-import { useCartStore } from '@/stores/cart.js';
+import { useCartStore } from "@/stores/cart.js";
 const cartStore = useCartStore();
 const route = useRoute();
 const store = useUserStore();
@@ -61,16 +61,14 @@ const closeDropdown = (event) => {
 // 在組件掛載時添加全局點擊事件監聽器
 onMounted(() => {
   window.addEventListener("click", closeDropdown);
-  window.addEventListener("scroll", handleScroll); 
+  window.addEventListener("scroll", handleScroll);
 });
 
 // 組件卸載時移除事件監聽器
 onUnmounted(() => {
   window.removeEventListener("click", closeDropdown);
-  window.removeEventListener("scroll", handleScroll); 
+  window.removeEventListener("scroll", handleScroll);
 });
-
-
 </script>
 
 <template>
@@ -84,7 +82,9 @@ onUnmounted(() => {
         {{ getNavTextColor }}
       </div>
       <div class="flex items-center w-1/4">
-        <LiquidNavLink to="/" :colorMode="getNavTextColor">Kizuna</LiquidNavLink>
+        <LiquidNavLink to="/" :colorMode="getNavTextColor"
+          >Kizuna</LiquidNavLink
+        >
       </div>
 
       <div class="flex justify-center flex-1 space-x-4">
@@ -103,6 +103,9 @@ onUnmounted(() => {
         <LiquidNavLink to="/activities/edit/:id" :colorMode="getNavTextColor"
           >活動編輯</LiquidNavLink
         >
+        <LiquidNavLink to="/edit-profile" :colorMode="getNavTextColor"
+          >編輯個人檔案
+        </LiquidNavLink>
       </div>
 
       <template v-if="!store.accessToken">
@@ -140,8 +143,10 @@ onUnmounted(() => {
               <span
                 v-if="cartStore.totalQuantity > 0"
                 class="absolute flex items-center justify-center min-w-[20px] h-5 px-1 text-xs font-semibold text-white rounded-full -top-2 -right-3 bg-[#E44C9B]"
-                >
-                {{ cartStore.totalQuantity > 99 ? '99+' : cartStore.totalQuantity }}
+              >
+                {{
+                  cartStore.totalQuantity > 99 ? "99+" : cartStore.totalQuantity
+                }}
               </span>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -175,7 +180,8 @@ onUnmounted(() => {
               >
                 目前登入帳號為 : {{ store.username }}
               </div>
-              <RouterLink
+              <!-- 0616 暫時先移到外面  -->
+              <!-- <RouterLink
                 to="/edit-profile"
                 class="flex items-center gap-2 px-4 py-4 text-gray-600 border-b border-gray-300 hover:bg-gray-100"
                 @click="isDropdownOpen = false"
@@ -195,12 +201,12 @@ onUnmounted(() => {
                   />
                 </svg>
                 <span class="whitespace-nowrap">編輯個人檔案</span>
+
+              </RouterLink> -->
+              <a
+                href="#"
+                class="flex items-center gap-2 px-4 py-4 text-gray-600 border-b border-gray-300 hover:bg-gray-100" 
               </RouterLink>
-              <RouterLink
-              to="/subscription"
-              class="flex items-center gap-2 px-4 py-4 text-gray-600 border-b border-gray-300 hover:bg-gray-100"
-              @click="isDropdownOpen = false"
-              >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 24 24"
@@ -246,7 +252,6 @@ onUnmounted(() => {
 </template>
 
 <style scoped>
-
 .group:hover .glow {
   opacity: 1;
 }
