@@ -206,7 +206,7 @@ onUnmounted(() => {
               <a
                 href="#"
                 class="flex items-center gap-2 px-4 py-4 text-gray-600 border-b border-gray-300 hover:bg-gray-100" 
-              </RouterLink>
+            >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 24 24"
@@ -221,6 +221,7 @@ onUnmounted(() => {
                   />
                 </svg>
                 升級方案
+                </a>
               </RouterLink>
               <a
                 href="#"
