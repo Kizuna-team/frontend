@@ -2,7 +2,21 @@
 import { ref, reactive, computed } from "vue";
 import { useCartStore } from "../stores/cart.js";
 import sendOrder from "@/utils/order.js";
+import { onMounted } from "vue";
+import { useUserStore } from "@/stores/user";
+import { useFriendStore } from "@/stores/friend";
+
 const cartStore = useCartStore();
+const userStore = useUserStore();
+const friendStore = useFriendStore();
+
+const friendOptions = computed(() => [
+  { value: "", label: "請選擇收件人" },
+  ...friendStore.friendList.map((f) => ({
+    value: f.friend_id,
+    label: f.friend_name,
+  })),
+]);
 
 // 響應式數據
 const currentStep = ref(0);
@@ -29,12 +43,7 @@ const steps = [
         name: "receiverId",
         label: "請選擇送禮對象",
         type: "select",
-        options: [
-          { value: "", label: "請選擇收件人" },
-          { value: "小花", label: "小花" },
-          { value: "小明", label: "小明" },
-          { value: "阿呆", label: "阿呆" },
-        ],
+        options: friendOptions.value,
       },
     ],
   },
@@ -167,6 +176,11 @@ const getStepTitle = (title) => {
       return title;
   }
 };
+onMounted(() => {
+  if (userStore.userId) {
+    friendStore.fetchFriendList(userStore.userId);
+  }
+});
 </script>
 <template>
   <div class="min-h-[60vh] flex justify-center">
