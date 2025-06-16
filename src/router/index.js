@@ -132,6 +132,11 @@ const router = createRouter({
       name: "ProductAdmin",
       component: ProductAdminView,
     },
+    {
+      path: "/subscription",
+      name: "Subscription",
+      component: SubscriptionView,
+    },
   ],
 });
 
