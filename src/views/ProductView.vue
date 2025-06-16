@@ -7,7 +7,6 @@ import { Vue3Lottie } from "vue3-lottie";
 import addCartAnimation from "@/assets/add-cart.json";
 
 const cartStore = useCartStore();
-const { addCart } = cartStore;
 
 const products = ref([]);
 const displayedProducts = ref([]);
@@ -40,7 +39,7 @@ const openCartModal=()=>{
 }
 
 const handleAddCart=(product)=> {
-  addCart(product);
+  cartStore.addCart(product);
   openCartModal();
 }
 

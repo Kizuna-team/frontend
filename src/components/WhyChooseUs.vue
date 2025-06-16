@@ -6,19 +6,18 @@ import { onMounted } from "vue";
 const cards = [
   {
     title: "有趣的活動",
-    descZh:
-      "找不到想參加的活動？沒關係，自己發起也行！\n和同好一起展開精彩聚會",
-    descEn: "Can't find events? Start your own and meet like-minded people.",
+    descZh: "找不到想參加的活動？沒關係，自己揪也行！週末來場聚會旅程",
+    descEn: "Can’t find events? Start your own and meet like-minded people.",
   },
   {
     title: "即時聊天",
     descZh: "配對成功後立刻開啟專屬聊天室，輕鬆交流、不再錯過緣分",
-    descEn: "Chat instantly after matching, never miss a connection.",
+    descEn: "Chat instantly after matching—never miss a connection.",
   },
   {
     title: "智能配對",
     descZh: "依你的興趣與行為推薦合適對象，主動邀請你互動、建立連結",
-    descEn: "Get smart matches based on your interests and behavior.",
+    descEn: "Receive smart matches based on your interests and behavior.",
   },
 ];
 
@@ -33,6 +32,7 @@ onMounted(() => {
 
 <template>
   <section
+    id="whyChooseUs"
     class="flex flex-col items-center justify-between w-full min-h-screen gap-12 px-6 bg-white md:flex-row py-36 text-darkblue"
   >
     <!-- 左側文字區 -->
@@ -69,9 +69,11 @@ onMounted(() => {
         data-aos="zoom-in"
         :data-aos-delay="index * 300"
       >
-        <h3 class="text-xl font-bold text-darkblue ">{{ card.title }}</h3>
+        <h3 class="text-xl font-bold text-darkblue">{{ card.title }}</h3>
         <!-- 加上 whitespace-pre-line 讓 \n 換行符號生效  -->
-        <p class="mt-2 text-sm text-gray-800 whitespace-pre-line">{{ card.descZh }}</p>
+        <p class="mt-2 text-sm text-gray-800 whitespace-pre-line">
+          {{ card.descZh }}
+        </p>
         <p class="mt-1 text-xs italic text-gray-500">{{ card.descEn }}</p>
       </div>
     </div>
