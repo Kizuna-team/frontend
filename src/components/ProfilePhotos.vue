@@ -92,9 +92,11 @@ const handleFileChange = (event, index) => {
   event.target.value = "";
 };
 
+// 移除照片、大頭照標記
 const removePhoto = async (index) => {
   const imageKey = photoList.value[index].key;
 
+  // 如果照片還沒上傳過（沒有 key），直接清空資料
   if (!imageKey) {
     photoList.value[index].file = null;
     photoList.value[index].preview = "";
@@ -107,13 +109,13 @@ const removePhoto = async (index) => {
     photoList.value[index].file = null;
     photoList.value[index].preview = "";
     photoList.value[index].key = "";
-    console.log("圖片刪除成功");
+    console.log(" 圖片刪除成功");
   } catch (err) {
-    console.error("圖片刪除失敗", err);
+    console.error(" 圖片刪除失敗", err);
   }
 };
 
-// 上傳後需要同步更新key，沒有把後端回傳的資訊存入photoList
+// 上傳後需要同步更新key
 const uploadAll = async () => {
   const uploadPromises = [];
   const uploadedResults = [];
@@ -152,8 +154,8 @@ const uploadAll = async () => {
 };
 
 // 讓外部元件可以呼叫 uploadAll，editProfileView.view 有呼叫
-defineExpose({ uploadAll });
 onMounted(refreshPhotos);
+defineExpose({ uploadAll });
 </script>
 
 <template>
@@ -232,8 +234,7 @@ onMounted(refreshPhotos);
   </div>
 
   <!-- 照片上傳區 -->
-
-  <h2 class="mb-6 text-2xl font-bold text-center text-darkblue">上傳照片</h2>
+  <h2 class="mb-6 text-2xl font-bold text-center text-darkblue">上傳生活照</h2>
   <div class="grid grid-cols-3 gap-4">
     <div
       v-for="(img, index) in photoList"
@@ -246,7 +247,6 @@ onMounted(refreshPhotos);
         class="absolute inset-0 opacity-0 cursor-pointer"
         @change="handleFileChange($event, index)"
       />
-
       <img
         v-if="img.preview"
         :src="img.preview"
@@ -258,7 +258,7 @@ onMounted(refreshPhotos);
       <button
         v-if="img.preview"
         @click.stop="removePhoto(index)"
-        class="absolute flex items-center justify-center w-6 h-6 text-sm text-orange-500 bg-white border border-gray-300 rounded-full bottom-1 right-1 hover:bg-orange-100"
+        class="absolute flex items-center justify-center w-6 h-6 text-sm text-orange-500 bg-white border border-gray-300 rounded-full bottom-1 right-1 hover:[bg-orange-100]"
       >
         ✕
       </button>

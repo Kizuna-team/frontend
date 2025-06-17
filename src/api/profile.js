@@ -1,6 +1,3 @@
-// 純 API 工具方法，從 store 裡主動「呼叫」它，接收資料並存起來
-// 所有 API 請求放在獨立的模組，store 呼叫後再更新狀態
-// 名字叫 axios（實際上是 instance）
 import axios from "@/api/axios.js";
 
 //  Pinia store 裡引用並呼叫 fetchProfile()，把資料存進 userProfile
@@ -18,7 +15,7 @@ export const fetchAllProfiles = async () => {
   }
 };
 
-// GET 取得使用者個人資料
+// GET 取得使用者個人編輯資料
 export const fetchProfile = async () => {
   try {
     const res = await axios.get("/profile/me");
@@ -40,6 +37,7 @@ export const fetchCertainProfile = async () => {
   }
 };
 
+// POST 建立個人資料
 export const createProfileApi = async (data) => {
   try {
     const res = await axios.post("/profile/me", data);

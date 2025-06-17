@@ -4,30 +4,9 @@ import { ref, computed, onUnmounted, onMounted } from "vue";
 import UserCard from "@/components/UserCard.vue";
 import MatchBtn from "@/components/MatchBtn.vue";
 import UserIntro from "@/components/UserIntro.vue";
-import MatchedDoneModal from "@/components/MatchedDoneModel.vue";
-
+import MatchedDoneModal from "@/components/MatchedDoneModal.vue";
 import { sendLike, sendSuperLike } from "@/api/like.js";
 import { fetchAllProfiles } from "@/api/profile.js";
-
-// user假資料
-// const users = ref([
-//   {
-//     id: 1,
-//     name: "西西",
-//     age: 28,
-//     zodiac: "雙子座",
-//     location: "高雄市",
-//     photos: [
-//       "https://im.marieclaire.com.tw/s1200c675h100b0/aq/2015/04/16/201504131747183239.jpg",
-//       "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjZ6kIRmyQ8LFGVxKbivqcxwZWqoXBmy5ANTekmGdnDoahHUzSzPHbLQIeDuEV0L0dRjslUHBIg8kaQE4BU5xXoRBX4GBmUooaViZzQG44k8QURYiYcZNOqwRMnyXNw_8qzaLjeQywUmUM/s1600/emma-watson.jpg",
-//       "https://cdn.wowscreen.com.tw/uploadfile/202210/goods_028263_373336.png",
-//     ],
-//     bio: "我是一個熱愛旅遊的人，喜歡挑戰新事物。",
-//     mbti: "INTJ",
-//     interests: ["攝影", "爬山", "音樂"],
-//     intro: "嗨，我是西西，期待認識新朋友。",
-//   },
-// ]);
 
 const allProfiles = ref([]);
 const limitUsers = 20;
@@ -59,13 +38,6 @@ const infoBtnTxt = ref("Show More");
 const infoToggle = () => {
   isShow.value = !isShow.value;
   infoBtnTxt.value = isShow.value ? "Hide Info" : "Show More";
-};
-
-// 切換到上一位使用者
-const prevUser = () => {
-  currentIndex.value =
-    (currentIndex.value - 1 + allProfiles.value.length) %
-    allProfiles.value.length;
 };
 
 // 切換到下一位使用者
@@ -227,10 +199,10 @@ const onCancel = () => {
     class="flex flex-col items-center justify-around pt-6 card-bg rounded-3xl"
   >
     <!-- 顯示對象滑滑區 -->
+    <!-- @goPrev="prevUser" -->
     <UserCard
       v-if="currentUser && currentUser.photos"
       :target-photos="currentUser.photos"
-      @goPrev="prevUser"
       @goNext="nextUser"
     />
 
@@ -291,7 +263,7 @@ const onCancel = () => {
     linear-gradient(to bottom, #8ecae6 35%, #8ecae6 55%),
     linear-gradient(to bottom, #219ebc 55%, #219ebc 75%),
     linear-gradient(to bottom, #fb8500 75%, #999999 100%);
-  background-size: 100% 40%;
+  background-size: 100% 20%;
   background-repeat: no-repeat;
   border-radius: 12px 12px 0 0;
 }

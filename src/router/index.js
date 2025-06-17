@@ -87,7 +87,6 @@ const router = createRouter({
       name: "eventDetail",
       component: () => import("@/views/EventCardByIdView.vue"), // ← 這個 view 自己命名
     },
-    // 加入編輯個人檔案頁面route
     {
       path: "/edit-profile",
       name: "EditProfile",
@@ -103,12 +102,14 @@ const router = createRouter({
       path: "/login",
       name: "Login",
       component: LoginView,
-    },{
+    },
+    {
       path: "/:pathMatch(.*)*",
       name: "NotFound",
       component: NotFound,
       meta: { hideHeader: true },
-    },{
+    },
+    {
       path: "/login",
       name: "Login",
       component: LoginView,

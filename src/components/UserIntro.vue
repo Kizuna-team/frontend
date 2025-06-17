@@ -3,8 +3,6 @@
 const { targetUser } = defineProps({
   targetUser: Object,
 });
-
-console.log("UserIntro props:", targetUser);
 </script>
 
 <template>

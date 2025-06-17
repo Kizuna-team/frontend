@@ -57,3 +57,14 @@ export const changeAvatar = async (imageKey) => {
     throw err;
   }
 };
+
+// 撈取他人大頭照
+export const fetchTargetPhotos = async (userId) => {
+  try {
+    const res = await axios.get(`/photos/match/${userId}`);
+    return res.data; // 陣列：每張照片的 image_url / sequence 等
+  } catch (err) {
+    console.error("fetchTargetPhotos 錯誤:", err);
+    throw err;
+  }
+};
