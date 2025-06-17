@@ -11,7 +11,7 @@ export const useActivityStore = defineStore("activity", () => {
   const getToken = () => {
     return localStorage.getItem('token');
   }
-  // 抓全部活動 
+
   const fetchActivities = async () => {
     loading.value = true;
     try {
