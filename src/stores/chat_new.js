@@ -11,7 +11,7 @@ export const userChatStore = defineStore("chat", () => {
 
   // 新增訊息
   const addMessage = (message) => {
-    console.log("📝 chatStore.addMessage 被呼叫");
+    console.log("chatStore.addMessage 被呼叫");
     console.log("接收到的訊息:", message);
     
     // 確保訊息有必要的屬性
@@ -36,13 +36,13 @@ export const userChatStore = defineStore("chat", () => {
 
   // 清空訊息
   // const clearMessages = () => {
-  //   console.log("🗑️ 清空所有訊息");
+  //   console.log("清空所有訊息");
   //   messages.value = [];
   // };
 
   // 設置目前房間
   const setCurrentRoom = (roomId) => {
-    console.log("🏠 設置當前房間:", roomId);
+    console.log("設置當前房間:", roomId);
     currentRoomId.value = roomId;
   };
 
@@ -51,20 +51,20 @@ export const userChatStore = defineStore("chat", () => {
     const index = messages.value.findIndex(msg => msg.id === messageId);
     if (index !== -1) {
       messages.value.splice(index, 1);
-      console.log("🗑️ 已移除訊息:", messageId);
+      console.log("已移除訊息:", messageId);
     }
   };
 
   // 更新線上用戶列表
   const updateOnlineUsers = (users) => {
     onlineUsers.value = users;
-    console.log("👥 更新線上用戶:", users);
+    console.log("更新線上用戶:", users);
   };
 
   // 設置連接狀態
   const setConnectionStatus = (status) => {
     isConnected.value = status;
-    console.log("🔗 連接狀態:", status);
+    console.log("連接狀態:", status);
   };
 
   // 獲取特定房間的訊息
