@@ -290,7 +290,7 @@ const onCancel = () => {
     linear-gradient(to bottom, #8ecae6 35%, #8ecae6 55%),
     linear-gradient(to bottom, #219ebc 55%, #219ebc 75%),
     linear-gradient(to bottom, #fb8500 75%, #999999 100%);
-  background-size: 100% 40%;
+  background-size: 100% 20%;
   background-repeat: no-repeat;
   border-radius: 12px 12px 0 0;
 }
