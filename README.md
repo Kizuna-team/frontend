@@ -1,4 +1,5 @@
 # kizuna-project｜交友配對網站（前端）
+<img width="1432" alt="首頁截圖" src="https://github.com/user-attachments/assets/ee2423c0-6483-4c04-a3a1-307d65e53c62" />
 
 >「Kizuna（絆）」在日語中意為「羈絆」，
 >象徵人與人之間的連結，
@@ -25,8 +26,11 @@ cd kizuna-frontend
 ```
 npm install
 ```
-
-### 3. 啟動開發伺服器
+### 3. 建立 .env 環境變數檔案
+```
+請參照 .env.template設定環境變數
+```
+### 4. 啟動開發伺服器
 ```
 npm run dev
 ```
