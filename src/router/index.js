@@ -92,6 +92,11 @@ const router = createRouter({
       component: ChatRoomView_new,
     },
     {
+      path: "/chat_new",
+      name: "ChatRoomView_new",
+      component: ChatRoomView_new,
+    },
+    {
       path: "/edit-profile",
       name: "EditProfile",
       component: EditProfileView,

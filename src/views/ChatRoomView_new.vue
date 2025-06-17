@@ -293,8 +293,6 @@ watch(
           </div>
         </div>
       </div>
-
-
       <!-- 聊天訊息區域 -->
       <!-- 外層容器 滾動區域 -->
       <div class="flex-1 overflow-y-auto p-4 space-y-4 bg-gray-50" ref="messagesContainer">
@@ -380,7 +378,6 @@ watch(
   flex: 1;
   min-height: 0;
 }
-
 .overflow-y-auto::-webkit-scrollbar-track {
   background: #f1f1f1;
 }
