@@ -146,8 +146,8 @@ const uploadAll = async () => {
 
   try {
     await Promise.all(uploadPromises);
-    alert(" 所有已選圖片都已上傳完成");
-    return uploadedResults; // 回傳上傳成功的結果
+    alert("所有已選圖片都已上傳完成");
+    return uploadedResults;
   } catch (err) {
     console.error("上傳過程發生錯誤", err);
   }
@@ -234,6 +234,7 @@ defineExpose({ uploadAll });
   </div>
 
   <!-- 照片上傳區 -->
+  <<<<<<< HEAD
   <h2 class="mb-6 text-2xl font-bold text-center text-darkblue">上傳生活照</h2>
   <div class="grid grid-cols-3 gap-4">
     <div

@@ -13,13 +13,6 @@ const emit = defineEmits(["cancel"]);
 const onCancelClick = () => {
   emit("cancel");
 };
-
-// 是空的就不會繼續執行發送動作
-// const sendMessage = () => {
-//   if (inputText.value.trim() === "") return;
-//   emit("send", inputText.value);
-//   inputText.value = "";
-// };
 </script>
 
 <template>

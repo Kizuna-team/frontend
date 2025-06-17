@@ -41,14 +41,6 @@ const superLikeStatus = async () => {
         : "尚未開啟高級會員功能 (今日次數已用完)";
     }
 
-    // if (totalCount.value > 0) {
-    //   msg.value = `剩餘 ${totalCount.value} 次 Super Like`;
-    // } else if (!isMember.value) {
-    //   msg.value = "尚未開啟高級會員功能";
-    // } else {
-    //   msg.value = "今日 Super Like 次數已用完";
-    // }
-
     emit("superLikeStatus", {
       isMember: isMember.value,
       totalCount: totalCount.value,
@@ -79,14 +71,9 @@ const dislikeHandler = () => {
 // Super-Like按鈕動畫
 const superLikeHandler = async () => {
   if (isDisabled.value) {
-    alert(msg.value); // 改成 下方 emit 彈出 modal
-    // emit("showSuperLikeModal", msg.value);
-    console.log("🛑 超級喜歡是否禁用:", isDisabled.value, msg.value);
-
+    alert(msg.value);
     return;
   }
-  console.log("🛑 超級喜歡是否禁用:", isDisabled.value, msg.value);
-
   superLikeActive.value = false;
   superLikeActive.value = true;
 

@@ -9,6 +9,8 @@ export const useUserStore = defineStore("user", () => {
   const refreshToken = ref(localStorage.getItem("refreshToken") || "");
   const username = ref(localStorage.getItem("username") || "");
   const userId = ref(localStorage.getItem("userId") || "");
+  // 設定使用者的訂閱計畫
+  const subscriptionPlan = ref(localStorage.getItem("subscriptionPlan") || "free");
 
   const profile = reactive({
     gender: "",
@@ -115,11 +117,16 @@ export const useUserStore = defineStore("user", () => {
   // Google 登入
   const loginWithGoogle = async (idToken) => {
     try {
-      const res = await axios.post("/auth/google", { idToken });
+      console.log("google嘗試登入中 idToken", idToken);
 
-      accessToken.value = res.data.accessToken;
-      refreshToken.value = res.data.refreshToken;
-      username.value = res.data.username;
+      const res = await axios.post("/auth/google", { credential: idToken });
+      
+      const { accessToken: newAccessToken, refreshToken: newFreshToken, user } = res.data;
+      console.log("從後端傳回來的response:", res.data);
+
+      accessToken.value = newAccessToken;
+      refreshToken.value = newFreshToken;
+      username.value = user.username;
 
       localStorage.setItem("accessToken", accessToken.value);
       localStorage.setItem("refreshToken", refreshToken.value);
@@ -129,7 +136,10 @@ export const useUserStore = defineStore("user", () => {
     }
   };
 
-  // 最後 return 出來
+   const setSubscription = (plan) => {
+      subscriptionPlan.value = plan;
+      localStorage.setItem("subscriptionPlan", plan);
+    };
   return {
     accessToken,
     refreshToken,
@@ -142,5 +152,6 @@ export const useUserStore = defineStore("user", () => {
     logout,
     refresh,
     loginWithGoogle,
+    setSubscription,
   };
 });

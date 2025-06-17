@@ -3,8 +3,6 @@
 const { targetUser } = defineProps({
   targetUser: Object,
 });
-
-console.log("UserIntro props:", targetUser);
 </script>
 
 <template>
@@ -43,7 +41,7 @@ console.log("UserIntro props:", targetUser);
 
 <style scoped>
 hr {
-  @apply my-4 border-t-4 border-primary-200 opacity-70;
+  @apply my-4 border-t-4 border-primary opacity-70;
 }
 h3 {
   @apply text-2xl my-2 font-semibold text-[#023047];

@@ -1,7 +1,6 @@
 import axios from "@/api/axios.js";
 
 // 送出 like 並取得有無配對結果 不喜歡0 喜歡1
-
 export const sendLike = async (targetId, status = 1) => {
   try {
     const res = await axios.post("/like/", {
@@ -10,7 +9,6 @@ export const sendLike = async (targetId, status = 1) => {
     });
 
     if (res.data.matched) {
-      console.log("👀 API 回傳:", res.data);
       return {
         matched: true,
         targetProfile: res.data.targetProfile,
@@ -36,7 +34,6 @@ export const sendSuperLike = async (targetId) => {
     });
 
     if (res.data.matched) {
-      console.log("👀 API 回傳:", res.data);
       return {
         matched: true,
         targetProfile: res.data.targetProfile,

@@ -1,19 +1,28 @@
 import { createRouter, createWebHistory } from "vue-router";
-import ProductView from "@/views/ProductView.vue";
-import CartView from "@/views/CartView.vue";
-import LoginView from "@/views/LoginView.vue";
-import RegisterView from "@/views/RegisterView.vue";
-import HomeView from "@/views/HomeView.vue";
-import BrandView from "@/views/BrandView.vue";
-// import ProfileView from "@/views/ProfileView.vue";
-import ChatRoomView from "@/views/ChatRoomView.vue";
-import MatchView from "@/views/MatchView.vue";
 import ActivityList from "@/components/ActivityList.vue";
 import ActivityView from "@/components/ActivityForm.vue";
+import ActivityMyView from "@/views/ActivityMyView.vue";
+import BrandView from "@/views/BrandView.vue";
+import BlessingView from "@/views/BlessingView.vue";
+import CartView from "@/views/CartView.vue";
+import ChatRoomView from "@/views/ChatRoomView.vue";
+import EventCardByIdView from "@/views/EventCardByIdView.vue";
 import EditProfileView from "@/views/EditProfileView.vue";
+import GiftCheckoutView from "@/views/GiftCheckoutView.vue";
+import HomeView from "@/views/HomeView.vue";
+import LoginView from "@/views/LoginView.vue";
+import MatchView from "../views/MatchView.vue";
+import MemberView from "@/views/MemberView.vue";
+import NotFound from "@/views/NotFound.vue";
+import ProfileTwoView from "@/views/ProfileTwoView.vue";
+import ProductView from "@/views/ProductView.vue";
+// import ProfileView from "@/views/ProfileView.vue";
+import PaymentView from "@/views/PaymentView.vue";
+import ProductAdminView from "@/views/ProductAdminView.vue";
+import RegisterView from "@/views/RegisterView.vue";
+import SubscriptionView from "@/views/SubscriptionView.vue";
 
 import { useUserStore } from "@/stores/user.js";
-
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -29,44 +38,14 @@ const router = createRouter({
     //   component: ProfileView,
     // },
     {
-      path: "/product",
-      name: "Product",
-      component: ProductView,
-    },
-    {
-      path: "/cart",
-      name: "Cart",
-      component: CartView,
-    },
-    {
-      path: "/login",
-      name: "Login",
-      component: LoginView,
-    },
-    {
-      path: "/register",
-      name: "Register",
-      component: RegisterView,
-    },
-    {
-      path: "/chat",
-      name: "ChatRoom",
-      component: ChatRoomView,
-    },
-    {
-      path: "/match",
-      name: "Match",
-      component: MatchView,
-    },
-    {
-      path: "/brand/:id",
-      name: "Brand",
-      component: BrandView,
-    },
-    {
       path: "/activities",
       name: "Activities",
       component: ActivityList,
+    },
+    {
+      path: "/activities/my",
+      name: "myActivity",
+      component: ActivityMyView,
     },
     {
       path: "/activities/new",
@@ -74,16 +53,116 @@ const router = createRouter({
       component: ActivityView,
     },
     {
+      path: "/activities/:id",
+      name: "eventDetail",
+      component: EventCardByIdView,
+    },
+    {
       path: "/activities/edit/:id",
       name: "activityEdit",
       component: ActivityView,
     },
-    // 加入編輯個人檔案頁面route
+    {
+      path: "/brand/:id",
+      name: "Brand",
+      component: BrandView,
+    },
+    {
+      path: "/blessing",
+      name: "Blessing",
+      component: BlessingView,
+    },
+    {
+      path: "/cart",
+      name: "Cart",
+      component: CartView,
+    },
+    {
+      path: "/chat",
+      name: "ChatRoom",
+      component: ChatRoomView,
+    },
+    {
+      path: "/events/:id",
+      name: "eventDetail",
+      component: () => import("@/views/EventCardByIdView.vue"), // ← 這個 view 自己命名
+    },
     {
       path: "/edit-profile",
       name: "EditProfile",
       component: EditProfileView,
       meta: { requiresAuth: true },
+    },
+    {
+      path: "/gift-checkout",
+      name: "GiftCheckout",
+      component: GiftCheckoutView,
+    },
+    {
+      path: "/login",
+      name: "Login",
+      component: LoginView,
+    },
+    {
+      path: "/:pathMatch(.*)*",
+      name: "NotFound",
+      component: NotFound,
+      meta: { hideHeader: true },
+    },
+    {
+      path: "/login",
+      name: "Login",
+      component: LoginView,
+    },
+    {
+      path: "/match",
+      name: "Match",
+      component: MatchView,
+    },
+    {
+      path: "/member",
+      name: "Member",
+      component: MemberView,
+    },
+    {
+      path: "/order/confirm",
+      name: "Payment",
+      component: PaymentView,
+    },
+    {
+      path: "/super/products/inventory",
+      name: "ProductAdmin",
+      component: ProductAdminView,
+    },
+    {
+      path: "/profile",
+      component: ProfileTwoView,
+    },
+    {
+      path: "/product",
+      name: "Product",
+      component: ProductView,
+    },
+    {
+      path: "/register",
+      name: "Register",
+      component: RegisterView,
+    },
+    {
+      path: "/subscribe",
+      name: "Subscribe",
+      component: SubscriptionView,
+    },
+    {
+      path: "/:pathMatch(.*)*",
+      name: "NotFound",
+      component: () => import("@/views/NotFound.vue"),
+      meta: { hideHeader: true },
+    },
+    {
+      path: "/subscription",
+      name: "Subscription",
+      component: SubscriptionView,
     },
   ],
 });
