@@ -1,17 +1,19 @@
 import { createRouter, createWebHistory } from "vue-router";
 import ActivityList from "@/components/ActivityList.vue";
-import ActivityView from "@/views/ActivityView.vue";
+import ActivityView from "@/components/ActivityForm.vue";
+import ActivityMyView from "@/views/ActivityMyView.vue";
 import BrandView from "@/views/BrandView.vue";
 import BlessingView from "@/views/BlessingView.vue";
 import CartView from "@/views/CartView.vue";
 import ChatRoomView from "@/views/ChatRoomView.vue";
-import ActivityMyView from "@/views/ActivityMyView.vue";
+import EventCardByIdView from "@/views/EventCardByIdView.vue";
 import EditProfileView from "@/views/EditProfileView.vue";
 import GiftCheckoutView from "@/views/GiftCheckoutView.vue";
 import HomeView from "@/views/HomeView.vue";
 import LoginView from "@/views/LoginView.vue";
 import MatchView from "../views/MatchView.vue";
 import MemberView from "@/views/MemberView.vue";
+import NotFound from "@/views/NotFound.vue";
 import ProfileTwoView from "@/views/ProfileTwoView.vue";
 import ProductView from "@/views/ProductView.vue";
 // import ProfileView from "@/views/ProfileView.vue";
@@ -53,7 +55,7 @@ const router = createRouter({
     {
       path: "/activities/:id",
       name: "eventDetail",
-      component: () => import("@/views/EventCardByIdView.vue"),
+      component: EventCardByIdView,
     },
     {
       path: "/activities/edit/:id",
@@ -101,6 +103,10 @@ const router = createRouter({
       path: "/login",
       name: "Login",
       component: LoginView,
+      path: "/:pathMatch(.*)*",
+      name: "NotFound",
+      component: NotFound,
+      meta: { hideHeader: true },
     },
     {
       path: "/match",

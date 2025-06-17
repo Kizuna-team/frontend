@@ -9,9 +9,6 @@ const { fetchActivities } = store;
 
 onMounted(() => {
   fetchActivities();
-  setTimeout(() => {
-    console.log("activities:", activities.value); // Pinia 要 .value
-  }, 1000); // 等 1 秒確保 fetch 完成
 });
 </script>
 
