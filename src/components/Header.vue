@@ -103,9 +103,17 @@ onUnmounted(() => {
         <LiquidNavLink to="/activities/edit/:id" :colorMode="getNavTextColor"
           >活動編輯</LiquidNavLink
         >
+        <LiquidNavLink to="/activities/my" :colorMode="getNavTextColor"
+          >我的活動</LiquidNavLink
+        >
         <LiquidNavLink to="/edit-profile" :colorMode="getNavTextColor"
           >編輯個人檔案
         </LiquidNavLink>
+        <RouterLink
+          to="/activities/my"
+          class="p-4 text-lg leading-none transition hover:text-gray-300"
+          >我的活動</RouterLink
+        >
       </div>
 
       <template v-if="!store.accessToken">
@@ -205,8 +213,8 @@ onUnmounted(() => {
               </RouterLink> -->
               <a
                 href="#"
-                class="flex items-center gap-2 px-4 py-4 text-gray-600 border-b border-gray-300 hover:bg-gray-100" 
-            >
+                class="flex items-center gap-2 px-4 py-4 text-gray-600 border-b border-gray-300 hover:bg-gray-100"
+              >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 24 24"
@@ -221,8 +229,8 @@ onUnmounted(() => {
                   />
                 </svg>
                 升級方案
-                </a>
-        
+              </a>
+
               <a
                 href="#"
                 class="flex items-center gap-2 px-4 py-4 text-gray-600 border-b border-gray-300 hover:bg-gray-100"

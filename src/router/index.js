@@ -1,10 +1,12 @@
 import { createRouter, createWebHistory } from "vue-router";
 import ActivityList from "@/components/ActivityList.vue";
 import ActivityView from "@/components/ActivityForm.vue";
+import ActivityMyView from "@/views/ActivityMyView.vue";
 import BrandView from "@/views/BrandView.vue";
 import BlessingView from "@/views/BlessingView.vue";
 import CartView from "@/views/CartView.vue";
 import ChatRoomView from "@/views/ChatRoomView.vue";
+import EventCardByIdView from "@/views/EventCardByIdView.vue";
 import EditProfileView from "@/views/EditProfileView.vue";
 import GiftCheckoutView from "@/views/GiftCheckoutView.vue";
 import ProductAdminView from "@/views/ProductAdminView.vue";
@@ -14,6 +16,7 @@ import HomeView from "@/views/HomeView.vue";
 import LoginView from "@/views/LoginView.vue";
 import MatchView from "../views/MatchView.vue";
 import MemberView from "@/views/MemberView.vue";
+import NotFound from "@/views/NotFound.vue";
 import ProfileTwoView from "@/views/ProfileTwoView.vue";
 import ProductView from "@/views/ProductView.vue";
 // import ProfileView from "@/views/ProfileView.vue";
@@ -43,9 +46,19 @@ const router = createRouter({
       component: ActivityList,
     },
     {
+      path: "/activities/my",
+      name: "myActivity",
+      component: ActivityMyView,
+    },
+    {
       path: "/activities/new",
       name: "activityCreate",
       component: ActivityView,
+    },
+    {
+      path: "/activities/:id",
+      name: "eventDetail",
+      component: EventCardByIdView,
     },
     {
       path: "/activities/edit/:id",
@@ -73,6 +86,12 @@ const router = createRouter({
       component: ChatRoomView,
     },
     {
+      path: "/events/:id",
+      name: "eventDetail",
+      component: () => import("@/views/EventCardByIdView.vue"), // ← 這個 view 自己命名
+    },
+    // 加入編輯個人檔案頁面route
+    {
       path: "/edit-profile",
       name: "EditProfile",
       component: EditProfileView,
@@ -84,6 +103,15 @@ const router = createRouter({
       component: GiftCheckoutView,
     },
     {
+      path: "/login",
+      name: "Login",
+      component: LoginView,
+    },{
+      path: "/:pathMatch(.*)*",
+      name: "NotFound",
+      component: NotFound,
+      meta: { hideHeader: true },
+    },{
       path: "/login",
       name: "Login",
       component: LoginView,
@@ -133,6 +161,7 @@ const router = createRouter({
       component: () => import("@/views/NotFound.vue"),
       meta: { hideHeader: true },
     },
+    {
 
       path: "/subscription",
       name: "Subscription",
@@ -143,7 +172,6 @@ const router = createRouter({
       name: '/Testchat',
       component: TestchatView
     },
-
   ],
 });
 

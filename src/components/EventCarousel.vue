@@ -5,52 +5,36 @@ import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/autoplay";
 
+import { ref, onMounted } from "vue";
 import EventCard from "./EventCard.vue";
+import { fetchActivities } from "../api/activities.js";
 
-const events = [
-  {
-    id: 1,
-    title: "桌遊之夜",
-    time: "06/15 19:00",
-    area: "台北市信義區信義路五段7號",
-    venue: "台北101",
-  },
-  {
-    id: 2,
-    title: "一起去爬山",
-    time: "06/16 08:00",
-    area: "台北市中正區忠孝東路一段1號",
-    venue: "台北車站",
-  },
-  {
-    id: 3,
-    title: "週末下午茶",
-    time: "06/22 14:30",
-    area: "台北市中山區民生東路三段8號",
-    venue: "小巨蛋旁咖啡廳",
-  },
-  {
-    id: 4,
-    title: "城市散步",
-    time: "06/23 16:00",
-    area: "台北市大安區羅斯福路三段245號",
-    venue: "台大側門前草地",
-  },
-  {
-    id: 5,
-    title: "音樂分享會",
-    time: "07/01 18:00",
-    area: "新北市板橋區文化路一段188號",
-    venue: "板橋車站大廳",
-  },
-  {
-    id: 6,
-    title: "戶外野餐日",
-    time: "07/06 10:30",
-    area: "新北市新店區北新路三段88號",
-    venue: "大坪林捷運站出口",
-  },
-];
+const events = ref([]);
+
+onMounted(async () => {
+  try {
+    const data = await fetchActivities();
+    events.value = data.map((act) => {
+      const date = new Date(act.date);
+      const month = String(date.getMonth() + 1).padStart(2, "0");
+      const day = String(date.getDate()).padStart(2, "0");
+      const hour = String(date.getHours()).padStart(2, "0");
+      const minute = String(date.getMinutes()).padStart(2, "0");
+      const time = `${month}/${day} ${hour}:${minute}`;
+
+      return {
+        id: act.id,
+        title: act.title,
+        time, 
+        venue: act.location,
+        image: act.image_url,
+      };
+    });
+  } catch (err) {
+    console.error("Failed to load events", err);
+  }
+});
+
 </script>
 
 <template>
@@ -80,6 +64,7 @@ const events = [
       class="relative flex items-center justify-center w-full px-4 py-10 flex-2 md:px-20"
     >
       <Swiper
+        v-if="events.length >= 4"
         :modules="[Navigation, Autoplay]"
         :slides-per-view="1.5"
         :space-between="30"
