@@ -7,6 +7,7 @@ import BlessingView from "@/views/BlessingView.vue";
 import CartView from "@/views/CartView.vue";
 import ChatRoomView from "@/views/ChatRoomView.vue";
 import EventCardByIdView from "@/views/EventCardByIdView.vue";
+import ChatRoomView_new from "@/views/ChatRoomView_new.vue"
 import EditProfileView from "@/views/EditProfileView.vue";
 import GiftCheckoutView from "@/views/GiftCheckoutView.vue";
 import HomeView from "@/views/HomeView.vue";
@@ -86,6 +87,9 @@ const router = createRouter({
       path: "/events/:id",
       name: "eventDetail",
       component: () => import("@/views/EventCardByIdView.vue"), // ← 這個 view 自己命名
+      path: "/chat_new",
+      name: "ChatRoomView_new",
+      component: ChatRoomView_new,
     },
     {
       path: "/edit-profile",
