@@ -12,21 +12,31 @@ import { io } from "socket.io-client";
 import { useUserStore } from "@/stores/user.js";
 import { userChatStore } from "@/stores/chat_new.js";
 import { useRoute } from "vue-router";
+import { storeToRefs } from "pinia";
 
+// Store
+const userStore = useUserStore();
+const { accessToken } = storeToRefs(userStore);
+const chatStore = userChatStore();
+const roomId = ref(1);
 const route = useRoute();
 
 // Socket.io 連接設定
-const socket = io("http://localhost:3000");
+const socket = io("http://localhost:3000",{
+    auth: {
+      token: accessToken.value
+    },
+    autoConnect: true,
+    reconnection: true,
+    reconnectionDelay: 1000,
+    reconnectionAttempts: 5,
+    timeout: 20000,
+  });
 
 // 響應式數據
 const currentRoom = ref("007");
 const newMessage = ref("");
 const messagesContainer = ref(null);
-
-// Store
-const userStore = useUserStore();
-const chatStore = userChatStore();
-const roomId = ref(1);
 
 // 當前使用者資訊
 const currentUser = computed(() => ({
