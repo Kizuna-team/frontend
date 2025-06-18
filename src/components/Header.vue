@@ -3,7 +3,7 @@ import { ref, computed, watch } from "vue";
 import { useUserStore } from "@/stores/user";
 import { useRoute, useRouter } from "vue-router";
 import LiquidNavLink from "@/components/LiquidGlass.vue";
-import { useCartStore } from '@/stores/cart.js';
+import { useCartStore } from "@/stores/cart.js";
 
 const route = useRoute();
 const router = useRouter();
@@ -25,12 +25,13 @@ const lightBgPages = [
   "/activities",
   "/activities/new",
   "/activities/edit",
+  "/activities/my",
   "/product",
   "/login",
   "/register",
   "/edit-profile",
   "/cart",
-  "/chat"
+  "/chat",
 ];
 
 const isLightBgPage = computed(() =>
@@ -78,7 +79,9 @@ watch(route, () => {
         : 'bg-transparent text-white border-transparent',
     ]"
   >
-    <nav class="flex items-center justify-between px-4 py-3 custom-desktop-px-8">
+    <nav
+      class="flex items-center justify-between px-4 py-3 custom-desktop-px-8"
+    >
       <!-- Logo -->
       <LiquidNavLink
         to="/"
@@ -88,7 +91,7 @@ watch(route, () => {
         Kizuna
       </LiquidNavLink>
 
-      <!-- 漢堡按鈕 - 1064px 以下顯示 -->
+      <!-- 漢堡按鈕 - 1250px 以下顯示 -->
       <button class="custom-mobile-show" @click="toggleMobileMenu">
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -107,20 +110,39 @@ watch(route, () => {
         </svg>
       </button>
 
-      <!-- 桌機導覽 - 1064px 以上顯示 -->
-      <div class="items-center justify-center flex-1 space-x-4 custom-desktop-show">
-        <LiquidNavLink to="/match" :colorMode="getNavTextColor">配對池</LiquidNavLink>
-        <LiquidNavLink to="/product" :colorMode="getNavTextColor">商品列表</LiquidNavLink>
-        <LiquidNavLink to="/activities" :colorMode="getNavTextColor">活動</LiquidNavLink>
-        <LiquidNavLink to="/activities/new" :colorMode="getNavTextColor">活動表單</LiquidNavLink>
-        <LiquidNavLink to="/activities/edit/:id" :colorMode="getNavTextColor">活動編輯</LiquidNavLink>
+      <!-- 桌機導覽 - 1250px 以上顯示 -->
+      <div
+        class="items-center justify-center flex-1 space-x-4 custom-desktop-show"
+      >
+        <LiquidNavLink to="/match" :colorMode="getNavTextColor"
+          >配對池</LiquidNavLink
+        >
+        <LiquidNavLink to="/product" :colorMode="getNavTextColor"
+          >商品列表</LiquidNavLink
+        >
+        <LiquidNavLink to="/activities" :colorMode="getNavTextColor"
+          >活動</LiquidNavLink
+        >
+        <LiquidNavLink to="/activities/new" :colorMode="getNavTextColor"
+          >活動表單</LiquidNavLink
+        >
+        <LiquidNavLink to="/activities/edit/:id" :colorMode="getNavTextColor"
+          >活動編輯</LiquidNavLink
+        >
+        <LiquidNavLink to="/activities/my" :colorMode="getNavTextColor"
+          >我的活動</LiquidNavLink
+        >
       </div>
 
-      <!-- 使用者選單 - 1064px 以上顯示 -->
+      <!-- 使用者選單 - 1250px 以上顯示 -->
       <div class="items-center justify-end w-1/4 space-x-4 custom-desktop-show">
         <template v-if="!store.accessToken">
-          <LiquidNavLink to="/login" :colorMode="getNavTextColor">登入</LiquidNavLink>
-          <LiquidNavLink to="/register" :colorMode="getNavTextColor">註冊</LiquidNavLink>
+          <LiquidNavLink to="/login" :colorMode="getNavTextColor"
+            >登入</LiquidNavLink
+          >
+          <LiquidNavLink to="/register" :colorMode="getNavTextColor"
+            >註冊</LiquidNavLink
+          >
         </template>
         <template v-else>
           <!-- 訊息icon -->
@@ -146,7 +168,9 @@ watch(route, () => {
                 v-if="cartStore.totalQuantity > 0"
                 class="absolute flex items-center justify-center min-w-[20px] h-5 px-1 text-xs font-semibold text-white rounded-full -top-2 -right-3 bg-[#E44C9B]"
               >
-                {{ cartStore.totalQuantity > 99 ? '99+' : cartStore.totalQuantity }}
+                {{
+                  cartStore.totalQuantity > 99 ? "99+" : cartStore.totalQuantity
+                }}
               </span>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -160,11 +184,15 @@ watch(route, () => {
               </svg>
             </div>
           </LiquidNavLink>
-          
+
           <div class="relative">
             <div
               class="flex items-center justify-center w-10 h-10 font-bold rounded-full cursor-pointer"
-              :class="getNavTextColor === 'white' ? 'bg-white text-black' : 'bg-gray-800 text-white'"
+              :class="
+                getNavTextColor === 'white'
+                  ? 'bg-white text-black'
+                  : 'bg-gray-800 text-white'
+              "
               @click="toggleDropdown"
             >
               {{ store.username?.charAt(0).toUpperCase() || "U" }}
@@ -173,7 +201,9 @@ watch(route, () => {
               v-if="isDropdownOpen"
               class="absolute right-0 w-48 mt-2 overflow-hidden bg-white border border-gray-200 rounded-lg shadow-lg"
             >
-              <div class="flex items-center justify-center px-4 py-3 text-gray-500 border-b border-gray-200">
+              <div
+                class="flex items-center justify-center px-4 py-3 text-gray-500 border-b border-gray-200"
+              >
                 Hello👋 {{ store.username }}
               </div>
               <router-link
@@ -244,149 +274,164 @@ watch(route, () => {
       </div>
     </nav>
 
-    <!-- 手機版選單 - 1064px 以下顯示 -->
-    <div 
+    <!-- 手機版選單 - 1250px 以下顯示 -->
+    <div
       class="custom-mobile-show transition-all duration-300 ease-in-out"
       :class="[
-        isMobileMenuOpen ? 'max-h-screen opacity-100' : 'max-h-0 opacity-0 overflow-hidden',
+        isMobileMenuOpen
+          ? 'max-h-screen opacity-100'
+          : 'max-h-0 opacity-0 overflow-hidden',
         isScrolled || isLightBgPage
           ? 'bg-white/95 backdrop-blur-lg'
-          : 'bg-white/5 backdrop-blur-lg'
+          : 'bg-white/5 backdrop-blur-lg',
       ]"
     >
       <div class="px-4 pt-2 pb-4 space-y-1">
-        <LiquidNavLink 
-          to="/match" 
+        <LiquidNavLink
+          to="/match"
           :colorMode="isScrolled || isLightBgPage ? 'black' : 'white'"
           class="block px-3 py-3 rounded-md text-base font-medium transition-all duration-200"
           :class="[
             isScrolled || isLightBgPage
               ? 'bg-white/80 hover:bg-white hover:shadow-sm'
-              : 'bg-white/10 hover:bg-white/20'
+              : 'bg-white/10 hover:bg-white/20',
           ]"
         >
           配對池
         </LiquidNavLink>
-        <LiquidNavLink 
-          to="/product" 
+        <LiquidNavLink
+          to="/product"
           :colorMode="isScrolled || isLightBgPage ? 'black' : 'white'"
           class="block px-3 py-3 rounded-md text-base font-medium transition-all duration-200"
           :class="[
             isScrolled || isLightBgPage
               ? 'bg-white/80 hover:bg-white hover:shadow-sm'
-              : 'bg-white/10 hover:bg-white/20'
+              : 'bg-white/10 hover:bg-white/20',
           ]"
         >
           商品列表
         </LiquidNavLink>
-        <LiquidNavLink 
-          to="/activities" 
+        <LiquidNavLink
+          to="/activities"
           :colorMode="isScrolled || isLightBgPage ? 'black' : 'white'"
           class="block px-3 py-3 rounded-md text-base font-medium transition-all duration-200"
           :class="[
             isScrolled || isLightBgPage
               ? 'bg-white/80 hover:bg-white hover:shadow-sm'
-              : 'bg-white/10 hover:bg-white/20'
+              : 'bg-white/10 hover:bg-white/20',
           ]"
         >
           活動
         </LiquidNavLink>
-        <LiquidNavLink 
-          to="/activities/new" 
+        <LiquidNavLink
+          to="/activities/new"
           :colorMode="isScrolled || isLightBgPage ? 'black' : 'white'"
           class="block px-3 py-3 rounded-md text-base font-medium transition-all duration-200"
           :class="[
             isScrolled || isLightBgPage
               ? 'bg-white/80 hover:bg-white hover:shadow-sm'
-              : 'bg-white/10 hover:bg-white/20'
+              : 'bg-white/10 hover:bg-white/20',
           ]"
         >
           活動表單
         </LiquidNavLink>
-        <LiquidNavLink 
-          to="/activities/edit/:id" 
+        <LiquidNavLink
+          to="/activities/edit/:id"
           :colorMode="isScrolled || isLightBgPage ? 'black' : 'white'"
           class="block px-3 py-3 rounded-md text-base font-medium transition-all duration-200"
           :class="[
             isScrolled || isLightBgPage
               ? 'bg-white/80 hover:bg-white hover:shadow-sm'
-              : 'bg-white/10 hover:bg-white/20'
+              : 'bg-white/10 hover:bg-white/20',
           ]"
         >
           活動編輯
         </LiquidNavLink>
 
+        <LiquidNavLink
+          to="/activities/my"
+          :colorMode="isScrolled || isLightBgPage ? 'black' : 'white'"
+          class="block px-3 py-3 rounded-md text-base font-medium transition-all duration-200"
+          :class="[
+            isScrolled || isLightBgPage
+              ? 'bg-white/80 hover:bg-white hover:shadow-sm'
+              : 'bg-white/10 hover:bg-white/20',
+          ]"
+        >
+          我的活動
+        </LiquidNavLink>
+
         <template v-if="!store.accessToken">
-          <LiquidNavLink 
-            to="/login" 
+          <LiquidNavLink
+            to="/login"
             :colorMode="isScrolled || isLightBgPage ? 'black' : 'white'"
             class="block px-3 py-3 rounded-md text-base font-medium transition-all duration-200"
             :class="[
               isScrolled || isLightBgPage
                 ? 'bg-white/80 hover:bg-white hover:shadow-sm'
-                : 'bg-white/10 hover:bg-white/20'
+                : 'bg-white/10 hover:bg-white/20',
             ]"
           >
             登入
           </LiquidNavLink>
-          <LiquidNavLink 
-            to="/register" 
+          <LiquidNavLink
+            to="/register"
             :colorMode="isScrolled || isLightBgPage ? 'black' : 'white'"
             class="block px-3 py-3 rounded-md text-base font-medium transition-all duration-200"
             :class="[
               isScrolled || isLightBgPage
                 ? 'bg-white/80 hover:bg-white hover:shadow-sm'
-                : 'bg-white/10 hover:bg-white/20'
+                : 'bg-white/10 hover:bg-white/20',
             ]"
           >
             註冊
           </LiquidNavLink>
         </template>
         <template v-else>
-          <LiquidNavLink 
-            to="/chat" 
+          <LiquidNavLink
+            to="/chat"
             :colorMode="isScrolled || isLightBgPage ? 'black' : 'white'"
             class="block px-3 py-3 rounded-md text-base font-medium transition-all duration-200"
             :class="[
               isScrolled || isLightBgPage
                 ? 'bg-white/80 hover:bg-white hover:shadow-sm'
-                : 'bg-white/10 hover:bg-white/20'
+                : 'bg-white/10 hover:bg-white/20',
             ]"
           >
             訊息
           </LiquidNavLink>
-          <LiquidNavLink 
-            to="/cart" 
+          <LiquidNavLink
+            to="/cart"
             :colorMode="isScrolled || isLightBgPage ? 'black' : 'white'"
             class="block px-3 py-3 rounded-md text-base font-medium transition-all duration-200"
             :class="[
               isScrolled || isLightBgPage
                 ? 'bg-white/80 hover:bg-white hover:shadow-sm'
-                : 'bg-white/10 hover:bg-white/20'
+                : 'bg-white/10 hover:bg-white/20',
             ]"
           >
             購物車
           </LiquidNavLink>
-          <LiquidNavLink 
-            to="/edit-profile" 
+          <LiquidNavLink
+            to="/edit-profile"
             :colorMode="isScrolled || isLightBgPage ? 'black' : 'white'"
             class="block px-3 py-3 rounded-md text-base font-medium transition-all duration-200"
             :class="[
               isScrolled || isLightBgPage
                 ? 'bg-white/80 hover:bg-white hover:shadow-sm'
-                : 'bg-white/10 hover:bg-white/20'
+                : 'bg-white/10 hover:bg-white/20',
             ]"
           >
             編輯個人檔案
           </LiquidNavLink>
-          <LiquidNavLink 
+          <LiquidNavLink
             @click="handleLogout"
             :colorMode="isScrolled || isLightBgPage ? 'black' : 'white'"
             class="block px-3 py-3 rounded-md text-base font-medium transition-all duration-200 cursor-pointer"
             :class="[
               isScrolled || isLightBgPage
                 ? 'bg-white/80 hover:bg-white hover:shadow-sm'
-                : 'bg-white/10 hover:bg-white/20'
+                : 'bg-white/10 hover:bg-white/20',
             ]"
           >
             登出
@@ -398,30 +443,30 @@ watch(route, () => {
 </template>
 
 <style scoped>
-/* 自定義 1064px 斷點 */
-@media (max-width: 1063px) {
+/* 自定義 1250px 斷點 */
+@media (max-width: 1250px) {
   /* 手機版元素顯示 */
   .custom-mobile-show {
     display: block;
   }
-  
+
   /* 桌機版元素隱藏 */
   .custom-desktop-show {
     display: none !important;
   }
 }
 
-@media (min-width: 1064px) {
+@media (min-width: 1251px) {
   /* 手機版元素隱藏 */
   .custom-mobile-show {
     display: none !important;
   }
-  
+
   /* 桌機版元素顯示 */
   .custom-desktop-show {
     display: flex !important;
   }
-  
+
   /* 桌機版更大的水平邊距 */
   .custom-desktop-px-8 {
     padding-left: 2rem;
