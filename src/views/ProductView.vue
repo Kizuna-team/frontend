@@ -38,10 +38,11 @@ const openCartModal=()=>{
   )
 }
 
-const handleAddCart=(product)=> {
+const handleAddCart = (product) => {
+  if (product.inventory === 0) return;
   cartStore.addCart(product);
   openCartModal();
-}
+};
 
 const search = () => {
   let filtered = products.value;
@@ -247,36 +248,44 @@ onMounted(async () => {
           </div>
           <!-- 下半部 : 庫存 -->
           <!-- 這樣寫是因為商品描述長度不同 會導致庫存在不同水平線上 -->
-          <div class="flex justify-center gap-4 mb-4">
+         <div class="flex justify-center gap-4 mb-4">
             <p class="py-1 font-semibold text-darkblue">
               庫存：{{ product.inventory }}
             </p>
-            <div v-if="product.inventory <= 5">
+            <div v-if="product.inventory > 0 && product.inventory <= 5">
               <p class="py-1 px-4 bg-[#ffb703] text-white rounded-[20px]">
                 庫存不足
               </p>
             </div>
           </div>
-          <button
-            @click="handleAddCart(product)"
-            class="css-button-fully-rounded--blue"
+         <button
+          @click="handleAddCart(product)"
+          :disabled="product.inventory === 0"
+          :class="product.inventory === 0 ? 'css-button-disabled' : 'css-button-fully-rounded--blue'"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            class="size-6"
           >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke-width="1.5"
-              stroke="currentColor"
-              class="relative size-6 -top-0.5"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                d="M15.75 10.5V6a3.75 3.75 0 1 0-7.5 0v4.5m11.356-1.993 1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 0 1-1.12-1.243l1.264-12A1.125 1.125 0 0 1 5.513 7.5h12.974c.576 0 1.059.435 1.119 1.007ZM8.625 10.5a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm7.5 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z"
-              />
-            </svg>
-            加入購物車
-          </button>
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M15.75 10.5V6a3.75 3.75 0 1 0-7.5 0v4.5m11.356-1.993 
+                1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 
+                0 0 1-1.12-1.243l1.264-12A1.125 1.125 
+                0 0 1 5.513 7.5h12.974c.576 0 1.059.435 
+                1.119 1.007ZM8.625 10.5a.375.375 0 1 
+                1-.75 0 .375.375 0 0 1 .75 0Zm7.5 
+                0a.375.375 0 1 1-.75 0 .375.375 
+                0 0 1 .75 0Z"
+            />
+          </svg>
+          {{ product.inventory === 0 ? "已售完" : "加入購物車" }}
+        </button>
         </div>
       </div>
     </div>
@@ -307,6 +316,24 @@ onMounted(async () => {
 .css-button-fully-rounded--blue:hover {
   background: #fff;
   color: #219ebc;
+}
+
+.css-button-disabled {
+  min-width: 130px;
+  width: 150px;
+  height: 40px;
+  color: #6b7280;                 
+  padding: 5px 10px;
+  font-weight: bold;
+  cursor: not-allowed;
+  border-radius: 20px;
+  border: 2px solid transparent;  
+  background: #d1d5db;            
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25rem;
+  margin: auto;
 }
 
 .swiper-button-next,
