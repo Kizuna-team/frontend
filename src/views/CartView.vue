@@ -37,11 +37,11 @@ const steps = [
     isCartStep: true,
   },
   {
-    title: "請選擇送禮對象",
+    title: "選擇送禮對象",
     fields: [
       {
         name: "receiverId",
-        label: "請選擇送禮對象",
+        label: "選擇送禮對象",
         type: "select",
         options: friendOptions.value,
       },
@@ -52,14 +52,14 @@ const steps = [
     fields: [{ label: "祝福留言", name: "message", type: "textarea" }],
   },
   {
-    title: "付款方式選擇",
+    title: "選擇付款方式",
     fields: [
       {
         name: "paymentMethod",
-        label: "請選擇付款方式",
+        label: "選擇付款方式",
         type: "select",
         options: [
-          { value: "", label: "請選擇付款方式" },
+          { value: "", label: "選擇付款方式" },
           { value: "LINEPAY", label: "LINEPAY" },
           { value: "PAYPAL", label: "PAYPAL" },
         ],
