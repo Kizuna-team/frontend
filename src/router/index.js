@@ -21,6 +21,8 @@ import ProductAdminView from "@/views/ProductAdminView.vue";
 import RegisterView from "@/views/RegisterView.vue";
 import SubscriptionView from "@/views/SubscriptionView.vue";
 
+import EditProfileViewNew from "@/views/EditProfileViewNew.vue";
+
 import { useUserStore } from "@/stores/user.js";
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -91,6 +93,14 @@ const router = createRouter({
       component: EditProfileView,
       meta: { requiresAuth: true },
     },
+    //測試
+    {
+      path: "/edit-profile-new",
+      name: "EditProfileNew",
+      component: EditProfileViewNew,
+      meta: { requiresAuth: true },
+    },
+
     {
       path: "/gift-checkout",
       name: "GiftCheckout",
