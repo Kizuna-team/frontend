@@ -34,9 +34,8 @@ watch(
 );
 // label 顯示給使用者，value 送後端或存資料庫
 const genderOptions = [
-  { label: "我是男生", value: "male" },
-  { label: "我是女生", value: "female" },
-  { label: "我不確定", value: "both" },
+  { label: "生理男", value: "male" },
+  { label: "生理女", value: "female" },
 ];
 const orientationOptions = [
   { label: "異性戀", value: 0 },
