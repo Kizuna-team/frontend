@@ -87,8 +87,8 @@ const toggle = (option) => {
       class="px-3 py-1.5 text-sm font-semibold transition rounded-full border shadow-sm hover:shadow-md"
       :class="
         isSelected(option)
-          ? 'bg-green-100 border-green-500 text-green-600'
-          : 'border-gray-300 text-gray-500'
+          ? 'bg-primary/20 border-primary/40 text-darkblue'
+          : 'border-gray-300 text-gray-400'
       "
     >
       {{ optionLabel(option) }}
