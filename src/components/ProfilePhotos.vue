@@ -176,9 +176,9 @@ defineExpose({ uploadAll });
       />
       <div
         v-else
-        class="flex items-center justify-center w-full h-full text-xl text-gray-400"
+        class="flex items-center justify-center w-full h-full text-gray-400"
       >
-        尚無大頭貼
+        尚未設定個人照片
       </div>
     </div>
   </div>

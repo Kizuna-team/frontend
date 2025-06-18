@@ -135,13 +135,13 @@ const handleUpload = async () => {
 
 <template>
   <div
-    class="w-screen min-h-screen p-6 bg-gradient-to-b from-[#f0f7ff] to-white"
+    class="min-h-screen p-6 overflow-x-hidden bg-gradient-to-b from-[#8ecae6]/10 to-white"
   >
     <div class="max-w-3xl p-8 mx-auto bg-white shadow-xl rounded-3xl">
       <div class="mb-8 text-center">
         <img src="/logo.png" alt="Logo" class="w-16 h-16 mx-auto mb-2" />
         <h2 class="text-2xl font-bold text-[#1c3b5a]">編輯個人資料</h2>
-        <p class="text-sm text-gray-500">讓大家更認識你 💬</p>
+        <p class="text-sm text-gray-500">讓大家更認識你</p>
       </div>
 
       <div class="flex justify-center gap-2 mb-6">
@@ -176,7 +176,7 @@ const handleUpload = async () => {
           <div
             v-for="(item, index) in cards"
             :key="index"
-            class="overflow-hidden border shadow-sm rounded-xl"
+            class="overflow-hidden border shadow-sm border-primary/20 rounded-xl"
           >
             <button
               class="flex justify-between items-center w-full p-4 text-[#1c3b5a] font-semibold"
@@ -251,7 +251,7 @@ const handleUpload = async () => {
         <ProfilePhotos ref="profilePhotosRef" />
         <button
           @click="handleUpload"
-          class="w-full py-2 font-semibold border-2 rounded-lg text-primary-100 border-darkblue hover:bg-darkblue hover:text-white"
+          class="flex-1 py-3 font-semibold text-white transition rounded-full shadow-md bg-gradient-to-r from-accent to-orange hover:brightness-110"
         >
           完成
         </button>
@@ -259,3 +259,12 @@ const handleUpload = async () => {
     </div>
   </div>
 </template>
+
+<style scoped>
+.form-card {
+  @apply bg-white p-4 rounded-2xl border border-primary/10 shadow-sm;
+}
+.form-input {
+  @apply w-full px-4 py-2 border border-primary/20 rounded-xl focus:outline-none focus:ring-2 focus:ring-secondary transition;
+}
+</style>
