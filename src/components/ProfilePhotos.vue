@@ -235,7 +235,7 @@ defineExpose({ uploadAll });
 
   <!-- 照片上傳區 -->
   <h2 class="mb-6 text-2xl font-bold text-center text-darkblue">上傳生活照</h2>
-  <div class="grid grid-cols-3 gap-4">
+  <div class="grid grid-cols-3 gap-4 pb-4">
     <div
       v-for="(img, index) in photoList"
       :key="index"
