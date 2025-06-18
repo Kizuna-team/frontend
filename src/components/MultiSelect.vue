@@ -84,7 +84,7 @@ const toggle = (option) => {
       v-for="option in options"
       :key="optionKey(option)"
       @click="toggle(option)"
-      class="px-2 py-1 text-sm font-semibold transition border-2 rounded-lg"
+      class="px-3 py-1.5 text-sm font-semibold transition rounded-full border shadow-sm hover:shadow-md"
       :class="
         isSelected(option)
           ? 'bg-green-100 border-green-500 text-green-600'
