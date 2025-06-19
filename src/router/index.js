@@ -17,7 +17,6 @@ import MemberView from "@/views/MemberView.vue";
 import NotFound from "@/views/NotFound.vue";
 import ProfileTwoView from "@/views/ProfileTwoView.vue";
 import ProductView from "@/views/ProductView.vue";
-// import ProfileView from "@/views/ProfileView.vue";
 import PaymentView from "@/views/PaymentView.vue";
 import ProductAdminView from "@/views/ProductAdminView.vue";
 import RegisterView from "@/views/RegisterView.vue";
@@ -32,12 +31,6 @@ const router = createRouter({
       name: "Home",
       component: HomeView,
     },
-    // (0605 目前無用先註解 by蕭)
-    // {
-    //   path: "/profile",
-    //   name: "googleProfile",
-    //   component: ProfileView,
-    // },
     {
       path: "/activities",
       name: "Activities",
@@ -86,7 +79,9 @@ const router = createRouter({
     {
       path: "/events/:id",
       name: "eventDetail",
-      component: () => import("@/views/EventCardByIdView.vue"), // ← 這個 view 自己命名
+      component: () => import("@/views/EventCardByIdView.vue"), 
+    },
+    {
       path: "/chat_new",
       name: "ChatRoomView_new",
       component: ChatRoomView_new,
@@ -106,11 +101,6 @@ const router = createRouter({
       path: "/gift-checkout",
       name: "GiftCheckout",
       component: GiftCheckoutView,
-    },
-    {
-      path: "/login",
-      name: "Login",
-      component: LoginView,
     },
     {
       path: "/:pathMatch(.*)*",
