@@ -1,4 +1,3 @@
-<!-- 負責串接 Store 和子元件，處理送出邏輯 -->
 <script setup>
 import { ref, onMounted } from "vue";
 import { useUserProfileStore } from "@/stores/userProfile";
@@ -18,7 +17,6 @@ const cards = [
   { title: "興趣" },
 ];
 
-// 傳入 MultiSelect 元件的「選項資料」
 const zodiacOptions = [
   { name: "牡羊座" },
   { name: "金牛座" },
@@ -59,24 +57,11 @@ const jobOptions = [
   "餐飲與零售",
   "商業與行政",
 ];
-// 興趣（多選，純字串陣列）
-const interestOptions = [
-  "海邊",
-  "旅行",
-  "登山",
-  "籃球",
-  "排球",
-  "網球",
-  "睡覺",
-  "追劇",
-  "閱讀",
-];
 
 // 暫存資料表單 (不會存後端)
 // 初始值 為空或預設的暫存資料 淺拷貝巢狀物件問題
 const showFormData = ref({ ...userProfileStore.userProfile });
 
-// 還原、反悔成最後的儲存狀態
 const resetFormData = () => {
   showFormData.value = { ...userProfileStore.userProfile };
 };
@@ -214,14 +199,7 @@ const handleUpload = async () => {
                   :options="jobOptions"
                   :multiple="false"
                   :cols="5"
-                />
-                <MultiSelect
-                  v-if="index === 3"
-                  v-model="showFormData.interests"
-                  :options="interestOptions"
-                  :multiple="true"
-                  :cols="3"
-                />
+                />               
               </div>
             </div>
           </div>
