@@ -13,7 +13,7 @@ const nextUser = () => emit("goNext");
 </script>
 
 <template>
-  <section class="flex items-center gap-3 p-2 mb-4">
+  <section class="flex flex-col items-center w-full gap-4 px-4 mb-6">
     <!-- 上一輪按鈕 -->
     <!-- <button
       type="button"
@@ -37,23 +37,23 @@ const nextUser = () => emit("goNext");
     </button>
      -->
     <!-- 使用者卡片區 -->
-    <div class="flex flex-wrap justify-center gap-3">
+    <div class="flex flex-wrap justify-center gap-4">
       <div
         v-for="photo in props.targetPhotos"
         :key="photo"
-        class="aspect-[3/4] bg-white rounded-lg shadow p-2 w-64 overflow-hidden"
+        class="w-64 aspect-[3/4] rounded-xl overflow-hidden shadow-md bg-white"
       >
         <img
           :src="photo"
-          alt="avatar"
-          class="object-cover w-full h-full rounded"
+          alt="user photo"
+          class="object-cover w-full h-full transition-transform duration-300 hover:scale-105"
         />
       </div>
     </div>
     <!-- 下一輪按鈕 -->
     <button
       type="button"
-      class="bg-gray-200 bg-opacity-50 circle-wrap hover:bg-white hover:shadow-lg"
+      class="transition duration-300 bg-white border shadow-sm circle-wrap border-primary hover:bg-primary hover:text-white"
       @click="nextUser"
     >
       <svg
@@ -62,7 +62,7 @@ const nextUser = () => emit("goNext");
         viewBox="0 0 24 24"
         stroke-width="4"
         stroke="currentColor"
-        class="size-6 text-primary"
+        class="size-6"
       >
         <path
           stroke-linecap="round"

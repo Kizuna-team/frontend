@@ -85,7 +85,7 @@ const superLikeHandler = async () => {
 </script>
 
 <template>
-  <div class="flex items-center justify-center w-48 gap-16 px-2">
+  <div class="flex items-center justify-center gap-8 px-2">
     <button
       type="button"
       class="circle-wrap bg-[#E8E8E8] transform hover:scale-125"

@@ -196,7 +196,7 @@ const onCancel = () => {
 
 <template>
   <main
-    class="flex flex-col items-center justify-around pt-6 card-bg rounded-3xl"
+    class="flex flex-col items-center w-full max-w-xl gap-6 px-4 pt-6 pb-10 mx-auto bg-white shadow-lg rounded-3xl"
   >
     <!-- 顯示對象滑滑區 -->
     <!-- @goPrev="prevUser" -->
@@ -204,6 +204,7 @@ const onCancel = () => {
       v-if="currentUser && currentUser.photos"
       :target-photos="currentUser.photos"
       @goNext="nextUser"
+      class="w-full shadow-md rounded-2xl"
     />
 
     <!-- 只有成功配對時才顯示 Modal -->
@@ -216,27 +217,34 @@ const onCancel = () => {
     />
 
     <!-- 配對按鈕區 -->
-    <MatchBtn
-      v-if="typeof currentUser?.userId === 'number'"
-      :target-user="currentUser.userId"
-      @like="likeFlag"
-      @dislike="dislikeFlag"
-      @superLike="superLikeFlag"
-      @superLikeStatus="handleSuperLikeStatus"
-    />
+    <div class="w-full mt-4">
+      <MatchBtn
+        v-if="typeof currentUser?.userId === 'number'"
+        :target-user="currentUser.userId"
+        @like="likeFlag"
+        @dislike="dislikeFlag"
+        @superLike="superLikeFlag"
+        @superLikeStatus="handleSuperLikeStatus"
+      />
+    </div>
 
     <!-- 個人資訊頁面收合區 -->
     <section class="w-full pt-4 mt-4">
       <button
         type="button"
-        class="-mb-4 relative z-10 block mx-auto px-5 py-2 rounded-full font-semibold text-[#2c3e50] bg-[#f8f9fa] border border-[#2c3e50] shadow-md hover:bg-[#2c3e50] hover:text-white transition duration-300"
+        class="relative z-10 block px-6 py-2 mx-auto text-lg font-bold text-white transition duration-300 rounded-full shadow-md bg-gradient-to-r from-primary via-accent to-orange hover:brightness-110"
         @click="infoToggle"
       >
         {{ infoBtnTxt }}
       </button>
+
       <!-- 展示個人資訊頁面 -->
       <transition name="slide-fade">
-        <UserIntro v-show="isShow" :target-user="currentUser" />
+        <UserIntro
+          v-show="isShow"
+          class="w-full mt-4 p-4 bg-[#fefefe] border border-gray-200 rounded-2xl shadow-inner"
+          :target-user="currentUser"
+        />
       </transition>
     </section>
   </main>
@@ -247,9 +255,11 @@ const onCancel = () => {
     class="fixed inset-0 z-50 flex flex-col items-center justify-center text-xl text-white bg-black bg-opacity-60"
     @click="closeCover"
   >
-    <p class="mb-4">滑完囉！解鎖倒數</p>
-    <p class="mb-4 text-lg">{{ countdownText }}</p>
-    <button class="px-4 py-2 text-black bg-white rounded hover:bg-[#ffb703]">
+    <p class="mb-3 text-2xl font-semibold">你今天滑完啦！</p>
+    <p class="mb-6 text-lg">距離下次刷新還有：{{ countdownText }}</p>
+    <button
+      class="px-6 py-3 text-lg font-bold text-white transition rounded-full shadow-md bg-gradient-to-r from-primary via-accent to-orange hover:scale-105"
+    >
       升級解鎖更多使用者
     </button>
   </div>
