@@ -15,6 +15,10 @@
 
 <img width="1461" alt="截圖 2025-06-19 上午9 54 41" src="https://github.com/user-attachments/assets/ea7adcb5-b7bb-471a-a975-298bb6fb25c5" />
 
+## DEMO 畫面
+[![Watch the video](https://img.youtube.com/vi/5nOsfhFN4Fc/hqdefault.jpg)](https://youtu.be/5nOsfhFN4Fc)
+
+
 ## 使用技術
 
   * `Vue.js 3`
@@ -63,7 +67,7 @@ npm run dev
 
 | 姓名             | 開發功能                                                                 | GitHub連結                                         |
 |------------------|--------------------------------------------------------------------------|----------------------------------------------------|
-| sin-huang        | 1. 串金流系統(`LINEPAY`串購物車下單送禮功能、`ECPAY`串會員訂閱升級功能)<br> 2. 購物車功能<br/> 3. 即時聊天室功能(串 `Gemini AI` 協助發想聊天內容)<br> 4. 會員註冊/登入系統(含`Google`第三方登入)<br> 3. 推薦顯示邏輯初版<br> 6. 網頁主視覺設計<br>           | [github](https://github.com/sin-huang)             |
+| sin-huang        | 1. 串金流系統(`LINEPAY`串購物車下單送禮功能、`ECPAY`串會員訂閱升級功能)<br> 2. 購物車功能<br/> 3. 即時聊天室功能(串 `Gemini AI` 協助發想聊天內容)<br> 4. 會員註冊/登入系統(含`Google`第三方登入)<br> 5. 推薦顯示邏輯初版<br> 6. 網頁主視覺設計<br>           | [github](https://github.com/sin-huang)             |
 | chingyu0713      | 串金流系統                                                               | [github](https://github.com/chingyu0713)           |
 | c16033           | 聊天室系統<br>購物車系統                                                | [github](https://github.com/c16033)                |
 | Heidi            | 個人檔案管理(後端)<br>配對頁面                                          | [github](https://github.com/HeidiSiao)             |
