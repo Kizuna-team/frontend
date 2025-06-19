@@ -1,12 +1,11 @@
 <script setup>
 import { ref, computed, watch } from "vue";
 import { useUserStore } from "@/stores/user";
-import { useRoute, useRouter } from "vue-router";
+import { useRoute } from "vue-router";
 import LiquidNavLink from "@/components/LiquidGlass.vue";
 import { useCartStore } from "@/stores/cart.js";
 
 const route = useRoute();
-const router = useRouter();
 const store = useUserStore();
 const cartStore = useCartStore();
 
@@ -126,9 +125,6 @@ watch(route, () => {
         >
         <LiquidNavLink to="/activities/new" :colorMode="getNavTextColor"
           >活動表單</LiquidNavLink
-        >
-        <LiquidNavLink to="/activities/edit/:id" :colorMode="getNavTextColor"
-          >活動編輯</LiquidNavLink
         >
         <LiquidNavLink to="/activities/my" :colorMode="getNavTextColor"
           >我的活動</LiquidNavLink
@@ -336,18 +332,7 @@ watch(route, () => {
         >
           活動表單
         </LiquidNavLink>
-        <LiquidNavLink
-          to="/activities/edit/:id"
-          :colorMode="isScrolled || isLightBgPage ? 'black' : 'white'"
-          class="block px-3 py-3 rounded-md text-base font-medium transition-all duration-200"
-          :class="[
-            isScrolled || isLightBgPage
-              ? 'bg-white/80 hover:bg-white hover:shadow-sm'
-              : 'bg-white/10 hover:bg-white/20',
-          ]"
-        >
-          活動編輯
-        </LiquidNavLink>
+        
 
         <LiquidNavLink
           to="/activities/my"
