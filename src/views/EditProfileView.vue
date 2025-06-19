@@ -10,11 +10,7 @@ const tab = ref("INTRO");
 const userProfileStore = useUserProfileStore();
 // const userProfile = userProfileStore.userProfile 地雷
 
-const cards = [
-  { title: "星座" },
-  { title: "MBTI" },
-  { title: "工作" },
-];
+const cards = [{ title: "星座" }, { title: "MBTI" }, { title: "工作" }];
 
 const zodiacOptions = [
   { name: "牡羊座" },
@@ -119,18 +115,23 @@ const handleUpload = async () => {
 
 <template>
   <div
-    class="flex items-center justify-center min-h-screen p-3 bg-darkblue rounded-2xl"
+    class="min-h-screen p-6 overflow-x-hidden bg-gradient-to-b from-[#8ecae6]/10 to-white"
   >
-    <div class="w-full p-12 m-4 bg-white shadow-xl rounded-2xl min-h-[1100px]">
-      <!-- 分頁按鈕（卡片左上角） -->
-      <div class="flex gap-2 mb-4">
+    <div class="max-w-3xl p-8 mx-auto bg-white shadow-xl rounded-3xl">
+      <div class="mb-8 text-center">
+        <img src="/logo.png" alt="Logo" class="w-16 h-16 mx-auto mb-2" />
+        <h2 class="text-2xl font-bold text-[#1c3b5a]">編輯個人資料</h2>
+        <p class="text-sm text-gray-500">讓大家更認識你</p>
+      </div>
+
+      <div class="flex justify-center gap-2 mb-6">
         <button
           :class="
             tab === 'INTRO'
-              ? 'bg-accent text-white'
+              ? 'bg-gradient-to-r from-secondary to-primary text-white shadow-md'
               : 'bg-gray-100 text-gray-500'
           "
-          class="px-4 py-1 font-semibold rounded-md"
+          class="px-4 py-2 font-semibold transition rounded-full"
           @click="tab = 'INTRO'"
         >
           INTRO
@@ -138,44 +139,41 @@ const handleUpload = async () => {
         <button
           :class="
             tab === 'PHOTO'
-              ? 'bg-accent text-white'
+              ? 'bg-gradient-to-r from-secondary to-primary text-white shadow-md'
               : 'bg-gray-100 text-gray-500'
           "
-          class="px-4 py-1 font-semibold rounded-md"
+          class="px-4 py-2 font-semibold transition rounded-full"
           @click="tab = 'PHOTO'"
         >
           PHOTO
         </button>
       </div>
+
       <div v-if="tab === 'INTRO'">
-        <!-- 個人資料表單 -->
         <ProfileForm v-model="showFormData" />
-        <!-- 星座 / MBTI / 工作選單 / 興趣 -->
-        <div class="mb-6 space-y-3">
+
+        <div class="mt-6 space-y-3">
           <div
             v-for="(item, index) in cards"
             :key="index"
-            class="border shadow-sm rounded-xl"
+            class="overflow-hidden border shadow-sm border-primary/20 rounded-xl"
           >
-            <!--  折疊卡標題  -->
             <button
-              class="flex justify-between items-center w-full p-4 text-left text-[#1c3b5a] font-semibold"
+              class="flex justify-between items-center w-full p-4 text-[#1c3b5a] font-semibold"
               @click="foldToggle(index)"
             >
               <span>{{ item.title }}</span>
               <i
-                class="transition-transform duration-300 transform fas fa-chevron-right"
+                class="transition-transform duration-300 fas fa-chevron-right"
                 :class="{ 'rotate-90': activeIndex === index }"
               ></i>
             </button>
 
-            <!-- 切換展開的區塊 -->
-            <!-- 根據 index 顯示 MultiSelect -->
             <div
-              class="px-4 overflow-hidden transition-[max-height,padding] duration-700 ease-in-out text-sm text-gray-600"
+              class="px-4 overflow-hidden text-sm text-gray-600 transition-all"
               :class="activeIndex === index ? 'max-h-64 py-3' : 'max-h-0 py-0'"
             >
-              <div class="w-full overflow-y-auto max-h-60">
+              <div class="overflow-y-auto max-h-60">
                 <MultiSelect
                   v-if="index === 0"
                   v-model="showFormData.zodiac"
@@ -197,25 +195,31 @@ const handleUpload = async () => {
                   v-model="showFormData.job"
                   :options="jobOptions"
                   :multiple="false"
-                  :cols="5"
-                />               
+                  :cols="3"
+                />
+                <MultiSelect
+                  v-if="index === 3"
+                  v-model="showFormData.interests"
+                  :options="interestOptions"
+                  :multiple="true"
+                  :cols="3"
+                />
               </div>
             </div>
           </div>
         </div>
-        <!-- 表單按鈕們 -->
-        <div class="flex justify-end gap-4 mt-6">
+
+        <div class="flex flex-col gap-4 mt-8 sm:flex-row">
           <button
             @click="resetFormData"
-            class="w-full py-2 font-semibold transition border-2 rounded-lg text-primary-100 border-darkblue hover:bg-darkblue hover:text-white"
+            class="flex-1 py-3 font-semibold transition border-2 rounded-full border-darkblue text-darkblue hover:bg-darkblue hover:text-white"
           >
             還原編輯
           </button>
-          <!-- 檔案更新按 -->
           <button
             @click="updateHandler"
             :disabled="userProfileStore.loading"
-            class="w-full py-2 font-semibold transition border-2 rounded-lg text-primary-100 border-darkblue hover:bg-darkblue hover:text-white"
+            class="flex-1 order-1 w-full py-3 font-medium font-semibold text-white transition-all transition duration-300 transform rounded-full shadow-md bg-gradient-to-r from-accent to-pink-400 hover:from-accent hover:to-pink-700 hover:scale-105 hover:shadow-lg sm:w-auto sm:order-2"
           >
             <span v-if="userProfileStore.loading">儲存中...</span>
             <span v-else>儲存變更</span>
@@ -223,12 +227,11 @@ const handleUpload = async () => {
         </div>
       </div>
 
-      <!-- PHOTO 頁面內容 -->
-      <div v-else-if="tab === 'PHOTO'" class="flex flex-col">
+      <div v-else-if="tab === 'PHOTO'" class="flex flex-col gap-4">
         <ProfilePhotos ref="profilePhotosRef" />
         <button
           @click="handleUpload"
-          class="w-full py-2 mx-2 my-5 font-semibold transition border-2 rounded-lg text-primary-100 border-darkblue hover:bg-darkblue hover:text-white"
+          class="flex-1 order-1 w-full py-3 font-medium font-semibold text-white transition-all transition duration-300 transform rounded-full shadow-md bg-gradient-to-r from-accent to-pink-400 hover:from-accent hover:to-pink-700 hover:scale-105 hover:shadow-lg sm:w-auto sm:order-2"
         >
           完成
         </button>
