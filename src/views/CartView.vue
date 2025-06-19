@@ -150,7 +150,7 @@ const handleSubmit = async () => {
       totalPrice: totalPrice.value,
       totalQuantity: totalQuantity.value,
     };
-    console.log("📝 訂單資料:", orderData);
+    console.log("訂單資料:", orderData);
     isCompleted.value = true;
   }
 };
