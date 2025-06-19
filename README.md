@@ -13,10 +13,9 @@
 成為好友後，將會為雙方「 開啟單獨聊天室 」，您可以在這和喜歡的人暢聊今天所發生的生活趣事，  
 另外，對於喜歡團體活動的E人們，我們也提供「新增活動揪團」功能。  
 
-<img width="1461" alt="截圖 2025-06-19 上午9 54 41" src="https://github.com/user-attachments/assets/ea7adcb5-b7bb-471a-a975-298bb6fb25c5" />
 
 ## DEMO 畫面
-[![Watch the video](https://img.youtube.com/vi/5nOsfhFN4Fc/hqdefault.jpg)](https://youtu.be/5nOsfhFN4Fc)
+[![Watch the video](./src/assets/homepage.png)](https://youtu.be/5nOsfhFN4Fc)
 
 
 ## 使用技術
