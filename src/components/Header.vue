@@ -74,13 +74,6 @@ onUnmounted(() => {
 <template>
   <header class="fixed top-0 left-0 z-50 w-full h-20 navbar-header">
     <nav class="flex items-center justify-between px-6 py-4">
-      <!-- debug -->
-      <div
-        class="absolute px-2 py-1 text-sm text-white bg-black rounded top-20 left-4"
-      >
-        Route: {{ $route.path }} | scrollY: {{ debugY }} | Color:
-        {{ getNavTextColor }}
-      </div>
       <div class="flex items-center w-1/4">
         <LiquidNavLink to="/" :colorMode="getNavTextColor"
           >Kizuna</LiquidNavLink
