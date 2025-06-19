@@ -131,7 +131,7 @@ const handleUpload = async () => {
               ? 'bg-gradient-to-r from-secondary to-primary text-white shadow-md'
               : 'bg-gray-100 text-gray-500'
           "
-          class="px-4 py-2 font-semibold transition rounded-full"
+          class="px-4 py-2 font-semibold rounded-full"
           @click="tab = 'INTRO'"
         >
           INTRO
@@ -164,13 +164,13 @@ const handleUpload = async () => {
             >
               <span>{{ item.title }}</span>
               <i
-                class="transition-transform duration-300 fas fa-chevron-right"
+                class="transition-transform duration-300 transform fas fa-chevron-right"
                 :class="{ 'rotate-90': activeIndex === index }"
               ></i>
             </button>
 
             <div
-              class="px-4 overflow-hidden text-sm text-gray-600 transition-all"
+              class="px-4 overflow-hidden text-sm text-gray-600 transition-[max-height,padding] duration-700 ease-in-out"
               :class="activeIndex === index ? 'max-h-64 py-3' : 'max-h-0 py-0'"
             >
               <div class="overflow-y-auto max-h-60">
