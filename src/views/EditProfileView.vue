@@ -14,7 +14,6 @@ const cards = [
   { title: "星座" },
   { title: "MBTI" },
   { title: "工作" },
-  { title: "興趣" },
 ];
 
 const zodiacOptions = [
