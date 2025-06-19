@@ -32,6 +32,7 @@ const lightBgPages = [
   "/edit-profile",
   "/cart",
   "/chat",
+  "/subscription",
 ];
 
 const isLightBgPage = computed(() =>
@@ -228,7 +229,7 @@ watch(route, () => {
                 <span class="whitespace-nowrap">編輯個人檔案</span>
               </router-link>
               <a
-                href="#"
+                href="/subscription"
                 class="flex items-center gap-3 px-4 py-3 text-gray-700 border-b border-gray-200 hover:bg-gray-50"
                 @click="isDropdownOpen = false"
               >
@@ -412,6 +413,20 @@ watch(route, () => {
           >
             購物車
           </LiquidNavLink>
+
+          <LiquidNavLink
+            to="/subscription"
+            :colorMode="isScrolled || isLightBgPage ? 'black' : 'white'"
+            class="block px-3 py-3 rounded-md text-base font-medium transition-all duration-200"
+            :class="[
+              isScrolled || isLightBgPage
+                ? 'bg-white/80 hover:bg-white hover:shadow-sm'
+                : 'bg-white/10 hover:bg-white/20',
+            ]"
+          >
+            升級方案
+          </LiquidNavLink>
+
           <LiquidNavLink
             to="/edit-profile"
             :colorMode="isScrolled || isLightBgPage ? 'black' : 'white'"
@@ -424,18 +439,26 @@ watch(route, () => {
           >
             編輯個人檔案
           </LiquidNavLink>
-          <LiquidNavLink
+
+          <button
             @click="handleLogout"
-            :colorMode="isScrolled || isLightBgPage ? 'black' : 'white'"
-            class="block px-3 py-3 rounded-md text-base font-medium transition-all duration-200 cursor-pointer"
+            class="group relative overflow-hidden rounded-full px-6 py-2 text-lg transition-all duration-300 backdrop-blur-xl bg-white/10 border border-white/20 shadow-xl hover:scale-105 hover:brightness-110 block px-3 py-3 rounded-md text-base font-medium transition-all duration-200"
             :class="[
               isScrolled || isLightBgPage
-                ? 'bg-white/80 hover:bg-white hover:shadow-sm'
-                : 'bg-white/10 hover:bg-white/20',
+                ? 'text-gray-800 drop-shadow-[0_0_4px_rgba(0,0,0,0.3)] bg-white/80 hover:bg-white hover:shadow-sm'
+                : 'text-white drop-shadow-[0_1px_3px_rgba(255,255,255,0.5)] bg-white/10 hover:bg-white/20',
             ]"
+            style="
+              width: 100% !important;
+              box-sizing: border-box;
+              text-align: left !important;
+            "
           >
-            登出
-          </LiquidNavLink>
+            <span class="relative z-10">登出</span>
+            <span
+              class="absolute inset-0 z-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-gradient-to-r from-[rgba(96,165,250,0.3)] to-[rgba(236,72,153,0.3)] blur-md"
+            ></span>
+          </button>
         </template>
       </div>
     </div>
