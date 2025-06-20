@@ -44,7 +44,7 @@ const nextUser = () => emit("goNext");
         class="aspect-[3/4] bg-white rounded-lg shadow p-2 w-64 overflow-hidden"
       >
         <img
-          :src="photo"
+          :src="photo.image_url"
           alt="avatar"
           class="object-cover w-full h-full rounded"
         />
