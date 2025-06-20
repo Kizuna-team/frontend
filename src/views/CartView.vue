@@ -108,7 +108,7 @@ const isValidStep = () => {
     if (field.conditional && formData.paymentMethod !== field.conditional) {
       return true; // 不需要驗證條件欄位
     }
-    return formData[field.name].trim() !== "";
+    return formData[field.name];
   });
 };
 
