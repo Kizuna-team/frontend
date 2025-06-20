@@ -13,6 +13,25 @@ import { useUserStore } from "@/stores/user.js";
 import { userChatStore } from "@/stores/chat.js";
 import { useRoute } from "vue-router";
 
+const aiSuggestions = ref([]);
+const aiTimer = ref(null);
+
+
+const triggerAISuggestion = () => {
+  if (aiTimer.value) clearTimeout(aiTimer.value);
+  aiTimer.value = setTimeout(async () => {
+    try {
+      const res = await axios.post("/api/chat/suggest", {
+        message: newMessage.value, // 或抓最後一則訊息
+      });
+      aiSuggestions.value = res.data.reply.split("\n").filter(line => line.trim() !== "");
+    } catch (err) {
+      console.error("AI 建議失敗", err);
+    }
+  }, 3000); // 等 3 秒再請 AI 回覆建議
+};
+
+
 
 // Socket.io 連接設定
 const socket = io("http://localhost:3000", {
@@ -35,7 +54,7 @@ const chatRooms = ref([]);
 // 0618 載入聊天室( 好友 + roomId )
 const fetchChatRooms = async () => {
   try {
-    const res = await axios.get("/friends");
+    const res = await axios.get("/friendLists");
     chatRooms.value = res.data.friends;
     console.log(chatRooms.value);
   } catch (error) {
@@ -88,6 +107,8 @@ function handleIncomingMessage(msg) {
 // 加入房間 & 綁定監聽器
 onMounted(() => {
   fetchChatRooms();
+  
+  triggerAISuggestion();
 
   // 綁定 socket 接收訊息
   socket.on("chatMessage", handleIncomingMessage);
@@ -173,6 +194,7 @@ const sendMessage = async () => {
   } catch (error) {
     console.error("❌ 發送訊息失敗", error);
   }
+  triggerAISuggestion();
 };
 
 // 監聽訊息長度 實現自動滾到訊息底部的功能
@@ -241,7 +263,7 @@ watch(
 <template>
   <div class="bg-gray-100 h-[70vh] flex flex-row">
     <!-- 左側邊欄 -->
-    <div class="w-80 bg-white border-r border-gray-200 flex flex-col">
+    <div class="flex flex-col bg-white border-r border-gray-200 w-80">
       <!-- 標題 -->
       <div class="p-4 border-b border-gray-200">
         <h1 class="text-xl font-semibold text-gray-800">聊天室</h1>
@@ -275,12 +297,14 @@ watch(
       </div>
     </div>
 
-    <!-- 右側主要聊天區域 -->
-    <div class="flex-1 flex flex-col">
+<!-- 右側主要聊天 + AI 建議區 -->
+<div class="flex flex-row flex-1">
+  <!-- 右側主要聊天區域 -->
+  <div class="flex flex-col flex-1">
       <!-- 聊天室標題欄 -->
-      <div class="bg-white border-b border-gray-200 p-4 flex items-center justify-between">
+      <div class="flex items-center justify-between p-4 bg-white border-b border-gray-200">
         <div class="flex items-center space-x-3">
-          <div class="w-10 h-10 bg-gray-300 rounded-full flex items-center justify-center">
+          <div class="flex items-center justify-center w-10 h-10 bg-gray-300 rounded-full">
             <!-- TODO:這邊之後放我的好友的大頭貼 -->
             <span class="text-sm font-medium text-gray-700">{{ }}</span>
           </div>
@@ -295,9 +319,9 @@ watch(
       </div>
       <!-- 聊天訊息區域 -->
       <!-- 外層容器 滾動區域 -->
-      <div class="flex-1 overflow-y-auto p-4 space-y-4 bg-gray-50" ref="messagesContainer">
+      <div class="flex-1 p-4 space-y-4 overflow-y-auto bg-gray-50" ref="messagesContainer">
         <!-- 空訊息提示 -->
-        <div v-if="chatStore.messages.length === 0" class="text-center py-8">
+        <div v-if="chatStore.messages.length === 0" class="py-8 text-center">
           <div class="text-gray-500">還沒有訊息，開始聊天吧！</div>
         </div>
 
@@ -307,7 +331,7 @@ watch(
         ]">
           <div class="flex flex-col">
             <!-- 顯示發送者名稱（如果不是自己的訊息） -->
-            <div v-if="Number(msg.senderId) !== Number(userStore.userId)" class="text-xs text-gray-600 mb-1 pl-2 font-medium">
+            <div v-if="Number(msg.senderId) !== Number(userStore.userId)" class="pl-2 mb-1 text-xs font-medium text-gray-600">
               {{ msg.senderName || `User${Number(msg.senderId)}` }}
             </div>
             <!-- 訊息泡泡 我發的訊息 白底靠右 ; 對方訊息 黃底靠左-->
@@ -335,7 +359,7 @@ watch(
       </div>
 
       <!-- 輸入區域 -->
-      <div class="bg-white border-t border-gray-200 p-4 flex-shrink-0">
+      <div class="flex-shrink-0 p-4 bg-white border-t border-gray-200">
         <div class="flex items-end space-x-3">
           <!-- 輸入框 -->
           <div class="flex-1">
@@ -361,6 +385,20 @@ watch(
       </div>
     </div>
   </div>
+   <!-- AI 建議右側欄 -->
+  <div class="w-64 p-4 space-y-2 bg-white border-l border-gray-200">
+    <h2 class="mb-2 text-lg font-semibold text-gray-700">AI 建議回覆</h2>
+    <div v-if="aiSuggestions.length === 0" class="text-sm text-gray-400">等待 AI 建議中...</div>
+    <div
+      v-for="(suggestion, index) in aiSuggestions"
+      :key="index"
+      class="p-2 bg-gray-100 rounded cursor-pointer hover:bg-gray-200"
+      @click="newMessage = suggestion"
+    >
+      {{ suggestion }}
+    </div>
+  </div>
+</div>
 </template>
 
 <style scoped>
