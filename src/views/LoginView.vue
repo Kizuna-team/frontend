@@ -134,7 +134,7 @@ const handleGoogleResponse = async (res) => {
           <p class="mt-2 text-sm text-gray-600">請先登入以繼續使用</p>
         </div>
 
-        <form @submit.prevent="handleLogin" class="space-y-6">
+        <div class="space-y-6">
           <!-- 帳號 -->
           <div>
             <label class="relative flex items-center text-gray-700">
@@ -163,12 +163,12 @@ const handleGoogleResponse = async (res) => {
 
           <!-- 登入按鈕 -->
           <button
-            type="submit"
+            @click.prevent="handleLogin"
             class="w-full py-3 text-white font-semibold rounded-full bg-gradient-to-r from-primary to-pink-300 hover:from-[#7bb8d9] hover:to-pink-400 shadow-lg hover:shadow-xl transition-all duration-200"
           >
             登入
           </button>
-        </form>
+        </div>
 
         <!-- or -->
         <div class="flex items-center my-6 text-gray-500">
