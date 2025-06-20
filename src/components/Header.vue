@@ -72,15 +72,15 @@ watch(route, () => {
 
 <template>
   <header
-    class="fixed top-0 left-0 z-50 w-full transition-colors duration-300 border-b-2 navbar-header"
+    class="fixed top-0 left-0 z-50 w-full transition-all duration-300 border-b-2 navbar-header"
     :class="[
       isScrolled || isLightBgPage
-        ? 'bg-white text-black border-[#219ebc]'
+        ? 'bg-white/95 backdrop-blur-lg text-black border-[#219ebc] shadow-lg'
         : 'bg-transparent text-white border-transparent',
     ]"
   >
     <nav
-      class="flex items-center justify-between px-4 py-3 custom-desktop-px-8"
+      class="flex items-center justify-between px-6 py-4 custom-desktop-px-8"
     >
       <!-- Logo -->
       <LiquidNavLink
@@ -112,7 +112,7 @@ watch(route, () => {
 
       <!-- 桌機導覽 - 1250px 以上顯示 -->
       <div
-        class="items-center justify-center flex-1 space-x-4 custom-desktop-show"
+        class="items-center justify-center flex-1 space-x-6 custom-desktop-show"
       >
         <LiquidNavLink to="/match" :colorMode="getNavTextColor"
           >配對池</LiquidNavLink
@@ -132,7 +132,7 @@ watch(route, () => {
       </div>
 
       <!-- 使用者選單 - 1250px 以上顯示 -->
-      <div class="items-center justify-end w-1/4 space-x-4 custom-desktop-show">
+      <div class="items-center justify-end space-x-4 custom-desktop-show">
         <template v-if="!store.accessToken">
           <LiquidNavLink to="/login" :colorMode="getNavTextColor"
             >登入</LiquidNavLink
@@ -271,9 +271,9 @@ watch(route, () => {
       </div>
     </nav>
 
-    <!-- 手機版選單 - 1250px 以下顯示 -->
+    <!-- 手機版選單 - 1250px 以下顯示，靠右對齊 -->
     <div
-      class="custom-mobile-show transition-all duration-300 ease-in-out"
+      class="custom-mobile-show transition-all duration-300 ease-in-out ml-auto mr-[2.5%] w-[30%] rounded-b-2xl"
       :class="[
         isMobileMenuOpen
           ? 'max-h-screen opacity-100'
@@ -283,11 +283,11 @@ watch(route, () => {
           : 'bg-white/5 backdrop-blur-lg',
       ]"
     >
-      <div class="px-4 pt-2 pb-4 space-y-1">
+      <div class="px-6 pt-2 pb-6 space-y-2">
         <LiquidNavLink
           to="/match"
           :colorMode="isScrolled || isLightBgPage ? 'black' : 'white'"
-          class="block px-3 py-3 rounded-md text-base font-medium transition-all duration-200 text-right"
+          class="block px-4 py-3 rounded-xl text-base font-medium transition-all duration-200 text-right"
           :class="[
             isScrolled || isLightBgPage
               ? 'bg-white/80 hover:bg-white hover:shadow-sm'
@@ -299,7 +299,7 @@ watch(route, () => {
         <LiquidNavLink
           to="/product"
           :colorMode="isScrolled || isLightBgPage ? 'black' : 'white'"
-          class="block px-3 py-3 rounded-md text-base font-medium transition-all duration-200 text-right"
+          class="block px-4 py-3 rounded-xl text-base font-medium transition-all duration-200 text-right"
           :class="[
             isScrolled || isLightBgPage
               ? 'bg-white/80 hover:bg-white hover:shadow-sm'
@@ -311,7 +311,7 @@ watch(route, () => {
         <LiquidNavLink
           to="/activities"
           :colorMode="isScrolled || isLightBgPage ? 'black' : 'white'"
-          class="block px-3 py-3 rounded-md text-base font-medium transition-all duration-200 text-right"
+          class="block px-4 py-3 rounded-xl text-base font-medium transition-all duration-200 text-right"
           :class="[
             isScrolled || isLightBgPage
               ? 'bg-white/80 hover:bg-white hover:shadow-sm'
@@ -323,7 +323,7 @@ watch(route, () => {
         <LiquidNavLink
           to="/activities/new"
           :colorMode="isScrolled || isLightBgPage ? 'black' : 'white'"
-          class="block px-3 py-3 rounded-md text-base font-medium transition-all duration-200 text-right"
+          class="block px-4 py-3 rounded-xl text-base font-medium transition-all duration-200 text-right"
           :class="[
             isScrolled || isLightBgPage
               ? 'bg-white/80 hover:bg-white hover:shadow-sm'
@@ -337,7 +337,7 @@ watch(route, () => {
         <LiquidNavLink
           to="/activities/my"
           :colorMode="isScrolled || isLightBgPage ? 'black' : 'white'"
-          class="block px-3 py-3 rounded-md text-base font-medium transition-all duration-200 text-right"
+          class="block px-4 py-3 rounded-xl text-base font-medium transition-all duration-200 text-right"
           :class="[
             isScrolled || isLightBgPage
               ? 'bg-white/80 hover:bg-white hover:shadow-sm'
@@ -351,7 +351,7 @@ watch(route, () => {
           <LiquidNavLink
             to="/login"
             :colorMode="isScrolled || isLightBgPage ? 'black' : 'white'"
-            class="block px-3 py-3 rounded-md text-base font-medium transition-all duration-200 text-right"
+            class="block px-4 py-3 rounded-xl text-base font-medium transition-all duration-200 text-right"
             :class="[
               isScrolled || isLightBgPage
                 ? 'bg-white/80 hover:bg-white hover:shadow-sm'
@@ -363,7 +363,7 @@ watch(route, () => {
           <LiquidNavLink
             to="/register"
             :colorMode="isScrolled || isLightBgPage ? 'black' : 'white'"
-            class="block px-3 py-3 rounded-md text-base font-medium transition-all duration-200 text-right"
+            class="block px-4 py-3 rounded-xl text-base font-medium transition-all duration-200 text-right"
             :class="[
               isScrolled || isLightBgPage
                 ? 'bg-white/80 hover:bg-white hover:shadow-sm'
@@ -377,7 +377,7 @@ watch(route, () => {
           <LiquidNavLink
             to="/chat"
             :colorMode="isScrolled || isLightBgPage ? 'black' : 'white'"
-            class="block px-3 py-3 rounded-md text-base font-medium transition-all duration-200 text-right"
+            class="block px-4 py-3 rounded-xl text-base font-medium transition-all duration-200 text-right"
             :class="[
               isScrolled || isLightBgPage
                 ? 'bg-white/80 hover:bg-white hover:shadow-sm'
@@ -389,7 +389,7 @@ watch(route, () => {
           <LiquidNavLink
             to="/cart"
             :colorMode="isScrolled || isLightBgPage ? 'black' : 'white'"
-            class="block px-3 py-3 rounded-md text-base font-medium transition-all duration-200 text-right"
+            class="block px-4 py-3 rounded-xl text-base font-medium transition-all duration-200 text-right"
             :class="[
               isScrolled || isLightBgPage
                 ? 'bg-white/80 hover:bg-white hover:shadow-sm'
@@ -402,7 +402,7 @@ watch(route, () => {
           <LiquidNavLink
             to="/subscription"
             :colorMode="isScrolled || isLightBgPage ? 'black' : 'white'"
-            class="block px-3 py-3 rounded-md text-base font-medium transition-all duration-200 text-right"
+            class="block px-4 py-3 rounded-xl text-base font-medium transition-all duration-200 text-right"
             :class="[
               isScrolled || isLightBgPage
                 ? 'bg-white/80 hover:bg-white hover:shadow-sm'
@@ -415,7 +415,7 @@ watch(route, () => {
           <LiquidNavLink
             to="/edit-profile"
             :colorMode="isScrolled || isLightBgPage ? 'black' : 'white'"
-            class="block px-3 py-3 rounded-md text-base font-medium transition-all duration-200 text-right"
+            class="block px-4 py-3 rounded-xl text-base font-medium transition-all duration-200 text-right"
             :class="[
               isScrolled || isLightBgPage
                 ? 'bg-white/80 hover:bg-white hover:shadow-sm'
@@ -427,16 +427,12 @@ watch(route, () => {
 
           <button
             @click="handleLogout"
-            class="group relative overflow-hidden rounded-full px-6 py-2 text-lg transition-all duration-300 backdrop-blur-xl bg-white/10 border border-white/20 shadow-xl hover:scale-105 hover:brightness-110 block px-3 py-3 rounded-md text-base font-medium transition-all duration-200 text-right"
+            class="group relative overflow-hidden rounded-xl px-6 py-3 text-lg transition-all duration-300 backdrop-blur-xl bg-white/10 border border-white/20 shadow-xl hover:scale-105 hover:brightness-110 block text-base font-medium transition-all duration-200 text-right w-full"
             :class="[
               isScrolled || isLightBgPage
                 ? 'text-gray-800 drop-shadow-[0_0_4px_rgba(0,0,0,0.3)] bg-white/80 hover:bg-white hover:shadow-sm'
                 : 'text-white drop-shadow-[0_1px_3px_rgba(255,255,255,0.5)] bg-white/10 hover:bg-white/20',
             ]"
-            style="
-              width: 100% !important;
-              box-sizing: border-box;
-            "
           >
             <span class="relative z-10">登出</span>
             <span
@@ -476,8 +472,8 @@ watch(route, () => {
 
   /* 桌機版更大的水平邊距 */
   .custom-desktop-px-8 {
-    padding-left: 2rem;
-    padding-right: 2rem;
+    padding-left: 3rem;
+    padding-right: 3rem;
   }
 }
 
