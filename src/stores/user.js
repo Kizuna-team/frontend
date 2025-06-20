@@ -58,8 +58,7 @@ export const useUserStore = defineStore("user", () => {
         username: usernameInput,
         password: passwordInput,
       });
-
-      // console.log(res.data);
+      
       accessToken.value = res.data.accessToken;
       refreshToken.value = res.data.refreshToken;
       username.value = res.data.username;
@@ -69,19 +68,8 @@ export const useUserStore = defineStore("user", () => {
       localStorage.setItem("refreshToken", refreshToken.value);
       localStorage.setItem("username", username.value);
       localStorage.setItem("userId", userId.value);
-    } catch (error) {
-      // console.log("進入 catch 區塊");
-      if (
-        error.response &&
-        error.response.data &&
-        error.response.data.message
-      ) {
-        console.error("登入失敗", error.response.data.message);
-        alert("登入失敗：" + error.response.data.message);
-      } else {
-        console.error("登入失敗", error.message);
-        alert("登入失敗：登入請求失敗：" + error.message);
-      }
+    } catch (error) { 
+      throw error;
     }
   };
 
