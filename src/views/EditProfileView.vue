@@ -142,7 +142,7 @@ const handleUpload = async () => {
               ? 'bg-gradient-to-r from-secondary to-primary text-white shadow-md'
               : 'bg-gray-100 text-gray-500'
           "
-          class="px-4 py-2 font-semibold transition rounded-full"
+          class="px-4 py-2 font-semibold rounded-full"
           @click="tab = 'PHOTO'"
         >
           PHOTO
