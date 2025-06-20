@@ -72,12 +72,7 @@ watch(route, () => {
 
 <template>
   <header
-    class="fixed top-0 left-0 z-50 w-full transition-all duration-300 border-b-2 navbar-header"
-    :class="[
-      isScrolled || isLightBgPage
-        ? 'bg-white/95 backdrop-blur-lg text-black border-[#219ebc] shadow-lg'
-        : 'bg-transparent text-white border-transparent',
-    ]"
+    class="fixed top-0 left-0 z-50 w-full transition-all duration-300 navbar-header"
   >
     <nav
       class="flex items-center justify-between px-6 py-4 custom-desktop-px-8"
@@ -278,12 +273,9 @@ watch(route, () => {
         isMobileMenuOpen
           ? 'max-h-screen opacity-100'
           : 'max-h-0 opacity-0 overflow-hidden',
-        isScrolled || isLightBgPage
-          ? 'bg-white/95 backdrop-blur-lg'
-          : 'bg-white/5 backdrop-blur-lg',
       ]"
     >
-      <div class="px-6 pt-2 pb-6 space-y-2">
+      <div class="space-y-2">
         <LiquidNavLink
           to="/match"
           :colorMode="isScrolled || isLightBgPage ? 'black' : 'white'"
