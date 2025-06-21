@@ -118,9 +118,9 @@ async function handleDelete() {
 </script>
 
 <template>
-  <div class="max-w-xl p-8 mx-auto mt-6 bg-white shadow-md rounded-2xl">
+  <div class="max-w-xl p-8 mx-auto mt-6 shadow-md rounded-2xl">
     <div class="mb-6">
-      <label class="mr-2 font-semibold">主辦人：</label>
+      <label class="mb-2 mr-2 text-lg font-bold text-darkblue">主辦人：</label>
       <span class="text-gray-500">
         {{
           isEditMode
@@ -134,77 +134,77 @@ async function handleDelete() {
       <img
         v-if="previewUrl"
         :src="previewUrl"
-        class="object-cover w-64 h-40 border rounded-xl"
+        class="object-cover w-full border h-80 rounded-xl"
       />
     </div>
 
-    <h2 class="mb-6 text-2xl font-bold text-center">{{ formTitle }}</h2>
+    <h2 class="mb-6 text-2xl font-bold text-center text-darkblue">{{ formTitle }}</h2>
 
     <form @submit.prevent="handleSubmit" class="space-y-4">
       <div>
-        <label for="title" class="block mb-1 font-semibold">活動標題：</label>
+        <label for="title" class="block mb-2 text-lg font-bold text-darkblue ">活動標題：</label>
         <input
           id="title"
           v-model="form.title"
           placeholder="請輸入活動標題"
-          class="w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
+          class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
         />
       </div>
       <div>
-        <label for="image" class="block mb-1 font-semibold">活動圖片：</label>
+        <label for="image" class="block mb-2 text-lg font-bold text-darkblue ">活動圖片：</label>
         <input
           id="image"
           type="file"
           @change="handleFileChange"
           accept="image/*"
-          class="w-full"
+          class="w-full border border-gray-300"
         />
       </div>
       <div>
-        <label for="location" class="block mb-1 font-semibold"
+        <label for="location" class="block mb-2 text-lg font-bold text-darkblue "
           >活動地點：</label
         >
         <input
           id="location"
           v-model="form.location"
           placeholder="請輸入活動地點"
-          class="w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
+          class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:text-secondary"
         />
       </div>
       <div>
-        <label for="date" class="block mb-1 font-semibold">活動日期：</label>
+        <label for="date" class="block mb-2 text-lg font-bold text-darkblue">活動日期：</label>
         <input
           id="date"
           v-model="form.date"
           type="date"
           :min="today"
-          class="w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
+          class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:text-secondary"
         />
       </div>
       <div>
-        <label for="time" class="block mb-1 font-semibold">活動時間：</label>
+        <label for="time" class="block mb-2 text-lg font-bold text-darkblue">活動時間：</label>
         <input
           id="time"
           type="time"
           v-model="form.time"
-          class="w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
+          class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:text-secondary"
         />
       </div>
       <div>
-        <label for="description" class="block mb-1 font-semibold"
+        <label for="description" class="block mb-2 text-lg font-bold text-darkblue"
           >活動描述：</label
         >
         <textarea
           id="description"
           v-model="form.description"
           placeholder="請輸入活動描述"
-          class="w-full h-24 px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
+          class="w-full h-24 px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:text-secondary"
         ></textarea>
       </div>
       <div class="flex gap-4 mt-6">
         <button
           type="submit"
-          class="flex-1 px-4 py-2 font-bold text-white transition bg-blue-500 rounded hover:bg-blue-600"
+          class="flex-1 min-w-[130px] w-[150px] h-[40px] px-2.5 py-1.5 font-bold text-white border-2 border-[#219ebc] bg-[#219ebc] rounded-full flex items-center justify-center gap-1 transition-all duration-300 hover:bg-white hover:text-[#219ebc] mx-auto"
         >
           {{ isEditMode ? "更新活動" : "建立活動" }}
         </button>
