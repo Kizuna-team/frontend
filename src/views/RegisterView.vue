@@ -108,7 +108,7 @@ const handleRegister = async () => {
               <input
                 type="password"
                 v-model="password"
-                placeholder="密碼（至少 6 碼英數混合）"
+                placeholder="密碼（至少 7 碼英數混合）"
                 class="w-full pl-10 pr-4 py-3 bg-white/80 backdrop-blur rounded-full border border-gray-300 focus:border-[#219ebc] focus:ring-2 focus:ring-[#219ebc] transition-all duration-200 outline-none text-gray-800"
               />
             </label>
