@@ -1,6 +1,9 @@
 <script setup>
-import { ref } from "vue";
-const inputText = ref("");
+import { useRouter } from "vue-router";
+import { useSendFriendMsg } from "@/api/useMatches.js";
+
+const router = useRouter();
+const { sendFriendMsg } = useSendFriendMsg();
 
 const props = defineProps({
   myProfile: Object,
@@ -12,6 +15,17 @@ const emit = defineEmits(["cancel"]);
 // 關閉彈窗
 const onCancelClick = () => {
   emit("cancel");
+};
+
+const goToChatRoom = async () => {
+  try {
+    await sendFriendMsg(props.targetProfile.userId); // 建立好友
+
+    router.push("/chat"); // 跳到聊天室頁面（它會自動載入第一個 room）
+  } catch (err) {
+    console.error("建立好友關係失敗", err);
+    alert("無法進入聊天室，請稍後再試");
+  }
 };
 </script>
 
@@ -65,48 +79,37 @@ const onCancelClick = () => {
         </div>
       </div>
 
-      <!-- 烙印風格：配對成功 + 輸入區，填滿父元素寬度 -->
-      <div class="mt-4">
+      <!-- 傳訊按鈕區塊 -->
+      <div class="pt-4">
         <div
-          class="w-full px-6 py-4 rounded-md shadow-inner bg-gray-200/60 backdrop-blur-sm"
+          class="flex items-center justify-center gap-3 px-4 py-3 border shadow-inner bg-white/50 backdrop-blur-sm border-white/40 rounded-xl"
         >
-          <h3 class="text-2xl font-bold text-center text-darkblue">
-            配對成功！
-          </h3>
+          <!-- 提示文字 -->
+          <span class="text-lg font-medium text-darkblue"
+            >點擊按鈕進入聊天室</span
+          >
 
-          <!-- 輸入框 -->
-          <div class="pt-4">
-            <div
-              class="flex items-center justify-between px-4 py-3 border shadow-inner bg-white/50 backdrop-blur-sm border-white/40 rounded-xl"
+          <!-- 傳送按鈕 -->
+          <button
+            title="進入聊天室"
+            class="transition text-darkblue hover:text-accent"
+            @click="goToChatRoom"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="rotate-45 w-7 h-7"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              stroke-width="2"
             >
-              <input
-                v-model="inputText"
-                class="flex-1 text-xl placeholder-gray-500 bg-transparent border-none outline-none text-darkblue placeholder-opacity-80"
-                type="text"
-                placeholder="Send a message"
-                @keyup.enter="sendMessage"
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M12 19l9 2-9-18-9 18 9-2z"
               />
-              <button
-                class="ml-2 transition text-darkblue hover:text-accent"
-                @click="sendMessage"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  class="rotate-45 w-7 h-7"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  stroke-width="2"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    d="M12 19l9 2-9-18-9 18 9-2z"
-                  />
-                </svg>
-              </button>
-            </div>
-          </div>
+            </svg>
+          </button>
         </div>
       </div>
     </div>
