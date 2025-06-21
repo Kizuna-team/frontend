@@ -1,6 +1,7 @@
 <script setup>
 import { useRouter } from "vue-router";
 import { useSendFriendMsg } from "@/api/useMatches.js";
+
 const router = useRouter();
 const { sendFriendMsg } = useSendFriendMsg();
 
@@ -20,7 +21,7 @@ const goToChatRoom = async () => {
   try {
     await sendFriendMsg(props.targetProfile.userId); // 建立好友
 
-    router.push("/chat"); // 跳到聊天室頁面（它會自動載入第一個 room）
+    router.push("/chat"); // 跳到聊天室頁面
   } catch (err) {
     console.error("建立好友關係失敗", err);
     alert("無法進入聊天室，請稍後再試");
