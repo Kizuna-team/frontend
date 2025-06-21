@@ -33,8 +33,8 @@ const props = defineProps({
     >
       <!-- 頂部 icon -->
       <div class="mb-4 text-5xl transition-colors group-hover:text-secondary">
-  <component :is="icon" class="w-12 h-12" />
-</div>
+        <component :is="icon" class="w-12 h-12" />
+      </div>
 
       <!-- 標題與說明文字 -->
       <h2 class="mb-1 text-2xl font-bold text-darkblue">{{ title }}</h2>
@@ -71,7 +71,7 @@ const props = defineProps({
       <!-- 「立即訂閱」按鈕 -->
       <div class="w-full mt-8" v-if="isRecommended">
         <button
-          class="w-full py-3 font-semibold text-white transition duration-300 rounded-full shadow-md bg-gradient-to-r from-primary/80 via-accent/70 to-orange/80 hover:brightness-110 hover:animate-pulse"
+          class="w-full py-3 font-semibold text-white transition duration-300 rounded-full shadow-md bg-gradient-to-r from-primary/80 via-accent/70 to-orange/80 hover:brightness-110"
         >
           立即訂閱
         </button>
