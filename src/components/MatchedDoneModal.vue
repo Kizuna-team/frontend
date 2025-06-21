@@ -1,7 +1,6 @@
 <script setup>
 import { useRouter } from "vue-router";
 import { useSendFriendMsg } from "@/api/useMatches.js";
-
 const router = useRouter();
 const { sendFriendMsg } = useSendFriendMsg();
 
