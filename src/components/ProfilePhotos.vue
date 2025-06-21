@@ -122,9 +122,10 @@ const uploadAll = async () => {
 
   photoList.value.forEach((item, index) => {
     if (item.file) {
+      const sequence = index + 1; // 圖片欄位是從1開始編號
       const uploadPromise = (async () => {
         try {
-          const data = await uploadPhoto(item.file);
+          const data = await uploadPhoto(item.file, sequence);
 
           const newPhoto = {
             file: null,

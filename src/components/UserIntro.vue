@@ -23,13 +23,9 @@ const { targetUser } = defineProps({
     <span class="personal-tag">
       {{ targetUser.zodiac }}
     </span>
-    <h4>興趣</h4>
-    <span
-      v-for="interest in targetUser.interests"
-      :key="interest"
-      class="personal-tag"
-    >
-      {{ interest }}
+    <h4>專業領域</h4>
+    <span class="personal-tag">
+      {{ targetUser.job }}
     </span>
     <hr />
     <h4>自我介紹</h4>

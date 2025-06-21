@@ -2,6 +2,9 @@
 import { ref, onMounted } from "vue";
 import { useUserProfileStore } from "@/stores/userProfile";
 
+import { useRouter } from "vue-router";
+const router = useRouter();
+
 import ProfileForm from "@/components/ProfileForm.vue";
 import MultiSelect from "@/components/MultiSelect.vue";
 import ProfilePhotos from "@/components/ProfilePhotos.vue";
@@ -102,13 +105,13 @@ const foldToggle = (index) => {
 const profilePhotosRef = ref(null);
 const handleUpload = async () => {
   try {
-    // const uploadedPhotos = await profilePhotosRef.value?.uploadAll();
-    // 上傳成功的資料更新進表單或送後端
-    profilePhotosRef.value?.uploadAll();
-    console.log(" 圖片上傳完成，更新進表單");
+    // 等待圖片全部上傳
+    await profilePhotosRef.value?.uploadAll();
+    alert("圖片上傳完成");
+    router.push("/match");
   } catch (err) {
-    console.error("❌ 上傳失敗", err);
-    alert("圖片上傳失敗，請稍後再試");
+    console.error(" 上傳失敗", err);
+    alert("圖片上傳失敗");
   }
 };
 </script>
@@ -195,13 +198,6 @@ const handleUpload = async () => {
                   v-model="showFormData.job"
                   :options="jobOptions"
                   :multiple="false"
-                  :cols="3"
-                />
-                <MultiSelect
-                  v-if="index === 3"
-                  v-model="showFormData.interests"
-                  :options="interestOptions"
-                  :multiple="true"
                   :cols="3"
                 />
               </div>

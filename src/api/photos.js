@@ -24,10 +24,15 @@ export const getPublicPhotos = async () => {
   }
 };
 
-export const uploadPhoto = async (file) => {
+export const uploadPhoto = async (file, sequence = null) => {
   try {
     const formData = new FormData();
     formData.append("image", file);
+
+    if (sequence !== null) {
+      formData.append("sequence", sequence);
+    }
+
     const res = await axios.post("/photos/me", formData, {
       headers: { "Content-Type": "multipart/form-data" },
     });
