@@ -1,4 +1,5 @@
 <script setup>
+import { toRefs } from "vue";
 const props = defineProps({
   title: String,
   options: Array,
@@ -7,10 +8,11 @@ const props = defineProps({
 });
 
 const emit = defineEmits(["update:modelValue"]);
+const { multiple, modelValue } = toRefs(props);
 
 const toggle = (option) => {
-  if (props.multiple) {
-    const arr = Array.isArray(props.modelValue) ? [...props.modelValue] : [];
+  if (multiple.value) {
+    const arr = Array.isArray(modelValue.value) ? [...modelValue.value] : [];
     const exists = arr.includes(option);
     const updated = exists ? arr.filter((i) => i !== option) : [...arr, option];
     emit("update:modelValue", updated);
@@ -29,12 +31,12 @@ const toggle = (option) => {
         :key="option"
         @click="toggle(option)"
         :class="[
-          'px-4 py-2 rounded-full border',
-          multiple
-            ? modelValue.includes(option)
+          'px-4 py-2 rounded-full border transition duration-150 ease-in-out',
+          multiple.value
+            ? modelValue.value.includes(option)
               ? 'bg-blue-500 text-white'
               : 'bg-gray-100'
-            : modelValue === option
+            : modelValue.value === option
             ? 'bg-blue-500 text-white'
             : 'bg-gray-100',
         ]"
