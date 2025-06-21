@@ -1,9 +1,18 @@
 <script setup>
-import SubscribePlan from "@/components/SubscribePlan.vue";
 import SubscriptionCard from "@/components/SubscriptionCard.vue";
 import { UserIcon, FireIcon } from "@heroicons/vue/24/outline";
-</script>
+import { useRouter } from 'vue-router';
 
+const router = useRouter();
+const handleSubscribe = (planType) => {
+  router.push({
+    path: '/subscribe-plan', // 
+    query: {
+      plan: planType
+    }
+  });
+};
+</script>
 <template>
   <section
     class="fixed inset-0 overflow-hidden bg-gradient-to-br from-[#8ecae6]/30 via-white/50 to-[#48bfe3]/10 pt-10"
@@ -24,6 +33,7 @@ import { UserIcon, FireIcon } from "@heroicons/vue/24/outline";
             '可參加社群活動',
             '每日 1 次超級喜歡',
           ]"
+          @subscribe="() => handleSubscribe('basic')"
         />
 
         <SubscriptionCard
@@ -40,6 +50,7 @@ import { UserIcon, FireIcon } from "@heroicons/vue/24/outline";
           ]"
           :isRecommended="true"
           :isHighlighted="true"
+          @subscribe="() => handleSubscribe('premium')"
         />
       </div>
     </div>
