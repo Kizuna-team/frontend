@@ -1,11 +1,14 @@
 <script setup>
 import { ref, onMounted, defineEmits } from 'vue';
 import axios from '@/api/axios';
+import { useToast } from 'vue-toastification'
+
 
 const emit = defineEmits(['friendConfirmed']);
 
 const pendingRequests = ref([]);
 const userId = localStorage.getItem("userId");
+const toast = useToast()
 
 const fetchPendingFriendRequests = async () => {
   if (!userId) {
@@ -39,7 +42,7 @@ const confirmFriendRequest = async (requestId, senderId, senderUsername) => {
 
   } catch (error) {
     console.error('確認好友邀請失敗:', error);
-    alert('發生錯誤，確認好友邀請失敗。');
+    toast.error('發生錯誤，確認好友邀請失敗。');
   }
 };
 
@@ -49,7 +52,7 @@ const rejectFriendRequest = async (requestId) => {
 
   if (!userId) {
     console.error("[Reject] userId 是空的！無法拒絕好友。");
-    alert('發生錯誤，拒絕好友邀請失敗。(用戶ID缺失)'); 
+    toast.error('發生錯誤，拒絕好友邀請失敗。(用戶ID缺失)'); 
     return;
   }
   
@@ -74,10 +77,10 @@ const rejectFriendRequest = async (requestId) => {
     console.log(`[Reject] 更新後 pendingRequests 列表長度：${newLength} (原長度: ${originalLength})`);
 
     if (newLength < originalLength) {
-        alert('好友邀請已拒絕。');
+        toast('好友邀請已拒絕。');
     } else {
         console.warn("[Reject] 警告：Filter 操作未移除任何邀請，請檢查傳入的 requestId 是否正確匹配列表中 request 的 id。");
-        alert('操作完成，但好友邀請未從列表移除。請刷新頁面。');
+        toast.error('操作完成，但好友邀請未從列表移除。請刷新頁面。');
     }
 
   } catch (error) {
@@ -85,13 +88,13 @@ const rejectFriendRequest = async (requestId) => {
     if (error.response) {
       console.error("[Reject] 後端錯誤響應狀態:", error.response.status);
       console.error("[Reject] 後端錯誤響應數據:", error.response.data);
-      alert(`發生錯誤，拒絕好友邀請失敗。錯誤碼: ${error.response.status}`);
+      toast.error(`發生錯誤，拒絕好友邀請失敗。錯誤碼: ${error.response.status}`);
     } else if (error.request) {
       console.error("[Reject] 沒有收到後端響應 (請求已發出):", error.request);
-      alert('發生錯誤，拒絕好友邀請失敗。(無後端響應)');
+      toast.error('發生錯誤，拒絕好友邀請失敗。(無後端響應)');
     } else {
       console.error("[Reject] 請求設置時發生錯誤:", error.message);
-      alert(`發生錯誤，拒絕好友邀請失敗。(${error.message})`);
+      toast.error(`發生錯誤，拒絕好友邀請失敗。(${error.message})`);
     }
   }
 };

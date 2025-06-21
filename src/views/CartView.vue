@@ -5,11 +5,14 @@ import sendOrder from "@/utils/order.js";
 import { onMounted } from "vue";
 import { useUserStore } from "@/stores/user";
 import { useFriendStore } from "@/stores/friend";
+import { useToast } from 'vue-toastification'
+
 
 import axios from "@/api/axios";
 const cartStore = useCartStore();
 const userStore = useUserStore();
 const friendStore = useFriendStore();
+const toast = useToast()
 
 const friendOptions = computed(() => [
   { value: "", label: "請選擇收件人" },
@@ -116,9 +119,9 @@ const isValidStep = () => {
 const nextStep = () => {
   if (!isValidStep()) {
     if (currentStep.value === 0) {
-      alert("購物車不能為空");
+      toast.error("購物車不能為空");
     } else {
-      alert("請填寫所有必填欄位");
+      toast.error("請填寫所有必填欄位");
     }
     return;
   }
@@ -135,7 +138,7 @@ const prevStep = () => {
 
 const handleSubmit = async () => {
   if (!isValidStep()) {
-    alert("請填寫所有必填欄位");
+    toast.error("請填寫所有必填欄位");
     return;
   }
   // 組成訂單資料
@@ -144,7 +147,7 @@ const handleSubmit = async () => {
     try {
       await sendOrder(cartStore.cartItems); //  送訂單 + 跳轉
     } catch (err) {
-      alert("訂單建立失敗，請稍後再試");
+      toast.error("訂單建立失敗，請稍後再試");
     }
     // PAYPAL
   } else if (formData.paymentMethod === "PAYPAL") {
@@ -167,11 +170,11 @@ const handleSubmit = async () => {
       if (res.data.success && res.data.approveUrl) {
         window.location.href = res.data.approveUrl;
       } else {
-        alert("PayPal 訂單建立失敗");
+        toast.error("PayPal 訂單建立失敗");
       }
     } catch (err) {
       console.error("PayPal 錯誤:", err);
-      alert("PayPal 付款失敗，請稍後再試");
+      toast.error("PayPal 付款失敗，請稍後再試");
     }
   } else {
     // 處理其他付款方式
