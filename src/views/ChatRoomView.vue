@@ -27,6 +27,15 @@ const socket = io(import.meta.env.VITE_API_BASE_URL, {
 const userStore = useUserStore();
 const chatStore = userChatStore();
 const roomId = ref("");
+// 依照內容自動調整對話框高度
+const textareaRef = ref(null);
+
+const autoResize = () => {
+  const element = textareaRef.value;
+  if (!element) return;
+  element.style.height = "auto"; // 先還原
+  element.style.height = element.scrollHeight + "px"; // 根據內容撐高
+};
 
 // 聊天室列表
 const chatRooms = ref([]);
@@ -81,10 +90,11 @@ function handleIncomingMessage(msg) {
   chatStore.addMessage(formattedMessage);
 }
 
+
+
 // 加入房間 & 綁定監聽器
 onMounted(() => {
   fetchChatRooms();
-
   // 綁定 socket 接收訊息
   socket.on("chatMessage", handleIncomingMessage);
 
@@ -155,10 +165,28 @@ const sendMessage = async () => {
     content: localMessage.content,
     timestamp: localMessage.timestamp,
   });
-    
-    // 清空輸入
-    newMessage.value = "";
+
+  // 清空輸入
+  newMessage.value = "";
+  autoResize(); 
 };
+
+// 加入 ai 建議 API
+const getSuggestion = async()=>{
+  try{
+    const res =  await axios.post("/chat/ai-suggestion",{
+      roomId: currentRoom.value,
+    })
+    newMessage.value = res.data.suggestion;
+
+    // 等 DOM 更新後 再調整高度
+    await nextTick();
+    autoResize();
+  }catch(err){
+    console.error("取得 AI 建議失敗", err);
+    alert("Google Gemini異常 請重新再試一遍");
+  }
+}
 
 // 監聽訊息長度 實現自動滾到訊息底部的功能
 watch(
@@ -221,22 +249,19 @@ watch(
     }
   }
 );
+
+watch(newMessage, autoResize);
+
 </script>
 
 <template>
-  <div class="bg-gray-100 h-[70vh] flex flex-row">
+  <div class="bg-gray-100 h-[90vh] flex flex-row">
     <!-- 左側邊欄 -->
     <div class="w-80 bg-white border-r border-gray-200 flex flex-col">
-      <!-- 標題 -->
       <div class="p-4 border-b border-gray-200">
         <h1 class="text-xl font-semibold text-gray-800">聊天室</h1>
       </div>
-
-      <!-- 聊天室列表 -->
       <div class="flex-1 overflow-y-auto">
-        <!-- 每一行代表一個聊天室(有幾個好友就有幾個聊天室) -->
-        <!-- 用 v-for 跑整個好友清單 -->
-        <!-- 點選某個 聊天室某一列 時 將 currentRoom 設為該聊天室的 roomId-->
         <div v-for="room in chatRooms" :key="room.roomId" @click="currentRoom = room.roomId" :class="[
           'p-4 cursor-pointer border-b border-gray-100',
           room.roomId === currentRoom
@@ -261,27 +286,22 @@ watch(
     </div>
 
     <!-- 右側主要聊天區域 -->
-    <div class="flex-1 flex flex-col">
-      <!-- 聊天室標題欄 -->
+    <div class="flex-1 flex flex-col min-h-0">
+      <!-- 聊天室標題 -->
       <div class="bg-white border-b border-gray-200 p-4 flex items-center justify-between">
         <div class="flex items-center space-x-3">
           <div class="w-10 h-10 bg-gray-300 rounded-full flex items-center justify-center">
-            <!-- TODO:這邊之後放我的好友的大頭貼 -->
             <span class="text-sm font-medium text-gray-700">{{ }}</span>
           </div>
           <div>
-            <!-- 當還沒有選擇聊天室時 chatRoom.find()找不到資料 => 所以試圖讀取 .friendName 會掛掉 -->
             <div class="font-medium text-gray-800">{{ currentFriend?.friendName }}</div>
-            <div class="text-sm text-gray-500">
-              Room ID: {{ currentRoom }}
-            </div>
+            <div class="text-sm text-gray-500">Room ID: {{ currentRoom }}</div>
           </div>
         </div>
       </div>
-      <!-- 聊天訊息區域 -->
-      <!-- 外層容器 滾動區域 -->
-      <div class="flex-1 overflow-y-auto p-4 space-y-4 bg-gray-50" ref="messagesContainer">
-        <!-- 空訊息提示 -->
+
+      <!-- 聊天訊息區 -->
+      <div class="flex-1 min-h-0 overflow-y-auto p-4 space-y-4 bg-gray-50" ref="messagesContainer">
         <div v-if="chatStore.messages.length === 0" class="text-center py-8">
           <div class="text-gray-500">還沒有訊息，開始聊天吧！</div>
         </div>
@@ -291,21 +311,17 @@ watch(
           Number(msg.senderId) === Number(userStore.userId) ? 'justify-end' : 'justify-start',
         ]">
           <div class="flex flex-col">
-            <!-- 顯示發送者名稱（如果不是自己的訊息） -->
-            <div v-if="Number(msg.senderId) !== Number(userStore.userId)" class="text-xs text-gray-600 mb-1 pl-2 font-medium">
+            <div v-if="Number(msg.senderId) !== Number(userStore.userId)"
+              class="text-xs text-gray-600 mb-1 pl-2 font-medium">
               {{ currentFriend.friendName || `User${Number(msg.senderId)}` }}
             </div>
-            <!-- 訊息泡泡 我發的訊息 白底靠右 ; 對方訊息 黃底靠左-->
             <div :class="[
               'rounded-2xl px-4 py-2 max-w-xs lg:max-w-md',
               Number(msg.senderId) === Number(userStore.userId)
                 ? 'bg-white text-gray-800 shadow-sm'
                 : 'bg-[#f6ba42] text-white shadow-sm',
             ]">
-              <!-- 訊息內容 -->
               <p class="break-words">{{ msg.content || msg.text }}</p>
-
-              <!-- 時間 -->
               <div :class="[
                 'text-xs mt-1',
                 Number(msg.senderId) === Number(userStore.userId)
@@ -319,28 +335,38 @@ watch(
         </div>
       </div>
 
-      <!-- 輸入區域 -->
-      <div class="bg-white border-t border-gray-200 p-4 flex-shrink-0">
-        <div class="flex items-end space-x-3">
-          <!-- 輸入框 -->
+      <!-- 輸入區域（高度可撐開） -->
+      <div class="bg-white border-t border-gray-200 p-4">
+        <div class="flex items-start space-x-3">
           <div class="flex-1">
-            <input type="text" placeholder="輸入訊息" v-model="newMessage"
-              @keyup.enter="sendMessage" :disabled="!isUserLoggedIn" :class="[
-                'w-full px-4 py-2 border border-gray-300 rounded-lg outline-none transition-colors',
-                isUserLoggedIn
-                  ? 'focus:ring-2 focus:ring-[#f6ba42] focus:border-transparent'
-                  : 'bg-gray-100 cursor-not-allowed',
-              ]" />
+            <textarea
+              ref="textareaRef"
+              id="chat-message"
+              placeholder="輸入訊息"
+              rows="1"
+              v-model="newMessage"
+              @input="autoResize"
+              @keyup.enter.prevent="sendMessage"
+              class="w-full px-4 py-2 border border-gray-300 rounded-lg outline-none transition-colors resize-none leading-[1.5rem] min-h-[40px]"
+            ></textarea>
           </div>
-
-          <!-- 發送按鈕 -->
-          <button @click="sendMessage" :disabled="!isUserLoggedIn || !newMessage.trim()" :class="[
-            'px-4 py-2 rounded-lg font-medium transition-colors',
-            isUserLoggedIn && newMessage.trim()
-              ? 'bg-[#f6ba42] hover:bg-[#ed8b34] text-white'
-              : 'bg-gray-300 text-gray-500 cursor-not-allowed',
-          ]">
+          <button
+            @click="sendMessage"
+            :disabled="!isUserLoggedIn || !newMessage.trim()"
+            :class="[
+              'px-4 py-2 rounded-lg font-medium transition-colors',
+              newMessage.trim()
+                ? 'bg-[#f6ba42] hover:bg-[#ed8b34] text-white'
+                : 'bg-gray-300 text-gray-500 cursor-not-allowed',
+            ]"
+          >
             送出
+          </button>
+          <button
+            class="ml-2 px-3 py-2 bg-[#f6ba42] text-white rounded"
+            @click="getSuggestion"
+          >
+            AI 建議
           </button>
         </div>
       </div>
@@ -363,6 +389,7 @@ watch(
   flex: 1;
   min-height: 0;
 }
+
 .overflow-y-auto::-webkit-scrollbar-track {
   background: #f1f1f1;
 }
