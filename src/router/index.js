@@ -11,7 +11,8 @@ import EditProfileView from "@/views/EditProfileView.vue";
 import GiftCheckoutView from "@/views/GiftCheckoutView.vue";
 import HomeView from "@/views/HomeView.vue";
 import LoginView from "@/views/LoginView.vue";
-import MatchView from "../views/MatchView.vue";
+import MatchView from "@/views/MatchView.vue";
+import MatchSetupView from "@/views/MatchSetupView";
 import MemberView from "@/views/MemberView.vue";
 import NotFound from "@/views/NotFound.vue";
 import ProfileTwoView from "@/views/ProfileTwoView.vue";
@@ -111,6 +112,11 @@ const router = createRouter({
       path: "/match",
       name: "Match",
       component: MatchView,
+    },
+    {
+      path: "/match/setup",
+      name: "MatchSetup",
+      component: MatchSetupView,
     },
     {
       path: "/member",
