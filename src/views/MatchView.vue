@@ -219,6 +219,7 @@ const goToSubscription = () => {
       :my-profile="myOwnProfile"
       :target-profile="matchedTarget"
       @cancel="onCancel"
+      @go-chat="goToChatRoom"
     />
 
     <!-- 配對按鈕區 -->
