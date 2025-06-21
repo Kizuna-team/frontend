@@ -3,10 +3,12 @@ import GiftItem from "@/components/GiftItem.vue"
 import FriendList from "@/components/FriendList.vue"
 import FriendRequestsPanel from "@/components/FriendRequestsPanel.vue"; // 引入新的好友邀請面板
 import { ref } from "vue"
+import { useToast } from 'vue-toastification'
 
 const subtotal = ref(0)
 const selectedFriends = ref([])
 const friendListRef = ref(null);
+const toast = useToast()
 
 const updateSubtotal = (val) => (subtotal.value = val)
 const updateSelected = (val) => (selectedFriends.value = val)
@@ -20,7 +22,7 @@ const handleFriendConfirmed = () => {
 };
 
 const confirmPurchase = () => {
-  alert(`你選了 ${selectedFriends.value.length} 位好友，總金額 $${subtotal.value}`)
+  toast(`你選了 ${selectedFriends.value.length} 位好友，總金額 $${subtotal.value}`)
 }
 </script>
 

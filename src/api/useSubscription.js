@@ -6,11 +6,11 @@ export async function checkout(planId, price) {
     // 0609 melody 如果登入後才會出現會員專區（現在是這樣）那其實不用以下這段
     // const store = useUserStore();
     // if (!store.accessToken) {
-    //   alert("請先登入！");
+    //   toast.error("請先登入！");
     //   return;
     // }
     // if (price === 0) {
-    //   alert("免費方案無需訂閱");
+    //   toast("免費方案無需訂閱");
     //   return;
     // }
 
@@ -32,10 +32,10 @@ export async function checkout(planId, price) {
       form.submit();
     } else {
       console.error("❌ 找不到綠界 form 或 action，回傳值錯：", formHtml);
-      alert("訂閱失敗，綠界表單異常");
+      toast.error("訂閱失敗，綠界表單異常");
     }
   } catch (err) {
-    alert("訂閱失敗！");
+    toast.error("訂閱失敗！");
     console.error(err);
   }
 }

@@ -1,6 +1,8 @@
 <script setup>
 import { ref, computed, watch, onMounted, defineExpose } from "vue"; // 引入 defineExpose
 import axios from "@/api/axios";
+import { useToast } from 'vue-toastification'
+const toast = useToast()
 
 const emit = defineEmits(["update:selected"]);
 
@@ -14,7 +16,7 @@ console.log("✅ userId =", userId);
 // 將獲取好友列表的邏輯封裝成一個函數，並暴露給父元件 
 const fetchFriendsData = async () => {
   if (!userId) {
-    alert(" 沒找到userId"); 
+    toast(" 沒找到userId"); 
     return;
   }
   try {

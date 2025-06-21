@@ -1,8 +1,10 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import axios from "@/api/axios";
+import { useToast } from 'vue-toastification'
 
 const products = ref([]);
+const toast = useToast()
 
 onMounted(async () => {
   await fetchProducts();
@@ -20,19 +22,19 @@ const updateInventory = async (productId, newInventory) => {
     await axios.put(`admin/products/${productId}/inventory`, {
       inventory: Number(newInventory),
     });
-    alert("更新成功");
+    toast("更新成功");
     await fetchProducts(); // 重新載入資料
   } catch (err) {
     console.error("更新庫存失敗", err);
-    alert("更新失敗，請稍後再試");
+    toast.error("更新失敗，請稍後再試");
   }
 };
 </script>
 
 <template>
   <div class="p-4">
-    <h1 class="text-2xl font-bold mb-4">商品庫存總覽</h1>
-    <table class="w-full table-auto border">
+    <h1 class="mb-4 text-2xl font-bold">商品庫存總覽</h1>
+    <table class="w-full border table-auto">
       <thead>
         <tr class="bg-gray-100">
           <th class="p-2 border">商品名稱</th>
@@ -49,7 +51,7 @@ const updateInventory = async (productId, newInventory) => {
             <input
               v-model.number="p.inventory"
               type="number"
-              class="w-24 border p-1"
+              class="w-24 p-1 border"
             />
           </td>
           <td class="p-2 border">

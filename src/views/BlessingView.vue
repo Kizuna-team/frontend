@@ -56,7 +56,9 @@ import card4 from "@/assets/card-sky-blue.jpg";
 import card5 from "@/assets/card-yellow.jpg";
 import { ref } from "vue";
 import { useRouter } from "vue-router";
+import { useToast } from 'vue-toastification'
 const router = useRouter();
+const toast = useToast()
 
 const images = [card1, card2, card3, card4, card5];
 
@@ -72,7 +74,7 @@ function sendBlessing() {
     selectedIndex.value === null ||
     !message.value.trim()
   ) {
-    alert("請選擇卡片並輸入訊息");
+    toast("請選擇卡片並輸入訊息");
     return;
   }
 

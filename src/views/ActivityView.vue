@@ -3,12 +3,14 @@ import { ref, watch, computed } from "vue";
 import { useActivityStore } from "@/stores/activity.js";
 import { useRoute } from "vue-router";
 import { storeToRefs } from "pinia";
+import { useToast } from 'vue-toastification'
 const store = useActivityStore();
 const { loading, error, selectedActivity } = storeToRefs(store);
 const { fetchActivityById, updateActivity, createActivity, deleteActivity } =
   store;
 
 const route = useRoute();
+const toast = useToast()
 
 const isEditMode = computed(() => route.name === "activityEdit"); //computed
 const formTitle = computed(() => (isEditMode.value ? "編輯活動" : "新增活動"));
@@ -56,18 +58,18 @@ async function handleSubmit() {
     try {
       const id = parseInt(route.params.id);
       await updateActivity(id, form.value);
-      alert("活動已更新！");
+      toast("活動已更新！");
     } catch (err) {
       console.log("更新活動時發生錯誤", err);
-      alert("更新失敗，請稍後再試");
+      toast.error("更新失敗，請稍後再試");
     }
   } else {
     try {
       await createActivity(form.value);
-      alert("活動已建立！");
+      toast("活動已建立！");
     } catch (err) {
       console.log("建立活動時發生錯誤", err);
-      alert("建立失敗，請稍後再試");
+      toast.error("建立失敗，請稍後再試");
     }
   }
 }
@@ -76,10 +78,10 @@ async function handleDelete() {
   try {
     const id = parseInt(route.params.id);
     await deleteActivity(id, form.value);
-    alert("活動已刪除！");
+    toast("活動已刪除！");
   } catch (err) {
     console.log("刪除活動失敗", err);
-    alert("刪除失敗，請稍後再試");
+    toast.error("刪除失敗，請稍後再試");
   }
 }
 </script>
