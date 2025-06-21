@@ -157,8 +157,8 @@ const handleSubmit = async () => {
       console.log("發送到 PayPal API:", items);
 
       const res = await axios.post("/paypal/create-order", {
-        sender_id: 2,
-        receiver_id: 10,
+        sender_id: userStore.userId,
+        receiver_id: formData.receiverId,
         items: items,
       });
 
