@@ -23,7 +23,7 @@ import SubscriptionView from "@/views/SubscriptionView.vue";
 
 import { useUserStore } from "@/stores/user.js";
 const router = createRouter({
-  history: createWebHistory(import.meta.env.BASE_URL),
+  history: createWebHistory(import.meta.env.VITE_APP_BASE_PATH),
   routes: [
     {
       path: "/",

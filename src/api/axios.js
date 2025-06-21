@@ -2,7 +2,7 @@ import axios from "axios";
 import { useUserStore } from "../stores/user.js";
 
 const instance = axios.create({
-  baseURL: "http://localhost:3000",
+  baseURL: import.meta.env.VITE_API_BASE_URL,
 });
 
 // 自訂義的 axios instance 在每次發送 req 時 會先被 axios提供的 interceptors 攔下來

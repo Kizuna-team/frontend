@@ -15,7 +15,7 @@ import { useRoute } from "vue-router";
 
 
 // Socket.io 連接設定
-const socket = io("http://localhost:3000", {
+const socket = io(import.meta.env.VITE_API_BASE_URL, {
   autoConnect: true,
   reconnection: true,
   reconnectionDelay: 1000,
