@@ -141,7 +141,11 @@ const handleSubmit = async () => {
   // LINEPAY
   if (formData.paymentMethod === "LINEPAY") {
     try {
-      await sendOrder(cartStore.cartItems); //  送訂單 + 跳轉
+      await sendOrder({
+        receiverId: formData.receiverId,
+        message: formData.message,
+        paymentMethod: formData.paymentMethod
+      }); //  送訂單 + 跳轉
     } catch (err) {
       alert("訂單建立失敗，請稍後再試");
     }
@@ -163,6 +167,7 @@ const handleSubmit = async () => {
     isCompleted.value = true;
   }
 };
+
 
 const getStepTitle = (title) => {
   switch (title) {
