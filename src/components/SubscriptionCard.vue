@@ -11,6 +11,12 @@ const props = defineProps({
   isHighlighted: Boolean,
   isRecommended: Boolean,
 });
+
+const emit = defineEmits(["subscribe"]);
+
+const handleSubscribeClick = () => {
+  emit("subscribe");
+};
 </script>
 
 <template>
@@ -71,7 +77,8 @@ const props = defineProps({
       <!-- 「立即訂閱」按鈕 -->
       <div class="w-full mt-8" v-if="isRecommended">
         <button
-          class="w-full py-3 font-semibold text-white transition duration-300 rounded-full shadow-md bg-gradient-to-r from-primary/80 via-accent/70 to-orange/80 hover:brightness-110"
+          @click="handleSubscribeClick"
+          class="w-full py-3 font-semibold text-white transition duration-300 rounded-full shadow-md bg-gradient-to-r from-primary/80 via-accent/70 to-orange/80 hover:brightness-110 hover:animate-pulse"
         >
           立即訂閱
         </button>

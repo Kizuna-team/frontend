@@ -35,6 +35,7 @@ const lightBgPages = [
   "/cart",
   "/chat",
   "/subscription",
+  "/subscribe-plan"
 ];
 
 const isLightBgPage = computed(() =>

@@ -78,7 +78,7 @@ const router = createRouter({
     {
       path: "/events/:id",
       name: "eventDetail",
-      component: () => import("@/views/EventCardByIdView.vue"), 
+      component: () => import("@/views/EventCardByIdView.vue"),
     },
     {
       path: "/chat",
@@ -156,6 +156,11 @@ const router = createRouter({
       path: "/subscription",
       name: "Subscription",
       component: SubscriptionView,
+    },
+    {
+      path: "/subscribe-plan",
+      name: "SubscribePlan",
+      component: () => import("@/components/SubscribePlan.vue"), 
     },
   ],
 });
