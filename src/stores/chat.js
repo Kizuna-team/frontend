@@ -35,13 +35,7 @@ export const userChatStore = defineStore("chat", () => {
       ...message
     };
 
-    console.log("格式化的訊息:", formattedMessage);
-    console.log("加入前 messages 長度:", messages.value.length);
-
     messages.value.push(formattedMessage);
-
-    console.log("加入後 messages 長度:", messages.value.length);
-    console.log("目前所有訊息:", messages.value);
   };
 
   // OK 用雙方專屬的room_id獲取特定房間的訊息

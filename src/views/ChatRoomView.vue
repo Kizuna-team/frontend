@@ -11,7 +11,7 @@ import {
 import { io } from "socket.io-client";
 import { useUserStore } from "@/stores/user.js";
 import { userChatStore } from "@/stores/chat.js";
-import { useRoute } from "vue-router";
+
 
 
 // Socket.io 連接設定
@@ -26,16 +26,15 @@ const socket = io(import.meta.env.VITE_API_BASE_URL, {
 // Store
 const userStore = useUserStore();
 const chatStore = userChatStore();
-const roomId = ref(1);
-const route = useRoute();
+const roomId = ref("");
 
 // 聊天室列表
 const chatRooms = ref([]);
 
-// 0618 載入聊天室( 好友 + roomId )
+// 載入聊天室( 好友 + roomId )
 const fetchChatRooms = async () => {
   try {
-    const res = await axios.get("/friends");
+    const res = await axios.get("/friendLists");
     chatRooms.value = res.data.friends;
     console.log(chatRooms.value);
   } catch (error) {
@@ -43,10 +42,10 @@ const fetchChatRooms = async () => {
   }
 }
 
-// 0618 抓目前正在聊天的人的資訊 找到那一列
+// 抓目前正在聊天的人的資訊 找到那一列
 // 要綁定畫面 所以用
 const currentFriend = computed(() => {
-  return chatRooms.value.find(room => room.roomId === currentRoom.value);
+  return chatRooms.value.find(room => String(room.roomId) === String(currentRoom.value));
 });
 
 // 響應式數據
@@ -67,15 +66,12 @@ const isUserLoggedIn = computed(
 
 // 訊息接收處理
 function handleIncomingMessage(msg) {
-  console.log("=== 收到訊息 ===");
-  console.log("原始訊息:", msg);
-
   // 格式化訊息 
   const formattedMessage = {
     id: msg.id || Date.now(),
     content: msg.content || msg.text,
     senderId: msg.senderId,
-    senderName: msg.senderName || msg.username || `User${msg.senderId}`,
+    senderName: msg.senderName || matchedRoom?.friendName || `User${msg.senderId}`,
     created_at: msg.timestamp || new Date().toISOString(),
     time: msg.time || formatTime(new Date(msg.timestamp || Date.now())),
     roomId: msg.roomId || roomId.value,
@@ -128,7 +124,7 @@ const formatTime = (date) => {
   return date.toLocaleTimeString("zh-TW", {
     hour: "2-digit",
     minute: "2-digit",
-    hour12: true, // ✅ 改為 false 就是 24 小時制
+    hour12: true,
   });
 };
 
@@ -149,7 +145,9 @@ const sendMessage = async () => {
     time: formatTime(now),        // 格式化成 "下午 xx:xx"
   };
 
-  // !!透過 socket 廣播出去（後端會寫入資料庫(後面post /messages)，再廣播給所有人!!
+  console.log(localMessage);
+
+  // !!透過 socket 廣播出去（後端會寫入資料庫)，再廣播給所有人!!
   socket.emit("chatMessage", {
     roomId: localMessage.roomId,
     senderId: localMessage.senderId,
@@ -157,22 +155,9 @@ const sendMessage = async () => {
     content: localMessage.content,
     timestamp: localMessage.timestamp,
   });
-
-  try {
-    const res = await axios.post("/messages", {
-      roomId: localMessage.roomId,
-      content: localMessage.content,
-    });
-
-    // 加入 chatStore，用完整格式
-    // 不要手動加 要不然訊息會跳出兩次
-    // chatStore.addMessage(localMessage);
-
+    
     // 清空輸入
     newMessage.value = "";
-  } catch (error) {
-    console.error("❌ 發送訊息失敗", error);
-  }
 };
 
 // 監聽訊息長度 實現自動滾到訊息底部的功能
@@ -308,7 +293,7 @@ watch(
           <div class="flex flex-col">
             <!-- 顯示發送者名稱（如果不是自己的訊息） -->
             <div v-if="Number(msg.senderId) !== Number(userStore.userId)" class="text-xs text-gray-600 mb-1 pl-2 font-medium">
-              {{ msg.senderName || `User${Number(msg.senderId)}` }}
+              {{ currentFriend.friendName || `User${Number(msg.senderId)}` }}
             </div>
             <!-- 訊息泡泡 我發的訊息 白底靠右 ; 對方訊息 黃底靠左-->
             <div :class="[
