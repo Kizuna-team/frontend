@@ -7,6 +7,8 @@ import UserIntro from "@/components/UserIntro.vue";
 import MatchedDoneModal from "@/components/MatchedDoneModal.vue";
 import { sendLike, sendSuperLike } from "@/api/like.js";
 import { fetchAllProfiles } from "@/api/profile.js";
+import { useRouter } from "vue-router";
+const router = useRouter();
 
 const allProfiles = ref([]);
 const limitUsers = 20;
@@ -192,6 +194,10 @@ const onCancel = () => {
   confirmModal.value = false;
   nextUser();
 };
+
+const goToSubscription = () => {
+  router.push('/subscription'); 
+};
 </script>
 
 <template>
@@ -249,7 +255,8 @@ const onCancel = () => {
   >
     <p class="mb-4">滑完囉！解鎖倒數</p>
     <p class="mb-4 text-lg">{{ countdownText }}</p>
-    <button class="px-4 py-2 text-black bg-white rounded hover:bg-[#ffb703]">
+    <button class="px-4 py-2 text-black bg-white rounded hover:bg-[#ffb703]"
+    @click.stop="goToSubscription">
       升級解鎖更多使用者
     </button>
   </div>
