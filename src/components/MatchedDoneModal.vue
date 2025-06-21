@@ -10,7 +10,7 @@ const props = defineProps({
   targetProfile: Object,
 });
 
-const emit = defineEmits(["cancel"]);
+const emit = defineEmits(["cancel", "go-chat"]);
 
 // 關閉彈窗
 const onCancelClick = () => {
