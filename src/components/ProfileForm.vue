@@ -42,6 +42,31 @@ const orientationOptions = [
   { label: "女生", value: 1 },
   { label: "不限", value: 2 },
 ];
+
+const twCities = [
+  "台北市",
+  "新北市",
+  "基隆市",
+  "桃園市",
+  "新竹市",
+  "新竹縣",
+  "苗栗縣",
+  "台中市",
+  "彰化縣",
+  "南投縣",
+  "雲林縣",
+  "嘉義市",
+  "嘉義縣",
+  "台南市",
+  "高雄市",
+  "屏東縣",
+  "宜蘭縣",
+  "花蓮縣",
+  "台東縣",
+  "澎湖縣",
+  "金門縣",
+  "連江縣",
+];
 </script>
 
 <template>
@@ -198,7 +223,7 @@ const orientationOptions = [
           type="number"
           v-model.number="tempFormData.age"
           class="form-input"
-          placeholder="18~99"
+          placeholder="請選擇年齡"
           min="18"
           max="99"
         />
@@ -226,13 +251,11 @@ const orientationOptions = [
           </svg>
           居住地
         </label>
-        <select v-model="tempFormData.location" class="form-input">
-          <option disabled value="">選擇地區</option>
-          <option value="taipei">台北市</option>
-          <option value="taoyuan">桃園市</option>
-          <option value="taichung">台中市</option>
-          <option value="tainan">台南市</option>
-          <option value="other">其他</option>
+        <select v-model="tempFormData.city" class="form-input">
+          <option disabled value="選擇地區">選擇地區</option>
+          <option v-for="city in twCities" :key="city" :value="city">
+            {{ city }}
+          </option>
         </select>
       </div>
     </div>
