@@ -1,12 +1,12 @@
 <script setup>
-import SubscribePlan from '@/components/SubscribePlan.vue'
+import SubscribePlan from "@/components/SubscribePlan.vue";
 import SubscriptionCard from "@/components/SubscriptionCard.vue";
 import { UserIcon, FireIcon } from "@heroicons/vue/24/outline";
 </script>
 
 <template>
   <section
-    class="fixed inset-0 overflow-hidden bg-gradient-to-br from-[#8ecae6]/70 via-white/50 to-[#48bfe3]/40 pt-10"
+    class="fixed inset-0 overflow-hidden bg-gradient-to-br from-[#8ecae6]/30 via-white/50 to-[#48bfe3]/10 pt-10"
   >
     <div class="relative z-10 px-4 py-12 mx-auto text-center max-w-7xl">
       <h1 class="mb-2 text-4xl font-extrabold">選擇您的方案</h1>
