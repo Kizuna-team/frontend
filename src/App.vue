@@ -4,8 +4,8 @@ import { useUserStore } from "./stores/user";
 import router from "./router";
 import Header from "./components/Header.vue";
 import { computed } from "vue";
-import { useToast } from 'vue-toastification'
-const toast = useToast()
+import { useToast } from "vue-toastification";
+const toast = useToast();
 
 const store = useUserStore();
 // 拿到當前路由
@@ -17,7 +17,10 @@ const showHeader = computed(() => {
 });
 
 const mainClass = computed(() => {
-  return route.path === "/" ? "w-full" : "max-w-[1000px] mx-auto mt-32";
+  const fullWidthPaths = ["/", "/subscription"];
+  return fullWidthPaths.includes(route.path)
+    ? "w-full"
+    : "max-w-[1000px] mx-auto mt-32";
 });
 
 const handleLogout = () => {
