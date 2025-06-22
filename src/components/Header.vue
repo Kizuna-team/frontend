@@ -195,12 +195,15 @@ watch(route, () => {
             </div>
             <div
               v-if="isDropdownOpen"
-              class="absolute right-0 w-48 mt-2 overflow-hidden bg-white border border-gray-200 rounded-lg shadow-lg"
+              class="absolute right-0 w-56 mt-2 overflow-hidden bg-white border border-gray-200 rounded-lg shadow-lg"
             >
-              <div
-                class="flex items-center justify-center px-4 py-3 text-gray-500 border-b border-gray-200"
-              >
-                Hello👋 {{ store.username }}
+              <div class="px-4 py-4 text-gray-600 border-b">
+                <div class="text-sm font-medium text-gray-800 mb-1">
+                  Hello👋
+                </div>
+                <div class="text-sm text-gray-600 break-all">
+                  {{ store.username }}
+                </div>
               </div>
               <router-link
                 to="/edit-profile"
