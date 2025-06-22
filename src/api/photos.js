@@ -25,11 +25,19 @@ export const getPublicPhotos = async () => {
 };
 
 // 只拿來上傳生活照（含 sequence）
-export const uploadPhoto = async (file, sequence) => {
+export const uploadPhoto = async (file, sequence = null, isAvatar = false) => {
   try {
     const formData = new FormData();
+
     formData.append("image", file);
-    formData.append("sequence", sequence);
+
+    //  傳給後端「這是不是大頭照」 記得轉成字串
+    formData.append("isAvatar", isAvatar.toString());
+
+    //  有 sequence 才傳（生活照才需要）
+    if (sequence !== null) {
+      formData.append("sequence", sequence);
+    }
 
     const res = await axios.post("/photos/me", formData);
     return res.data;
