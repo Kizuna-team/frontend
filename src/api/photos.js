@@ -1,6 +1,6 @@
 import axios from "@/api/axios";
-import { useToast } from 'vue-toastification'
-const toast = useToast()
+import { useToast } from "vue-toastification";
+const toast = useToast();
 
 // 取我的所有照片
 export const getPhotos = async () => {
@@ -24,18 +24,14 @@ export const getPublicPhotos = async () => {
   }
 };
 
-export const uploadPhoto = async (file, sequence = null) => {
+// 只拿來上傳生活照（含 sequence）
+export const uploadPhoto = async (file, sequence) => {
   try {
     const formData = new FormData();
     formData.append("image", file);
+    formData.append("sequence", sequence);
 
-    if (sequence !== null) {
-      formData.append("sequence", sequence);
-    }
-
-    const res = await axios.post("/photos/me", formData, {
-      headers: { "Content-Type": "multipart/form-data" },
-    });
+    const res = await axios.post("/photos/me", formData);
     return res.data;
   } catch (err) {
     console.error("uploadPhoto 錯誤:", err);
