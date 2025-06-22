@@ -8,9 +8,6 @@ import { useUserStore } from "@/stores/user";
 
 // 使用者目前訂閱方案 id
 const userStore = useUserStore();
-// 用來存從資料庫抓到的方案
-const plans = ref([]);
-const planId = ref(null);
 
 const subscriptionName = ref("（載入中）"); // 顯示「免費會員」或「高級會員」
 const expireDate = ref(""); // 顯示訂閱到期日（只有高級才有）
