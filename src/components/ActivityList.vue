@@ -2,21 +2,36 @@
 import { onMounted } from "vue";
 import { useActivityStore } from "@/stores/activity.js";
 import { storeToRefs } from "pinia";
-import { useRouter } from 'vue-router'
+import axios from "../api/axios.js";
 
-
-const router = useRouter()
+const baseUrl = import.meta.env.VITE_API_BASE_URL
 const store = useActivityStore();
 const { activities } = storeToRefs(store);
 const { fetchActivities } = store;
+
+const token = localStorage.getItem('token')
+
+const handleJoin = async (activityId) => {
+  try {
+    const res = await axios.post(`${baseUrl}activities/join/${activityId}`, {}, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    })
+    alert(res.data.message)
+  } catch (err) {
+    if (err.response?.status === 409) {
+    alert(err.response.data.message);
+  } else {
+    console.error('加入活動失敗:', err);
+  }
+}
+}
 
 onMounted(() => {
   fetchActivities();
 });
 
-function viewDetail(id) {
-  router.push(`/activities/${id}`)
-}
 
 </script>
 
@@ -53,7 +68,11 @@ function viewDetail(id) {
             <span class="font-semibold">建立時間：</span
             >{{ activity.created_at?.slice(0, 10) }}
           </p>
-          <button @click="viewDetail(activity.id)">查看詳細</button>
+          <button @click="handleJoin(activity.id)"
+             class="min-w-[130px] w-[150px] h-[40px] mt-4 mb-4 text-white font-bold cursor-pointer transition-all duration-300 ease-in-out outline-none rounded-[20px] border-2 border-[#219ebc] bg-[#219ebc] flex items-center justify-center gap-1 mx-auto hover:bg-white hover:text-[#219ebc]"
+            >
+          加入活動
+          </button>
         </div>
       </div>
     </div>
