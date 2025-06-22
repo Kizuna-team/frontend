@@ -1,4 +1,3 @@
-
 <script setup>
 import axios from "@/api/axios";
 import { ref, onMounted } from "vue";
@@ -8,100 +7,98 @@ const userStore = useUserStore();
 const orders = ref([]);
 
 const fetchOrders = async () => {
-  try {
-    const res = await axios.get(`/order/my-orders?userId=${userStore.userId}`);
-    orders.value = res.data;
-  } catch (err) {
-    console.error("取得購買紀錄失敗", err);
-  }
+    try {
+        const res = await axios.get(`/order/my-orders?userId=${userStore.userId}`);
+        orders.value = res.data;
+    } catch (err) {
+        console.error("取得購買紀錄失敗", err);
+    }
 };
 
 onMounted(() => {
-  fetchOrders();
+    fetchOrders();
 });
 
 const formatDate = (dateStr) => {
-  return new Date(dateStr).toLocaleString("zh-TW", {
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
-    hour: "2-digit",
-    minute: "2-digit",
-  });
+    return new Date(dateStr).toLocaleString("zh-TW", {
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit",
+    });
 };
 
 const statusLabel = (status) => {
-  switch (status) {
-    case "paid":
-      return "已付款";
-    case "pending":
-      return "待付款";
-    case "canceled":
-      return "已取消";
-    default:
-      return "未知狀態";
-  }
+    switch (status) {
+        case "paid":
+            return "已付款";
+        case "pending":
+            return "待付款";
+        default:
+            return "未知狀態";
+    }
 };
 
 const statusColor = (status) => {
-  switch (status) {
-    case "paid":
-      return "bg-green-100 text-green-800";
-    case "pending":
-      return "bg-yellow-100 text-yellow-800";
-    case "canceled":
-      return "bg-red-100 text-red-800";
-    default:
-      return "bg-gray-200 text-gray-700";
-  }
+    switch (status) {
+        case "paid":
+            return "bg-green-100 text-green-800 text-xl";
+        case "pending":
+            return "bg-yellow-100 text-yellow-800 text-xl";
+        default:
+            return "bg-gray-200 text-gray-700 text-xl";
+    }
 };
 </script>
 
 <template>
-  <div class="p-6 max-w-4xl mx-auto">
-    <h1 class="text-2xl font-bold mb-6">我的購買紀錄</h1>
+    <div class="p-6 max-w-4xl mx-auto">
+        <h1 class="text-2xl font-bold mb-6">我的購買紀錄</h1>
 
-    <div v-if="orders.length === 0" class="text-gray-500">尚未有任何購買紀錄</div>
+        <div v-if="orders.length === 0" class="text-gray-500">尚未有任何購買紀錄</div>
 
-    <div v-else class="space-y-6">
-      <div
-        v-for="order in orders"
-        :key="order.orderId"
-        class="border border-gray-300 rounded-lg shadow-sm bg-white p-4"
-      >
-        <div class="flex justify-between items-center mb-2">
-          <div class="text-sm text-gray-600">
-            訂單編號：<span class="font-mono">{{ order.orderId }}</span>
-          </div>
-          <div
-            class="text-xs px-2 py-1 rounded font-semibold"
-            :class="statusColor(order.status)"
-          >
-            {{ statusLabel(order.status) }}
-          </div>
-        </div>
+        <div v-else class="space-y-6">
+            <div v-for="order in orders" :key="order.orderId"
+                class="border border-gray-300 rounded-lg shadow-sm bg-white p-4">
+                <div class="flex justify-between items-center mb-2">
+                    <div class="text-sm text-gray-600">
+                        訂單編號：<span class="font-mono">{{ order.orderId }}</span>
+                    </div>
+                    <div class="text-xs px-2 py-1 rounded font-semibold" :class="statusColor(order.status)">
+                        {{ statusLabel(order.status) }}
+                    </div>
+                </div>
 
-        <div class="text-sm text-gray-700 mb-2">
-          購買日期：{{ formatDate(order.createdAt) }}
-        </div>
-        <div class="text-sm text-gray-700 mb-2">
-          收件人：<span class="font-semibold">{{ order.receiverName }}</span>
-        </div>
+                <div class="text-sm text-gray-700 mb-2">
+                    購買日期：{{ formatDate(order.createdAt) }}
+                </div>
+                <div class="text-sm text-gray-700 mb-2">
+                    收件人：<span class="font-semibold">{{ order.receiverName }}</span>
+                </div>
+                <div class="mt-3">
+                    <p class="font-semibold mb-2 text-gray-700">購買商品：</p>
+                    <div v-for="(item, index) in order.items" :key="index"
+                        class="p-4 transition-shadow duration-300 bg-white border border-gray-200 shadow-sm rounded-xl hover:shadow-md mb-4">
+                        <div class="flex items-center space-x-4">
+                            <img :src="item.imageUrl || '/default.jpg'" :alt="item.productName"
+                                class="object-cover w-20 h-20 rounded-lg" />
+                            <div class="flex-1">
+                                <h4 class="text-lg font-semibold text-gray-800">
+                                    {{ item.productName }}
+                                </h4>
+                                <div class="flex items-center justify-between mt-1">
+                                    <span class="text-sm text-gray-600">購買數量：{{ item.quantity }}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
-        <div class="mt-3 text-sm text-gray-700">
-          <p class="font-semibold mb-1">購買商品：</p>
-          <ul class="list-disc list-inside">
-            <li v-for="(item, index) in order.items" :key="index">
-              {{ item.productName }} × {{ item.quantity }}
-            </li>
-          </ul>
+                <div class="mt-4 text-right text-base font-semibold text-gray-800">
+                    總金額：NT$ {{ order.amount }}
+                </div>
+            </div>
         </div>
-
-        <div class="mt-4 text-right text-base font-semibold text-gray-800">
-          金額：NT$ {{ order.amount }}
-        </div>
-      </div>
     </div>
-  </div>
 </template>
-
