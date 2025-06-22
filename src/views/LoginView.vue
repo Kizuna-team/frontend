@@ -181,20 +181,6 @@ const handleGoogleResponse = async (res) => {
 
         <!-- Google 登入 - 使用官方按鈕 -->
         <div id="google-signin-button" class="w-full"></div>
-
-        <!-- 備用的自訂按鈕 -->
-        <button
-          @click="handleGoogleLogin"
-          v-if="false"
-          class="flex items-center justify-center w-full gap-3 py-3 text-sm font-semibold rounded-full border border-gray-300 bg-white/80 backdrop-blur hover:bg-white hover:border-[#219ebc] transition-all duration-200"
-        >
-          <img
-            src="https://www.svgrepo.com/show/475656/google-color.svg"
-            alt="Google"
-            class="w-5 h-5"
-          />
-          <span class="text-gray-800">使用 Google 登入</span>
-        </button>
       </div>
     </div>
   </div>
