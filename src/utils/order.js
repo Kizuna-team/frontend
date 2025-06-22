@@ -1,8 +1,10 @@
 import axios from "@/api/axios.js";
-import { useCartStore } from "../stores/cart.js"
+import { useCartStore } from "../stores/cart.js";
+import { useUserStore } from "../stores/user.js";
 
-const sendOrder = async () => {
+const sendOrder = async (receiverId) => {
   const cartStore = useCartStore();
+  const userStore = useUserStore();
   
   try{
     // 組成要送給 API 的 items 格式
@@ -12,11 +14,12 @@ const sendOrder = async () => {
     }));
     
     console.log(items);
+    console.log(receiverId)
     
     const res = await axios.post("/order/gift-orders", {
       // 寫死測試
-      sender_id: 2,
-      receiver_id: 10,
+      sender_id: userStore.userId,
+      receiver_id: receiverId,
       items: items
     });
    

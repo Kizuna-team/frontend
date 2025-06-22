@@ -12,7 +12,7 @@ import axios from "@/api/axios";
 const cartStore = useCartStore();
 const userStore = useUserStore();
 const friendStore = useFriendStore();
-const toast = useToast()
+const toast = useToast();
 
 const friendOptions = computed(() => [
   { value: "", label: "請選擇收件人" },
@@ -144,8 +144,11 @@ const handleSubmit = async () => {
   // 組成訂單資料
   // LINEPAY
   if (formData.paymentMethod === "LINEPAY") {
+    // 送出訂單前先抓到要送給誰
+    const receiverId = formData.receiverId;
+
     try {
-      await sendOrder(cartStore.cartItems); //  送訂單 + 跳轉
+      await sendOrder(receiverId, cartStore.cartItems); //  送訂單 + 跳轉
     } catch (err) {
       toast.error("訂單建立失敗，請稍後再試");
     }
