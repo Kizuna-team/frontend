@@ -63,7 +63,7 @@ const handleAvatarUpload = async (e) => {
 
   try {
     // 上傳圖片到 S3，取得 URL 和 key
-    const data = await uploadPhoto(file); // 上傳API
+    const data = await uploadPhoto(file, null, true); // 大頭照不需要 sequence
 
     // 設為大頭貼
     await changeAvatar(data.key); // 換頭貼 API
