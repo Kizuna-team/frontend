@@ -263,6 +263,12 @@ const sendMessage = async () => {
   autoResize(); 
 };
 
+// 切換貼圖面板顯示
+const toggleStickerPanel = () => {
+  showStickerPanel.value = !showStickerPanel.value;
+  autoResize(); 
+};
+
 // 發送貼圖
 const sendSticker = async (sticker) => {
   const now = new Date();
@@ -293,11 +299,6 @@ const sendSticker = async (sticker) => {
 
   // 關閉貼圖面板
   showStickerPanel.value = false;
-};
-
-// 切換貼圖面板顯示
-const toggleStickerPanel = () => {
-  showStickerPanel.value = !showStickerPanel.value;
 };
 
 // 加入 ai 建議 API
@@ -374,7 +375,7 @@ watch(
           });
         });
       } catch (err) {
-        console.error("❌ 載入歷史訊息失敗", err);
+        console.error("載入歷史訊息失敗", err);
       }
 
       console.log("切換到新房間:", newRoom);
@@ -607,7 +608,6 @@ watch(newMessage, autoResize);
               ]"
             />
           </div>
-
           <!-- 發送按鈕 -->
           <button
             @click="sendMessage"
