@@ -1,6 +1,8 @@
 import axios from "./axios";
 import { useUserStore } from "@/stores/user";
+import { useToast } from 'vue-toastification'
 
+const toast = useToast()
 export async function checkout(planId, price) {
   try {
     // 0609 melody 如果登入後才會出現會員專區（現在是這樣）那其實不用以下這段
