@@ -13,6 +13,7 @@ import HomeView from "@/views/HomeView.vue";
 import LoginView from "@/views/LoginView.vue";
 import MatchView from "@/views/MatchView.vue";
 import MatchSetupView from "@/views/MatchSetupView.vue";
+import MyOrdersView from "@/views/MyOrdersView.vue"
 import NotFound from "@/views/NotFound.vue";
 import ProfileTwoView from "@/views/ProfileTwoView.vue";
 import ProductView from "@/views/ProductView.vue";
@@ -106,6 +107,11 @@ const router = createRouter({
       path: "/login",
       name: "Login",
       component: LoginView,
+    },
+    {
+      path: "/my-orders",
+      name: "MyOrdersView",
+      component: MyOrdersView,
     },
     {
       path: "/match",
