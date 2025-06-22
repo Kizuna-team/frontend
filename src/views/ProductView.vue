@@ -7,7 +7,6 @@ import { Vue3Lottie } from "vue3-lottie";
 import addCartAnimation from "@/assets/add-cart.json";
 
 const cartStore = useCartStore();
-
 const products = ref([]);
 const displayedProducts = ref([]);
 const selectedCategory = ref("全部");
@@ -16,8 +15,45 @@ const searchKeyword = ref("");
 const isLoading = ref(true);
 
 watch(selectedCategory, () => {
+  currentPage.value = 1;
   search();
 });
+watch(searchKeyword, () => {
+  currentPage.value = 1;
+  search();
+});
+
+const currentPage = ref(1);
+const itemsPerPage = ref(9);
+
+const paginatedProducts = computed(() => {
+  const start = (currentPage.value - 1) * itemsPerPage.value;
+  return displayedProducts.value.slice(start, start + itemsPerPage.value);
+});
+
+const totalPages = computed(() =>
+  Math.ceil(displayedProducts.value.length / itemsPerPage.value)
+);
+
+const visiblePages = computed(() => {
+  const total = totalPages.value;
+  const current = currentPage.value;
+  if (total <= 7) return Array.from({ length: total }, (_, i) => i + 1);
+  const pages = [1];
+  if (current > 4) pages.push("...");
+  const start = Math.max(2, current - 1);
+  const end = Math.min(total - 1, current + 1);
+  for (let i = start; i <= end; i++) pages.push(i);
+  if (current < total - 3) pages.push("...");
+  pages.push(total);
+  return pages;
+});
+
+function goToPage(page) {
+  if (page === "...") return;
+  currentPage.value = page;
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
 
 const animationDuration = computed(() => {
   const speedPerItem = 6;
@@ -81,241 +117,205 @@ onMounted(async () => {
 </script>
 
 <template>
+  <!-- Cart Modal -->
   <div
     v-if="showCartModal"
-    class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-70"
+    class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-60"
   >
-    <div
-      class="bg-white rounded-xl p-8 min-w-[320px] min-h-[180px] shadow-lg text-center flex flex-col items-center justify-center"
-    >
-      <div class="flex items-center justify-center w-24 h-24 mb-4">
-        <Vue3Lottie
-          :animationData="addCartAnimation"
-          :height="80"
-          :width="80"
-        />
-      </div>
-      <p class="text-lg font-bold text-secondary">已加入購物車 !</p>
+    <div class="flex flex-col items-center p-6 bg-white shadow-lg rounded-2xl">
+      <Vue3Lottie :animationData="addCartAnimation" :height="80" :width="80" />
+      <p class="mt-2 text-lg font-bold text-secondary">已加入購物車 !</p>
     </div>
   </div>
 
+  <!-- Loading -->
   <div v-show="isLoading" class="loading-overlay">
-    <img :src="spinner" alt="Loading" class="w-20 h-20" />
+    <img :src="spinner" alt="Loading" class="w-16 h-16" />
   </div>
 
-  <div class="flex items-center justify-center gap-2 px-4 mb-6">
-    <!-- <svg
-      xmlns="http://www.w3.org/2000/svg"
-      fill="none"
-      viewBox="0 0 24 24"
-      stroke-width="1.5"
-      stroke="#023047"
-      class="w-6 h-6 text-darkblue"
-    >
-      <path
-        stroke-linecap="round"
-        stroke-linejoin="round"
-        d="M21 11.25v8.25a1.5 1.5 0 0 1-1.5 1.5H5.25a1.5 1.5 0 0 1-1.5-1.5v-8.25M12 4.875A2.625 2.625 0 1 0 9.375 7.5H12m0-2.625V7.5m0-2.625A2.625 2.625 0 1 1 14.625 7.5H12m0 0V21m-8.625-9.75h18c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125h-18c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125Z"
-      />
-    </svg> -->
-    <h2 class="text-2xl font-bold sm:text-3xl text-darkblue">暢銷禮物</h2>
-    <!-- <svg
-      xmlns="http://www.w3.org/2000/svg"
-      fill="none"
-      viewBox="0 0 24 24"
-      stroke-width="1.5"
-      stroke="#023047"
-      class="w-6 h-6 text-darkblue"
-    >
-      <path
-        stroke-linecap="round"
-        stroke-linejoin="round"
-        d="M21 11.25v8.25a1.5 1.5 0 0 1-1.5 1.5H5.25a1.5 1.5 0 0 1-1.5-1.5v-8.25M12 4.875A2.625 2.625 0 1 0 9.375 7.5H12m0-2.625V7.5m0-2.625A2.625 2.625 0 1 1 14.625 7.5H12m0 0V21m-8.625-9.75h18c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125h-18c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125Z"
-      />
-    </svg> -->
-  </div>
-
-  <div class="overflow-hidden">
-    <div
-      class="flex gap-4 w-max animate-slide"
-      :style="{ animationDuration: animationDuration + 's' }"
-    >
-      <template v-for="repeat in 2" :key="repeat">
-        <div
-          v-for="(product, index) in topSellingProducts"
-          :key="`${repeat}-${index}`"
-          class="flex-shrink-0 w-48 p-2 sm:w-52"
-        >
-          <div
-            class="flex flex-col justify-between h-full p-4 transition bg-white border rounded-lg hover:shadow-lg"
-          >
-            <img
-              :src="product.image_url"
-              class="object-cover w-full h-40 mb-3 rounded-lg sm:h-44"
-            />
-            <h3
-              class="mb-1 text-lg font-bold text-center truncate text-darkblue"
-            >
-              {{ product.name }}
-            </h3>
-            <p class="mb-2 text-sm text-center text-gray-500">
-              銷售量：{{ product.sales }}
-            </p>
-            <p class="mb-3 text-sm font-semibold text-center text-secondary">
-              價格：{{ product.price }} 元
-            </p>
-
-            <button
-              @click="handleAddCart(product)"
-              class="w-full btn btn-primary"
-            >
-              <!-- <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke-width="1.5"
-                stroke="currentColor"
-                class="relative -top-0.5 w-5 h-5 mr-1"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  d="M15.75 10.5V6a3.75 3.75 0 1 0-7.5 0v4.5m11.356-1.993 1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 0 1-1.12-1.243l1.264-12A1.125 1.125 0 0 1 5.513 7.5h12.974c.576 0 1.059.435 1.119 1.007ZM8.625 10.5a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm7.5 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z"
-                />
-              </svg> -->
-              加入購物車
-            </button>
-          </div>
-        </div>
-      </template>
-    </div>
-  </div>
-
-  <div class="flex flex-wrap justify-center gap-4 px-4 my-6">
-    <button
-      v-for="category in categories"
-      :key="category"
-      @click="selectedCategory = category"
-      :class="[
-        'px-4 py-2 rounded-full font-semibold transition',
-        selectedCategory === category
-          ? 'text-darkblue border-secondary border-b-2'
-          : 'text-gray-400',
-      ]"
-    >
-      {{ category }}
-    </button>
-  </div>
-
-  <div class="flex justify-center px-4 mb-8">
-    <div class="relative w-full max-w-md">
-      <input
-        type="text"
-        v-model="searchKeyword"
-        @keyup.enter="search"
-        placeholder="輸入關鍵字搜尋商品"
-        class="w-full py-2 pl-10 pr-4 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-secondary"
-      />
-      <button
-        @click="search"
-        class="absolute -translate-y-1/2 left-3 top-1/2 text-secondary focus:outline-none"
-      >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke-width="1.5"
-          stroke="currentColor"
-          class="w-5 h-5"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"
-          />
-        </svg>
-      </button>
-    </div>
-  </div>
-
-  <div class="px-4 pb-12">
-    <h1 class="mb-4 text-2xl font-bold text-center text-darkblue">
-      {{ selectedCategory }}
-    </h1>
-    <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+  <section class="max-w-screen-xl px-4 py-8 mx-auto sm:px-6 lg:px-8">
+    <!-- Top Selling Carousel -->
+    <h2 class="mb-6 text-2xl font-bold text-center sm:text-3xl text-darkblue">
+      暢銷禮物
+    </h2>
+    <div class="mb-8 overflow-hidden">
       <div
-        v-for="product in displayedProducts"
-        :key="product.id"
-        class="flex flex-col p-4 transition bg-white rounded-lg shadow hover:shadow-lg"
+        class="flex gap-4 w-max animate-slide"
+        :style="{ animationDuration: animationDuration + 's' }"
       >
-        <div class="flex flex-col justify-between h-full">
-          <!-- 上半部: 圖片 + 描述 -->
-          <div class="mb-2">
-            <img
-              :src="product.image_url"
-              alt="Product Image"
-              class="object-cover w-full h-48 mb-4 rounded"
-            />
-          </div>
-          <div class="flex flex-col h-full gap-2">
-            <h3 class="mb-2 text-lg font-semibold truncate text-darkblue">
-              {{ product.name }}
-            </h3>
-            <p class="mb-1 font-semibold text-secondary">
-              價格：{{ product.price }} 元
-            </p>
-            <p class="mb-4 text-sm text-gray-500 line-clamp-3">
-              {{ product.description }}
-            </p>
-          </div>
-          <!-- 下半部 : 庫存 -->
-          <!-- 這樣寫是因為商品描述長度不同 會導致庫存在不同水平線上 -->
-          <div class="mt-auto">
-            <p class="mb-2 text-sm text-darkblue">
-              庫存：{{ product.inventory }}
-            </p>
-            <div v-if="product.inventory > 0 && product.inventory <= 5">
-              <p class="py-1 px-4 bg-[#ffb703] text-white rounded-[20px]">
-                庫存不足
+        <template v-for="repeat in 2" :key="repeat">
+          <div
+            v-for="(p, idx) in topSellingProducts"
+            :key="repeat + '-' + idx"
+            class="flex-shrink-0 w-48 p-2 sm:w-52"
+          >
+            <div
+              class="flex flex-col h-full p-4 transition bg-white border rounded-lg hover:shadow-lg"
+            >
+              <img
+                :src="p.image_url"
+                class="object-cover w-full h-40 mb-3 rounded sm:h-44"
+              />
+              <h3
+                class="mb-1 text-lg font-bold text-center truncate text-darkblue"
+              >
+                {{ p.name }}
+              </h3>
+              <p class="mb-2 text-sm text-center text-gray-500">
+                銷售量：{{ p.sales }}
               </p>
+              <p class="mb-4 text-sm font-semibold text-center text-secondary">
+                價格：{{ p.price }} 元
+              </p>
+              <button @click="handleAddCart(p)" class="w-full btn btn-primary">
+                加入購物車
+              </button>
             </div>
           </div>
+        </template>
+      </div>
+    </div>
+    <!-- Filters & Search -->
+    <div class="flex flex-wrap justify-center gap-4 mb-8">
+      <!-- Categories -->
+      <div class="flex flex-wrap justify-center w-full gap-2">
+        <button
+          v-for="c in categories"
+          :key="c"
+          @click="selectedCategory = c"
+          class="px-4 py-2 font-semibold transition rounded-full"
+          :class="
+            selectedCategory === c
+              ? 'text-darkblue border-b-2 border-secondary'
+              : 'text-gray-400'
+          "
+        >
+          {{ c }}
+        </button>
+      </div>
+      <!-- Search Input -->
+      <div class="relative w-full max-w-md">
+        <input
+          v-model="searchKeyword"
+          @keyup.enter="search"
+          class="w-full py-2 pl-10 pr-4 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-secondary"
+          placeholder="搜尋商品名稱或描述"
+        />
+        <button
+          @click="search"
+          class="absolute -translate-y-1/2 left-3 top-1/2 text-secondary"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            class="w-5 h-5"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+            />
+          </svg>
+        </button>
+      </div>
+      <!-- Items Per Page -->
+      <div class="flex items-center justify-end gap-2 ml-auto">
+        <label for="perPage" class="text-sm text-gray-600">每頁顯示</label>
+        <select
+          id="perPage"
+          v-model="itemsPerPage"
+          class="px-3 py-1 border border-gray-300 rounded-md"
+        >
+          <option v-for="n in [6, 9, 12]" :key="n" :value="n">{{ n }}</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Products Grid -->
+    <div>
+      <h3 class="mb-6 text-xl font-bold text-center text-darkblue">
+        {{ selectedCategory }}
+      </h3>
+      <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <div
+          v-for="product in paginatedProducts"
+          :key="product.id"
+          class="flex flex-col p-4 transition bg-white rounded-lg shadow hover:shadow-lg"
+        >
+          <img
+            :src="product.image_url"
+            class="object-cover w-full h-48 mb-4 rounded"
+          />
+          <h4 class="mb-2 text-lg font-semibold truncate text-darkblue">
+            {{ product.name }}
+          </h4>
+          <p class="mb-2 font-semibold text-secondary">
+            價格：{{ product.price }} 元
+          </p>
+          <p class="mb-4 text-sm text-gray-500 line-clamp-3">
+            {{ product.description }}
+          </p>
+          <p class="mt-auto mb-2 text-sm text-darkblue">
+            庫存：{{ product.inventory }}
+          </p>
           <button
             @click="handleAddCart(product)"
             :disabled="product.inventory === 0"
-            :class="
-              product.inventory === 0
-                ? 'w-full btn ƒ-disabled'
-                : 'w-full btn btn-primary'
-            "
+            class="w-full btn btn-primary"
           >
-            <!-- <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke-width="1.5"
-              stroke="currentColor"
-              class="w-6 h-6"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                d="M15.75 10.5V6a3.75 3.75 0 1 0-7.5 0v4.5m11.356-1.993 
-                1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 
-                0 0 1-1.12-1.243l1.264-12A1.125 1.125 
-                0 0 1 5.513 7.5h12.974c.576 0 1.059.435 
-                1.119 1.007ZM8.625 10.5a.375.375 0 1 
-                1-.75 0 .375.375 0 0 1 .75 0Zm7.5 
-                0a.375.375 0 1 1-.75 0 .375.375 
-                0 0 1 .75 0Z"
-              />
-            </svg> -->
             {{ product.inventory === 0 ? "已售完" : "加入購物車" }}
           </button>
         </div>
       </div>
+
+      <!-- Pagination -->
+      <div
+        v-if="totalPages > 1"
+        class="flex flex-wrap justify-center gap-2 mt-8"
+      >
+        <button
+          @click="goToPage(currentPage - 1)"
+          :disabled="currentPage === 1"
+          class="px-2 py-1 border rounded-full"
+          :class="
+            currentPage === 1
+              ? 'bg-gray-200 text-gray-400'
+              : 'bg-white hover:bg-gray-100'
+          "
+        >
+          上一頁
+        </button>
+        <button
+          v-for="p in visiblePages"
+          :key="p"
+          @click="goToPage(p)"
+          class="px-2 py-1 border rounded-full"
+          :class="
+            p === currentPage
+              ? 'bg-secondary text-white border-secondary'
+              : 'bg-white hover:bg-gray-100'
+          "
+        >
+          {{ p }}
+        </button>
+        <button
+          @click="goToPage(currentPage + 1)"
+          :disabled="currentPage === totalPages"
+          class="px-2 py-1 border rounded-full"
+          :class="
+            currentPage === totalPages
+              ? 'bg-gray-200 text-gray-400'
+              : 'bg-white hover:bg-gray-100'
+          "
+        >
+          下一頁
+        </button>
+      </div>
     </div>
-  </div>
+  </section>
 </template>
 
 <style>
