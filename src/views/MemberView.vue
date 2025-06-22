@@ -22,9 +22,7 @@ onMounted(async () => {
         Authorization: `Bearer ${userStore.accessToken}`,
       },
     });
-    console.log("✅ 取得會員資料成功", res.data); // <--有跑到這
     const user = res.data.user;
-    console.log("user", user); // <--有跑到這
 
     // 存入 store 裡（如果你要用的話）
     userStore.setSubscription(user.subscription_plan);
