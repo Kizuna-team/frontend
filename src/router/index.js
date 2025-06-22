@@ -12,7 +12,7 @@ import GiftCheckoutView from "@/views/GiftCheckoutView.vue";
 import HomeView from "@/views/HomeView.vue";
 import LoginView from "@/views/LoginView.vue";
 import MatchView from "@/views/MatchView.vue";
-import MatchSetupView from "@/views/MatchSetupView";
+import MatchSetupView from "@/views/MatchSetupView.vue";
 import MemberView from "@/views/MemberView.vue";
 import NotFound from "@/views/NotFound.vue";
 import ProfileTwoView from "@/views/ProfileTwoView.vue";
