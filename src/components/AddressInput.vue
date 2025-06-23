@@ -1,50 +1,75 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted, nextTick } from 'vue'
 import MapSelector from './MapSelector.vue'
+import { loadGoogleMapsAPI } from '@/api/googleMapsApi'
 
-// Props 定義
 const props = defineProps({
-  modelValue: {
-    type: String,
-    default: ''
-  },
-  placeholder: {
-    type: String,
-    default: '請輸入活動地點'
-  },
-  label: {
-    type: String,
-    default: '活動地點'
-  },
-  required: {
-    type: Boolean,
-    default: false
+  modelValue: String
+})
+
+const emit = defineEmits(['update:modelValue'])
+
+const showMapModal = ref(false)
+const inputRef = ref(null)
+const autocompleteInstance = ref(null)
+
+// 載入 Google Maps 並初始化 Autocomplete
+onMounted(async () => {
+  try {
+    await loadGoogleMapsAPI()
+    if (window.google && window.google.maps && window.google.maps.places) {
+      await nextTick()
+      initAutocomplete()
+    }
+  } catch (error) {
+    console.error('Places API 載入失敗:', error)
   }
 })
 
-// Emits 定義
-const emit = defineEmits(['update:modelValue'])
+// 初始化 Places Autocomplete
+const initAutocomplete = () => {
+  if (!inputRef.value) return
 
-// 本地狀態
-const showMapModal = ref(false)
+  try {
+    autocompleteInstance.value = new google.maps.places.Autocomplete(inputRef.value, {
+      componentRestrictions: { country: 'TW' }, // 限制台灣
+      fields: ['formatted_address', 'geometry'], // 只取需要的資料
+      types: ['establishment', 'geocode'] // 地點類型
+    })
 
-// 更新值的方法
-const updateValue = (value) => {
-  emit('update:modelValue', value)
+    // 監聽地址選擇事件
+    autocompleteInstance.value.addListener('place_changed', handlePlaceSelect)
+    
+    console.log('Places Autocomplete 初始化成功')
+  } catch (error) {
+    console.error('Autocomplete 初始化失敗:', error)
+  }
 }
 
-// 開啟地圖選擇器
+// 處理 Places 選擇
+const handlePlaceSelect = () => {
+  const place = autocompleteInstance.value.getPlace()
+  
+  if (place.formatted_address) {
+    emit('update:modelValue', place.formatted_address)
+    console.log('從 Places 選擇地址:', place.formatted_address)
+  }
+}
+
+// 處理手動輸入
+const handleInput = (event) => {
+  emit('update:modelValue', event.target.value)
+}
+
 const openMapSelector = () => {
   showMapModal.value = true
 }
 
-// 處理地圖選擇結果
 const handleAddressSelected = (address) => {
-  updateValue(address)
+  emit('update:modelValue', address)
   showMapModal.value = false
 }
 
-// 關閉地圖
 const closeMapModal = () => {
   showMapModal.value = false
 }
@@ -52,18 +77,13 @@ const closeMapModal = () => {
 
 <template>
   <div>
-    <label 
-      for="location" 
-      class="block mb-2 text-lg font-bold text-darkblue"
-    >
-      {{ label }}{{ required ? '*' : '' }}：
-    </label>
     <div class="flex gap-2">
       <input
+        ref="inputRef"
         id="location"
         :value="modelValue"
-        @input="updateValue($event.target.value)"
-        :placeholder="placeholder"
+        @input="handleInput"
+        placeholder="請輸入活動地點，會自動顯示建議"
         class="flex-1 px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:text-secondary"
       />
       <button 
@@ -71,13 +91,16 @@ const closeMapModal = () => {
         type="button"
         class="px-3 py-2 bg-[#219ebc] text-white rounded hover:bg-[#1a8ba3] transition-colors whitespace-nowrap text-sm"
       >
-        📍 地圖選擇
+        地圖選擇
       </button>
     </div>
+    
+    <!-- 提示文字 -->
+    <p class="mt-1 text-xs text-gray-500">
+      開始輸入會顯示地址建議，或點擊地圖選擇
+    </p>
 
-    <!-- 地圖選擇器組件 -->
     <MapSelector
-      v-if="showMapModal"
       :show="showMapModal"
       @address-selected="handleAddressSelected"
       @close="closeMapModal"
