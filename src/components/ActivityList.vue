@@ -13,15 +13,13 @@ const token = localStorage.getItem("token");
 
 const handleJoin = async (activityId) => {
   try {
-    const res = await axios.post(
-      `${baseUrl}activities/join/${activityId}`,
-      {},
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+    // 文瑜 你少加/ 所以報 ERR_NAME_NOT_RESOLVED
+    const res = await axios.post(`${baseUrl}/activities/join/${activityId}`, {}, {
+      headers: {
+        Authorization: `Bearer ${token}`
       }
-    );
+    });
+  
     alert(res.data.message);
   } catch (err) {
     if (err.response?.status === 409) {
