@@ -22,6 +22,13 @@ const friendOptions = computed(() => [
   })),
 ]);
 
+const getOptions = (field) => {
+  if (field.name === "receiverId") {
+    return friendOptions.value;
+  }
+  return field.options;
+};
+
 // 響應式數據
 const currentStep = ref(0);
 const isCompleted = ref(false);
@@ -515,7 +522,7 @@ onMounted(() => {
                         required
                       >
                         <option
-                          v-for="option in field.options"
+                          v-for="option in getOptions(field)"
                           :key="option.value"
                           :value="option.value"
                         >

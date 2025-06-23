@@ -8,7 +8,6 @@ import CartView from "@/views/CartView.vue";
 import ChatRoomView from "@/views/ChatRoomView.vue";
 import EventCardByIdView from "@/views/EventCardByIdView.vue";
 import EditProfileView from "@/views/EditProfileView.vue";
-import GiftCheckoutView from "@/views/GiftCheckoutView.vue";
 import HomeView from "@/views/HomeView.vue";
 import LoginView from "@/views/LoginView.vue";
 import MatchView from "@/views/MatchView.vue";
@@ -86,11 +85,6 @@ const router = createRouter({
       name: "EditProfile",
       component: EditProfileView,
       meta: { requiresAuth: true },
-    },
-    {
-      path: "/gift-checkout",
-      name: "GiftCheckout",
-      component: GiftCheckoutView,
     },
     {
       path: "/:pathMatch(.*)*",
