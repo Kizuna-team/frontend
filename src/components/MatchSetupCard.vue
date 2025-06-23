@@ -9,18 +9,12 @@ const props = defineProps({
   type: String, // 如果是 'range' 則顯示輸入框
 });
 
-console.log("🔍 props.title", props.title);
-console.log("🔍 props.options", props.options);
-console.log("🔍 props.modelValue", props.modelValue);
-console.log("🔍 props.multiple", props.multiple);
-console.log("🔍 props.type", props.type);
-
 const emit = defineEmits(["update:modelValue"]);
 
-// 初始化選取值
+// 因為props唯讀 作為子元件內部顯示、修改選項的值
 const selectedValue = ref(props.modelValue);
 
-// 雙向同步：父傳子
+// 雙向同步：父改值 子更新
 watch(
   () => props.modelValue,
   (val) => {
@@ -28,27 +22,21 @@ watch(
   }
 );
 
-console.log("🚀 初始 selectedValue:", selectedValue.value);
-
-// 雙向同步：子傳父
+// 雙向同步：子操作 回傳父
 watch(selectedValue, (val) => {
-  console.log("📤 子元件 emit 回父層:", val);
   emit("update:modelValue", val);
 });
 
-// 切換選項
+// 切換選項 更新 selectedValue 解析 option 取Id
 const toggle = (option) => {
-  console.log("🟡 toggle 被點了，option:", option);
   const optionId = option.id ?? option;
-  console.log("🟠 解析出來的 optionId:", optionId);
-  console.log("🟣 當前 selectedValue.value:", selectedValue.value);
 
   if (props.multiple) {
     const arr = Array.isArray(selectedValue.value)
-      ? [...selectedValue.value]
+      ? [...selectedValue.value] // 已存在的就移除
       : [];
     const exists = arr.includes(optionId);
-    console.log("🔵 是否已存在:", exists);
+    console.log("是否已存在:", exists);
     selectedValue.value = exists
       ? arr.filter((i) => i !== optionId)
       : [...arr, optionId];
@@ -56,7 +44,7 @@ const toggle = (option) => {
     selectedValue.value = optionId;
   }
 
-  console.log("🟢 更新後 selectedValue.value:", selectedValue.value);
+  console.log("更新後 selectedValue.value:", selectedValue.value);
 };
 </script>
 
