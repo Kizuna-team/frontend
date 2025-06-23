@@ -133,7 +133,7 @@ onMounted(async () => {
 
   <section class="max-w-screen-xl px-4 py-8 mx-auto sm:px-6 lg:px-8">
     <h2 class="mb-6 text-2xl font-bold text-center sm:text-3xl text-darkblue">
-      暢銷禮物
+      熱門精選禮物
     </h2>
     <div class="mb-8 overflow-hidden">
       <div
@@ -172,39 +172,40 @@ onMounted(async () => {
         </template>
       </div>
     </div>
-    <div class="flex flex-wrap justify-center gap-4 mb-8">
-      <div class="flex flex-wrap justify-center w-full gap-2">
-        <button
-          v-for="c in categories"
-          :key="c"
-          @click="selectedCategory = c"
-          class="px-4 py-2 font-semibold transition rounded-full"
-          :class="
-            selectedCategory === c
-              ? 'text-darkblue border-b-2 border-secondary'
-              : 'text-gray-400'
-          "
-        >
-          {{ c }}
-        </button>
-      </div>
-      <div class="relative w-full max-w-md">
+    <div class="flex flex-wrap justify-center w-full gap-2 mb-6">
+      <button
+        v-for="category in categories"
+        :key="category"
+        @click="selectedCategory = category"
+        class="px-4 py-2 font-semibold transition rounded-full"
+        :class="
+          selectedCategory === category
+            ? 'text-darkblue border-b-2 border-secondary'
+            : 'text-gray-400'
+        "
+      >
+        {{ category }}
+      </button>
+    </div>
+    <div class="flex flex-wrap items-center gap-3 mb-6">
+      <!-- 搜尋框 -->
+      <div class="relative flex-1 w-full sm:w-auto">
         <input
           v-model="searchKeyword"
           @keyup.enter="search"
-          class="w-full py-2 pl-10 pr-4 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-secondary"
+          type="text"
           placeholder="搜尋商品名稱或描述"
+          class="w-full py-2 pl-10 pr-4 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-secondary"
         />
-        <button
-          @click="search"
-          class="absolute -translate-y-1/2 left-3 top-1/2 text-secondary"
+        <div
+          class="absolute inset-y-0 flex items-center pointer-events-none left-3"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
+            class="w-5 h-5 text-secondary"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
-            class="w-5 h-5"
           >
             <path
               stroke-linecap="round"
@@ -213,24 +214,55 @@ onMounted(async () => {
               d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
             />
           </svg>
-        </button>
+        </div>
       </div>
-      <div class="flex items-center justify-end gap-2 ml-auto">
-        <label for="perPage" class="text-sm text-gray-600">每頁顯示</label>
+
+      <!-- 每頁顯示 -->
+      <div class="flex items-center w-full gap-2 sm:w-auto">
+        <label for="perPage" class="text-sm text-gray-600 whitespace-nowrap"
+          >每頁顯示</label
+        >
         <select
           id="perPage"
           v-model="itemsPerPage"
-          class="px-3 py-1 border border-gray-300 rounded-md"
+          class="px-2 py-1 text-sm border border-gray-300 rounded-md"
         >
-          <option v-for="n in [6, 9, 12]" :key="n" :value="n">{{ n }}</option>
+          <option :value="6">6</option>
+          <option :value="9">9</option>
+          <option :value="12">12</option>
         </select>
       </div>
     </div>
 
+    <!-- 無結果 -->
+    <div
+      v-if="paginatedProducts.length === 0"
+      class="py-16 text-center text-gray-500"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        class="w-12 h-12 mx-auto mb-4 text-secondary"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+        />
+      </svg>
+      <p class="text-lg font-medium">
+        找不到符合「<span class="font-semibold text-secondary">{{
+          searchKeyword
+        }}</span
+        >」的商品
+      </p>
+      <p class="mt-2 text-sm text-gray-400">請試試其他關鍵字</p>
+    </div>
+
     <div>
-      <h3 class="mb-6 text-xl font-bold text-center text-darkblue">
-        {{ selectedCategory }}
-      </h3>
       <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
         <div
           v-for="product in paginatedProducts"

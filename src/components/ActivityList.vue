@@ -14,12 +14,16 @@ const token = localStorage.getItem("token");
 const handleJoin = async (activityId) => {
   try {
     // 文瑜 你少加/ 所以報 ERR_NAME_NOT_RESOLVED
-    const res = await axios.post(`${baseUrl}/activities/join/${activityId}`, {}, {
-      headers: {
-        Authorization: `Bearer ${token}`
+    const res = await axios.post(
+      `${baseUrl}/activities/join/${activityId}`,
+      {},
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       }
-    });
-  
+    );
+
     alert(res.data.message);
   } catch (err) {
     if (err.response?.status === 409) {
@@ -100,16 +104,40 @@ watch(searchQuery, () => (currentPage.value = 1));
   <div class="max-w-6xl px-4 py-6 mx-auto">
     <h1 class="mb-4 text-2xl font-bold text-darkblue">熱門活動列表</h1>
 
-    <!-- 搜尋與每頁顯示 -->
     <div class="flex flex-wrap items-center gap-3 mb-6">
-      <input
-        v-model="searchQuery"
-        type="text"
-        placeholder="搜尋活動標題、描述或地點"
-        class="flex-1 min-w-[200px] px-4 py-2 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-secondary"
-      />
+      <!-- 搜尋框 -->
+      <div class="relative flex-1 w-full sm:w-auto">
+        <input
+          v-model="searchQuery"
+          type="text"
+          placeholder="搜尋活動標題、描述或地點"
+          class="w-full py-2 pl-10 pr-4 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-secondary"
+        />
+        <div
+          class="absolute inset-y-0 flex items-center pointer-events-none left-3"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="w-5 h-5 text-secondary"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+            />
+          </svg>
+        </div>
+      </div>
+
+      <!-- 每頁顯示 -->
       <div class="flex items-center w-full gap-2 sm:w-auto">
-        <label for="perPage" class="text-sm text-gray-600">每頁顯示</label>
+        <label for="perPage" class="text-sm text-gray-600 whitespace-nowrap"
+          >每頁顯示</label
+        >
         <select
           id="perPage"
           v-model="itemsPerPage"
@@ -128,12 +156,27 @@ watch(searchQuery, () => (currentPage.value = 1));
       v-if="filteredActivities.length === 0"
       class="py-10 text-center text-gray-500"
     >
-      <p class="mt-4 text-lg">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        class="w-12 h-12 mx-auto mb-4 text-secondary"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+        />
+      </svg>
+      <p class="text-lg font-medium">
         找不到符合「<span class="font-semibold text-secondary">{{
           searchQuery
         }}</span
         >」的活動
       </p>
+      <p class="mt-2 text-sm text-gray-400">請試試其他關鍵字</p>
     </div>
 
     <!-- 活動卡片 -->
@@ -227,9 +270,6 @@ watch(searchQuery, () => (currentPage.value = 1));
       >
         下一頁
       </button>
-      <p class="w-full text-sm text-center text-gray-500">
-        第 {{ currentPage }} 頁，共 {{ totalPages }} 頁
-      </p>
     </div>
   </div>
 </template>
