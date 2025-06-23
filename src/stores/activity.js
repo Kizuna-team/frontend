@@ -122,6 +122,15 @@ export const useActivityStore = defineStore("activity", () => {
       }
     }
 
+  const deleteJoinActivity = async (id) => {
+  try {
+    const res = await axios.delete(`/activities/join/${id}`)
+    console.log('刪除成功', res.data)
+  } catch (error) {
+    console.error('刪除失敗', error)
+  }
+}
+
   return {
     selectedActivity,
     activities,
@@ -135,6 +144,7 @@ export const useActivityStore = defineStore("activity", () => {
     updateActivity,
     createActivity,
     deleteActivity,
-    fetchMyJoinActivities
+    fetchMyJoinActivities,
+    deleteJoinActivity
   };
 });
