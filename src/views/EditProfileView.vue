@@ -108,7 +108,7 @@ const handleUpload = async () => {
     // 等待圖片全部上傳
     await profilePhotosRef.value?.uploadAll();
     alert("圖片上傳完成");
-    router.push("/match");
+    router.push("/match/setup");
   } catch (err) {
     console.error(" 上傳失敗", err);
     alert("圖片上傳失敗");
