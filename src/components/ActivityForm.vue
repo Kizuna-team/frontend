@@ -54,7 +54,8 @@ watch(
         form.value = {
           title: selectedActivity.value?.title || "",
           location: selectedActivity.value?.location || "",
-          date: selectedActivity.value?.date || "",
+          date: selectedActivity.value?.date?.slice(0, 10) || "",
+          time: selectedActivity.value?.date?.slice(11, 16) || "",
           description: selectedActivity.value?.description || "",
           createdBy: selectedActivity.value?.createdBy || "",
         };
@@ -85,7 +86,7 @@ async function handleSubmit() {
   const formData = new FormData();
   formData.append("title", form.value.title);
   formData.append("location", form.value.location);
-  formData.append("date", `${form.value.date}T${form.value.time}:00`);
+  formData.append("date", `${form.value.date}T${form.value.time}:00+08:00`);
   formData.append("description", form.value.description);
   formData.append("createdBy", form.value.createdBy);
   if (imageFile.value) {
