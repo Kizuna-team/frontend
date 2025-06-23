@@ -7,6 +7,7 @@ export const useActivityStore = defineStore("activity", () => {
   const loading = ref(false);
   const error = ref(null);
   const selectedActivity = ref(null);
+  const joinActivities = ref([]);
 
   const getToken = () => {
     return localStorage.getItem('token');
@@ -111,11 +112,22 @@ export const useActivityStore = defineStore("activity", () => {
     }
   };
 
+  const fetchMyJoinActivities = async() => {
+      try {
+        const res = await axios.get('/activities/me');
+        console.log(res.data)
+        joinActivities.value = res.data;
+      } catch (err) {
+        console.error("取得參加活動失敗", err);
+      }
+    }
+
   return {
     selectedActivity,
     activities,
     loading,
     error,
+    joinActivities,
     getToken,
     fetchActivities,
     fetchMyActivities,
@@ -123,5 +135,6 @@ export const useActivityStore = defineStore("activity", () => {
     updateActivity,
     createActivity,
     deleteActivity,
+    fetchMyJoinActivities
   };
 });
