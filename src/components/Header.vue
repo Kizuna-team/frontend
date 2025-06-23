@@ -1,13 +1,13 @@
 <script setup>
 import { ref, computed, watch } from "vue";
 import { useUserStore } from "@/stores/user";
-import { useRoute, useRouter } from "vue-router";
+import { useRoute } from "vue-router";
 import LiquidNavLink from "@/components/LiquidGlass.vue";
 import { useCartStore } from "@/stores/cart.js";
 import { useToast } from "vue-toastification";
+import ScrollToTop from "@/components/ScrollToTop.vue"
 
 const route = useRoute();
-const router = useRouter();
 const store = useUserStore();
 const cartStore = useCartStore();
 const toast = useToast();
@@ -561,7 +561,9 @@ watch(route, () => {
         </template>
       </div>
     </div>
+    
   </header>
+   <ScrollToTop />
 </template>
 
 <style scoped>
