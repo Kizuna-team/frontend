@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, watch, onMounted, defineExpose } from "vue"; // 引入 defineExpose
+import { ref, computed, watch, onMounted, defineExpose } from "vue"; 
 import axios from "@/api/axios";
 import { useToast } from 'vue-toastification'
 const toast = useToast()
@@ -11,9 +11,8 @@ const selected = ref([]);
 const friends = ref([]);
 
 const userId = localStorage.getItem("userId");
-console.log("✅ userId =", userId);
+console.log(" userId =", userId);
 
-// 將獲取好友列表的邏輯封裝成一個函數，並暴露給父元件 
 const fetchFriendsData = async () => {
   if (!userId) {
     toast(" 沒找到userId"); 
@@ -21,18 +20,17 @@ const fetchFriendsData = async () => {
   }
   try {
     const res = await axios.get(`/api/friends?userId=${userId}`);
-    // 確保後端返回的數據包含 friend_id 和 friend_name
     friends.value = res.data.map((f) => ({
-      friend_id: f.friend_id, // 確保有 friend_id
-      name: f.friend_name, // 使用 friend_name
+      friend_id: f.friend_id, 
+      name: f.friend_name, 
     }));
   } catch (err) {
-    console.error("❌ 撈好友失敗", err); 
+    console.error(" 撈好友失敗", err); 
   }
 };
 
 onMounted(() => {
-  fetchFriendsData(); // 元件掛載時調用
+  fetchFriendsData(); 
 });
 
 const filteredFriends = computed(() =>
@@ -50,7 +48,7 @@ const toggleSelect = (i) => {
   idx === -1 ? selected.value.push(i) : selected.value.splice(idx, 1);
 };
 
-// ⭐⭐⭐ 暴露 fetchFriendsData 函數給父元件 ⭐⭐⭐
+
 defineExpose({
   fetchFriendsData
 });
