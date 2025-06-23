@@ -77,11 +77,6 @@ const router = createRouter({
       component: ChatRoomView,
     },
     {
-      path: "/events/:id",
-      name: "eventDetail",
-      component: () => import("@/views/EventCardByIdView.vue"),
-    },
-    {
       path: "/chat",
       name: "ChatRoomView",
       component: ChatRoomView,
