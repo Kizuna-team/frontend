@@ -117,7 +117,6 @@ onMounted(async () => {
 </script>
 
 <template>
-  <!-- Cart Modal -->
   <div
     v-if="showCartModal"
     class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-60"
@@ -128,13 +127,11 @@ onMounted(async () => {
     </div>
   </div>
 
-  <!-- Loading -->
   <div v-show="isLoading" class="loading-overlay">
     <img :src="spinner" alt="Loading" class="w-16 h-16" />
   </div>
 
   <section class="max-w-screen-xl px-4 py-8 mx-auto sm:px-6 lg:px-8">
-    <!-- Top Selling Carousel -->
     <h2 class="mb-6 text-2xl font-bold text-center sm:text-3xl text-darkblue">
       暢銷禮物
     </h2>
@@ -175,9 +172,7 @@ onMounted(async () => {
         </template>
       </div>
     </div>
-    <!-- Filters & Search -->
     <div class="flex flex-wrap justify-center gap-4 mb-8">
-      <!-- Categories -->
       <div class="flex flex-wrap justify-center w-full gap-2">
         <button
           v-for="c in categories"
@@ -193,7 +188,6 @@ onMounted(async () => {
           {{ c }}
         </button>
       </div>
-      <!-- Search Input -->
       <div class="relative w-full max-w-md">
         <input
           v-model="searchKeyword"
@@ -221,7 +215,6 @@ onMounted(async () => {
           </svg>
         </button>
       </div>
-      <!-- Items Per Page -->
       <div class="flex items-center justify-end gap-2 ml-auto">
         <label for="perPage" class="text-sm text-gray-600">每頁顯示</label>
         <select
@@ -234,7 +227,6 @@ onMounted(async () => {
       </div>
     </div>
 
-    <!-- Products Grid -->
     <div>
       <h3 class="mb-6 text-xl font-bold text-center text-darkblue">
         {{ selectedCategory }}
@@ -271,7 +263,6 @@ onMounted(async () => {
         </div>
       </div>
 
-      <!-- Pagination -->
       <div
         v-if="totalPages > 1"
         class="flex flex-wrap justify-center gap-2 mt-8"
