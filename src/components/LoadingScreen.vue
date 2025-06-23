@@ -43,9 +43,9 @@
 .loading-screen {
   background: linear-gradient(-45deg, #000000, #023047, #1b2b34, #0f0f0f);
   background-size: 600% 600%;
-  animation: gradient-move 10s ease infinite, mask-reveal 4s ease forwards,
-    slide-up-fade-out 1s ease forwards;
-  animation-delay: 0s, 0s, 4.2s;
+  animation: gradient-move 10s ease infinite, mask-reveal 3s ease forwards,
+    slide-up-fade-out 0.8s ease forwards;
+  animation-delay: 0s, 0s, 2.5s;
   animation-fill-mode: forwards;
 
   /* 加遮罩漸變效果 */
@@ -86,9 +86,8 @@
   fill: transparent;
   stroke-dasharray: 1200;
   stroke-dashoffset: 1200;
-  animation: draw-stroke 2.5s ease forwards, scale-up 0.8s ease forwards,
-    fill-in 0.6s ease forwards;
-  animation-delay: 0s, 2.5s, 3.3s;
+  animation: draw-stroke 1.5s ease forwards, fill-in 0.4s ease forwards;
+  animation-delay: 0s, 1.6s;
   animation-fill-mode: forwards;
   transform-origin: center;
 }
@@ -112,16 +111,6 @@
   }
   100% {
     -webkit-mask-position: 100% 0%;
-  }
-}
-
-/* 放大動畫 */
-@keyframes scale-up {
-  0% {
-    transform: scale(1);
-  }
-  100% {
-    transform: scale(1.15);
   }
 }
 
