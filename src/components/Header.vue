@@ -16,10 +16,10 @@ const isDropdownOpen = ref(false);
 
 //定義每個區域的滾動位置
 const sectionPositions = {
-  about: 800, // 關於我們
-  tutorial: 2700, // 使用教學區
-  "activities-preview": 1700, // 探索活動
-  "match-preview": 3500, // 立即配對
+  about: 1000, // 關於我們
+  tutorial: 2800, // 使用教學區
+  "activities-preview": 1800, // 探索活動
+  "match-preview": 3600, // 立即配對
 };
 
 // 處理導覽點擊事件
@@ -391,7 +391,7 @@ watch(route, () => {
       ]"
     >
       <div class="space-y-2">
-        <!-- ✅ 未登入時：顯示首頁區域導覽按鈕 -->
+        <!-- 未登入時：顯示首頁區域導覽按鈕 -->
         <template v-if="!store.accessToken">
           <!-- 關於我們 -->
           <LiquidNavLink
@@ -481,7 +481,7 @@ watch(route, () => {
           </LiquidNavLink>
         </template>
 
-        <!-- ✅ 已登入時：顯示功能頁面連結 -->
+        <!-- 已登入時：顯示功能頁面連結 -->
         <template v-else>
           <LiquidNavLink
             to="/match"
