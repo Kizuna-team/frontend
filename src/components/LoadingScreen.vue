@@ -124,4 +124,24 @@
     transform: scale(1.15);
   }
 }
+
+@media (max-width: 768px) {
+  svg {
+    width: 90% !important;
+  }
+
+  .draw-text {
+    font-size: 80px;
+    stroke-dasharray: 800;
+    stroke-dashoffset: 800;
+  }
+}
+
+@media (max-width: 480px) {
+  .draw-text {
+    font-size: 60px;
+    stroke-dasharray: 600;
+    stroke-dashoffset: 600;
+  }
+}
 </style>
