@@ -1,9 +1,10 @@
 <script setup>
 import GiftItem from "@/components/GiftItem.vue"
 import FriendList from "@/components/FriendList.vue"
-import FriendRequestsPanel from "@/components/FriendRequestsPanel.vue"; // 引入新的好友邀請面板
+import FriendRequestsPanel from "@/components/FriendRequestsPanel.vue"; 
 import { ref } from "vue"
 import { useToast } from 'vue-toastification'
+import { onMounted } from "vue"; 
 
 const subtotal = ref(0)
 const selectedFriends = ref([])
@@ -13,13 +14,16 @@ const toast = useToast()
 const updateSubtotal = (val) => (subtotal.value = val)
 const updateSelected = (val) => (selectedFriends.value = val)
 
-// 當 FriendRequestsPanel 發出 friendConfirmed 事件時，會調用此函數
+
 const handleFriendConfirmed = () => {
   if (friendListRef.value) {
-    // 調用 FriendList 元件內部暴露的 fetchFriendsData 方法，重新獲取好友列表
+   
     friendListRef.value.fetchFriendsData(); 
   }
 };
+onMounted(() => {
+  friendListRef.value?.fetchFriendsData(); 
+});
 
 const confirmPurchase = () => {
   toast(`你選了 ${selectedFriends.value.length} 位好友，總金額 $${subtotal.value}`)
@@ -58,5 +62,4 @@ const confirmPurchase = () => {
 </template>
 
 <style scoped>
-/* 保持不變 */
 </style>
