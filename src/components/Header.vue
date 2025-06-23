@@ -4,13 +4,12 @@ import { useUserStore } from "@/stores/user";
 import { useRoute } from "vue-router";
 import LiquidNavLink from "@/components/LiquidGlass.vue";
 import { useCartStore } from "@/stores/cart.js";
-import { useToast } from 'vue-toastification'
-
+import { useToast } from "vue-toastification";
 
 const route = useRoute();
 const store = useUserStore();
 const cartStore = useCartStore();
-const toast = useToast()
+const toast = useToast();
 
 const isMobileMenuOpen = ref(false);
 const isDropdownOpen = ref(false);
@@ -36,7 +35,7 @@ const lightBgPages = [
   "/chat",
   "/subscription",
   "/subscribe-plan",
-  "/my-orders"
+  "/my-orders",
 ];
 
 const isLightBgPage = computed(() =>
@@ -248,25 +247,24 @@ watch(route, () => {
                 </svg>
                 <span class="whitespace-nowrap">升級方案</span>
               </a>
-               <a
+              <a
                 href="/my-orders"
                 class="flex items-center gap-3 px-4 py-3 text-gray-700 border-b border-gray-200 hover:bg-gray-50"
                 @click="isDropdownOpen = false"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke-width="1.5"
-                  stroke="currentColor"
-                  class="w-5 h-5"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                  class="size-5"
                 >
                   <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    d="M11.48 3.499a.562.562 0 0 1 1.04 0l2.125 5.111a.563.563 0 0 0 .475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 0 0-.182.557l1.285 5.385a.562.562 0 0 1-.84.61l-4.725-2.885a.562.562 0 0 0-.586 0L6.982 20.54a.562.562 0 0 1-.84-.61l1.285-5.386a.562.562 0 0 0-.182-.557l-4.204-3.602a.562.562 0 0 1 .321-.988l5.518-.442a.563.563 0 0 0 .475-.345L11.48 3.5Z"
+                    fill-rule="evenodd"
+                    d="M6 5v1H4.667a1.75 1.75 0 0 0-1.743 1.598l-.826 9.5A1.75 1.75 0 0 0 3.84 19H16.16a1.75 1.75 0 0 0 1.743-1.902l-.826-9.5A1.75 1.75 0 0 0 15.333 6H14V5a4 4 0 0 0-8 0Zm4-2.5A2.5 2.5 0 0 0 7.5 5v1h5V5A2.5 2.5 0 0 0 10 2.5ZM7.5 10a2.5 2.5 0 0 0 5 0V8.75a.75.75 0 0 1 1.5 0V10a4 4 0 0 1-8 0V8.75a.75.75 0 0 1 1.5 0V10Z"
+                    clip-rule="evenodd"
                   />
                 </svg>
+
                 <span class="whitespace-nowrap">我的購買紀錄</span>
               </a>
               <button
@@ -304,7 +302,7 @@ watch(route, () => {
           : 'max-h-0 opacity-0 overflow-hidden',
       ]"
     >
-      <div class="space-y-2 ">
+      <div class="space-y-2">
         <LiquidNavLink
           to="/match"
           :colorMode="isScrolled || isLightBgPage ? 'black' : 'white'"
@@ -353,7 +351,6 @@ watch(route, () => {
         >
           活動表單
         </LiquidNavLink>
-        
 
         <LiquidNavLink
           to="/activities/my"
@@ -431,6 +428,19 @@ watch(route, () => {
             ]"
           >
             升級方案
+          </LiquidNavLink>
+
+          <LiquidNavLink
+            to="/my-orders"
+            :colorMode="isScrolled || isLightBgPage ? 'black' : 'white'"
+            class="block !px-3 py-2 !text-[16px] overflow-hidden text-ellipsis whitespace-nowrap font-medium text-right transition-all duration-200 rounded-xl"
+            :class="[
+              isScrolled || isLightBgPage
+                ? 'bg-white/80 hover:bg-white hover:shadow-sm'
+                : 'bg-white/10 hover:bg-white/20',
+            ]"
+          >
+            我的購買紀錄
           </LiquidNavLink>
 
           <LiquidNavLink
