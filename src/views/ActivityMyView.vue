@@ -3,12 +3,21 @@ import { useActivityStore } from "@/stores/activity.js";
 import { storeToRefs } from "pinia";
 import { onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
-
+import {
+  UserIcon,
+  CalendarDaysIcon,
+  MapPinIcon,
+  PencilSquareIcon,
+  TrashIcon,
+  ChatBubbleLeftEllipsisIcon,
+} from "@heroicons/vue/24/outline";
 
 const store = useActivityStore();
 // 把 store 裡的變數都轉為 ref
 const { activities, loading, error, joinActivities } = storeToRefs(store);
 const router = useRouter();
+const activeTab = ref("created"); // tabs: created or joined
+
 console.log("joinActivity:", joinActivities.value);
 // console.log("myActivities:", activities);
 onMounted(() => {
@@ -42,36 +51,70 @@ const handleDeleteJoin = async (id) => {
 </script>
 
 <template>
-  <div class="max-w-5xl p-4 mx-auto">
-    <h2 class="mb-4 text-2xl font-semibold text-darkblue">我創建的活動</h2>
-    <div v-if="loading" class="py-8 text-center text-gray-500">載入中...</div>
-    <div v-else-if="error" class="text-gray-500">{{ error }}</div>
-    <div v-else>
-      <div
-        v-if="joinActivities && joinActivities.length === 0"
-        class="text-center text-gray-400"
+  <div class="max-w-6xl px-4 py-8 mx-auto space-y-8">
+    <div
+      class="flex justify-center gap-8 text-lg font-semibold border-b border-gray-200"
+    >
+      <button
+        @click="activeTab = 'created'"
+        :class="[
+          'pb-2 transition relative',
+          activeTab === 'created'
+            ? 'text-secondary border-b-4 border-secondary font-bold scale-105'
+            : 'text-gray-400 hover:text-darkblue',
+        ]"
       >
+        我創建的活動
+      </button>
+      <button
+        @click="activeTab = 'joined'"
+        :class="[
+          'pb-2 transition relative',
+          activeTab === 'joined'
+            ? 'text-secondary border-b-4 border-secondary font-bold scale-105'
+            : 'text-gray-400 hover:text-darkblue',
+        ]"
+      >
+        我參加的活動
+      </button>
+    </div>
+
+    <div v-if="loading" class="py-8 text-center text-gray-500">載入中...</div>
+    <div v-else-if="error" class="text-center text-red-500">{{ error }}</div>
+
+    <div v-if="activeTab === 'created'" class="space-y-6">
+      <div
+        v-if="activities.length === 0"
+        class="py-16 text-base text-center text-gray-400"
+      >
+        <div class="mb-2 text-4xl">📂</div>
         你還沒有建立任何活動
       </div>
+
       <div
         v-for="activity in activities"
         :key="activity.id"
-        class="flex flex-col items-center justify-between p-4 mb-6 bg-white border shadow-md rounded-2xl md:flex-row"
+        class="flex flex-col items-start gap-4 p-5 transition duration-200 bg-white shadow-md md:flex-row md:items-stretch md:gap-6 sm:p-6 rounded-2xl hover:shadow-lg"
       >
         <img
           v-if="activity.image_url"
           :src="activity.image_url"
-          class="object-cover w-full mb-2 md:w-72 rounded-xl md:mb-0 h-52"
+          loading="lazy"
+          class="w-full md:w-64 aspect-[4/3] sm:aspect-video object-cover rounded-xl"
         />
-        <div class="w-full md:w-[300px]">
-          <h3 class="mb-1 text-lg font-bold text-darkblue">
+
+        <div class="w-full space-y-2 text-base text-gray-700 md:flex-1">
+          <h3 class="flex items-center gap-2 text-xl font-bold text-darkblue">
             {{ activity.title }}
           </h3>
-          <p class="mb-1 text-sm text-gray-600">
-            <span class="font-semibold text-darkblue">主辦人：</span>{{ activity.created_by_username }}
+          <p class="flex items-center gap-2">
+            <UserIcon class="w-5 h-5 text-secondary shrink-0 -mt-0.5" />
+            <span class="font-semibold text-secondary">主辦人：</span>
+            {{ activity.created_by_username }}
           </p>
-          <p class="mb-1 text-sm text-gray-600">
-            <span class="font-semibold text-darkblue">日期：</span>
+          <p class="flex items-center gap-2">
+            <CalendarDaysIcon class="w-5 h-5 text-secondary shrink-0 -mt-0.5" />
+            <span class="font-semibold text-secondary">日期：</span>
             {{
               new Date(activity.date).toLocaleString("zh-TW", {
                 year: "numeric",
@@ -84,86 +127,99 @@ const handleDeleteJoin = async (id) => {
               })
             }}
           </p>
-          <p class="mb-1 text-sm text-gray-600">
-            <span class="font-semibold text-darkblue">地點：</span
-            >{{ activity.location }}
+          <p class="flex items-center gap-2">
+            <MapPinIcon class="w-5 h-5 text-secondary shrink-0 -mt-0.5" />
+            <span class="font-semibold text-secondary">地點：</span>
+            {{ activity.location }}
           </p>
-          <p class="mb-1 text-sm text-gray-600">
-            <span class="font-semibold text-darkblue">描述：</span
-            >{{ activity.description }}
+          <p class="text-sm">
+            <span class="font-semibold text-secondary">描述：</span>
+            {{ activity.description }}
           </p>
-          <p class="text-sm text-gray-600">
-            <span class="font-semibold text-darkblue">建立時間：</span
-            >{{ activity.created_at?.slice(0, 10) }}
+          <p class="text-xs text-gray-400">
+            建立時間：{{ activity.created_at?.slice(0, 10) }}
           </p>
         </div>
-        <div>
+
+        <div class="flex flex-col items-end gap-3 mt-4 md:mt-0">
           <button
             @click="goEdit(activity.id)"
-            class="min-w-[130px] w-[150px] h-[40px] text-white px-[10px] py-[5px] font-bold cursor-pointer transition-all duration-300 outline-none rounded-[20px] border-2 border-[#219ebc] bg-[#219ebc] flex items-center justify-center gap-1 hover:bg-white hover:text-[#219ebc] mb-4"
+            class="w-[150px] h-[40px] flex items-center justify-center gap-1 font-bold transition-all duration-300 rounded-full border-2 border-secondary bg-secondary text-white hover:bg-white hover:text-secondary hover:scale-105"
           >
-            編輯
+            <PencilSquareIcon class="w-5 h-5" /> 編輯
           </button>
           <button
             @click="handleDelete(activity.id)"
-            class="min-w-[130px] w-[150px] h-[40px] text-white px-[10px] py-[5px] font-bold cursor-pointer transition-all duration-300 outline-none rounded-[20px] border-2 border-[#219ebc] bg-[#219ebc] flex items-center justify-center gap-1 hover:bg-white hover:text-[#219ebc]"
+            class="w-[150px] h-[40px] flex items-center justify-center gap-1 font-bold transition-all duration-300 rounded-full border-2 border-secondary bg-secondary text-white hover:bg-white hover:text-secondary hover:scale-105"
           >
-            刪除
+            <TrashIcon class="w-5 h-5" /> 刪除
           </button>
         </div>
       </div>
     </div>
-    <h2 class="mb-4 text-2xl font-semibold text-darkblue">我參加的活動</h2>
-    <div
-      v-if="joinActivities && joinActivities.length === 0"
-      class="text-center text-gray-400"
-    >
-      你還沒有參加任何活動
-    </div>
-    <div
-      v-for="activity in joinActivities"
-      :key="activity.id"
-      class="flex flex-col items-center justify-between p-4 mb-6 bg-white border shadow-md rounded-2xl md:flex-row"
-    >
-      <img
-        v-if="activity.image_url"
-        :src="activity.image_url"
-        class="object-cover w-full mb-2 md:w-72 rounded-xl md:mb-0 h-52"
-      />
-      <div class="w-full md:w-[300px]">
-        <h3 class="mb-1 text-lg font-bold text-darkblue">
-          {{ activity.title }}
-        </h3>
-        <p class="mb-1 text-sm text-gray-600">
-          <span class="font-semibold text-darkblue">日期：</span>
-          {{
-            new Date(activity.date).toLocaleString("zh-TW", {
-              year: "numeric",
-              month: "2-digit",
-              day: "2-digit",
-              hour: "2-digit",
-              minute: "2-digit",
-              hour12: false,
-              timeZone: "Asia/Taipei",
-            })
-          }}
-        </p>
-        <p class="mb-1 text-sm text-gray-600">
-          <span class="font-semibold text-darkblue">地點：</span
-          >{{ activity.location }}
-        </p>
-        <p class="mb-1 text-sm text-gray-600">
-          <span class="font-semibold text-darkblue">描述：</span
-          >{{ activity.description }}
-        </p>
+
+    <div v-if="activeTab === 'joined'" class="space-y-6">
+      <div
+        v-if="joinActivities.length === 0"
+        class="py-16 text-base text-center text-gray-400"
+      >
+        <div class="mb-2 text-4xl">🧾</div>
+        你還沒有參加任何活動
       </div>
 
-      <button
-        @click="handleDeleteJoin(activity.id)"
-        class="min-w-[130px] w-[150px] h-[40px] text-white px-[10px] py-[5px] font-bold cursor-pointer transition-all duration-300 outline-none rounded-[20px] border-2 border-[#219ebc] bg-[#219ebc] flex items-center justify-center gap-1 hover:bg-white hover:text-[#219ebc]"
+      <div
+        v-for="activity in joinActivities"
+        :key="activity.id"
+        class="flex flex-col items-start gap-4 p-5 transition duration-200 bg-white shadow-md md:flex-row md:items-stretch md:gap-6 sm:p-6 rounded-2xl hover:shadow-lg"
       >
-        取消參加
-      </button>
+        <img
+          v-if="activity.image_url"
+          :src="activity.image_url"
+          loading="lazy"
+          class="w-full md:w-64 aspect-[4/3] sm:aspect-video object-cover rounded-xl"
+        />
+
+        <div class="w-full space-y-2 text-base text-gray-700 md:flex-1">
+          <h3 class="flex items-center gap-2 text-xl font-bold text-darkblue">
+            {{ activity.title }}
+          </h3>
+          <p class="flex items-center gap-2">
+            <CalendarDaysIcon class="w-5 h-5 text-secondary shrink-0 -mt-0.5" />
+            <span class="font-semibold text-secondary">日期：</span>
+            {{
+              new Date(activity.date).toLocaleString("zh-TW", {
+                year: "numeric",
+                month: "2-digit",
+                day: "2-digit",
+                hour: "2-digit",
+                minute: "2-digit",
+                hour12: false,
+                timeZone: "Asia/Taipei",
+              })
+            }}
+          </p>
+          <p class="flex items-center gap-2">
+            <MapPinIcon class="w-5 h-5 text-secondary shrink-0 -mt-0.5" />
+            <span class="font-semibold text-secondary">地點：</span>
+            {{ activity.location }}
+          </p>
+          <p class="text-sm">
+            <span class="font-semibold text-secondary">描述：</span>
+            {{ activity.description }}
+          </p>
+        </div>
+
+        <div
+          class="flex flex-col self-stretch w-full gap-3 mt-4 md:w-auto md:self-end md:mt-0"
+        >
+          <button
+            @click="handleDeleteJoin(activity.id)"
+            class="w-full md:w-[150px] h-[40px] flex items-center justify-center gap-1 font-bold transition duration-200 rounded-full border-2 border-secondary bg-secondary text-white hover:bg-white hover:text-secondary hover:scale-105"
+          >
+            <TrashIcon class="w-5 h-5" /> 取消參加
+          </button>
+        </div>
+      </div>
     </div>
   </div>
 </template>
