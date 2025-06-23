@@ -141,16 +141,16 @@ const handleDeleteJoin = async (id) => {
           </p>
         </div>
 
-        <div class="flex flex-col items-end gap-3 mt-4 md:mt-0">
+        <div
+          class="flex flex-col w-full gap-3 mt-4 sm:w-auto sm:items-end sm:mt-0"
+        >
           <button
-            @click="goEdit(activity.id)"
-            class="w-[150px] h-[40px] flex items-center justify-center gap-1 font-bold transition-all duration-300 rounded-full border-2 border-secondary bg-secondary text-white hover:bg-white hover:text-secondary hover:scale-105"
+            class="w-full sm:w-[150px] h-[40px] flex items-center justify-center gap-1 font-bold transition-all duration-300 rounded-full border-2 border-secondary bg-secondary text-white hover:bg-white hover:text-secondary hover:scale-105"
           >
             <PencilSquareIcon class="w-5 h-5" /> 編輯
           </button>
           <button
-            @click="handleDelete(activity.id)"
-            class="w-[150px] h-[40px] flex items-center justify-center gap-1 font-bold transition-all duration-300 rounded-full border-2 border-secondary bg-secondary text-white hover:bg-white hover:text-secondary hover:scale-105"
+            class="w-full sm:w-[150px] h-[40px] flex items-center justify-center gap-1 font-bold transition-all duration-300 rounded-full border-2 border-secondary bg-secondary text-white hover:bg-white hover:text-secondary hover:scale-105"
           >
             <TrashIcon class="w-5 h-5" /> 刪除
           </button>
@@ -210,11 +210,10 @@ const handleDeleteJoin = async (id) => {
         </div>
 
         <div
-          class="flex flex-col self-stretch w-full gap-3 mt-4 md:w-auto md:self-end md:mt-0"
+          class="flex flex-col w-full gap-3 mt-4 sm:w-auto sm:items-end sm:mt-0"
         >
           <button
-            @click="handleDeleteJoin(activity.id)"
-            class="w-full md:w-[150px] h-[40px] flex items-center justify-center gap-1 font-bold transition duration-200 rounded-full border-2 border-secondary bg-secondary text-white hover:bg-white hover:text-secondary hover:scale-105"
+            class="w-full sm:w-[150px] h-[40px] flex items-center justify-center gap-1 font-bold transition-all duration-300 rounded-full border-2 border-secondary bg-secondary text-white hover:bg-white hover:text-secondary hover:scale-105"
           >
             <TrashIcon class="w-5 h-5" /> 取消參加
           </button>
