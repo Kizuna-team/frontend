@@ -493,7 +493,7 @@ watch(route, () => {
                 : 'bg-white/10 hover:bg-white/20',
             ]"
           >
-            配對池
+            立即配對
           </LiquidNavLink>
 
           <LiquidNavLink
@@ -519,7 +519,7 @@ watch(route, () => {
                 : 'bg-white/10 hover:bg-white/20',
             ]"
           >
-            活動
+            探索活動
           </LiquidNavLink>
 
           <LiquidNavLink
