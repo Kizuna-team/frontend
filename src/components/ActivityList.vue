@@ -174,7 +174,7 @@ watch(searchQuery, () => (currentPage.value = 1));
               >{{ activity.description }}
             </p>
             <p class="mt-2 text-sm text-gray-500">
-              <span class="font-semibold">建立時間：</span
+              <span class="font-semibold text-darkblue">建立時間：</span
               >{{ activity.created_at?.slice(0, 10) }}
             </p>
           </div>
