@@ -32,6 +32,17 @@ const handleJoin = async (activityId) => {
 
 onMounted(() => fetchActivities());
 
+function formatDateTime(isoString) {
+  if (!isoString) return "";
+  const d = new Date(isoString);
+  const yyyy = d.getFullYear();
+  const mm = String(d.getMonth() + 1).padStart(2, "0");
+  const dd = String(d.getDate()).padStart(2, "0");
+  const hh = String(d.getHours()).padStart(2, "0");
+  const min = String(d.getMinutes()).padStart(2, "0");
+  return `${yyyy}/${mm}/${dd} ${hh}:${min}`;
+}
+
 const searchQuery = ref("");
 const currentPage = ref(1);
 const itemsPerPage = ref(6);
@@ -149,6 +160,10 @@ watch(searchQuery, () => (currentPage.value = 1));
             <p class="mb-1 text-sm text-gray-600">
               <span class="font-semibold text-darkblue">主辦人：</span
               >{{ activity.created_by_username }}
+            </p>
+            <p class="mb-1 text-sm text-gray-600">
+              <span class="font-semibold text-darkblue">日期：</span>
+              {{ formatDateTime(activity.date) }}
             </p>
             <p class="mb-1 text-sm text-gray-600">
               <span class="font-semibold text-darkblue">地點：</span
