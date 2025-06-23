@@ -1,4 +1,3 @@
-// api/googleMapsApi.js
 import { GOOGLE_MAPS_CONFIG } from '@/config/googleMaps'
 
 // 載入 Google Maps API

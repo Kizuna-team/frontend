@@ -4,8 +4,8 @@ import { useActivityStore } from "@/stores/activity.js";
 import { useRoute } from "vue-router";
 import { storeToRefs } from "pinia";
 import { useUserStore } from "@/stores/user.js";
-import { useToast } from 'vue-toastification'
-import AddressInput from '@/components/AddressInput.vue'
+import { useToast } from "vue-toastification";
+import AddressInput from "@/components/AddressInput.vue";
 const userStore = useUserStore(); //抓username
 const previewUrl = ref(""); // 圖片預覽網址
 const store = useActivityStore();
@@ -15,7 +15,7 @@ const { fetchActivityById, updateActivity, createActivity, deleteActivity } =
 
 const route = useRoute();
 const activityId = route.params.id;
-const toast = useToast()
+const toast = useToast();
 
 const isEditMode = computed(() => route.name === "activityEdit"); //computed
 const formTitle = computed(() => (isEditMode.value ? "編輯活動" : "新增活動"));
@@ -142,11 +142,15 @@ async function handleDelete() {
       />
     </div>
 
-    <h2 class="mb-6 text-2xl font-bold text-center text-darkblue">{{ formTitle }}</h2>
+    <h2 class="mb-6 text-2xl font-bold text-center text-darkblue">
+      {{ formTitle }}
+    </h2>
 
     <form @submit.prevent="handleSubmit" class="space-y-4">
       <div>
-        <label for="title" class="block mb-2 text-lg font-bold text-darkblue ">活動標題：</label>
+        <label for="title" class="block mb-2 text-lg font-bold text-darkblue"
+          >活動標題：</label
+        >
         <input
           id="title"
           v-model="form.title"
@@ -155,7 +159,9 @@ async function handleDelete() {
         />
       </div>
       <div>
-        <label for="image" class="block mb-2 text-lg font-bold text-darkblue ">活動圖片：</label>
+        <label for="image" class="block mb-2 text-lg font-bold text-darkblue"
+          >活動圖片：</label
+        >
         <input
           id="image"
           type="file"
@@ -165,26 +171,15 @@ async function handleDelete() {
         />
       </div>
       <div>
-        <label for="location" class="block mb-2 text-lg font-bold text-darkblue "
+        <label for="location" class="block mb-2 text-lg font-bold text-darkblue"
           >活動地點：</label
         >
-        <input
-          id="location"
-          v-model="form.location"
-          placeholder="請輸入活動地點"
-          class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:text-secondary"
-        />
       </div>
-
-      <AddressInput
-        v-model="form.location"
-        label="活動地點"
-        placeholder="請輸入活動地點或點擊地圖選擇"
-        :required="true"
-      />
-      
+      <AddressInput v-model="form.location" />
       <div>
-        <label for="date" class="block mb-2 text-lg font-bold text-darkblue">活動日期：</label>
+        <label for="date" class="block mb-2 text-lg font-bold text-darkblue"
+          >活動日期：</label
+        >
         <input
           id="date"
           v-model="form.date"
@@ -194,7 +189,9 @@ async function handleDelete() {
         />
       </div>
       <div>
-        <label for="time" class="block mb-2 text-lg font-bold text-darkblue">活動時間：</label>
+        <label for="time" class="block mb-2 text-lg font-bold text-darkblue"
+          >活動時間：</label
+        >
         <input
           id="time"
           type="time"
@@ -203,7 +200,9 @@ async function handleDelete() {
         />
       </div>
       <div>
-        <label for="description" class="block mb-2 text-lg font-bold text-darkblue"
+        <label
+          for="description"
+          class="block mb-2 text-lg font-bold text-darkblue"
           >活動描述：</label
         >
         <textarea
