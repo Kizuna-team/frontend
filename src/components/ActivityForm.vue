@@ -5,6 +5,7 @@ import { useRoute } from "vue-router";
 import { storeToRefs } from "pinia";
 import { useUserStore } from "@/stores/user.js";
 import { useToast } from 'vue-toastification'
+import AddressInput from '@/components/AddressInput.vue'
 const userStore = useUserStore(); //抓username
 const previewUrl = ref(""); // 圖片預覽網址
 const store = useActivityStore();
@@ -174,6 +175,14 @@ async function handleDelete() {
           class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:text-secondary"
         />
       </div>
+
+      <AddressInput
+        v-model="form.location"
+        label="活動地點"
+        placeholder="請輸入活動地點或點擊地圖選擇"
+        :required="true"
+      />
+      
       <div>
         <label for="date" class="block mb-2 text-lg font-bold text-darkblue">活動日期：</label>
         <input
