@@ -87,7 +87,6 @@ const handleDeleteJoin = async (id) => {
         v-if="activities.length === 0"
         class="py-16 text-base text-center text-gray-400"
       >
-        <div class="mb-2 text-4xl">📂</div>
         你還沒有建立任何活動
       </div>
 
@@ -145,11 +144,13 @@ const handleDeleteJoin = async (id) => {
           class="flex flex-col w-full gap-3 mt-4 sm:w-auto sm:items-end sm:mt-0"
         >
           <button
+            @click="goEdit(activity.id)"
             class="w-full sm:w-[150px] h-[40px] flex items-center justify-center gap-1 font-bold transition-all duration-300 rounded-full border-2 border-secondary bg-secondary text-white hover:bg-white hover:text-secondary hover:scale-105"
           >
             <PencilSquareIcon class="w-5 h-5" /> 編輯
           </button>
           <button
+            @click="handleDelete(activity.id)"
             class="w-full sm:w-[150px] h-[40px] flex items-center justify-center gap-1 font-bold transition-all duration-300 rounded-full border-2 border-secondary bg-secondary text-white hover:bg-white hover:text-secondary hover:scale-105"
           >
             <TrashIcon class="w-5 h-5" /> 刪除
@@ -213,6 +214,7 @@ const handleDeleteJoin = async (id) => {
           class="flex flex-col w-full gap-3 mt-4 sm:w-auto sm:items-end sm:mt-0"
         >
           <button
+            @click="handleDeleteJoin(activity.id)"
             class="w-full sm:w-[150px] h-[40px] flex items-center justify-center gap-1 font-bold transition-all duration-300 rounded-full border-2 border-secondary bg-secondary text-white hover:bg-white hover:text-secondary hover:scale-105"
           >
             <TrashIcon class="w-5 h-5" /> 取消參加
