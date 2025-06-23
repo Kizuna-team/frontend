@@ -1,23 +1,71 @@
 <script setup>
 import { ref, computed, watch } from "vue";
 import { useUserStore } from "@/stores/user";
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import LiquidNavLink from "@/components/LiquidGlass.vue";
 import { useCartStore } from "@/stores/cart.js";
 import { useToast } from "vue-toastification";
 
 const route = useRoute();
+const router = useRouter();
 const store = useUserStore();
 const cartStore = useCartStore();
 const toast = useToast();
-
 const isMobileMenuOpen = ref(false);
 const isDropdownOpen = ref(false);
+
+//定義每個區域的滾動位置
+const sectionPositions = {
+  about: 800, // 關於我們
+  tutorial: 2700, // 使用教學區
+  "activities-preview": 1700, // 探索活動
+  "match-preview": 3500, // 立即配對
+};
+
+// 處理導覽點擊事件
+const handleNavClick = async (event, sectionId) => {
+  event.preventDefault();
+  if (route.path === "/") {
+    // 如果在首頁，滾動到對應位置
+    const targetPosition = sectionPositions[sectionId];
+    if (targetPosition) {
+      window.scrollTo({
+        top: targetPosition,
+        behavior: "smooth",
+      });
+    }
+  } else {
+    // 如果不在首頁，先跳轉到首頁
+    await router.push("/");
+
+    // 等待頁面載入完成，然後滾動
+    setTimeout(() => {
+      const targetPosition = sectionPositions[sectionId];
+      if (targetPosition) {
+        window.scrollTo({
+          top: targetPosition,
+          behavior: "smooth",
+        });
+      }
+    }, 300);
+  }
+
+  // 關閉手機選單
+  isMobileMenuOpen.value = false;
+};
+
+// 需要隱藏中間導覽按鈕的頁面
+const hideNavButtonsPages = ["/login", "/register"];
+
+// 判斷是否需要隱藏中間導覽按鈕
+const shouldHideNavButtons = computed(() =>
+  hideNavButtonsPages.includes(route.path)
+);
 
 // 判斷 header 是否滾動狀態
 const isScrolled = ref(false);
 window.addEventListener("scroll", () => {
-  isScrolled.value = window.scrollY > 10;
+  isScrolled.value = window.scrollY > 790;
 });
 
 // 白底頁面清單（可擴充）
@@ -109,26 +157,66 @@ watch(route, () => {
         </svg>
       </button>
 
-      <!-- 桌機導覽 - 1250px 以上顯示 -->
+      <!-- 桌機導覽 - 1250px 以上顯示 在登入註冊頁面時隱藏中間按鈕 -->
       <div
+        v-if="!shouldHideNavButtons"
         class="items-center justify-center flex-1 space-x-6 custom-desktop-show"
       >
-        <LiquidNavLink to="/match" :colorMode="getNavTextColor"
-          >配對池</LiquidNavLink
-        >
-        <LiquidNavLink to="/product" :colorMode="getNavTextColor"
-          >商品列表</LiquidNavLink
-        >
-        <LiquidNavLink to="/activities" :colorMode="getNavTextColor"
-          >活動</LiquidNavLink
-        >
-        <LiquidNavLink to="/activities/new" :colorMode="getNavTextColor"
-          >活動表單</LiquidNavLink
-        >
-        <LiquidNavLink to="/activities/my" :colorMode="getNavTextColor"
-          >我的活動</LiquidNavLink
-        >
+        <template v-if="!store.accessToken">
+          <!-- 保留 LiquidNavLink 樣式，但加入點擊事件處理 -->
+          <LiquidNavLink
+            to=""
+            :colorMode="getNavTextColor"
+            @click="(e) => handleNavClick(e, 'about')"
+          >
+            關於我們
+          </LiquidNavLink>
+
+          <LiquidNavLink
+            to=""
+            :colorMode="getNavTextColor"
+            @click="(e) => handleNavClick(e, 'activities-preview')"
+          >
+            探索活動
+          </LiquidNavLink>
+
+          <LiquidNavLink
+            to=""
+            :colorMode="getNavTextColor"
+            @click="(e) => handleNavClick(e, 'tutorial')"
+          >
+            使用教學
+          </LiquidNavLink>
+
+          <LiquidNavLink
+            to=""
+            :colorMode="getNavTextColor"
+            @click="(e) => handleNavClick(e, 'match-preview')"
+          >
+            立即配對
+          </LiquidNavLink>
+        </template>
+        <template v-else>
+          <LiquidNavLink to="/match" :colorMode="getNavTextColor"
+            >立即配對</LiquidNavLink
+          >
+          <LiquidNavLink to="/product" :colorMode="getNavTextColor"
+            >商品列表</LiquidNavLink
+          >
+          <LiquidNavLink to="/activities/new" :colorMode="getNavTextColor"
+            >活動表單</LiquidNavLink
+          >
+          <LiquidNavLink to="/activities/my" :colorMode="getNavTextColor"
+            >我的活動</LiquidNavLink
+          >
+          <LiquidNavLink to="/activities" :colorMode="getNavTextColor"
+            >探索活動</LiquidNavLink
+          >
+        </template>
       </div>
+
+      <!-- 如果隱藏中間按鈕，用空的 div 保持佈局 -->
+      <div v-else class="flex-1 custom-desktop-show"></div>
 
       <!-- 使用者選單 - 1250px 以上顯示 -->
       <div class="items-center justify-end space-x-4 custom-desktop-show">
