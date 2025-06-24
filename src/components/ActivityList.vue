@@ -11,7 +11,8 @@ const { fetchActivities } = store;
 
 const token = localStorage.getItem("token");
 
-const handleJoin = async (activityId) => {
+
+const handleJoin = async (activityId,activity) => {
   try {
     const res = await axios.post(
       `${baseUrl}/activities/join/${activityId}`,
@@ -23,6 +24,9 @@ const handleJoin = async (activityId) => {
       }
     );
 
+    activity.current_participants = Number(activity.current_participants) + 1
+    console.log(activity.current_participants); 
+    
     alert(res.data.message);
   } catch (err) {
     if (err.response?.status === 409) {
@@ -225,7 +229,7 @@ watch(searchQuery, () => (currentPage.value = 1));
             </p>
           </div>
           <button
-            @click="handleJoin(activity.id)"
+            @click="handleJoin(activity.id,activity)"
             class="w-full py-2 mt-4 text-sm font-semibold text-white transition-all border-2 rounded-full bg-secondary hover:bg-white hover:text-secondary border-secondary"
           >
             加入活動

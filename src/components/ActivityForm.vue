@@ -26,6 +26,7 @@ const form = ref({
   time: "",
   description: "",
   createdBy: "",
+  maxParticipants:"",
 });
 
 const today = new Date().toISOString().split("T")[0];
@@ -59,6 +60,7 @@ watch(
           time: selectedActivity.value?.date?.slice(11, 16) || "",
           description: selectedActivity.value?.description || "",
           createdBy: selectedActivity.value?.createdBy || "",
+          maxParticipants: selectedActivity.value?.maxParticipants || "",
         };
         // 如果有舊圖片就顯示，沒有就空字串
         if (selectedActivity.value?.image_url) {
@@ -76,6 +78,7 @@ watch(
         date: "",
         description: "",
         createdBy: "",
+        maxParticipants:"",
       };
     }
   },
@@ -83,6 +86,7 @@ watch(
 );
 
 async function handleSubmit() {
+  // console.log("maxParticipants：", form.value.maxParticipants);
   // 1. 建立 FormData 物件
   const formData = new FormData();
   formData.append("title", form.value.title);
@@ -90,9 +94,14 @@ async function handleSubmit() {
   formData.append("date", `${form.value.date}T${form.value.time}:00+08:00`);
   formData.append("description", form.value.description);
   formData.append("createdBy", form.value.createdBy);
+  formData.append("maxParticipants",form.value.maxParticipants)
   if (imageFile.value) {
     formData.append("image", imageFile.value); // 圖片也放進去
   }
+
+  // for (let pair of formData.entries()) {
+  // console.log(pair[0] + ": " + pair[1]);
+  // }
 
   try {
     if (isEditMode.value) {
@@ -196,6 +205,17 @@ async function handleDelete() {
           id="time"
           type="time"
           v-model="form.time"
+          class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:text-secondary"
+        />
+      </div>
+      <div>
+        <label for="max-participants" class="block mb-2 text-lg font-bold text-darkblue"
+          >活動人數上限：</label
+        >
+        <input
+          id="max-participants"
+          type="number"
+          v-model.number="form.maxParticipants"
           class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:text-secondary"
         />
       </div>
