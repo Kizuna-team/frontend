@@ -2,12 +2,14 @@
 import { ref, computed, watch } from "vue";
 import { useUserStore } from "@/stores/user";
 import { useRoute } from "vue-router";
+import { useRouter } from "vue-router";
 import LiquidNavLink from "@/components/LiquidGlass.vue";
 import { useCartStore } from "@/stores/cart.js";
 import { useToast } from "vue-toastification";
 import ScrollToTop from "@/components/ScrollToTop.vue";
 
 const route = useRoute();
+const router = useRouter();
 const store = useUserStore();
 const cartStore = useCartStore();
 const toast = useToast();
@@ -395,8 +397,8 @@ watch(route, () => {
         <template v-if="!store.accessToken">
           <!-- 關於我們 -->
           <LiquidNavLink
-          to="#"
-          :colorMode="getNavTextColor"
+            to="#"
+            :colorMode="getNavTextColor"
             @click="(e) => handleNavClick(e, 'about')"
             class="block w-full !px-3 py-2 !text-[16px] overflow-hidden text-ellipsis whitespace-nowrap font-medium text-right transition-all duration-200 rounded-xl"
             :class="[
@@ -410,8 +412,8 @@ watch(route, () => {
 
           <!-- 探索活動 -->
           <LiquidNavLink
-          to="#"
-          :colorMode="getNavTextColor"
+            to="#"
+            :colorMode="getNavTextColor"
             @click="(e) => handleNavClick(e, 'activities-preview')"
             class="block w-full !px-3 py-2 !text-[16px] overflow-hidden text-ellipsis whitespace-nowrap font-medium text-right transition-all duration-200 rounded-xl"
             :class="[
