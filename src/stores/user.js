@@ -10,7 +10,9 @@ export const useUserStore = defineStore("user", () => {
   const username = ref(localStorage.getItem("username") || "");
   const userId = ref(localStorage.getItem("userId") || "");
   // 設定使用者的訂閱計畫
-  const subscriptionPlan = ref(localStorage.getItem("subscriptionPlan") || "free");
+  const subscriptionPlan = ref(
+    localStorage.getItem("subscriptionPlan") || "free"
+  );
 
   const profile = reactive({
     gender: "",
@@ -21,7 +23,7 @@ export const useUserStore = defineStore("user", () => {
   });
 
   // 從資料庫抓 profile
-  function getProfile(profileDate){
+  function getProfile(profileDate) {
     profile.gender = profileDate.gender;
     profile.age = profileDate.age;
     profile.location = profileDate.location;
@@ -58,7 +60,7 @@ export const useUserStore = defineStore("user", () => {
         username: usernameInput,
         password: passwordInput,
       });
-      
+
       accessToken.value = res.data.accessToken;
       refreshToken.value = res.data.refreshToken;
       username.value = res.data.username;
@@ -68,7 +70,19 @@ export const useUserStore = defineStore("user", () => {
       localStorage.setItem("refreshToken", refreshToken.value);
       localStorage.setItem("username", username.value);
       localStorage.setItem("userId", userId.value);
-    } catch (error) { 
+
+      const storedCartUserId = localStorage.getItem("cartUserId");
+      const currentUserId = String(userId.value);
+
+      if (storedCartUserId && storedCartUserId !== currentUserId) {
+        localStorage.removeItem("cartItems");
+        const { useCartStore } = await import("../stores/cart.js");
+        const cartStore = useCartStore();
+        cartStore.cartItems = [];
+      }
+
+      localStorage.setItem("cartUserId", currentUserId);
+    } catch (error) {
       throw error;
     }
   };
@@ -79,7 +93,7 @@ export const useUserStore = defineStore("user", () => {
     refreshToken.value = "";
     username.value = "";
     userId.value = null;
-    profile.age= null;
+    profile.age = null;
     profile.gender = "";
     profile.location = "";
     profile.bio = "";
@@ -89,7 +103,6 @@ export const useUserStore = defineStore("user", () => {
     localStorage.removeItem("refreshToken");
     localStorage.removeItem("username");
     localStorage.removeItem("userId");
-
   };
 
   // 用 refreshToken 取得新的 accessToken
@@ -108,8 +121,12 @@ export const useUserStore = defineStore("user", () => {
       console.log("google嘗試登入中 idToken", idToken);
 
       const res = await axios.post("/auth/google", { credential: idToken });
-      
-      const { accessToken: newAccessToken, refreshToken: newFreshToken, user } = res.data;
+
+      const {
+        accessToken: newAccessToken,
+        refreshToken: newFreshToken,
+        user,
+      } = res.data;
       console.log("從後端傳回來的response:", res.data);
 
       accessToken.value = newAccessToken;
@@ -124,10 +141,10 @@ export const useUserStore = defineStore("user", () => {
     }
   };
 
-   const setSubscription = (plan) => {
-      subscriptionPlan.value = plan;
-      localStorage.setItem("subscriptionPlan", plan);
-    };
+  const setSubscription = (plan) => {
+    subscriptionPlan.value = plan;
+    localStorage.setItem("subscriptionPlan", plan);
+  };
   return {
     accessToken,
     refreshToken,
