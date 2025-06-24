@@ -6,17 +6,23 @@ import { useUserStore } from "@/stores/user";
 const userStore = useUserStore();
 const orders = ref([]);
 const activeTab = ref("sent");
+const loading = ref(false);
 
 const fetchOrders = async () => {
+  loading.value = true;
   try {
     const url =
       activeTab.value === "sent"
         ? `/order/my-orders?userId=${userStore.userId}`
         : `/order/received?userId=${userStore.userId}`;
     const res = await axios.get(url);
-    orders.value = res.data;
+    orders.value = res.data.sort(
+      (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+    );
   } catch (err) {
     console.error("取得紀錄失敗", err);
+  } finally {
+    loading.value = false;
   }
 };
 
@@ -88,7 +94,7 @@ const statusColor = (status) => {
     <div v-if="loading" class="py-8 text-center text-gray-500">載入中...</div>
 
     <div v-else>
-      <div v-if="orders.length === 0" class="text-center text-gray-400 py-16">
+      <div v-if="orders.length === 0" class="py-16 text-center text-gray-400">
         尚未有任何{{ activeTab === "sent" ? "購買" : "收禮" }}紀錄
       </div>
 
@@ -98,54 +104,83 @@ const statusColor = (status) => {
           :key="order.orderId"
           class="p-5 transition duration-200 bg-white shadow-md rounded-2xl hover:shadow-lg"
         >
-          <div class="flex justify-between items-center mb-2">
+          <div class="flex items-center justify-between mb-2">
             <div class="text-sm text-gray-600">
               訂單編號：<span class="font-mono">{{ order.orderId }}</span>
             </div>
             <div
-              class="text-xs px-2 py-1 rounded font-semibold"
+              v-if="activeTab === 'sent'"
+              class="px-2 py-1 text-xs font-semibold rounded"
               :class="statusColor(order.status)"
             >
               {{ statusLabel(order.status) }}
             </div>
           </div>
 
-          <div class="text-sm text-gray-700 mb-1">
+          <div class="mb-1 text-sm text-gray-700">
             {{ activeTab === "sent" ? "購買日期" : "收到日期" }}：
             {{ formatDate(order.createdAt) }}
           </div>
-          <div class="text-sm text-gray-700 mb-2">
+          <div class="mb-2 text-sm text-gray-700">
             {{ activeTab === "sent" ? "收件人" : "送禮人" }}：
             <span class="font-semibold">
               {{ activeTab === "sent" ? order.receiverName : order.senderName }}
             </span>
           </div>
 
-          <div class="space-y-3">
-            <div
-              v-for="(item, index) in order.items"
-              :key="index"
-              class="flex items-center gap-4 p-3 border border-gray-200 rounded-xl"
-            >
+          <div
+            v-if="activeTab === 'sent'"
+            class="relative p-3 border border-gray-200 rounded-xl"
+          >
+            <div class="flex items-center gap-4">
               <img
-                :src="item.imageUrl || '/default.jpg'"
+                :src="order.items[0]?.imageUrl || '/default.jpg'"
                 alt="product"
                 class="object-cover w-20 h-20 rounded-xl"
               />
-              <div class="flex-1">
+              <div>
                 <div class="text-base font-semibold text-gray-800">
-                  {{ item.productName }}
+                  {{ order.items[0]?.productName }}
                 </div>
                 <div class="text-sm text-gray-600">
-                  數量：{{ item.quantity }}
+                  數量：{{ order.items[0]?.quantity }}
                 </div>
               </div>
             </div>
-          </div>
 
-          <div class="mt-4 text-right text-base font-semibold text-gray-800">
-            {{ activeTab === "sent" ? "贈送金額" : "禮物價值" }}：NT$
-            {{ order.amount }}
+            <div
+              class="absolute text-base font-semibold text-gray-800 bottom-3 right-4"
+            >
+              贈送金額：NT$ {{ order.amount }}
+            </div>
+          </div>
+          <div
+            v-if="activeTab === 'received'"
+            class="flex items-start justify-between gap-4 mt-4"
+          >
+            <div
+              class="flex items-center flex-1 gap-3 p-3 border border-gray-200 rounded-xl"
+            >
+              <img
+                :src="order.items[0]?.imageUrl || '/default.jpg'"
+                alt="product"
+                class="object-cover w-20 h-20 rounded-xl"
+              />
+              <div>
+                <div class="text-base font-semibold text-gray-800">
+                  {{ order.items[0]?.productName }}
+                </div>
+                <div class="text-sm text-gray-600">
+                  數量：{{ order.items[0]?.quantity }}
+                </div>
+              </div>
+            </div>
+
+            <img
+              src="https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=yeet"
+              alt="QR Code"
+              class="w-24 h-24"
+            />
           </div>
         </div>
       </div>
