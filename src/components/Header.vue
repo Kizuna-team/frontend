@@ -355,7 +355,7 @@ watch(route, () => {
                   />
                 </svg>
 
-                <span class="whitespace-nowrap">我的購買紀錄</span>
+                <span class="whitespace-nowrap">我的禮物紀錄</span>
               </a>
               <button
                 @click="handleLogout"
@@ -599,7 +599,7 @@ watch(route, () => {
                 : 'bg-white/10 hover:bg-white/20',
             ]"
           >
-            我的購買紀錄
+            我的禮物紀錄
           </LiquidNavLink>
 
           <LiquidNavLink
