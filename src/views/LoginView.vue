@@ -74,7 +74,7 @@ onMounted(() => {
       {
         theme: "outline",
         size: "large",
-        width: "100%",
+        width: 375,
         text: "signin_with",
         shape: "pill",
       }
