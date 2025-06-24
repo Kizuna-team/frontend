@@ -5,8 +5,7 @@ import sendOrder from "@/utils/order.js";
 import { onMounted } from "vue";
 import { useUserStore } from "@/stores/user";
 import { useFriendStore } from "@/stores/friend";
-import { useToast } from 'vue-toastification'
-
+import { useToast } from "vue-toastification";
 
 import axios from "@/api/axios";
 const cartStore = useCartStore();
@@ -223,7 +222,7 @@ onMounted(() => {
 });
 </script>
 <template>
-  <div class="min-h-[60vh] flex justify-center">
+  <div class="min-h-[60vh] flex justify-center px-4 sm:px-6 md:px-8">
     <!-- 完成狀態 -->
     <div
       v-if="isCompleted"
@@ -251,9 +250,9 @@ onMounted(() => {
     <!-- 表單主體 -->
     <div
       v-else
-      class="bg-white rounded-2xl shadow-2xl p-8 max-w-2xl min-h-[70vh] w-full"
+      class="bg-white rounded-2xl shadow-2xl p-4 sm:p-6 md:p-8 max-w-full md:max-w-2xl min-h-[70vh] w-full"
     >
-      <h1 class="mb-8 text-3xl font-bold text-center text-gray-800">
+      <h1 class="mb-8 text-2xl font-bold text-center text-gray-800 sm:text-3xl">
         訂購流程
       </h1>
 
@@ -268,7 +267,7 @@ onMounted(() => {
             style="background: linear-gradient(to right, #8ecae6, #e07600)"
             :style="{ width: progressPercentage + '%' }"
           ></div>
-          <ol class="relative z-10 flex justify-between">
+          <ol class="relative z-10 flex flex-wrap justify-between">
             <li
               v-for="(step, index) in steps"
               :key="index"
@@ -309,7 +308,7 @@ onMounted(() => {
               </div>
               <span
                 :class="[
-                  'mt-2 text-xs font-medium',
+                  'mt-2 text-xs font-medium sm:text-sm',
                   currentStep >= index ? '' : 'text-gray-400',
                 ]"
                 :style="currentStep >= index ? 'color: #ffb703' : ''"
@@ -350,30 +349,45 @@ onMounted(() => {
                   :key="item.id"
                   class="p-4 transition-shadow duration-300 bg-white border border-gray-200 shadow-sm rounded-xl hover:shadow-md"
                 >
-                  <div class="flex items-center space-x-4">
-                    <img
-                      :src="item.img"
-                      :alt="item.name"
-                      class="object-cover w-20 h-20 rounded-lg"
-                    />
-                    <div class="flex-1">
-                      <h4 class="text-lg font-semibold text-gray-800">
-                        {{ item.name }}
-                      </h4>
-                      <p class="mt-1 text-sm text-gray-600">
-                        {{ item.description }}
-                      </p>
-                      <div class="flex items-center justify-between mt-3">
-                        <div class="flex items-center space-x-3">
-                          <span class="text-lg font-bold text-accent"
-                            >NT$ {{ item.price.toLocaleString() }}</span
-                          >
+                  <div class="flex flex-col gap-4 sm:flex-row sm:items-start">
+                    <!-- 圖片 -->
+                    <div class="flex justify-center w-full sm:w-auto">
+                      <img
+                        :src="item.img"
+                        :alt="item.name"
+                        class="object-cover w-full h-full rounded-lg sm:w-20 sm:h-20"
+                      />
+                    </div>
+
+                    <!-- 商品資訊 -->
+                    <div
+                      class="flex flex-col justify-between flex-1 text-center sm:text-left"
+                    >
+                      <!-- 名稱與描述 -->
+                      <div>
+                        <h4 class="text-lg font-semibold text-gray-800">
+                          {{ item.name }}
+                        </h4>
+                        <p class="mt-1 text-sm text-gray-600">
+                          {{ item.description }}
+                        </p>
+                      </div>
+
+                      <!-- 價格與數量 -->
+                      <div
+                        class="flex flex-col items-center justify-between gap-4 mt-4 sm:flex-row"
+                      >
+                        <!-- 價格 -->
+                        <div class="text-lg font-bold text-accent">
+                          NT$ {{ item.price.toLocaleString() }}
                         </div>
+
+                        <!-- 數量調整 -->
                         <div class="flex items-center space-x-3">
                           <button
                             type="button"
                             @click="updateQuantity(item.id, item.quantity - 1)"
-                            class="flex items-center justify-center w-8 h-8 transition-colors bg-gray-100 rounded-full hover:bg-gray-200"
+                            class="flex items-center justify-center w-8 h-8 bg-gray-100 rounded-full hover:bg-gray-200"
                           >
                             <svg
                               class="w-4 h-4 text-gray-600"
@@ -386,16 +400,18 @@ onMounted(() => {
                                 stroke-linejoin="round"
                                 stroke-width="2"
                                 d="M20 12H4"
-                              ></path>
+                              />
                             </svg>
                           </button>
+
                           <span class="w-8 font-medium text-center">{{
                             item.quantity
                           }}</span>
+
                           <button
                             type="button"
                             @click="updateQuantity(item.id, item.quantity + 1)"
-                            class="flex items-center justify-center w-8 h-8 transition-colors bg-gray-100 rounded-full hover:bg-gray-200"
+                            class="flex items-center justify-center w-8 h-8 bg-gray-100 rounded-full hover:bg-gray-200"
                           >
                             <svg
                               class="w-4 h-4 text-gray-600"
@@ -408,38 +424,40 @@ onMounted(() => {
                                 stroke-linejoin="round"
                                 stroke-width="2"
                                 d="M12 6v6m0 0v6m0-6h6m-6 0H6"
-                              ></path>
+                              />
                             </svg>
                           </button>
+
                           <button
                             type="button"
                             @click="removeItem(item.id)"
-                            class="flex items-center justify-center w-8 h-8 ml-2 transition-colors bg-red-100 rounded-full hover:bg-red-200"
+                            class="flex items-center justify-center w-8 h-8 ml-2 text-red-600 bg-red-100 rounded-full hover:bg-red-200"
                           >
                             <svg
-                              class="w-4 h-4 text-red-600"
+                              xmlns="http://www.w3.org/2000/svg"
                               fill="none"
-                              stroke="currentColor"
                               viewBox="0 0 24 24"
+                              stroke-width="1.5"
+                              stroke="currentColor"
+                              class="size-4"
                             >
                               <path
                                 stroke-linecap="round"
                                 stroke-linejoin="round"
-                                stroke-width="2"
-                                d="M6 18L18 6M6 6l12 12"
-                              ></path>
+                                d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0"
+                              />
                             </svg>
                           </button>
                         </div>
                       </div>
+
+                      <!-- 小計 -->
                       <div class="mt-2 text-right">
                         <span class="text-sm text-gray-500">小計: </span>
-                        <span class="font-bold text-gray-800"
-                          >NT$
-                          {{
-                            (item.price * item.quantity).toLocaleString()
-                          }}</span
-                        >
+                        <span class="font-bold text-gray-800">
+                          NT$
+                          {{ (item.price * item.quantity).toLocaleString() }}
+                        </span>
                       </div>
                     </div>
                   </div>
@@ -555,7 +573,9 @@ onMounted(() => {
         </div>
 
         <!-- Controls -->
-        <div class="flex items-center justify-between pt-12">
+        <div
+          class="flex flex-col-reverse items-center justify-between gap-4 pt-12 sm:flex-row"
+        >
           <button
             type="button"
             @click="prevStep"
