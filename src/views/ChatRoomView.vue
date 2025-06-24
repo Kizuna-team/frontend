@@ -247,7 +247,6 @@ const toggleStickerPanel = () => {
 
 // 發送貼圖
 const handleStickerSelect = async (sticker) => {
-  console.log('🎯 選擇貼圖:', sticker);
   const now = new Date();
 
   const stickerMessage = {
