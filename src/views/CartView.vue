@@ -154,7 +154,7 @@ const handleSubmit = async () => {
     const receiverId = formData.receiverId;
 
     try {
-      await sendOrder(receiverId, cartStore.cartItems); //  送訂單 + 跳轉
+      await sendOrder(receiverId, formData.message); //  送訂單 + 跳轉
     } catch (err) {
       toast.error("訂單建立失敗，請稍後再試");
     }

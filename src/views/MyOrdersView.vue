@@ -159,7 +159,7 @@ const statusColor = (status) => {
             class="flex items-start justify-between gap-4 mt-4"
           >
             <div
-              class="flex items-center flex-1 gap-3 p-3 border border-gray-200 rounded-xl"
+              class="relative flex items-center flex-1 gap-3 p-3 border border-gray-200 rounded-xl"
             >
               <img
                 :src="order.items[0]?.imageUrl || '/default.jpg'"
@@ -173,6 +173,13 @@ const statusColor = (status) => {
                 <div class="text-sm text-gray-600">
                   數量：{{ order.items[0]?.quantity }}
                 </div>
+              </div>
+
+              <div
+                v-if="order.message"
+                class="absolute left-1/2 top-1/2 -translate-x-[1%] -translate-y-[50%] text-lg font-semibold text-center text-gray-800"
+              >
+                📬{{ order.message }}
               </div>
             </div>
 
