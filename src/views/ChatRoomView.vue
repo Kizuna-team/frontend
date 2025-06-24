@@ -134,6 +134,9 @@ function handleIncomingMessage(msg) {
 }
 // 加入房間 & 綁定監聽器
 onMounted(() => {
+  // 🎉 【新增】調試貼圖數據
+  console.log("🎯 貼圖數據載入:", defaultStickers);
+  console.log("🎯 貼圖數量:", defaultStickers.length);
   fetchChatRooms();
   // 綁定 socket 接收訊息
   socket.on("chatMessage", handleIncomingMessage);
