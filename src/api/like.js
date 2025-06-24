@@ -32,20 +32,16 @@ export const sendSuperLike = async (targetId) => {
     const res = await axios.post("like/super-like", {
       targetId,
     });
-
-    if (res.data.matched) {
+    if (res.data.forcedMatched) {
+      alert("Super Like 一鍵打破等待");
       return {
         matched: true,
+        forcedMatched: true,
         targetProfile: res.data.targetProfile,
         myProfile: res.data.myProfile,
         message: res.data.message,
       };
     }
-    // 不是雙向喜歡
-    return {
-      matched: false,
-      message: res.data.message,
-    };
   } catch (error) {
     console.error("發送 super like 失敗:", error);
     throw error;
