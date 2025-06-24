@@ -65,6 +65,9 @@ onMounted(() => {
       cancel_on_tap_outside: false,
     });
 
+    const el = document.getElementById("google-signin-button");
+    if (el) el.innerHTML = "";
+
     // 渲染 Google 登入按鈕
     window.google.accounts.id.renderButton(
       document.getElementById("google-signin-button"),
