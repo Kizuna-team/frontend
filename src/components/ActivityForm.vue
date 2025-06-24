@@ -174,8 +174,8 @@ async function handleDelete() {
         <label for="location" class="block mb-2 text-lg font-bold text-darkblue"
           >活動地點：</label
         >
+        <AddressInput v-model="form.location" />
       </div>
-      <AddressInput v-model="form.location" />
       <div>
         <label for="date" class="block mb-2 text-lg font-bold text-darkblue"
           >活動日期：</label
