@@ -13,7 +13,6 @@ const token = localStorage.getItem("token");
 
 const handleJoin = async (activityId) => {
   try {
-    // 文瑜 你少加/ 所以報 ERR_NAME_NOT_RESOLVED
     const res = await axios.post(
       `${baseUrl}/activities/join/${activityId}`,
       {},
@@ -219,6 +218,10 @@ watch(searchQuery, () => (currentPage.value = 1));
             <p class="mt-2 text-sm text-gray-500">
               <span class="font-semibold text-darkblue">建立時間：</span
               >{{ activity.created_at?.slice(0, 10) }}
+            </p>
+            <p class="mt-2 text-sm text-gray-500">
+              <span class="font-semibold text-darkblue">報名人數/上限人數：</span
+              >{{ activity.current_participants }}/{{ activity.max_participants }}
             </p>
           </div>
           <button
