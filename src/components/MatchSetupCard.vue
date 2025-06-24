@@ -1,5 +1,5 @@
 <script setup>
-import { ref, watch } from "vue";
+import { defineModel } from "vue";
 
 const props = defineProps({
   title: String,
@@ -9,23 +9,8 @@ const props = defineProps({
   type: String, // 如果是 'range' 則顯示輸入框
 });
 
-const emit = defineEmits(["update:modelValue"]);
-
-// 因為props唯讀 作為子元件內部顯示、修改選項的值
-const selectedValue = ref(props.modelValue);
-
-// 雙向同步：父改值 子更新
-watch(
-  () => props.modelValue,
-  (val) => {
-    selectedValue.value = val;
-  }
-);
-
-// 雙向同步：子操作 回傳父
-watch(selectedValue, (val) => {
-  emit("update:modelValue", val);
-});
+// 等於接收父回傳值
+const selectedValue = defineModel();
 
 // 切換選項 更新 selectedValue 解析 option 取Id
 const toggle = (option) => {
