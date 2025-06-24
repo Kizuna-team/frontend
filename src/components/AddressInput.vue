@@ -17,7 +17,7 @@ const autocompleteInstance = ref(null)
 onMounted(async () => {
   try {
     await loadGoogleMapsAPI()
-    if (window.google && window.google.maps && window.google.maps.places) {
+    if (window.google?.maps?.places) {
       await nextTick()
       initAutocomplete()
     }
@@ -32,15 +32,12 @@ const initAutocomplete = () => {
 
   try {
     autocompleteInstance.value = new google.maps.places.Autocomplete(inputRef.value, {
-      componentRestrictions: { country: 'TW' }, // 限制台灣
-      fields: ['formatted_address', 'geometry'], // 只取需要的資料
-      types: ['establishment', 'geocode'] // 地點類型
+      componentRestrictions: { country: 'TW' },
+      fields: ['formatted_address'],  // 簡化：只要地址，不要 geometry
+      types: ['establishment', 'geocode']
     })
 
-    // 監聽地址選擇事件
     autocompleteInstance.value.addListener('place_changed', handlePlaceSelect)
-    
-    console.log('Places Autocomplete 初始化成功')
   } catch (error) {
     console.error('Autocomplete 初始化失敗:', error)
   }
@@ -52,7 +49,6 @@ const handlePlaceSelect = () => {
   
   if (place.formatted_address) {
     emit('update:modelValue', place.formatted_address)
-    console.log('從 Places 選擇地址:', place.formatted_address)
   }
 }
 
@@ -95,7 +91,6 @@ const closeMapModal = () => {
       </button>
     </div>
     
-    <!-- 提示文字 -->
     <p class="mt-1 text-xs text-gray-500">
       開始輸入會顯示地址建議，或點擊地圖選擇
     </p>
