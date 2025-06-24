@@ -8,6 +8,7 @@ import { useToast } from "vue-toastification";
 import AddressInput from "@/components/AddressInput.vue";
 const userStore = useUserStore(); //抓username
 const previewUrl = ref(""); // 圖片預覽網址
+const fileInputRef = ref(null); // 綁定 input 元件
 const store = useActivityStore();
 const { loading, error, selectedActivity } = storeToRefs(store);
 const { fetchActivityById, updateActivity, createActivity, deleteActivity } =
@@ -31,6 +32,23 @@ const form = ref({
 
 const today = new Date().toISOString().split("T")[0];
 const imageFile = ref(null);
+
+function resetForm() {
+  form.value = {
+    title: "",
+    location: "",
+    date: "",
+    time: "",
+    description: "",
+    createdBy: "",
+    maxParticipants: "", 
+  };
+  imageFile.value = null;
+
+  if (fileInputRef.value) {
+    fileInputRef.value.value = "";
+  }
+}
 
 // 處理使用者選檔案
 function handleFileChange(event) {
@@ -112,6 +130,8 @@ async function handleSubmit() {
       await createActivity(formData); // 要用 FormData
       toast("活動已建立！");
     }
+    
+    resetForm();
   } catch (err) {
     console.log("提交活動時發生錯誤", err);
     toast.error(isEditMode.value ? "更新失敗" : "建立失敗");
@@ -173,6 +193,7 @@ async function handleDelete() {
         >
         <input
           id="image"
+          ref="fileInputRef"
           type="file"
           @change="handleFileChange"
           accept="image/*"
