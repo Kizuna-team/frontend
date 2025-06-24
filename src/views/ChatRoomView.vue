@@ -8,10 +8,13 @@ import {
   watch,
   computed,
 } from "vue";
+
 import { io } from "socket.io-client";
 import { useUserStore } from "@/stores/user.js";
 import { userChatStore } from "@/stores/chat.js";
 import { createRecognition } from "@/config/voiceRecognition.js"
+import { Vue3Lottie } from "vue3-lottie";
+import voiceInputAnimation from '@/assets/voice.json';
 
 // Socket.io 連接設定
 const socket = io(import.meta.env.VITE_API_BASE_URL, {
@@ -28,6 +31,7 @@ const chatStore = userChatStore();
 const roomId = ref("");
 // 依照內容自動調整對話框高度
 const textareaRef = ref(null);
+const isListening = ref(false);
 
 const autoResize = () => {
   const element = textareaRef.value;
@@ -236,20 +240,29 @@ const startVoiceInput = () => {
     const recognition = createRecognition();
     if (!recognition) return;
 
+    isListening.value = true;
+
     recognition.onresult = (event) => {
       const transcript = event.results[0][0].transcript;
       // 將辨識的語音轉成文字塞進輸入框中
       newMessage.value = transcript;
+      isListening.value = false;
     };
 
     recognition.onerror = (event) => {
       console.error('語音辨識錯誤：', event.error);
       alert('語音辨識發生錯誤：' + event.error);
+      isListening.value = false;
+    };
+
+    recognition.onend = () => {
+      isListening.value = false;
     };
 
     recognition.start();
   } catch (err) {
     console.error('語音啟動錯誤', err);
+    isListening.value = false;
   }
 };
 
@@ -566,14 +579,21 @@ watch(newMessage, autoResize);
             </svg>
           </button>
           <!-- 輸入框 -->
-          <div class="flex-1">
-            <input type="text" placeholder="輸入訊息" v-model="newMessage" @keyup.enter="sendMessage"
+          <div class="relative w-full flex-1">
+              <input type="text" placeholder="輸入訊息或使用語音..." v-model="newMessage" @keyup.enter="sendMessage"
               :disabled="!isUserLoggedIn" :class="[
                 'w-full px-4 py-2 border border-gray-300 rounded-lg outline-none transition-colors',
-                isUserLoggedIn
-                  ? 'focus:ring-2 focus:ring-[#f6ba42] focus:border-transparent'
-                  : 'bg-gray-100 cursor-not-allowed',
+                'focus:ring-2 focus:ring-[#f6ba42] focus:border-transparent',
               ]" />
+            <div v-if="isListening" class="z-[99] absolute inset-y-0 right-2 flex items-center">
+              <Vue3Lottie 
+              :animationData="voiceInputAnimation" 
+              :height="48" 
+              :width="48"
+              :loop="true"
+              :autoPlay="true" 
+            />
+            </div>
           </div>
           <!-- 發送按鈕 -->
           <button @click="sendMessage" :disabled="!isUserLoggedIn || !newMessage.trim()" :class="[
@@ -593,7 +613,7 @@ watch(newMessage, autoResize);
   </div>
 </template>
 
-<style scoped>
+<style>
 .chat-container {
   height: 100vh;
 }
