@@ -30,6 +30,31 @@ const handleLogin = async () => {
   }
 };
 
+// Google 登入按鈕點擊處理
+// const handleGoogleLogin = () => {
+//   // 彈出 Google 登入視窗
+//   window.google.accounts.id.prompt();
+// };
+
+// 處理登入成功的 callback
+const handleGoogleResponse = async (res) => {
+  // console.log("Google response:", res);
+
+  const idToken = res.credential;
+  if (!idToken) {
+    toast.error("登入失敗 無效的 Google 憑證");
+    return;
+  }
+  try {
+    await store.loginWithGoogle(idToken);
+    toast("Google 登入成功！");
+    router.push("/");
+  } catch (err) {
+    console.error("Google 登入錯誤", err);
+    toast.error("Google 登入失敗，請稍後再試");
+  }
+};
+
 // 初始化 google API 並設定 callback
 onMounted(() => {
   if (window.google && window.google.accounts) {
@@ -55,42 +80,6 @@ onMounted(() => {
     console.error("Google API 未載入");
   }
 });
-
-// Google 登入按鈕點擊處理
-const handleGoogleLogin = () => {
-  // 彈出 Google 登入視窗
-  window.google.accounts.id.prompt(() => {
-    window.google.accounts.id.renderButton(
-      document.getElementById("google-signin-button"),
-      {
-        theme: "outline",
-        size: "large",
-        width: "100%",
-        shape: "pill",
-        text: "signin_with",
-      }
-    );
-  });
-};
-
-// 處理登入成功的 callback
-const handleGoogleResponse = async (res) => {
-  // console.log("Google response:", res);
-
-  const idToken = res.credential;
-  if (!idToken) {
-    toast.error("登入失敗 無效的 Google 憑證");
-    return;
-  }
-  try {
-    await store.loginWithGoogle(idToken);
-    toast("Google 登入成功！");
-    router.push("/");
-  } catch (err) {
-    console.error("Google 登入錯誤", err);
-    toast.error("Google 登入失敗，請稍後再試");
-  }
-};
 </script>
 
 <template>
