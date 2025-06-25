@@ -1,12 +1,9 @@
 <script setup>
-
-import { useProductStore } from "../stores/products.js";
 import { useCartStore } from "../stores/cart.js";
 
-const productStore = useProductStore();
 const cartStore = useCartStore();
 
-const { addCart } = cartStore; //解構拿來使用
+const { addCart } = cartStore; 
 
 defineProps({
   product: {
@@ -14,7 +11,6 @@ defineProps({
     required: true,
   },
 });
-// 記得要使用props，還有該拿到的變數資料(js)要進來
 
 
 </script>

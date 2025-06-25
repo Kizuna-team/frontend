@@ -1,9 +1,7 @@
-// stores/chat.js
 import { defineStore } from "pinia";
 import { ref, computed } from "vue";
 
 export const userChatStore = defineStore("chat", () => {
-  // 狀態
   const messages = ref([]);
   const currentRoomId = ref(null);
   const onlineUsers = ref([]);
@@ -67,25 +65,22 @@ export const userChatStore = defineStore("chat", () => {
     console.log("連接狀態:", status);
   };
 
-  // 計算屬性 - 訊息數量
+  // 訊息數量
   const messageCount = computed(() => messages.value.length);
 
-  // 計算屬性 - 線上用戶數量
+  // 線上用戶數量
   const onlineUserCount = computed(() => onlineUsers.value.length);
 
   return {
-    // 狀態
     messages,
     currentRoomId,
     onlineUsers,
     isConnected,
 
-    // 計算屬性
     currentRoomMessages,
     messageCount,
     onlineUserCount,
 
-    // 方法 - 確保所有方法都有被 return
     addMessage,
     setCurrentRoom,
     updateOnlineUsers,

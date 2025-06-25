@@ -1,10 +1,6 @@
 <script setup>
 import { useCartStore } from "../stores/cart.js";
-import { useProductStore } from "../stores/products.js";
 const cartStore = useCartStore();
-const productStore = useProductStore();
-// 傳資料
-// const { cartItems, totalPrice, totalItems } = storeToRefs(cartStore); 這邊不會用到這些資訊，函式不能寫入storeToRefs?
 
 defineProps({
   item: {

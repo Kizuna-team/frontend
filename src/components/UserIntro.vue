@@ -1,5 +1,4 @@
 <script setup>
-// 抓父層傳來的 currentUser
 const { targetUser } = defineProps({
   targetUser: Object,
 });

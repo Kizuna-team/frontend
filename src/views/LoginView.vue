@@ -41,7 +41,6 @@ const handleGoogleLogin = () => {
   }
 };
 
-// 處理登入成功的 callback
 const handleGoogleResponse = async (res) => {
   const idToken = res.credential;
   if (!idToken) {
@@ -58,7 +57,6 @@ const handleGoogleResponse = async (res) => {
   }
 };
 
-// 初始化 google API 並設定 callback
 onMounted(() => {
   if (window.google && window.google.accounts) {
     window.google.accounts.id.initialize({

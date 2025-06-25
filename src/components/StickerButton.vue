@@ -1,7 +1,6 @@
 <script setup>
 import { ref, defineProps, defineEmits } from "vue";
 
-// Props
 const props = defineProps({
   disabled: {
     type: Boolean,
@@ -13,20 +12,16 @@ const props = defineProps({
   },
 });
 
-// Emits
 const emit = defineEmits(["toggle"]);
 
-// Template refs
 const stickerButtonRef = ref(null);
 
-// 切換面板
 const togglePanel = () => {
   if (!props.disabled) {
     emit("toggle");
   }
 };
 
-// 暴露 button ref 給父組件使用
 defineExpose({
   stickerButtonRef,
 });

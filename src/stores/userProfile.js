@@ -97,5 +97,3 @@ export const useUserProfileStore = defineStore("userProfile", () => {
     updateProfile,
   };
 });
-// stores 裡需要保持是 確定的資料，暫存的資料 移去組件
-// 再重新get最新資料的做法，會多一次 API 請求浪費效能

@@ -24,15 +24,15 @@
       <h1
         class="mb-6 text-4xl md:text-7xl font-extrabold leading-tight md:leading-[1.2] tracking-wide opacity-0 animate-slide-up"
       >
-        每段相遇，
+        「羈」於好感
         <br />
-        <span class="block mt-2 animate-slide-up-delay">都藏著一條羈絆</span>
+        <span class="block mt-2 animate-slide-up-delay">所以相「絆」</span>
       </h1>
       <p
         class="mb-8 text-xl leading-relaxed opacity-0 md:text-2xl drop-shadow-sm animate-fade-in-delay"
       >
-        <span class="font-bold text-primary">Real connections,</span>
-        <span class="font-bold text-accent"> heartfelt beginnings.</span>
+        <span class="font-bold text-primary">Kizuna begins with</span>
+        <span class="font-bold text-accent">a spark of affection.</span>
       </p>
       <router-link to="/register">
         <button

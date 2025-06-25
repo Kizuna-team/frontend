@@ -28,11 +28,9 @@ const getOptions = (field) => {
   return field.options;
 };
 
-// 響應式數據
 const currentStep = ref(0);
 const isCompleted = ref(false);
 
-// 表單數據
 const formData = reactive({
   receiverId: "",
   orderDate: "",
@@ -78,7 +76,7 @@ const steps = [
   },
 ];
 
-// 計算屬性 - 使用 cartStore 的資料
+// 使用 cartStore 的資料
 const totalPrice = computed(() => {
   return cartStore.cartItems.reduce(
     (sum, item) => sum + item.price * item.quantity,
@@ -94,7 +92,7 @@ const progressPercentage = computed(() => {
   return (currentStep.value / (steps.length - 1)) * 100;
 });
 
-// 方法 - 使用 cartStore 的方法
+// 使用 cartStore 的方法
 const updateQuantity = (id, newQuantity) => {
   if (newQuantity < 1) return;
   cartStore.updateQuantity(id, newQuantity);

@@ -53,7 +53,6 @@ const handleClose = () => {
 }
 // test
 
-// Store
 const userStore = useUserStore();
 const chatStore = userChatStore();
 const roomId = ref("");

@@ -1,15 +1,14 @@
-// 使用 Pinia 管理 user 的狀態，Composition API 寫法
 import axios from "../api/axios";
 import { defineStore } from "pinia";
 import { ref, reactive } from "vue";
 
 export const useUserStore = defineStore("user", () => {
-  // 初始化
+
   const accessToken = ref(localStorage.getItem("accessToken") || "");
   const refreshToken = ref(localStorage.getItem("refreshToken") || "");
   const username = ref(localStorage.getItem("username") || "");
   const userId = ref(localStorage.getItem("userId") || "");
-  // 設定使用者的訂閱計畫
+  
   const subscriptionPlan = ref(
     localStorage.getItem("subscriptionPlan") || "free"
   );
@@ -31,7 +30,6 @@ export const useUserStore = defineStore("user", () => {
     profile.interests = profileDate.interests;
   }
 
-  // 註冊
   const register = async (usernameInput, passwordInput) => {
     try {
       const res = await axios.post("/auth/register", {
@@ -53,7 +51,6 @@ export const useUserStore = defineStore("user", () => {
     }
   };
 
-  // 登入
   const login = async (usernameInput, passwordInput) => {
     try {
       const res = await axios.post("/auth/login", {
@@ -87,7 +84,6 @@ export const useUserStore = defineStore("user", () => {
     }
   };
 
-  // 登出
   const logout = async () => {
     accessToken.value = "";
     refreshToken.value = "";
@@ -105,7 +101,6 @@ export const useUserStore = defineStore("user", () => {
     localStorage.removeItem("userId");
   };
 
-  // 用 refreshToken 取得新的 accessToken
   const refresh = async () => {
     const res = await axios.post("/refresh", {
       refreshToken: refreshToken.value,
@@ -115,7 +110,6 @@ export const useUserStore = defineStore("user", () => {
     localStorage.setItem("accessToken", accessToken.value);
   };
 
-  // Google 登入
   const loginWithGoogle = async (idToken) => {
     try {
       console.log("google嘗試登入中 idToken", idToken);

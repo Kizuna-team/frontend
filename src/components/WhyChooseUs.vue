@@ -70,7 +70,6 @@ onMounted(() => {
         :data-aos-delay="index * 300"
       >
         <h3 class="text-xl font-bold text-darkblue">{{ card.title }}</h3>
-        <!-- 加上 whitespace-pre-line 讓 \n 換行符號生效  -->
         <p class="mt-2 text-sm text-gray-800 whitespace-pre-line">
           {{ card.descZh }}
         </p>

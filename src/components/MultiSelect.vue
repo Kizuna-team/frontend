@@ -1,5 +1,4 @@
 <script setup>
-// 父傳入使用者選中的選項: 你現在要顯示這些選項 props 唯讀不能被改寫
 const props = defineProps({
   modelValue: {
     type: [Array, String, Number], // 支援多選陣列或單選值

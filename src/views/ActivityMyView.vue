@@ -9,7 +9,6 @@ import {
   MapPinIcon,
   PencilSquareIcon,
   TrashIcon,
-  ChatBubbleLeftEllipsisIcon,
 } from "@heroicons/vue/24/outline";
 
 const store = useActivityStore();

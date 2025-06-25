@@ -6,7 +6,7 @@ const productStore = useProductStore();
 const { products } = productStore;
 
 const brandStore = useBrandStore();
-const { filteredBrands, changeCurrentCategory } = brandStore;
+const { changeCurrentCategory } = brandStore;
 
 const handleClick = (cat) => {
   changeCurrentCategory(cat);
