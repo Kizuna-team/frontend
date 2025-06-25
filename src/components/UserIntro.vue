@@ -4,7 +4,6 @@ const { targetUser } = defineProps({
   isVisible: Boolean,
 });
 
-
 // 新增：檢查是否有值的輔助函數
 const hasValue = (value) => {
   return value && value !== "" && value !== null && value !== undefined;
