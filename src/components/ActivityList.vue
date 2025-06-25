@@ -92,6 +92,7 @@ function formatDateTime(isoString) {
   return `${yyyy}/${mm}/${dd} ${hh}:${min}`;
 }
 
+
 const searchQuery = ref("");
 const currentPage = ref(1);
 const itemsPerPage = ref(6);
@@ -260,10 +261,6 @@ watch(searchQuery, () => (currentPage.value = 1));
             <p class="mb-1 text-sm text-gray-600 line-clamp-2">
               <span class="font-semibold text-darkblue">活動資訊：</span
               >{{ activity.description }}
-            </p>
-            <p class="mt-2 text-sm text-gray-500">
-              <span class="font-semibold text-darkblue">建立時間：</span
-              >{{ activity.created_at?.slice(0, 10) }}
             </p>
             <p class="mt-2 text-sm text-gray-500">
               <span class="font-semibold text-darkblue"

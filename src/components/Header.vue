@@ -205,14 +205,14 @@ watch(route, () => {
           <LiquidNavLink to="/product" :colorMode="getNavTextColor"
             >商品列表</LiquidNavLink
           >
+          <LiquidNavLink to="/activities" :colorMode="getNavTextColor"
+            >探索活動</LiquidNavLink
+          >
           <LiquidNavLink to="/activities/new" :colorMode="getNavTextColor"
-            >活動表單</LiquidNavLink
+            >創建活動</LiquidNavLink
           >
           <LiquidNavLink to="/activities/my" :colorMode="getNavTextColor"
             >我的活動</LiquidNavLink
-          >
-          <LiquidNavLink to="/activities" :colorMode="getNavTextColor"
-            >探索活動</LiquidNavLink
           >
         </template>
       </div>
@@ -288,7 +288,7 @@ watch(route, () => {
               class="absolute right-0 w-56 mt-2 overflow-hidden bg-white border border-gray-200 rounded-lg shadow-lg"
             >
               <div class="px-4 py-4 text-gray-600 border-b">
-                <div class="text-sm font-medium text-gray-800 mb-1">
+                <div class="mb-1 text-sm font-medium text-gray-800">
                   Hello👋
                 </div>
                 <div class="text-sm text-gray-600 break-all">
