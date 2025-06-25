@@ -2,8 +2,6 @@ import { createRouter, createWebHistory } from "vue-router";
 import ActivityList from "@/components/ActivityList.vue";
 import ActivityView from "@/components/ActivityForm.vue";
 import ActivityMyView from "@/views/ActivityMyView.vue";
-import BrandView from "@/views/BrandView.vue";
-import BlessingView from "@/views/BlessingView.vue";
 import CartView from "@/views/CartView.vue";
 import ChatRoomView from "@/views/ChatRoomView.vue";
 import EventCardByIdView from "@/views/EventCardByIdView.vue";
@@ -54,16 +52,6 @@ const router = createRouter({
       path: "/activities/edit/:id",
       name: "activityEdit",
       component: ActivityView,
-    },
-    {
-      path: "/brand/:id",
-      name: "Brand",
-      component: BrandView,
-    },
-    {
-      path: "/blessing",
-      name: "Blessing",
-      component: BlessingView,
     },
     {
       path: "/cart",
