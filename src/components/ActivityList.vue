@@ -3,41 +3,83 @@ import { ref, computed, onMounted, watch } from "vue";
 import { useActivityStore } from "@/stores/activity.js";
 import { storeToRefs } from "pinia";
 import axios from "../api/axios.js";
+import { useToast } from 'vue-toastification'
 
-const baseUrl = import.meta.env.VITE_API_BASE_URL;
 const store = useActivityStore();
 const { activities } = storeToRefs(store);
 const { fetchActivities } = store;
+const toast = useToast()
+const activityStatuses = ref({}); // { 1: 'FULL', 2: 'OPEN', 3: 'ALREADY_JOINED' }
 
-const token = localStorage.getItem("token");
+const notifyError = (err, userMessage = "操作失敗") => {
+  console.error("錯誤訊息：", err);
+  toast.error(userMessage);
+};
 
+const logInfo = (message, data) => {
+  console.log(message, data);
+};
 
-const handleJoin = async (activityId,activity) => {
+const notifySuccess = (message) => {
+  toast.success(message);
+};
+
+const fetchActivityStatuses = async () => {
+  const userId = localStorage.getItem("userId");
+  const activityIds = activities.value.map((a) => a.id);
+
+  if (!userId || activityIds.length === 0) return;
+
   try {
     const res = await axios.post(
-      `${baseUrl}/activities/join/${activityId}`,
-      {},
+      `/activities/status`,
       {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
+        userId,
+        activityIds,
+      },
     );
 
-    activity.current_participants = Number(activity.current_participants) + 1
-    console.log(activity.current_participants); 
-    
-    alert(res.data.message);
+    // logInfo("後端回傳的活動狀態", res.data);
+
+    const statusMap = {};
+    for (const item of res.data.statuses) {
+      statusMap[item.activityId] = item.status;
+    }
+
+    activityStatuses.value = statusMap;
+    // logInfo("整理後的 status map", activityStatuses.value);
   } catch (err) {
+    notifyError(err, "查詢活動狀態失敗");
+  }
+};
+
+const handleJoin = async (activityId, activity) => {
+  const previousStatus = activityStatuses.value[activityId];
+  activityStatuses.value[activityId] = "ALREADY_JOINED";
+  activity.current_participants = Number(activity.current_participants) + 1;
+  // logInfo("目前人數", activity.current_participants);
+  try {
+    const res = await axios.post(
+      `/activities/join/${activityId}`,
+    );
+    notifySuccess(res.data.message);
+    
+  } catch (err) {
+    activityStatuses.value[activityId] = previousStatus;
+    activity.current_participants = Number(activity.current_participants) - 1;
+    
     if (err.response?.status === 409) {
-      alert(err.response.data.message);
+      toast(err.response.data.message);
     } else {
-      console.error("加入活動失敗:", err);
+      notifyError(err, "加入活動失敗");
     }
   }
 };
 
-onMounted(() => fetchActivities());
+onMounted(async () => {
+  await fetchActivities();
+  await fetchActivityStatuses();
+});
 
 function formatDateTime(isoString) {
   if (!isoString) return "";
@@ -224,15 +266,33 @@ watch(searchQuery, () => (currentPage.value = 1));
               >{{ activity.created_at?.slice(0, 10) }}
             </p>
             <p class="mt-2 text-sm text-gray-500">
-              <span class="font-semibold text-darkblue">報名人數/上限人數：</span
-              >{{ activity.current_participants }}/{{ activity.max_participants }}
+              <span class="font-semibold text-darkblue"
+                >報名人數/上限人數：</span
+              >{{ activity.current_participants }}/{{
+                activity.max_participants
+              }}
             </p>
           </div>
           <button
-            @click="handleJoin(activity.id,activity)"
+            v-if="activityStatuses[activity.id] === 'OPEN'"
+            @click="handleJoin(activity.id, activity)"
             class="w-full py-2 mt-4 text-sm font-semibold text-white transition-all border-2 rounded-full bg-secondary hover:bg-white hover:text-secondary border-secondary"
           >
             加入活動
+          </button>
+          <button
+            v-else-if="activityStatuses[activity.id] === 'ALREADY_JOINED'"
+            disabled
+            class="w-full py-2 mt-4 text-sm font-semibold text-gray-400 border-2 border-gray-400 rounded-full cursor-not-allowed"
+          >
+            已加入
+          </button>
+          <button
+            v-else-if="activityStatuses[activity.id] === 'FULL'"
+            disabled
+            class="w-full py-2 mt-4 text-sm font-semibold text-red-400 border-2 border-red-400 rounded-full cursor-not-allowed"
+          >
+            已額滿
           </button>
         </div>
       </div>
