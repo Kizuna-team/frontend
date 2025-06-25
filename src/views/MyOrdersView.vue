@@ -83,29 +83,21 @@ const statusColor = (status) => {
 
 <template>
   <div class="max-w-4xl px-4 py-8 mx-auto space-y-8">
-    <div
-      class="flex justify-center gap-8 text-lg font-semibold border-b border-gray-200"
-    >
-      <button
-        @click="activeTab = 'sent'"
-        :class="[
-          'pb-2 transition relative',
-          activeTab === 'sent'
-            ? 'text-secondary border-b-4 border-secondary font-bold scale-105'
-            : 'text-gray-400 hover:text-darkblue',
-        ]"
-      >
+    <div class="flex justify-center gap-8 text-lg font-semibold border-b border-gray-200">
+      <button @click="activeTab = 'sent'" :class="[
+        'pb-2 transition relative',
+        activeTab === 'sent'
+          ? 'text-secondary border-b-4 border-secondary font-bold scale-105'
+          : 'text-gray-400 hover:text-darkblue',
+      ]">
         我送出的
       </button>
-      <button
-        @click="activeTab = 'received'"
-        :class="[
-          'pb-2 transition relative',
-          activeTab === 'received'
-            ? 'text-secondary border-b-4 border-secondary font-bold scale-105'
-            : 'text-gray-400 hover:text-darkblue',
-        ]"
-      >
+      <button @click="activeTab = 'received'" :class="[
+        'pb-2 transition relative',
+        activeTab === 'received'
+          ? 'text-secondary border-b-4 border-secondary font-bold scale-105'
+          : 'text-gray-400 hover:text-darkblue',
+      ]">
         我收到的
       </button>
     </div>
@@ -119,47 +111,70 @@ const statusColor = (status) => {
       尚未有任何{{ activeTab === "sent" ? "購買" : "收禮" }}紀錄
     </div>
 
-    <div v-else-if="activeTab === 'sent'" class="space-y-6">
-      <div
-        v-for="order in orders"
-        :key="order.orderId"
-        class="p-5 transition duration-200 bg-white shadow-md rounded-2xl hover:shadow-lg"
-      >
-        <div class="flex items-center justify-between mb-2">
-          <div class="text-sm text-gray-600">
-            訂單編號：<span class="font-mono">{{ order.orderId }}</span>
+      <div v-else class="space-y-6">
+        <div v-for="order in orders" :key="order.orderId"
+          class="p-5 transition duration-200 bg-white shadow-md rounded-2xl hover:shadow-lg">
+          <div class="flex items-center justify-between mb-2">
+            <div class="text-sm text-gray-600">
+              訂單編號：<span class="font-mono">{{ order.orderId }}</span>
+            </div>
+            <div v-if="activeTab === 'sent'" class="px-2 py-1 text-xs font-semibold rounded"
+              :class="statusColor(order.status)">
+              {{ statusLabel(order.status) }}
+            </div>
           </div>
-          <div
-            class="px-2 py-1 text-xs font-semibold rounded"
-            :class="statusColor(order.status)"
-          >
-            {{ statusLabel(order.status) }}
+
+          <div class="mb-1 text-sm text-gray-700">
+            {{ activeTab === "sent" ? "購買日期" : "收到日期" }}：
+            {{ formatDate(order.createdAt) }}
           </div>
-        </div>
+          <div class="mb-2 text-sm text-gray-700">
+            {{ activeTab === "sent" ? "收件人" : "送禮人" }}：
+            <span class="font-semibold">
+              {{ activeTab === "sent" ? order.receiverName : order.senderName }}
+            </span>
+          </div>
 
-        <div class="mb-1 text-sm text-gray-700">
-          購買日期：{{ formatDate(order.createdAt) }}
-        </div>
-        <div class="mb-2 text-sm text-gray-700">
-          收件人：
-          <span class="font-semibold">{{ order.receiverName }}</span>
-        </div>
-
-        <div class="relative p-3 border border-gray-200 rounded-xl">
-          <div class="flex items-center gap-4">
-            <img
-              :src="order.items[0]?.imageUrl || '/default.jpg'"
-              alt="product"
-              class="object-cover w-20 h-20 rounded-xl"
-            />
-            <div>
-              <div class="text-base font-semibold text-gray-800">
-                {{ order.items[0]?.productName }}
-              </div>
-              <div class="text-sm text-gray-600">
-                數量：{{ order.items[0]?.quantity }}
+          <div v-if="activeTab === 'sent'" class="relative p-3 border border-gray-200 rounded-xl">
+            <div class="flex flex-col gap-4">
+              <div v-for="(item, index) in order.items" :key="index" class="flex items-center gap-4">
+                <img :src="item.imageUrl || '/default.jpg'" alt="product" class="object-cover w-20 h-20 rounded-xl" />
+                <div>
+                  <div class="text-base font-semibold text-gray-800">
+                    {{ item.productName }}
+                  </div>
+                  <div class="text-sm text-gray-600">
+                    數量：{{ item.quantity }}
+                  </div>
+                </div>
               </div>
             </div>
+
+            <div class="absolute text-base font-semibold text-gray-800 bottom-3 right-4">
+              贈送金額：NT$ {{ order.amount }}
+            </div>
+          </div>
+          <div v-if="activeTab === 'received'" class="flex items-start justify-between gap-4 mt-4">
+            <div class="relative flex items-center flex-1 gap-3 p-3 border border-gray-200 rounded-xl">
+              <img :src="order.items[0]?.imageUrl || '/default.jpg'" alt="product"
+                class="object-cover w-20 h-20 rounded-xl" />
+              <div>
+                <div class="text-base font-semibold text-gray-800">
+                  {{ order.items[0]?.productName }}
+                </div>
+                <div class="text-sm text-gray-600">
+                  數量：{{ order.items[0]?.quantity }}
+                </div>
+              </div>
+
+              <div v-if="order.message"
+                class="absolute left-1/2 top-1/2 -translate-x-[1%] -translate-y-[50%] text-lg font-semibold text-center text-gray-800">
+                📬{{ order.message }}
+              </div>
+            </div>
+
+            <img src="https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=yeet" alt="QR Code"
+              class="w-24 h-24" />
           </div>
 
           <div
@@ -219,5 +234,4 @@ const statusColor = (status) => {
         </div>
       </div>
     </div>
-  </div>
 </template>
