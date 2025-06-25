@@ -405,113 +405,86 @@ watch(newMessage, autoResize);
 </script>
 
 <template>
-  <div class="bg-gray-100 h-[90vh] flex flex-row">
-    <!-- 左側邊欄 -->
-    <div class="flex flex-col bg-white border-r border-gray-200 w-80">
-      <div class="p-4 border-b border-gray-200">
+  <div class="flex flex-col md:flex-row h-screen">
+    <!-- 好友列表區域 -->
+    <div class="w-full md:w-80 bg-white border-b md:border-b-0 md:border-r border-gray-200 flex md:flex-col overflow-x-auto md:overflow-y-auto">
+      <div class="p-4 border-b border-gray-200 hidden md:block">
         <h1 class="text-xl font-semibold text-gray-800">聊天室</h1>
       </div>
-      <div class="flex-1 overflow-y-auto">
-        <!-- 每一行代表一個聊天室(有幾個好友就有幾個聊天室) -->
-        <!-- 用 v-for 跑整個好友清單 -->
-        <!-- 點選某個 聊天室某一列 時 將 currentRoom 設為該聊天室的 roomId-->
-        <div v-for="room in chatRooms" :key="room.roomId" @click="currentRoom = room.roomId" :class="[
-          'p-4 cursor-pointer border-b border-gray-100',
-          room.roomId === currentRoom
-            ? 'bg-[#f6ba42] text-white'
-            : 'hover:bg-gray-50',
-        ]">
-          <div class="flex flex-row"> 
-            <img :src="room.avatarUrl || '/default-chat-avatar.png'"
-              class="object-cover w-10 h-10 border-2 border-white rounded-full mr-2" />
-            <div class="font-medium p-2">{{ room.name }}</div>
-          </div>
-          <div :class="[
-            'text-sm',
-            room.roomId === currentRoom ? 'opacity-90' : 'text-gray-500',
-          ]">
-            {{ room.day }}
-          </div>
-          <div :class="[
-            'text-xs mt-1',
-            room.roomId === currentRoom ? 'opacity-75' : 'text-gray-400',
-          ]">
-            {{ room.lastMessage }}
+      <div class="flex md:flex-col flex-row md:flex-1">
+        <div
+          v-for="room in chatRooms"
+          :key="room.roomId"
+          @click="currentRoom = room.roomId"
+          :class="[
+            'cursor-pointer border-b md:border-b-0 md:border-t border-gray-100 flex items-center md:items-start md:flex-row flex-col px-3 py-2 md:p-4 gap-2 transition-all',
+            currentRoom === room.roomId ? 'bg-[#f6ba42] text-white' : 'hover:bg-gray-50',
+          ]"
+          class="shrink-0 min-w-[96px] md:min-w-0"
+        >
+          <img :src="room.avatarUrl || '/default-chat-avatar.png'" class="object-cover w-10 h-10 border-2 border-white rounded-full" />
+          <div class="font-medium text-xs md:text-base text-center md:text-left">
+            {{ room.name }}
           </div>
         </div>
       </div>
     </div>
 
-    <!-- 右側主要聊天區域 -->
-    <div class="flex flex-col flex-1">
-      <!-- 聊天室標題欄 -->
-      <div class="flex items-center justify-between p-4 bg-white border-b border-gray-200">
-        <div class="flex items-center space-x-3">
-          <div>
-            <div class="w-10 h-10 bg-gray-300 rounded-full">
-              <img :src="currentFriend?.avatarUrl || '/default-chat-avatar.png'"
-                class="object-cover w-10 h-10 border-2 border-white rounded-full" />
-            </div>
-            <span class="text-sm font-medium text-gray-700">{{}}</span>
-          </div>
-          <div>
-            <!-- 當還沒有選擇聊天室時 chatRoom.find()找不到資料 => 所以試圖讀取 .friendName 會掛掉 -->
-            <div class="font-medium text-gray-800">
-              {{ currentFriend?.name || "未知使用者" }}
-            </div>
-            <div class="text-sm text-gray-500">Room ID: {{ currentRoom }}</div>
-          </div>
-        </div>
-      </div>
-      <!-- 聊天訊息區域 -->
-      <!-- 外層容器 滾動區域 -->
+    <!-- 聊天訊息與輸入區域 -->
+    <div class="flex flex-col flex-1 min-h-0 max-h-[calc(100vh-160px)] md:max-h-full">
+      <!-- 訊息列表 -->
       <div class="flex-1 p-4 space-y-4 overflow-y-auto bg-gray-50" ref="messagesContainer">
-        <!-- 空訊息提示 -->
         <div v-if="chatStore.messages.length === 0" class="py-8 text-center">
           <div class="text-gray-500">還沒有訊息，開始聊天吧！</div>
         </div>
 
-        <div v-for="msg in chatStore.currentRoomMessages" :key="msg.id || msg.timestamp" :class="[
-          'flex',
-          Number(msg.senderId) === Number(userStore.userId)
-            ? 'justify-end'
-            : 'justify-start',
-        ]">
+        <div
+          v-for="msg in chatStore.currentRoomMessages"
+          :key="msg.id || msg.timestamp"
+          :class="[
+            'flex',
+            Number(msg.senderId) === Number(userStore.userId)
+              ? 'justify-end'
+              : 'justify-start',
+          ]"
+        >
           <div class="flex flex-col">
-            <!-- 顯示發送者名稱（如果不是自己的訊息） -->
-            <div v-if="Number(msg.senderId) !== Number(userStore.userId)"
-              class="pl-2 mb-1 text-xs font-medium text-gray-600">
+            <div
+              v-if="Number(msg.senderId) !== Number(userStore.userId)"
+              class="pl-2 mb-1 text-xs font-medium text-gray-600"
+            >
               {{ currentFriend.friendName || `User${Number(msg.senderId)}` }}
             </div>
-            <!-- 訊息泡泡 我發的訊息 白底靠右 ; 對方訊息 黃底靠左-->
-            <div :class="[
-              'rounded-2xl px-4 py-2 max-w-xs lg:max-w-md',
-              Number(msg.senderId) === Number(userStore.userId)
-                ? 'bg-white text-gray-800 shadow-sm'
-                : 'bg-[#f6ba42] text-white shadow-sm',
-            ]">
-              <!-- 貼圖訊息 -->
-              <div v-if="msg.type === 'sticker'" class="flex flex-col items-center">
-                <!-- 如果有貼圖URL則顯示圖片，否則顯示emoji -->
-                <img v-if="msg.stickerUrl" :src="msg.stickerUrl" :alt="msg.stickerEmoji || 'sticker'"
-                  class="object-contain w-16 h-16" @error="handleStickerError" :style="{ display: 'block' }" />
-
-                <!-- emoji作為備用顯示 -->
-                <span v-show="!msg.stickerUrl" class="text-4xl">{{
-                  msg.stickerEmoji || "🙂"
-                }}</span>
-              </div>
-
-              <!-- 訊息內容 -->
-              <p class="break-words">{{ msg.content || msg.text }}</p>
-
-              <!-- 時間 -->
-              <div :class="[
-                'text-xs mt-1',
+            <div
+              :class="[
+                'rounded-2xl px-4 py-2 max-w-xs lg:max-w-md break-words',
                 Number(msg.senderId) === Number(userStore.userId)
-                  ? 'text-gray-500 text-right'
-                  : 'text-white opacity-75',
-              ]">
+                  ? 'bg-white text-gray-800 shadow-sm'
+                  : 'bg-[#f6ba42] text-white shadow-sm',
+              ]"
+            >
+              <div v-if="msg.type === 'sticker'" class="flex flex-col items-center">
+                <img
+                  v-if="msg.stickerUrl"
+                  :src="msg.stickerUrl"
+                  :alt="msg.stickerEmoji || 'sticker'"
+                  class="object-contain w-16 h-16"
+                  @error="handleStickerError"
+                  :style="{ display: 'block' }"
+                />
+                <span v-show="!msg.stickerUrl" class="text-4xl">
+                  {{ msg.stickerEmoji || '🙂' }}
+                </span>
+              </div>
+              <p>{{ msg.content || msg.text }}</p>
+              <div
+                :class="[
+                  'text-xs mt-1',
+                  Number(msg.senderId) === Number(userStore.userId)
+                    ? 'text-gray-500 text-right'
+                    : 'text-white opacity-75',
+                ]"
+              >
                 {{ msg.time }}
               </div>
             </div>
@@ -519,46 +492,78 @@ watch(newMessage, autoResize);
         </div>
       </div>
 
-      <!-- 輸入區域 -->
+      <!-- 訊息輸入欄 -->
       <div class="relative flex-shrink-0 p-4 bg-white border-t border-gray-200">
-        <!-- 貼圖選擇面板 -->
-        <StickerPanel ref="stickerPanelRef" :show="showStickerPanel" :stickers="defaultStickers"
-          @select-sticker="handleStickerSelect" />
-
-        <div class="flex items-end space-x-3">
-          <!-- 使用貼圖按鈕組件 -->
-          <StickerButton ref="stickerButtonRef" :disabled="!isUserLoggedIn" :active="showStickerPanel"
-            @toggle="toggleStickerPanel" />
-          <!-- 語音輸入 -->
-          <button @click="startVoiceInput" aria-label="語音輸入" :class="[
-            'p-2 rounded-lg transition-colors flex-shrink-0',
-            'text-gray-600 hover:bg-gray-100 hover:text-[#f6ba42]',
-          ]">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-              stroke="currentColor" class="size-6">
-              <path stroke-linecap="round" stroke-linejoin="round"
-                d="M12 18.75a6 6 0 0 0 6-6v-1.5m-6 7.5a6 6 0 0 1-6-6v-1.5m6 7.5v3.75m-3.75 0h7.5M12 15.75a3 3 0 0 1-3-3V4.5a3 3 0 1 1 6 0v8.25a3 3 0 0 1-3 3Z" />
+        <StickerPanel
+          ref="stickerPanelRef"
+          :show="showStickerPanel"
+          :stickers="defaultStickers"
+          @select-sticker="handleStickerSelect"
+        />
+        <div class="flex flex-wrap items-end gap-2 sm:gap-3">
+          <StickerButton
+            ref="stickerButtonRef"
+            :disabled="!isUserLoggedIn"
+            :active="showStickerPanel"
+            @toggle="toggleStickerPanel"
+          />
+          <button
+            @click="startVoiceInput"
+            aria-label="語音輸入"
+            class="p-2 rounded-lg transition-colors text-gray-600 hover:bg-gray-100 hover:text-[#f6ba42]"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              class="w-6 h-6"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M12 18.75a6 6 0 0 0 6-6v-1.5m-6 7.5a6 6 0 0 1-6-6v-1.5m6 7.5v3.75m-3.75 0h7.5M12 15.75a3 3 0 0 1-3-3V4.5a3 3 0 1 1 6 0v8.25a3 3 0 0 1-3 3Z"
+              />
             </svg>
           </button>
-          <!-- 輸入框 -->
-          <div class="relative flex-1 w-full">
-            <input type="text" placeholder="輸入訊息或使用語音..." @keydown.enter="handleEnter" v-model="newMessage" :class="[
-              'w-full px-4 py-2 border border-gray-300 rounded-lg outline-none transition-colors',
-              'focus:ring-2 focus:ring-[#f6ba42] focus:border-transparent',
-            ]" />
-            <div v-if="isListening" class="z-[99] absolute inset-y-0 right-2 flex items-center">
-              <Vue3Lottie :animationData="voiceInputAnimation" :height="48" :width="48" :loop="true" :autoPlay="true" />
+          <div class="relative flex-1">
+            <input
+              type="text"
+              placeholder="輸入訊息或使用語音..."
+              @keydown.enter="handleEnter"
+              v-model="newMessage"
+              class="w-full px-4 py-2 border border-gray-300 rounded-lg outline-none focus:ring-2 focus:ring-[#f6ba42] focus:border-transparent"
+            />
+            <div
+              v-if="isListening"
+              class="z-[99] absolute inset-y-0 right-2 flex items-center"
+            >
+              <Vue3Lottie
+                :animationData="voiceInputAnimation"
+                :height="48"
+                :width="48"
+                :loop="true"
+                :autoPlay="true"
+              />
             </div>
           </div>
-          <!-- 發送按鈕 -->
-          <button @click="sendMessage" :disabled="!newMessage.trim()" :class="[
-            'px-4 py-2 rounded-lg font-medium transition-colors',
-            newMessage.trim()
-              ? 'bg-[#f6ba42] hover:bg-[#ed8b34] text-white'
-              : 'bg-gray-300 text-gray-500 cursor-not-allowed',
-          ]">
+          <button
+            @click="sendMessage"
+            :disabled="!newMessage.trim()"
+            :class="[
+              'px-4 py-2 rounded-lg font-medium transition-colors',
+              newMessage.trim()
+                ? 'bg-[#f6ba42] hover:bg-[#ed8b34] text-white'
+                : 'bg-gray-300 text-gray-500 cursor-not-allowed',
+            ]"
+          >
             送出
           </button>
+        </div>
+      </div>
+    </div>
+  </div>
           <div class="fixed z-50 bottom-20 right-20">
             <!-- 收合狀態的圓點 -->
             <div class="absolute transition-all duration-500" :class="isExpanded
@@ -626,13 +631,17 @@ watch(newMessage, autoResize);
               </div>
             </div>
           </div>
-        </div>
-      </div>
-    </div>
-  </div>
 </template>
 
 <style>
+::-webkit-scrollbar {
+  height: 4px;
+}
+::-webkit-scrollbar-thumb {
+  background: #ccc;
+  border-radius: 2px;
+}
+
 .chat-container {
   height: 100vh;
 }
