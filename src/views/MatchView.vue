@@ -14,26 +14,24 @@ const matchStore = useMatchStore();
 
 const allProfiles = ref([]);
 const limitUsers = 20;
-// 在 script setup 中暫時修改
-//const confirmModal = ref(true); // 改成 true
 
 // 並設定測試資料
-onMounted(async () => {
-  await fetchAllUsers();
+// onMounted(async () => {
+//   await fetchAllUsers();
 
-  // 🔥 加入測試資料
-  myOwnProfile.value = {
-    name: "我的測試名字",
-    avatarUrl: "https://via.placeholder.com/100",
-    userId: 1,
-  };
+//   // 🔥 加入測試資料
+//   myOwnProfile.value = {
+//     name: "我的測試名字",
+//     avatarUrl: "https://via.placeholder.com/100",
+//     userId: 1,
+//   };
 
-  matchedTarget.value = {
-    name: "測試配對對象",
-    avatarUrl: "https://via.placeholder.com/100",
-    userId: 2,
-  };
-});
+//   matchedTarget.value = {
+//     name: "測試配對對象",
+//     avatarUrl: "https://via.placeholder.com/100",
+//     userId: 2,
+//   };
+// });
 
 // 計算當前是第 X 位使用者
 const currentIndex = ref(0);
@@ -83,7 +81,7 @@ const mutualLike = ref(false); // 是否互相喜歡
 const restSuperLikes = ref(null);
 // 配對關閉 ｜ 彈跳配對視窗
 const isCovering = ref(false);
-const confirmModal = ref(true);
+const confirmModal = ref(false);
 
 const likeFlag = async (targetId) => {
   try {
@@ -265,7 +263,7 @@ const goToSubscription = () => {
     <div class="w-full pt-4 mt-4 max-w-[1000px] mx-auto">
       <button
         type="button"
-        class="-mb-4 relative z-10 block mx-auto px-5 py-2 rounded-full font-semibold text-[#2c3e50] bg-[#f8f9fa] border border-[#2c3e50] shadow-md hover:bg-[#2c3e50] hover:text-white transition duration-300"
+        class="-mb-4 relative z-10 block mx-auto px-5 py-2 rounded-full font-semibold text-[#8ECAE6] bg-[#f8f9fa] border border-[#8ECAE6] shadow-md hover:bg-[#8ECAE6] hover:text-white transition duration-300"
         @click="infoToggle"
       >
         {{ infoBtnTxt }}

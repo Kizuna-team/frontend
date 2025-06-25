@@ -107,7 +107,7 @@ const superLikeHandler = async () => {
       <button
         :disabled="isDisabled"
         type="button"
-        class="circle-wrap  bg-[#ff5e5e] hover:bg-[#ff5e5e] hover:shadow-lg hover:scale-110 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 disabled:hover:shadow-none transition-all duration-200 ease-in-out"
+        class="circle-wrap bg-[#ff5e5e] hover:bg-[#ff5e5e] hover:shadow-lg hover:scale-110 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 disabled:hover:shadow-none transition-all duration-200 ease-in-out"
         :class="{ 'animate-pulse shadow-lg shadow-[#229EBC]/30': superLikeActive }"
         @click="superLikeHandler"
       >
@@ -153,8 +153,8 @@ const superLikeHandler = async () => {
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  width: 3rem;
-  height: 3rem;
+  width: 80px;
+  height: 80px;
   border-radius: 100%;
 }
 
