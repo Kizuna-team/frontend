@@ -8,8 +8,14 @@ import "swiper/css/autoplay";
 import { ref, onMounted } from "vue";
 import EventCard from "./EventCard.vue";
 import { fetchActivities } from "../api/activities.js";
+import { useUserStore } from "@/stores/user.js";
+import { useRouter } from "vue-router";
+import { useToast } from "vue-toastification";
 
 const events = ref([]);
+const userStore = useUserStore();
+const router = useRouter();
+const toast = useToast();
 
 onMounted(async () => {
   try {
@@ -25,7 +31,7 @@ onMounted(async () => {
       return {
         id: act.id,
         title: act.title,
-        time, 
+        time,
         venue: act.location,
         image: act.image_url,
       };
@@ -35,6 +41,15 @@ onMounted(async () => {
   }
 });
 
+const handleJoinClick = () => {
+  if (!userStore.accessToken) {
+    localStorage.setItem("returnTo", "/activities");
+    toast.info("請先登入才能參加活動");
+    router.push("/login");
+    return;
+  }
+  router.push("/activities");
+};
 </script>
 
 <template>
@@ -126,8 +141,8 @@ onMounted(async () => {
 
   <!-- 按鈕區 -->
   <section class="flex items-center justify-center w-full py-10">
-    <router-link to="/activities">
       <button
+        @click="handleJoinClick"
         type="button"
         class="relative w-80 py-5 text-2xl font-bold text-white rounded-full bg-[#023047] overflow-hidden group"
       >
@@ -141,6 +156,5 @@ onMounted(async () => {
           class="absolute inset-0 bg-[#fb8500] translate-y-full transition-transform duration-500 ease-in-out rounded-full opacity-0 group-hover:translate-y-0 group-hover:opacity-100"
         ></span>
       </button>
-    </router-link>
   </section>
 </template>
