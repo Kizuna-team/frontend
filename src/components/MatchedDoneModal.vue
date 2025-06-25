@@ -44,14 +44,14 @@ const goToChatRoom = async () => {
 </script>
 
 <template>
+  <Teleport to="body">
   <!-- 全螢幕遮罩背景 - 點擊可關閉彈窗 -->
   <div
     class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
-    @click="onCancelClick"
   >
     <!-- 主要彈窗容器 - 黃色漸層背景，圓角設計 -->
     <div
-      class="bg-gradient-to-br from-[#ffc0e4] to-yellow-100 rounded-3xl p-8 max-w-sm mx-4 relative shadow-2xl"
+      class="bg-gradient-to-br from-[#ffc0e4] to-yellow-100 rounded-3xl p-8 w-full max-w-sm mx-4 relative shadow-2xl"
       @click.stop
     >
       <!-- 頭像區域 - 我的頭像 + 愛心 + 對方頭像 -->
@@ -174,6 +174,7 @@ const goToChatRoom = async () => {
       </div>
     </div>
   </div>
+  </Teleport>
 </template>
 
 <style scoped>
