@@ -12,6 +12,26 @@ const router = useRouter();
 
 const allProfiles = ref([]);
 const limitUsers = 20;
+// 在 script setup 中暫時修改
+//const confirmModal = ref(true); // 改成 true
+
+// 並設定測試資料
+onMounted(async () => {
+  await fetchAllUsers();
+
+  // 🔥 加入測試資料
+  myOwnProfile.value = {
+    name: "我的測試名字",
+    avatarUrl: "https://via.placeholder.com/100",
+    userId: 1,
+  };
+
+  matchedTarget.value = {
+    name: "測試配對對象",
+    avatarUrl: "https://via.placeholder.com/100",
+    userId: 2,
+  };
+});
 
 // 計算當前是第 X 位使用者
 const currentIndex = ref(0);
@@ -61,7 +81,7 @@ const mutualLike = ref(false); // 是否互相喜歡
 const restSuperLikes = ref(null);
 // 配對關閉 ｜ 彈跳配對視窗
 const isCovering = ref(false);
-const confirmModal = ref(false);
+const confirmModal = ref(true);
 
 const likeFlag = async (targetId) => {
   try {
@@ -196,44 +216,48 @@ const onCancel = () => {
 };
 
 const goToSubscription = () => {
-  router.push('/subscription'); 
+  router.push("/subscription");
 };
 </script>
 
 <template>
-  <main
-    class="flex flex-col items-center justify-around pt-6 card-bg rounded-3xl"
+  <div
+    class="min-h-screen overflow-x-hidden bg-gradient-to-br from-[#8ecae6]/70 via-white/50 to-pink-200/70"
   >
-    <!-- 顯示對象滑滑區 -->
-    <!-- @goPrev="prevUser" -->
-    <UserCard
-      v-if="currentUser && currentUser.photos"
-      :target-photos="currentUser.photos"
-      @goNext="nextUser"
-    />
+    <main
+      class="max-w-[1000px] mx-auto mt-32 bg-white/20 backdrop-blur-md border border-white/30 shadow-xl flex flex-col items-center justify-around pt-6 rounded-3xl pb-10"
+    >
+      <!-- 顯示對象滑滑區 -->
+      <!-- @goPrev="prevUser" -->
+      <UserCard
+        v-if="currentUser && currentUser.photos"
+        :target-photos="currentUser.photos"
+        @goNext="nextUser"
+      />
 
-    <!-- 只有成功配對時才顯示 Modal -->
-    <!-- 傳給子元件 自己 pinia 的名字 和  配對對象 名<template> 會自動解 ref 別.value  -->
-    <MatchedDoneModal
-      v-if="confirmModal"
-      :my-profile="myOwnProfile"
-      :target-profile="matchedTarget"
-      @cancel="onCancel"
-      @go-chat="goToChatRoom"
-    />
+      <!-- 只有成功配對時才顯示 Modal -->
+      <!-- 傳給子元件 自己 pinia 的名字 和  配對對象 名<template> 會自動解 ref 別.value  -->
+      <MatchedDoneModal
+        v-if="confirmModal"
+        :my-profile="myOwnProfile"
+        :target-profile="matchedTarget"
+        @cancel="onCancel"
+        @go-chat="goToChatRoom"
+      />
 
-    <!-- 配對按鈕區 -->
-    <MatchBtn
-      v-if="typeof currentUser?.userId === 'number'"
-      :target-user="currentUser.userId"
-      @like="likeFlag"
-      @dislike="dislikeFlag"
-      @superLike="superLikeFlag"
-      @superLikeStatus="handleSuperLikeStatus"
-    />
+      <!-- 配對按鈕區 -->
+      <MatchBtn
+        v-if="typeof currentUser?.userId === 'number'"
+        :target-user="currentUser.userId"
+        @like="likeFlag"
+        @dislike="dislikeFlag"
+        @superLike="superLikeFlag"
+        @superLikeStatus="handleSuperLikeStatus"
+      />
+    </main>
 
     <!-- 個人資訊頁面收合區 -->
-    <section class="w-full pt-4 mt-4">
+    <section class="w-full pt-4 mt-4 max-w-[1000px] mx-auto">
       <button
         type="button"
         class="-mb-4 relative z-10 block mx-auto px-5 py-2 rounded-full font-semibold text-[#2c3e50] bg-[#f8f9fa] border border-[#2c3e50] shadow-md hover:bg-[#2c3e50] hover:text-white transition duration-300"
@@ -242,47 +266,51 @@ const goToSubscription = () => {
         {{ infoBtnTxt }}
       </button>
       <!-- 展示個人資訊頁面 -->
-      <transition name="slide-fade">
-        <UserIntro v-show="isShow" :target-user="currentUser" />
+       <transition name="fade">
+      <UserIntro
+        v-if="isShow"
+        :target-user="currentUser"
+        :is-visible="isShow"
+      />
       </transition>
     </section>
-  </main>
 
-  <!-- 滑完出現遮罩 -->
-  <div
-    v-if="isCovering"
-    class="fixed inset-0 z-50 flex flex-col items-center justify-center text-xl text-white bg-black bg-opacity-60"
-    @click="closeCover"
-  >
-    <p class="mb-4">滑完囉！解鎖倒數</p>
-    <p class="mb-4 text-lg">{{ countdownText }}</p>
-    <button class="px-4 py-2 text-black bg-white rounded hover:bg-[#ffb703]"
-    @click.stop="goToSubscription">
-      升級解鎖更多使用者
-    </button>
+    <!-- 滑完出現遮罩 -->
+    <div
+      v-if="isCovering"
+      class="fixed inset-0 z-50 flex flex-col items-center justify-center text-xl text-white bg-black bg-opacity-60"
+      @click="closeCover"
+    >
+      <p class="mb-4">滑完囉！解鎖倒數</p>
+      <p class="mb-4 text-lg">{{ countdownText }}</p>
+      <button
+        class="px-4 py-2 text-black bg-white rounded hover:bg-[#ffb703]"
+        @click.stop="goToSubscription"
+      >
+        升級解鎖更多使用者
+      </button>
+    </div>
   </div>
 </template>
 
 <style scoped>
 .card-bg {
   position: relative;
-  background-image: linear-gradient(to bottom, #c0d7ec 0%, #c0d7ec 20%),
-    linear-gradient(to bottom, #7395ba 20%, #7395ba 35%),
-    linear-gradient(to bottom, #8ecae6 35%, #8ecae6 55%),
-    linear-gradient(to bottom, #219ebc 55%, #219ebc 75%),
-    linear-gradient(to bottom, #fb8500 75%, #999999 100%);
-  background-size: 100% 20%;
+  /* background-image: linear-gradient(to bottom, #B1D9EE 0%,  #FFF1F0 100%); */
+  /* background:#B1D9EE; */
+
+  background-size: 100%;
   background-repeat: no-repeat;
-  border-radius: 12px 12px 0 0;
+  border-radius: 12px 12px;
 }
 
-.slide-fade-enter-active,
+/* .slide-fade-enter-active,
 .slide-fade-leave-active {
   transition: all 0.3s ease;
   transform-origin: top;
-}
+} */
 
-.slide-fade-enter-from,
+/* .slide-fade-enter-from,
 .slide-fade-leave-to {
   opacity: 0;
   transform: scaleY(0.95);
@@ -292,5 +320,17 @@ const goToSubscription = () => {
 .slide-fade-leave-from {
   opacity: 1;
   transform: scaleY(1);
+} */
+ .fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.3s ease;
+}
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+.fade-enter-to,
+.fade-leave-from {
+  opacity: 1;
 }
 </style>

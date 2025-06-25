@@ -84,7 +84,7 @@ const superLikeHandler = async () => {
   <div class="flex items-center justify-center w-48 gap-16 px-2">
     <button
       type="button"
-      class="circle-wrap bg-[#fcfcfc] hover:bg-white hover:shadow-lg hover:scale-110 active:scale-95 transition-all duration-200 ease-in-out"
+      class="w-12 h-12 rounded-[50%] shadow-xl bg-[#fcfcfc] hover:bg-white hover:shadow-lg hover:scale-110 active:scale-95 transition-all duration-200 ease-in-out"
       @click="dislikeHandler"
     >
       <svg
@@ -93,7 +93,7 @@ const superLikeHandler = async () => {
         fill="none"
         stroke="currentColor"
         stroke-width="2"
-        class="w-10 h-10 text-[#229EBC]"
+        class="w-12 h-12 text-[#229EBC]"
       >
         <path
           stroke-linecap="round"
@@ -107,7 +107,7 @@ const superLikeHandler = async () => {
       <button
         :disabled="isDisabled"
         type="button"
-        class="circle-wrap bg-white hover:bg-gray-50 hover:shadow-lg hover:scale-110 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 disabled:hover:shadow-none transition-all duration-200 ease-in-out"
+        class="circle-wrap  bg-[#ff5e5e] hover:bg-[#ff5e5e] hover:shadow-lg hover:scale-110 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 disabled:hover:shadow-none transition-all duration-200 ease-in-out"
         :class="{ 'animate-pulse shadow-lg shadow-[#229EBC]/30': superLikeActive }"
         @click="superLikeHandler"
       >
@@ -115,7 +115,7 @@ const superLikeHandler = async () => {
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 24 24"
           fill="currentColor"
-          class="w-10 h-10 text-[#229EBC] "
+          class="w-10 h-10 text-[#ffffff] "
         >
           <path
             d="m11.645 20.91-.007-.003-.022-.012a15.247 15.247 0 0 1-.383-.218 25.18 25.18 0 0 1-4.244-3.17C4.688 15.36 2.25 12.174 2.25 8.25 2.25 5.322 4.714 3 7.688 3A5.5 5.5 0 0 1 12 5.052 5.5 5.5 0 0 1 16.313 3c2.973 0 5.437 2.322 5.437 5.25 0 3.925-2.438 7.111-4.739 9.256a25.175 25.175 0 0 1-4.244 3.17 15.247 15.247 0 0 1-.383.219l-.022.012-.007.004-.003.001a.752.752 0 0 1-.704 0l-.003-.001Z"
@@ -125,7 +125,7 @@ const superLikeHandler = async () => {
     
     <button
       type="button"
-      class="circle-wrap bg-white hover:bg-gray-50 hover:shadow-lg hover:scale-110 active:scale-95 transition-all duration-200 ease-in-out"
+      class="w-12 h-12 rounded-[50%] shadow-xl bg-white hover:bg-gray-50 hover:shadow-lg hover:scale-110 active:scale-95 transition-all duration-200 ease-in-out"
       @click="likeHandler"
     >
       <svg
@@ -134,7 +134,7 @@ const superLikeHandler = async () => {
         fill="none"
         stroke="currentColor"
         stroke-width="2"
-        class="w-10 h-10 text-[#229EBC] "
+        class="w-12 h-12 text-[#229EBC] "
       >
         <path
           fill-rule="evenodd"
