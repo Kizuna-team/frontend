@@ -85,17 +85,21 @@ const superLikeHandler = async () => {
 </script>
 
 <template>
-  <div class="flex items-center justify-center w-48 gap-16 px-2">
+  <div
+    class="flex flex-wrap items-center justify-center gap-6 px-2 py-4 sm:gap-16"
+  >
+    <!-- Dislike -->
     <button
       type="button"
-      class="circle-wrap bg-[#E8E8E8] transform hover:scale-125"
+      class="text-orange-700 circle-btn bg-gradient-to-br from-orange-100 to-orange-300 hover:scale-110"
       @click="dislikeHandler"
+      aria-label="Dislike"
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"
-        viewBox="0 0 24 24"
         fill="currentColor"
-        class="w-10 h-10 text-red-600"
+        viewBox="0 0 24 24"
+        class="w-8 h-8"
       >
         <path
           fill-rule="evenodd"
@@ -104,18 +108,21 @@ const superLikeHandler = async () => {
         />
       </svg>
     </button>
+
+    <!-- Super Like -->
     <div :class="{ 'puff-out-center': superLikeActive }">
       <button
         :disabled="isDisabled"
         type="button"
-        class="circle-wrap bg-[#fff]"
+        class="text-pink-500 circle-btn bg-gradient-to-br from-[#8ecae6]/70 via-white/50 to-pink-200/70 hover:scale-110 disabled:opacity-40"
         @click="superLikeHandler"
+        aria-label="Super Like"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 24 24"
           fill="currentColor"
-          class="w-10 h-10 text-pink-400"
+          viewBox="0 0 24 24"
+          class="w-8 h-8"
         >
           <path
             d="m11.645 20.91-.007-.003-.022-.012a15.247 15.247 0 0 1-.383-.218 25.18 25.18 0 0 1-4.244-3.17C4.688 15.36 2.25 12.174 2.25 8.25 2.25 5.322 4.714 3 7.688 3A5.5 5.5 0 0 1 12 5.052 5.5 5.5 0 0 1 16.313 3c2.973 0 5.437 2.322 5.437 5.25 0 3.925-2.438 7.111-4.739 9.256a25.175 25.175 0 0 1-4.244 3.17 15.247 15.247 0 0 1-.383.219l-.022.012-.007.004-.003.001a.752.752 0 0 1-.704 0l-.003-.001Z"
@@ -123,16 +130,19 @@ const superLikeHandler = async () => {
         </svg>
       </button>
     </div>
+
+    <!-- Like -->
     <button
       type="button"
-      class="circle-wrap bg-[#E8E8E8] transform hover:scale-125"
+      class="text-darkblue circle-btn bg-gradient-to-br from-[#cdeffc] to-primary hover:scale-110"
       @click="likeHandler"
+      aria-label="Like"
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"
-        viewBox="0 0 24 24"
         fill="currentColor"
-        class="w-10 h-10 text-teal-700"
+        viewBox="0 0 24 24"
+        class="w-8 h-8"
       >
         <path
           fill-rule="evenodd"
@@ -145,53 +155,22 @@ const superLikeHandler = async () => {
 </template>
 
 <style scoped>
-.circle-wrap {
-  /* 記得class另外補上背景色 */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  width: 3rem;
-  height: 3rem;
-  border-radius: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+.circle-btn {
+  @apply w-14 h-14 rounded-full shadow-md transition-all duration-300 ease-out flex items-center justify-center;
 }
 
-/* superLike的彈跳動畫 */
 .puff-out-center {
-  -webkit-animation: puff-out-center 1s ease-in alternate forwards;
-  animation: puff-out-center 1s ease-in alternate forwards;
+  animation: puff-out-center 0.8s ease-in-out forwards;
 }
-@-webkit-keyframes puff-out-center {
-  0% {
-    -webkit-transform: scale(1);
-    transform: scale(1);
-    -webkit-filter: blur(1px);
-    filter: blur(0px);
-    opacity: 1;
-  }
-  100% {
-    -webkit-transform: scale(2);
-    transform: scale(2);
-    -webkit-filter: blur(2px);
-    filter: blur(4px);
-    opacity: 0;
-  }
-}
+
 @keyframes puff-out-center {
   0% {
-    -webkit-transform: scale(1);
     transform: scale(1);
-    -webkit-filter: blur(1px);
     filter: blur(0px);
     opacity: 1;
   }
   100% {
-    -webkit-transform: scale(2);
     transform: scale(2);
-    -webkit-filter: blur(2px);
     filter: blur(4px);
     opacity: 0;
   }
