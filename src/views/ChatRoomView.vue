@@ -8,7 +8,7 @@ import {
   watch,
   computed,
 } from "vue";
-import { Bot, X, Sparkles } from 'lucide-vue-next';
+import { Bot, X, Sparkles } from "lucide-vue-next";
 import { io } from "socket.io-client";
 import { useUserStore } from "@/stores/user.js";
 import { userChatStore } from "@/stores/chat.js";
@@ -31,26 +31,26 @@ const socket = io(import.meta.env.VITE_API_BASE_URL, {
 let suggestionFromAI = false;
 
 // test
-const isExpanded = ref(false)
-const messages = ref([])
-const isLoading = ref(false)
-const messagesEndRef = ref(null)
+const isExpanded = ref(false);
+const messages = ref([]);
+const isLoading = ref(false);
+const messagesEndRef = ref(null);
 
 const scrollToBottom = () => {
   nextTick(() => {
-    messagesEndRef.value?.scrollIntoView({ behavior: 'smooth' })
-  })
-}
+    messagesEndRef.value?.scrollIntoView({ behavior: "smooth" });
+  });
+};
 
-watch(messages, scrollToBottom)
+watch(messages, scrollToBottom);
 
 const handleExpand = () => {
   isExpanded.value = true;
-}
+};
 
 const handleClose = () => {
-  isExpanded.value = false
-}
+  isExpanded.value = false;
+};
 // test
 
 const userStore = useUserStore();
@@ -132,6 +132,7 @@ function handleIncomingMessage(msg) {
   // 加入到 chatStore
   chatStore.addMessage(formattedMessage);
 }
+
 // 加入房間 & 綁定監聽器
 onMounted(() => {
   fetchChatRooms();
@@ -173,7 +174,6 @@ onBeforeUnmount(() => {
     userId: userStore.userId,
   });
 });
-
 
 const handleClickOutside = (event) => {
   const panelElement = stickerPanelRef.value?.stickerPanelRef;
@@ -335,7 +335,6 @@ const handleEnter = (e) => {
   }
 };
 
-
 // 監聽訊息長度 實現自動滾到訊息底部的功能
 watch(
   () => chatStore.currentRoomMessages.length,
@@ -407,7 +406,7 @@ watch(newMessage, autoResize);
 <template>
   <div class="bg-gray-100 h-[90vh] flex flex-row">
     <!-- 左側邊欄 -->
-    <div class="w-80 bg-white border-r border-gray-200 flex flex-col">
+    <div class="flex flex-col bg-white border-r border-gray-200 w-80">
       <div class="p-4 border-b border-gray-200">
         <h1 class="text-xl font-semibold text-gray-800">聊天室</h1>
       </div>
@@ -426,7 +425,7 @@ watch(newMessage, autoResize);
               : 'hover:bg-gray-50',
           ]"
         >
-          <div class="font-medium">{{ room.friendName }}</div>
+          <div class="font-medium">{{ room.name }}</div>
           <div
             :class="[
               'text-sm',
@@ -448,22 +447,25 @@ watch(newMessage, autoResize);
     </div>
 
     <!-- 右側主要聊天區域 -->
-    <div class="flex-1 flex flex-col">
+    <div class="flex flex-col flex-1">
       <!-- 聊天室標題欄 -->
       <div
-        class="bg-white border-b border-gray-200 p-4 flex items-center justify-between"
+        class="flex items-center justify-between p-4 bg-white border-b border-gray-200"
       >
         <div class="flex items-center space-x-3">
-          <div
-            class="w-10 h-10 bg-gray-300 rounded-full flex items-center justify-center"
-          >
-            <!-- TODO:這邊之後放我的好友的大頭貼 -->
-            <span class="text-sm font-medium text-gray-700">{{  }}</span>
+          <div>
+            <div class="w-10 h-10 bg-gray-300 rounded-full">
+              <img
+                :src="currentFriend?.avatarUrl || '/default-chat-avatar.png'"
+                class="object-cover w-10 h-10 border-2 border-white rounded-full"
+              />
+            </div>
+            <span class="text-sm font-medium text-gray-700">{{}}</span>
           </div>
           <div>
             <!-- 當還沒有選擇聊天室時 chatRoom.find()找不到資料 => 所以試圖讀取 .friendName 會掛掉 -->
             <div class="font-medium text-gray-800">
-              {{ currentFriend?.friendName }}
+              {{ currentFriend?.name || "未知使用者" }}
             </div>
             <div class="text-sm text-gray-500">Room ID: {{ currentRoom }}</div>
           </div>
@@ -472,11 +474,11 @@ watch(newMessage, autoResize);
       <!-- 聊天訊息區域 -->
       <!-- 外層容器 滾動區域 -->
       <div
-        class="flex-1 overflow-y-auto p-4 space-y-4 bg-gray-50"
+        class="flex-1 p-4 space-y-4 overflow-y-auto bg-gray-50"
         ref="messagesContainer"
       >
         <!-- 空訊息提示 -->
-        <div v-if="chatStore.messages.length === 0" class="text-center py-8">
+        <div v-if="chatStore.messages.length === 0" class="py-8 text-center">
           <div class="text-gray-500">還沒有訊息，開始聊天吧！</div>
         </div>
 
@@ -494,7 +496,7 @@ watch(newMessage, autoResize);
             <!-- 顯示發送者名稱（如果不是自己的訊息） -->
             <div
               v-if="Number(msg.senderId) !== Number(userStore.userId)"
-              class="text-xs text-gray-600 mb-1 pl-2 font-medium"
+              class="pl-2 mb-1 text-xs font-medium text-gray-600"
             >
               {{ currentFriend.friendName || `User${Number(msg.senderId)}` }}
             </div>
@@ -517,7 +519,7 @@ watch(newMessage, autoResize);
                   v-if="msg.stickerUrl"
                   :src="msg.stickerUrl"
                   :alt="msg.stickerEmoji || 'sticker'"
-                  class="w-16 h-16 object-contain"
+                  class="object-contain w-16 h-16"
                   @error="handleStickerError"
                   :style="{ display: 'block' }"
                 />
@@ -525,7 +527,7 @@ watch(newMessage, autoResize);
                 <!-- emoji作為備用顯示 -->
                 <span v-show="!msg.stickerUrl" class="text-4xl">{{
                   msg.stickerEmoji || "🙂"
-                  }}</span>
+                }}</span>
               </div>
 
               <!-- 訊息內容 -->
@@ -548,7 +550,7 @@ watch(newMessage, autoResize);
       </div>
 
       <!-- 輸入區域 -->
-      <div class="bg-white border-t border-gray-200 p-4 flex-shrink-0 relative">
+      <div class="relative flex-shrink-0 p-4 bg-white border-t border-gray-200">
         <!-- 貼圖選擇面板 -->
         <StickerPanel
           ref="stickerPanelRef"
@@ -590,13 +592,28 @@ watch(newMessage, autoResize);
             </svg>
           </button>
           <!-- 輸入框 -->
-          <div class="relative w-full flex-1">
-            <input type="text" placeholder="輸入訊息或使用語音..."  @keydown.enter="handleEnter" v-model="newMessage" :class="[
-              'w-full px-4 py-2 border border-gray-300 rounded-lg outline-none transition-colors',
-              'focus:ring-2 focus:ring-[#f6ba42] focus:border-transparent',
-            ]" />
-            <div v-if="isListening" class="z-[99] absolute inset-y-0 right-2 flex items-center">
-              <Vue3Lottie :animationData="voiceInputAnimation" :height="48" :width="48" :loop="true" :autoPlay="true" />
+          <div class="relative flex-1 w-full">
+            <input
+              type="text"
+              placeholder="輸入訊息或使用語音..."
+              @keydown.enter="handleEnter"
+              v-model="newMessage"
+              :class="[
+                'w-full px-4 py-2 border border-gray-300 rounded-lg outline-none transition-colors',
+                'focus:ring-2 focus:ring-[#f6ba42] focus:border-transparent',
+              ]"
+            />
+            <div
+              v-if="isListening"
+              class="z-[99] absolute inset-y-0 right-2 flex items-center"
+            >
+              <Vue3Lottie
+                :animationData="voiceInputAnimation"
+                :height="48"
+                :width="48"
+                :loop="true"
+                :autoPlay="true"
+              />
             </div>
           </div>
           <!-- 發送按鈕 -->
@@ -612,62 +629,103 @@ watch(newMessage, autoResize);
           >
             送出
           </button>
-          <div class="fixed bottom-20 right-20 z-50">
+          <div class="fixed z-50 bottom-20 right-20">
             <!-- 收合狀態的圓點 -->
-            <div class="absolute transition-all duration-500"
-              :class="isExpanded ? 'opacity-0 scale-0 pointer-events-none' : 'opacity-100 scale-100 pointer-events-auto'">
-              <div @click="handleExpand"
-                class="group relative overflow-hidden rounded-full w-16 h-16 cursor-pointer transition-all duration-500 backdrop-blur-xl bg-gradient-to-r from-blue-500/20 to-purple-500/20 border border-white/30 shadow-2xl hover:scale-110 hover:shadow-blue-500/25 hover:shadow-2xl">
+            <div
+              class="absolute transition-all duration-500"
+              :class="
+                isExpanded
+                  ? 'opacity-0 scale-0 pointer-events-none'
+                  : 'opacity-100 scale-100 pointer-events-auto'
+              "
+            >
+              <div
+                @click="handleExpand"
+                class="relative w-16 h-16 overflow-hidden transition-all duration-500 border rounded-full shadow-2xl cursor-pointer group backdrop-blur-xl bg-gradient-to-r from-blue-500/20 to-purple-500/20 border-white/30 hover:scale-110 hover:shadow-blue-500/25 hover:shadow-2xl"
+              >
                 <div
-                  class="absolute inset-0 bg-gradient-to-r from-blue-400/30 to-purple-400/30 rounded-full blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                </div>
-                <div class="relative z-10 w-full h-full flex items-center justify-center">
-                  <Bot class="w-8 h-8 text-white drop-shadow-lg animate-pulse" />
+                  class="absolute inset-0 transition-opacity duration-300 rounded-full opacity-0 bg-gradient-to-r from-blue-400/30 to-purple-400/30 blur-xl group-hover:opacity-100"
+                ></div>
+                <div
+                  class="relative z-10 flex items-center justify-center w-full h-full"
+                >
+                  <Bot
+                    class="w-8 h-8 text-white drop-shadow-lg animate-pulse"
+                  />
                 </div>
                 <div
-                  class="absolute inset-0 rounded-full bg-gradient-to-r from-blue-400 to-purple-400 opacity-20 animate-ping">
-                </div>
+                  class="absolute inset-0 rounded-full bg-gradient-to-r from-blue-400 to-purple-400 opacity-20 animate-ping"
+                ></div>
               </div>
             </div>
 
             <!-- 展開狀態的聊天視窗 -->
-            <div class="absolute bottom-0 right-0 transition-all duration-500"
-              :class="isExpanded ? 'opacity-100 scale-100 pointer-events-auto' : 'opacity-0 scale-0 pointer-events-none'">
+            <div
+              class="absolute bottom-0 right-0 transition-all duration-500"
+              :class="
+                isExpanded
+                  ? 'opacity-100 scale-100 pointer-events-auto'
+                  : 'opacity-0 scale-0 pointer-events-none'
+              "
+            >
               <div
-                class="relative overflow-hidden rounded-2xl w-80 h-96 backdrop-blur-xl bg-white/10 border border-white/20 shadow-2xl flex flex-col">
-                <div class="absolute inset-0 bg-gradient-to-br from-blue-500/10 via-purple-500/10 to-pink-500/10"></div>
+                class="relative flex flex-col overflow-hidden border shadow-2xl rounded-2xl w-80 h-96 backdrop-blur-xl bg-white/10 border-white/20"
+              >
+                <div
+                  class="absolute inset-0 bg-gradient-to-br from-blue-500/10 via-purple-500/10 to-pink-500/10"
+                ></div>
 
                 <div
-                  class="relative z-50 flex items-center justify-between p-4 border-b border-white/20 bg-white/5 backdrop-blur-sm flex-shrink-0">
+                  class="relative z-50 flex items-center justify-between flex-shrink-0 p-4 border-b border-white/20 bg-white/5 backdrop-blur-sm"
+                >
                   <div class="flex items-center space-x-2">
                     <div
-                      class="w-8 h-8 rounded-full bg-gradient-to-r from-blue-400 to-purple-400 flex items-center justify-center">
+                      class="flex items-center justify-center w-8 h-8 rounded-full bg-gradient-to-r from-blue-400 to-purple-400"
+                    >
                       <Sparkles class="w-4 h-4 text-white" />
                     </div>
                     <div>
-                      <h3 class="text-gray-800 font-medium text-sm">AI 聊天助手</h3>
-                      <p class="text-gray-600 text-xs">智能對話建議</p>
+                      <h3 class="text-sm font-medium text-gray-800">
+                        AI 聊天助手
+                      </h3>
+                      <p class="text-xs text-gray-600">智能對話建議</p>
                     </div>
                   </div>
-                  <button @click="handleClose"
-                    class="relative z-50 p-2 rounded-full bg-red-500/20 hover:bg-red-500/40 transition-all duration-200 hover:scale-110 border border-red-400/30 group">
-                    <X class="w-4 h-4 text-white drop-shadow-lg group-hover:text-red-200" />
+                  <button
+                    @click="handleClose"
+                    class="relative z-50 p-2 transition-all duration-200 border rounded-full bg-red-500/20 hover:bg-red-500/40 hover:scale-110 border-red-400/30 group"
+                  >
+                    <X
+                      class="w-4 h-4 text-white drop-shadow-lg group-hover:text-red-200"
+                    />
                   </button>
                 </div>
-                <div class="relative z-10 flex-1 p-3 overflow-y-auto min-h-0">
-                  <div v-if="isLoading" class="text-center text-gray-600 text-sm py-8">
-                    <Bot class="w-8 h-8 mx-auto mb-2 opacity-70 text-gray-600" />
+                <div class="relative z-10 flex-1 min-h-0 p-3 overflow-y-auto">
+                  <div
+                    v-if="isLoading"
+                    class="py-8 text-sm text-center text-gray-600"
+                  >
+                    <Bot
+                      class="w-8 h-8 mx-auto mb-2 text-gray-600 opacity-70"
+                    />
                     正在分析你們的對話...
                   </div>
-                  <textarea type="text" v-model="newMessage"
-                    class="w-full h-[200px] p-3 rounded-xl border border-white/30 bg-white/10 text-sm text-gray-800 placeholder-gray-400 resize-none focus:outline-none focus:ring-2 focus:ring-purple-300 backdrop-blur-sm shadow-inner"></textarea>
+                  <textarea
+                    type="text"
+                    v-model="newMessage"
+                    class="w-full h-[200px] p-3 rounded-xl border border-white/30 bg-white/10 text-sm text-gray-800 placeholder-gray-400 resize-none focus:outline-none focus:ring-2 focus:ring-purple-300 backdrop-blur-sm shadow-inner"
+                  ></textarea>
                 </div>
-                <div class="relative z-20 p-3 border-t border-white/20 bg-white/5 backdrop-blur-sm flex-shrink-0
-        ">
-                  <div class="mt-2 flex justify-center">
-                    <button @click="getSuggestion" :disabled="isLoading"
-                      class="px-3 py-1 bg-white/10 hover:bg-white/20 rounded-full text-xs text-gray-700 transition-colors disabled:opacity-50 border border-white/20 h-10">
-                      {{ isLoading ? '分析中...' : '獲取聊天建議' }}
+                <div
+                  class="relative z-20 flex-shrink-0 p-3 border-t border-white/20 bg-white/5 backdrop-blur-sm"
+                >
+                  <div class="flex justify-center mt-2">
+                    <button
+                      @click="getSuggestion"
+                      :disabled="isLoading"
+                      class="h-10 px-3 py-1 text-xs text-gray-700 transition-colors border rounded-full bg-white/10 hover:bg-white/20 disabled:opacity-50 border-white/20"
+                    >
+                      {{ isLoading ? "分析中..." : "獲取聊天建議" }}
                     </button>
                   </div>
                 </div>

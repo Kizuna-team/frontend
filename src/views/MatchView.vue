@@ -1,6 +1,7 @@
 <!-- 父組件 控制配對流程與切換使用者 -->
 <script setup>
 import { ref, computed, onUnmounted, onMounted } from "vue";
+import { useMatchStore } from "@/stores/matches.js";
 import UserCard from "@/components/UserCard.vue";
 import MatchBtn from "@/components/MatchBtn.vue";
 import UserIntro from "@/components/UserIntro.vue";
@@ -9,6 +10,7 @@ import { sendLike, sendSuperLike } from "@/api/like.js";
 import { fetchAllProfiles } from "@/api/profile.js";
 import { useRouter } from "vue-router";
 const router = useRouter();
+const matchStore = useMatchStore();
 
 const allProfiles = ref([]);
 const limitUsers = 20;
@@ -114,10 +116,13 @@ const handleSuperLikeStatus = (status) => {
 
 const superLikeFlag = async (targetId) => {
   try {
-    const { matched, remainingCount, message, targetProfile, myProfile } =
+    const { forcedMatched, remainingCount, message, targetProfile, myProfile } =
       await sendSuperLike(targetId);
 
-    if (matched) {
+    if (forcedMatched) {
+      // 寫進 Pinia
+      matchStore.setProfiles(myProfile, targetProfile);
+
       matchedTarget.value = targetProfile;
       myOwnProfile.value = myProfile;
       mutualLike.value = true;
@@ -196,7 +201,7 @@ const onCancel = () => {
 };
 
 const goToSubscription = () => {
-  router.push('/subscription'); 
+  router.push("/subscription");
 };
 </script>
 
@@ -256,8 +261,10 @@ const goToSubscription = () => {
   >
     <p class="mb-4">滑完囉！解鎖倒數</p>
     <p class="mb-4 text-lg">{{ countdownText }}</p>
-    <button class="px-4 py-2 text-black bg-white rounded hover:bg-[#ffb703]"
-    @click.stop="goToSubscription">
+    <button
+      class="px-4 py-2 text-black bg-white rounded hover:bg-[#ffb703]"
+      @click.stop="goToSubscription"
+    >
       升級解鎖更多使用者
     </button>
   </div>
