@@ -31,7 +31,7 @@
       <p
         class="mb-8 text-xl leading-relaxed opacity-0 md:text-2xl drop-shadow-sm animate-fade-in-delay"
       >
-        <span class="font-bold text-primary">Kizuna begins with</span>
+        <span class="font-bold text-primary">Kizuna begins with </span>
         <span class="font-bold text-accent">a spark of affection.</span>
       </p>
       <router-link to="/register">
