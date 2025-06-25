@@ -11,14 +11,12 @@ const { targetUser } = defineProps({
 });
 
 const emit = defineEmits(["like", "dislike", "superLike", "superLikeStatus"]);
-const likeActive = ref(false);
-const dislikeActive = ref(false);
-const superLikeActive = ref(false);
 
 const isMember = ref(false);
 const totalCount = ref(0);
 const isDisabled = ref(true);
 const msg = ref("");
+const superLikeActive = ref(false);
 
 const superLikeStatus = async () => {
   try {
@@ -59,12 +57,10 @@ onMounted(() => {
 });
 
 const likeHandler = () => {
-  likeActive.value = false;
   emit("like", targetUser);
 };
 
 const dislikeHandler = () => {
-  dislikeActive.value = false;
   emit("dislike", targetUser);
 };
 
@@ -88,51 +84,57 @@ const superLikeHandler = async () => {
   <div class="flex items-center justify-center w-48 gap-16 px-2">
     <button
       type="button"
-      class="circle-wrap bg-[#E8E8E8] transform hover:scale-125"
+      class="circle-wrap bg-[#fcfcfc] hover:bg-white hover:shadow-lg hover:scale-110 active:scale-95 transition-all duration-200 ease-in-out"
       @click="dislikeHandler"
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 24 24"
-        fill="currentColor"
-        class="w-10 h-10 text-red-600"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        class="w-10 h-10 text-[#229EBC]"
       >
         <path
-          fill-rule="evenodd"
+          stroke-linecap="round"
+          stroke-linejoin="round"
           d="M5.47 5.47a.75.75 0 0 1 1.06 0L12 10.94l5.47-5.47a.75.75 0 1 1 1.06 1.06L13.06 12l5.47 5.47a.75.75 0 1 1-1.06 1.06L12 13.06l-5.47 5.47a.75.75 0 0 1-1.06-1.06L10.94 12 5.47 6.53a.75.75 0 0 1 0-1.06Z"
           clip-rule="evenodd"
         />
       </svg>
     </button>
-    <div :class="{ 'puff-out-center': superLikeActive }">
+    
       <button
         :disabled="isDisabled"
         type="button"
-        class="circle-wrap bg-[#fff]"
+        class="circle-wrap bg-white hover:bg-gray-50 hover:shadow-lg hover:scale-110 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 disabled:hover:shadow-none transition-all duration-200 ease-in-out"
+        :class="{ 'animate-pulse shadow-lg shadow-[#229EBC]/30': superLikeActive }"
         @click="superLikeHandler"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 24 24"
           fill="currentColor"
-          class="w-10 h-10 text-pink-400"
+          class="w-10 h-10 text-[#229EBC] "
         >
           <path
             d="m11.645 20.91-.007-.003-.022-.012a15.247 15.247 0 0 1-.383-.218 25.18 25.18 0 0 1-4.244-3.17C4.688 15.36 2.25 12.174 2.25 8.25 2.25 5.322 4.714 3 7.688 3A5.5 5.5 0 0 1 12 5.052 5.5 5.5 0 0 1 16.313 3c2.973 0 5.437 2.322 5.437 5.25 0 3.925-2.438 7.111-4.739 9.256a25.175 25.175 0 0 1-4.244 3.17 15.247 15.247 0 0 1-.383.219l-.022.012-.007.004-.003.001a.752.752 0 0 1-.704 0l-.003-.001Z"
           />
         </svg>
       </button>
-    </div>
+    
     <button
       type="button"
-      class="circle-wrap bg-[#E8E8E8] transform hover:scale-125"
+      class="circle-wrap bg-white hover:bg-gray-50 hover:shadow-lg hover:scale-110 active:scale-95 transition-all duration-200 ease-in-out"
       @click="likeHandler"
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 24 24"
-        fill="currentColor"
-        class="w-10 h-10 text-teal-700"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        class="w-10 h-10 text-[#229EBC] "
       >
         <path
           fill-rule="evenodd"
@@ -141,7 +143,7 @@ const superLikeHandler = async () => {
         />
       </svg>
     </button>
-  </div>
+    </div>
 </template>
 
 <style scoped>
@@ -154,9 +156,6 @@ const superLikeHandler = async () => {
   width: 3rem;
   height: 3rem;
   border-radius: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
 
 /* superLike的彈跳動畫 */
