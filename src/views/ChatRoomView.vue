@@ -94,9 +94,10 @@ const currentFriend = computed(() => {
   );
 });
 
-// 響應式數據
+
 const currentRoom = ref("");
 const newMessage = ref("");
+const aiMessage = ref("");
 // 用來做訊息自動滾動
 const messagesContainer = ref(null);
 
@@ -308,7 +309,7 @@ const getSuggestion = async () => {
     const res = await axios.post("/chat/ai-suggestion", {
       roomId: currentRoom.value,
     });
-    newMessage.value = res.data.suggestion;
+    aiMessage.value = res.data.suggestion;
     suggestionFromAI = true;
 
     // 等 DOM 更新後 再調整高度
@@ -611,7 +612,7 @@ watch(newMessage, autoResize);
                     <Bot class="w-8 h-8 mx-auto mb-2 text-gray-600 opacity-70" />
                     正在分析你們的對話...
                   </div>
-                  <textarea type="text" v-model="newMessage"
+                  <textarea type="text" v-model="aiMessage"
                     class="w-full h-[200px] p-3 rounded-xl border border-white/30 bg-white/10 text-sm text-gray-800 placeholder-gray-400 resize-none focus:outline-none focus:ring-2 focus:ring-purple-300 backdrop-blur-sm shadow-inner"></textarea>
                 </div>
                 <div class="relative z-20 flex-shrink-0 p-3 border-t border-white/20 bg-white/5 backdrop-blur-sm">
