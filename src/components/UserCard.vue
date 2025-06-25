@@ -19,19 +19,19 @@ const nextUser = () => emit("goNext");
       <div
         v-for="photo in props.targetPhotos"
         :key="photo"
-        class="aspect-[3/4] bg-white rounded-lg shadow p-2 w-64 overflow-hidden"
+        class="aspect-[3/4] bg-white rounded-[20px] shadow p-2 w-64 overflow-hidden"
       >
         <img
           :src="photo.image_url"
           alt="avatar"
-          class="object-cover w-full h-full rounded"
+          class="object-cover w-full h-full rounded-[20px] "
         />
       </div>
     </div>
     <!-- 下一輪按鈕 -->
     <button
       type="button"
-      class="bg-gray-200 bg-opacity-50 circle-wrap hover:bg-white hover:shadow-lg"
+      class="bg-[#ffff] bg-opacity-50 circle-wrap hover:bg-white hover:shadow-lg hover:scale-110 active:scale-95 transition-all duration-200 ease-in-out"
       @click="nextUser"
     >
       <svg
@@ -40,7 +40,7 @@ const nextUser = () => emit("goNext");
         viewBox="0 0 24 24"
         stroke-width="4"
         stroke="currentColor"
-        class="size-6 text-primary"
+        class="size-6 text-[#229EBC]"
       >
         <path
           stroke-linecap="round"

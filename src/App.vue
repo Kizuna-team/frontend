@@ -17,7 +17,7 @@ const showHeader = computed(() => {
 });
 
 const mainClass = computed(() => {
-  const fullWidthPaths = ["/", "/subscription"];
+  const fullWidthPaths = ["/", "/subscription","/match"];
   return fullWidthPaths.includes(route.path)
     ? "w-full"
     : "max-w-[1000px] mx-auto mt-32";
