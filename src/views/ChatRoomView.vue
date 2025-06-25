@@ -133,7 +133,6 @@ function handleIncomingMessage(msg) {
   // 加入到 chatStore
   chatStore.addMessage(formattedMessage);
 }
-
 // 加入房間 & 綁定監聽器
 onMounted(() => {
   fetchChatRooms();
