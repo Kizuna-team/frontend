@@ -3,7 +3,7 @@ import { useActivityStore } from "@/stores/activity.js";
 import { storeToRefs } from "pinia";
 import { onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
-import { useToast } from 'vue-toastification'
+import { useToast } from "vue-toastification";
 import {
   UserIcon,
   CalendarDaysIcon,
@@ -12,7 +12,7 @@ import {
   TrashIcon,
 } from "@heroicons/vue/24/outline";
 
-const toast = useToast()
+const toast = useToast();
 const store = useActivityStore();
 // 把 store 裡的變數都轉為 ref
 const { activities, loading, error, joinActivities } = storeToRefs(store);
@@ -188,7 +188,6 @@ const handleDeleteJoin = async (id) => {
           v-if="joinActivities.length === 0"
           class="py-16 text-base text-center text-gray-400"
         >
-          <div class="mb-2 text-4xl">🧾</div>
           你還沒有參加任何活動
         </div>
 

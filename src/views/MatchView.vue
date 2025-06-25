@@ -207,10 +207,9 @@ const goToSubscription = () => {
 
 <template>
   <main
-    class="flex flex-col items-center justify-around pt-6 card-bg rounded-3xl"
+    class="flex flex-col items-center justify-between w-full max-w-2xl px-4 pt-6 pb-10 mx-auto transition-all shadow-xl bg-white/95 backdrop-blur-md rounded-3xl ring-1 ring-gray-200/50"
   >
     <!-- 顯示對象滑滑區 -->
-    <!-- @goPrev="prevUser" -->
     <UserCard
       v-if="currentUser && currentUser.photos"
       :target-photos="currentUser.photos"
@@ -228,41 +227,45 @@ const goToSubscription = () => {
     />
 
     <!-- 配對按鈕區 -->
-    <MatchBtn
-      v-if="typeof currentUser?.userId === 'number'"
-      :target-user="currentUser.userId"
-      @like="likeFlag"
-      @dislike="dislikeFlag"
-      @superLike="superLikeFlag"
-      @superLikeStatus="handleSuperLikeStatus"
-    />
+    <div class="w-full mt-6">
+      <MatchBtn
+        v-if="typeof currentUser?.userId === 'number'"
+        :target-user="currentUser.userId"
+        @like="likeFlag"
+        @dislike="dislikeFlag"
+        @superLike="superLikeFlag"
+        @superLikeStatus="handleSuperLikeStatus"
+      />
+    </div>
 
-    <!-- 個人資訊頁面收合區 -->
-    <section class="w-full pt-4 mt-4">
+    <!-- 更多資訊 -->
+    <section class="w-full pt-6 mt-6 border-t border-gray-300/50">
       <button
         type="button"
-        class="-mb-4 relative z-10 block mx-auto px-5 py-2 rounded-full font-semibold text-[#2c3e50] bg-[#f8f9fa] border border-[#2c3e50] shadow-md hover:bg-[#2c3e50] hover:text-white transition duration-300"
+        class="relative block px-6 py-2 mx-auto text-sm font-semibold transition border rounded-full shadow-md text-primary border-primary bg-primary/10 hover:bg-primary hover:text-white"
         @click="infoToggle"
       >
         {{ infoBtnTxt }}
       </button>
       <!-- 展示個人資訊頁面 -->
       <transition name="slide-fade">
-        <UserIntro v-show="isShow" :target-user="currentUser" />
+        <UserIntro v-show="isShow" :target-user="currentUser" class="mt-4" />
       </transition>
     </section>
   </main>
 
-  <!-- 滑完出現遮罩 -->
+  <!-- 滑完遮罩 -->
   <div
     v-if="isCovering"
-    class="fixed inset-0 z-50 flex flex-col items-center justify-center text-xl text-white bg-black bg-opacity-60"
+    class="fixed inset-0 z-50 flex flex-col items-center justify-center p-4 text-center bg-white/90 text-darkblue backdrop-blur-md"
     @click="closeCover"
   >
-    <p class="mb-4">滑完囉！解鎖倒數</p>
-    <p class="mb-4 text-lg">{{ countdownText }}</p>
+    <p class="mb-3 text-lg font-medium">你已瀏覽完今日推薦配對</p>
+    <p class="mb-6 text-base tracking-wide text-secondary">
+      將於 {{ countdownText }} 後更新
+    </p>
     <button
-      class="px-4 py-2 text-black bg-white rounded hover:bg-[#ffb703]"
+      class="px-6 py-2 font-semibold text-white transition-all rounded-full shadow-md bg-accent hover:bg-orange"
       @click.stop="goToSubscription"
     >
       升級解鎖更多使用者
@@ -271,18 +274,6 @@ const goToSubscription = () => {
 </template>
 
 <style scoped>
-.card-bg {
-  position: relative;
-  background-image: linear-gradient(to bottom, #c0d7ec 0%, #c0d7ec 20%),
-    linear-gradient(to bottom, #7395ba 20%, #7395ba 35%),
-    linear-gradient(to bottom, #8ecae6 35%, #8ecae6 55%),
-    linear-gradient(to bottom, #219ebc 55%, #219ebc 75%),
-    linear-gradient(to bottom, #fb8500 75%, #999999 100%);
-  background-size: 100% 20%;
-  background-repeat: no-repeat;
-  border-radius: 12px 12px 0 0;
-}
-
 .slide-fade-enter-active,
 .slide-fade-leave-active {
   transition: all 0.3s ease;
@@ -299,5 +290,32 @@ const goToSubscription = () => {
 .slide-fade-leave-from {
   opacity: 1;
   transform: scaleY(1);
+}
+
+.card-slide-enter-active,
+.card-slide-leave-active {
+  transition: all 0.4s ease;
+}
+.card-slide-enter-from {
+  opacity: 0;
+  transform: translateX(40px) scale(0.95);
+}
+.card-slide-leave-to {
+  opacity: 0;
+  transform: translateX(-40px) scale(0.95);
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.98);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+.animate-fadeIn {
+  animation: fadeIn 0.5s ease-out both;
 }
 </style>
