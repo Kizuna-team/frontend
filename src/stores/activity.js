@@ -17,8 +17,13 @@ export const useActivityStore = defineStore("activity", () => {
     loading.value = true;
     try {
       const response = await axios.get("/activities");
-      activities.value = response.data;
-      console.log("API response:", response.data);
+      const allActivities = response.data;
+
+      const today = new Date();
+      activities.value = allActivities.filter(activity => 
+      new Date(activity.date) >= today
+    );
+    console.log("Filtered activities:", activities.value);
     } catch (err) {
       error.value = err;
       console.error("Fetch error:", err);

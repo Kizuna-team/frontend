@@ -27,7 +27,7 @@ const form = ref({
   time: "",
   description: "",
   createdBy: "",
-  maxParticipants:"",
+  maxParticipants: "",
 });
 
 const today = new Date().toISOString().split("T")[0];
@@ -41,7 +41,7 @@ function resetForm() {
     time: "",
     description: "",
     createdBy: "",
-    maxParticipants: "", 
+    maxParticipants: "",
   };
   imageFile.value = null;
 
@@ -96,7 +96,7 @@ watch(
         date: "",
         description: "",
         createdBy: "",
-        maxParticipants:"",
+        maxParticipants: "",
       };
     }
   },
@@ -104,6 +104,32 @@ watch(
 );
 
 async function handleSubmit() {
+  const requiredFields = {
+    title: "活動標題",
+    location: "活動地點",
+    date: "活動日期",
+    time: "活動時間",
+    description: "活動描述",
+    maxParticipants: "人數上限",
+  };
+
+  const missingFields = [];
+
+  for (const key in requiredFields) {
+    if (!form.value[key]) {
+      missingFields.push(requiredFields[key]);
+    }
+  }
+
+  if (!imageFile.value) {
+    missingFields.push("活動圖片");
+  }
+
+  if (missingFields.length > 0) {
+    toast.error(`請填寫以下欄位：${missingFields.join("、")}`);
+    return;
+  }
+
   // console.log("maxParticipants：", form.value.maxParticipants);
   // 1. 建立 FormData 物件
   const formData = new FormData();
@@ -112,14 +138,10 @@ async function handleSubmit() {
   formData.append("date", `${form.value.date}T${form.value.time}:00+08:00`);
   formData.append("description", form.value.description);
   formData.append("createdBy", form.value.createdBy);
-  formData.append("maxParticipants",form.value.maxParticipants)
+  formData.append("maxParticipants", form.value.maxParticipants);
   if (imageFile.value) {
     formData.append("image", imageFile.value); // 圖片也放進去
   }
-
-  // for (let pair of formData.entries()) {
-  // console.log(pair[0] + ": " + pair[1]);
-  // }
 
   try {
     if (isEditMode.value) {
@@ -130,7 +152,7 @@ async function handleSubmit() {
       await createActivity(formData); // 要用 FormData
       toast("活動已建立！");
     }
-    
+
     resetForm();
   } catch (err) {
     console.log("提交活動時發生錯誤", err);
@@ -230,12 +252,15 @@ async function handleDelete() {
         />
       </div>
       <div>
-        <label for="max-participants" class="block mb-2 text-lg font-bold text-darkblue"
+        <label
+          for="max-participants"
+          class="block mb-2 text-lg font-bold text-darkblue"
           >活動人數上限：</label
         >
         <input
           id="max-participants"
           type="number"
+          min="2"
           v-model.number="form.maxParticipants"
           class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:text-secondary"
         />
@@ -264,7 +289,7 @@ async function handleDelete() {
           v-if="isEditMode"
           @click="handleDelete"
           type="button"
-          class="flex-1 px-4 py-2 font-bold text-white transition bg-red-500 rounded hover:bg-red-600"
+          class="flex-1 min-w-[130px] w-[150px] h-[40px] px-2.5 py-1.5 font-bold text-white border-2 border-red-400 bg-red-400 rounded-full flex items-center justify-center gap-1 transition-all duration-300 hover:bg-white hover:text-red-400 mx-auto"
         >
           刪除活動
         </button>
