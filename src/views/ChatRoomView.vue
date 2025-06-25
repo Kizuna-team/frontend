@@ -10,7 +10,6 @@ import {
 } from "vue";
 import { Bot, X, Sparkles } from 'lucide-vue-next';
 import { io } from "socket.io-client";
-import AiChatBot from "../components/AiChatBot.vue";
 import { useUserStore } from "@/stores/user.js";
 import { userChatStore } from "@/stores/chat.js";
 import { createRecognition } from "@/config/voiceRecognition.js";
@@ -28,6 +27,8 @@ const socket = io(import.meta.env.VITE_API_BASE_URL, {
   reconnectionAttempts: 5,
   timeout: 20000,
 });
+
+let suggestionFromAI = false;
 
 // test
 const isExpanded = ref(false)
@@ -309,6 +310,7 @@ const getSuggestion = async () => {
       roomId: currentRoom.value,
     });
     newMessage.value = res.data.suggestion;
+    suggestionFromAI = true;
 
     // 等 DOM 更新後 再調整高度
     await nextTick();
@@ -319,6 +321,21 @@ const getSuggestion = async () => {
     alert("Google Gemini異常 請重新再試一遍");
   }
 };
+
+const handleEnter = (e) => {
+  if (e.shiftKey) return;
+  e.preventDefault();
+
+  if (suggestionFromAI) {
+    suggestionFromAI = false;
+    return;
+  }
+
+  if (newMessage.value.trim()) {
+    sendMessage();
+  }
+};
+
 
 // 監聽訊息長度 實現自動滾到訊息底部的功能
 watch(
@@ -442,7 +459,7 @@ watch(newMessage, autoResize);
             class="w-10 h-10 bg-gray-300 rounded-full flex items-center justify-center"
           >
             <!-- TODO:這邊之後放我的好友的大頭貼 -->
-            <span class="text-sm font-medium text-gray-700">{{}}</span>
+            <span class="text-sm font-medium text-gray-700">{{  }}</span>
           </div>
           <div>
             <!-- 當還沒有選擇聊天室時 chatRoom.find()找不到資料 => 所以試圖讀取 .friendName 會掛掉 -->
@@ -575,7 +592,7 @@ watch(newMessage, autoResize);
           </button>
           <!-- 輸入框 -->
           <div class="relative w-full flex-1">
-            <input type="text" placeholder="輸入訊息或使用語音..." @keyup.enter="sendMessage" :disabled="!isUserLoggedIn" :class="[
+            <input type="text" placeholder="輸入訊息或使用語音..."  @keydown.enter="handleEnter" v-model="newMessage" :class="[
               'w-full px-4 py-2 border border-gray-300 rounded-lg outline-none transition-colors',
               'focus:ring-2 focus:ring-[#f6ba42] focus:border-transparent',
             ]" />
@@ -586,7 +603,7 @@ watch(newMessage, autoResize);
           <!-- 發送按鈕 -->
           <button
             @click="sendMessage"
-            :disabled="!isUserLoggedIn || !newMessage.trim()"
+            :disabled="!newMessage.trim()"
             :class="[
               'px-4 py-2 rounded-lg font-medium transition-colors',
               newMessage.trim()
