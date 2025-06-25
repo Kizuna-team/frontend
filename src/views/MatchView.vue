@@ -276,7 +276,9 @@ const goToSubscription = () => {
         :is-visible="isShow"
       />
       </transition>
-    </section>
+      </div>
+      </div>
+    
 
   <!-- 滑完出現遮罩 -->
   <div
