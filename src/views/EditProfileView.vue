@@ -1,4 +1,5 @@
 <script setup>
+import { notify } from "@/utils/notify";
 import { ref, onMounted } from "vue";
 import { useUserProfileStore } from "@/stores/userProfile";
 
@@ -88,7 +89,7 @@ const updateHandler = async () => {
 
     console.log("updatedUser:", updatedUser); //  確認這邊不是 undefined
     showFormData.value = { ...updatedUser };
-    alert("編輯成功");
+    notify.gradient("編輯成功！");
   } catch (error) {
     console.error("updateHandler 發生錯誤：", error);
     alert(userProfileStore.error || "更新失敗");
@@ -107,7 +108,6 @@ const handleUpload = async () => {
   try {
     // 等待圖片全部上傳
     await profilePhotosRef.value?.uploadAll();
-    alert("圖片上傳完成");
     router.push("/match/setup");
   } catch (err) {
     console.error(" 上傳失敗", err);

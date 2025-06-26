@@ -1,5 +1,6 @@
 <!-- 照片邏輯 -->
 <script setup>
+import { notify } from "@/utils/notify";
 import { ref, onMounted, defineExpose } from "vue";
 import {
   getPhotos,
@@ -146,8 +147,10 @@ const uploadAll = async () => {
   });
 
   try {
+    const toastId = notify.loading("上傳照片中...");
     await Promise.all(uploadPromises);
-    alert("所有已選圖片都已上傳完成");
+    notify.updateSuccess(toastId, "照片上傳完成！");
+
     return uploadedResults;
   } catch (err) {
     console.error("上傳過程發生錯誤", err);
