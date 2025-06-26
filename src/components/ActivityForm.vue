@@ -45,7 +45,8 @@ function resetForm() {
     maxParticipants: "",
   };
   imageFile.value = null;
-
+  previewUrl.value = null;
+  
   if (fileInputRef.value) {
     fileInputRef.value.value = "";
   }
