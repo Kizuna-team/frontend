@@ -1,7 +1,7 @@
 <script setup>
 import { ref, watch, computed } from "vue";
 import { useActivityStore } from "@/stores/activity.js";
-import { useRoute } from "vue-router";
+import { useRoute,useRouter } from "vue-router";
 import { storeToRefs } from "pinia";
 import { useUserStore } from "@/stores/user.js";
 import { useToast } from "vue-toastification";
@@ -14,6 +14,7 @@ const { loading, error, selectedActivity } = storeToRefs(store);
 const { fetchActivityById, updateActivity, createActivity, deleteActivity } =
   store;
 
+const router = useRouter();
 const route = useRoute();
 const activityId = route.params.id;
 const toast = useToast();
@@ -75,12 +76,13 @@ watch(
         await fetchActivityById(id);
         form.value = {
           title: selectedActivity.value?.title || "",
+          imageInput: selectedActivity.value?.image_url || "",
           location: selectedActivity.value?.location || "",
           date: selectedActivity.value?.date?.slice(0, 10) || "",
           time: selectedActivity.value?.date?.slice(11, 16) || "",
           description: selectedActivity.value?.description || "",
           createdBy: selectedActivity.value?.createdBy || "",
-          maxParticipants: selectedActivity.value?.maxParticipants || "",
+          maxParticipants: selectedActivity.value?.max_participants || "",
         };
         // 如果有舊圖片就顯示，沒有就空字串
         if (selectedActivity.value?.image_url) {
@@ -153,9 +155,11 @@ async function handleSubmit() {
       const id = parseInt(route.params.id);
       await updateActivity(id, formData); // 要用 FormData
       toast("活動已更新！");
+      router.push("/activities/my");
     } else {
       await createActivity(formData); // 要用 FormData
       toast("活動已建立！");
+      router.push("/activities/my");
     }
 
     resetForm();
@@ -173,6 +177,7 @@ async function handleDelete() {
     const id = parseInt(route.params.id);
     await deleteActivity(id, form.value);
     toast("活動已刪除！");
+    router.push("/activities/my");
   } catch (err) {
     console.log("刪除活動失敗", err);
     toast.error("刪除失敗，請稍後再試");
@@ -183,15 +188,13 @@ async function handleDelete() {
 </script>
 
 <template>
-  <div class="relative">
-    <!-- 遮罩 -->
-    <div
-      v-if="isLoading"
-      class="absolute inset-0 z-50 flex items-center justify-center bg-white/70 rounded-2xl"
-    >
-      <div class="text-lg text-darkblue animate-pulse">處理中...</div>
-    </div>
-
+  <div
+  v-if="isLoading"
+  class="fixed inset-0 z-50 flex items-center justify-center bg-white/70"
+  >
+    <img src="@/assets/spinner.svg" alt="處理中..." class="w-16 h-16" />
+  </div>
+  <div>
     <div class="max-w-xl p-8 mx-auto mt-6 shadow-md rounded-2xl">
       <div class="mb-6">
         <label class="mb-2 mr-2 text-lg font-bold text-darkblue"
@@ -282,6 +285,7 @@ async function handleDelete() {
           >
           <input
             id="max-participants"
+            min="2"
             type="number"
             v-model.number="form.maxParticipants"
             class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:text-secondary"
