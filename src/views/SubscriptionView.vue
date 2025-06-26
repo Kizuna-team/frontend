@@ -36,7 +36,7 @@ onMounted(async () => {
 
     // 如果不是免費會員，就計算訂閱到期日
     if (user.subscription_plan !== 1 && user.end_date) {
-      const expire = dayjs(end_date);
+      const expire = dayjs(user.end_date);
       expireDate.value = expire.tz("Asia/Taipei").format("YYYY/MM/DD HH:mm");
     }
   } catch (error) {
