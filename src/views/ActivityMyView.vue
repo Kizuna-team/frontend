@@ -34,18 +34,19 @@ const goEdit = (id) => {
 
 // 刪除（直接呼叫 store action）
 const handleDelete = async (id) => {
+  const confirmed = confirm("確定要刪除嗎？");
+  if (!confirmed) return;
+
   isLoading.value = true;
-  if (confirm("確定要刪除嗎？")) {
-    try {
-      await store.deleteActivity(id); // 刪除 API
-      await store.fetchMyActivities(); // 更新列表
-      alert("刪除成功！");
-    } catch (err) {
-      console.error("刪除活動錯誤：", err);
-      alert("刪除失敗，請稍後再試！");
-    } finally {
-      isLoading.value = false;
-    }
+  try {
+    await store.deleteActivity(id); // 刪除 API
+    await store.fetchMyActivities(); // 更新列表
+    alert("刪除成功！");
+  } catch (err) {
+    console.error("刪除活動錯誤：", err);
+    alert("刪除失敗，請稍後再試！");
+  } finally {
+    isLoading.value = false;
   }
 };
 
