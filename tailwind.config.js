@@ -1,5 +1,5 @@
 export default {
-  content: ["./index.html", "./src/**/*.{vue,js,ts,jsx,tsx}"],
+  content: ["./index.html", "./src/**/*.{vue,js,ts,jsx,tsx,css}"],
   theme: {
     extend: {
       fontSize: {
@@ -30,7 +30,7 @@ export default {
       },
       animation: {
         "fade-in-up": "fade-in-up 0.8s ease-out both",
-        'spin-slow': 'spin 2s linear infinite',
+        "spin-slow": "spin 2s linear infinite",
       },
     },
   },

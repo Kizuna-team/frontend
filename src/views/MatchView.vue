@@ -1,5 +1,6 @@
 <!-- 父組件 控制配對流程與切換使用者 -->
 <script setup>
+import { notify } from "@/utils/notify";
 import { ref, computed, onUnmounted, onMounted } from "vue";
 import { useMatchStore } from "@/stores/matches.js";
 import UserCard from "@/components/UserCard.vue";
@@ -9,6 +10,7 @@ import MatchedDoneModal from "@/components/MatchedDoneModal.vue";
 import { sendLike, sendSuperLike } from "@/api/like.js";
 import { fetchAllProfiles } from "@/api/profile.js";
 import { useRouter } from "vue-router";
+
 const router = useRouter();
 const matchStore = useMatchStore();
 
@@ -125,15 +127,17 @@ const superLikeFlag = async (targetId) => {
 
       matchedTarget.value = targetProfile;
       myOwnProfile.value = myProfile;
-      mutualLike.value = true;
-      confirmModal.value = true;
-      alert(message); // 要換成動畫
+      // mutualLike.value = true;
+      // confirmModal.value = true;
+      notify.gradient(message);
     }
 
     // 更新剩餘次數的 UI 或狀態
     if (remainingCount !== undefined) {
       restSuperLikes.value = remainingCount;
-      alert(`已送出Super like 剩下${restSuperLikes.value}次`); // 要換成動畫
+      const message = `已送出 Super Like！
+      剩下${restSuperLikes.value}次`;
+      notify.gradient(message);
     }
     nextUser();
   } catch (error) {

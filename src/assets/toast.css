@@ -1,0 +1,36 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  .toast-gradient {
+    background: linear-gradient(to right, #d0ecf6, #fde2ec) !important;
+    color: #023047 !important; /* 深藍文字更溫和 */
+    font-weight: bold !important;
+    border-radius: 0.75rem !important;
+    padding: 1rem !important;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08) !important;
+  }
+
+  .toast-warn {
+    background: linear-gradient(to right, #fff4cc, #ffe0b2) !important;
+    color: #b45309 !important;
+    font-weight: bold !important;
+    border-radius: 0.75rem !important;
+    padding: 1rem !important;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08) !important;
+  }
+
+  .toast-kiwi {
+    background: linear-gradient(
+      to right,
+      #f0fcd4,
+      #c1e1a6
+    ) !important; /* 淡黃綠 → 奇異果綠 */
+    color: #2f5d34 !important; /* 深墨綠文字 */
+    font-weight: bold !important;
+    border-radius: 0.75rem !important;
+    padding: 1rem !important;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08) !important;
+  }
+}

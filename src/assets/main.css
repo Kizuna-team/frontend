@@ -36,3 +36,39 @@ a,
     padding: 0 2rem;
   }
 } */
+
+@layer components {
+  .toast-gradient {
+    @apply bg-gradient-to-r from-primary to-pink-300
+           hover:from-[#7bb8d9] hover:to-pink-400
+           text-white font-bold rounded-xl
+           shadow-lg hover:shadow-xl
+           transition-all duration-200;
+  }
+
+  .toast-orange {
+    @apply bg-gradient-to-r from-orange to-accent
+           text-white font-bold rounded-xl
+           shadow-lg hover:shadow-xl
+           transition-all duration-200;
+  }
+
+  .toast-darkblue {
+    @apply bg-gradient-to-r from-darkblue to-secondary
+           text-white font-bold rounded-xl
+           shadow-lg hover:shadow-xl
+           transition-all duration-200;
+  }
+
+  .toast-glass {
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    color: #023047;
+    border-radius: 1rem;
+    font-weight: bold;
+    padding: 12px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+    transition: all 0.3s ease;
+  }
+}
