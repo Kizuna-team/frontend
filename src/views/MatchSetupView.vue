@@ -131,12 +131,12 @@ const submitHandler = async () => {
 
 <template>
   <div
-    class="relative min-h-[500px] w-full flex flex-col items-center justify-center"
+    class="relative flex flex-col items-center justify-center w-full min-h-screen px-4 py-4 md:px-6 lg:px-8"
   >
     <TransitionGroup
       name="slide-fade"
       tag="div"
-      class="relative h-[400px] w-full flex justify-center items-center"
+      class="relative flex items-center justify-center w-full max-w-sm mb-2 md:max-w-md lg:max-w-lg"
     >
       <MatchSetupCard
         v-if="steps[step]"
@@ -150,7 +150,7 @@ const submitHandler = async () => {
     </TransitionGroup>
 
     <button
-      class="mt-6 px-8 py-3 rounded-full font-bold tracking-wide text-[#a5c1e7] border-[3px] border-[#a5c1e7] bg-white transition-all duration-500 ease-in-out hover:text-white hover:bg-gradient-to-r hover:from-[#a5c1e7] hover:to-[#dd99c1] hover:border-transparent hover:shadow-lg hover:scale-[1.04]"
+      class="px-6 py-3 md:px-8 md:py-3 rounded-full font-bold tracking-wide text-[#a5c1e7] border-[3px] border-[#a5c1e7] bg-white transition-all duration-500 ease-in-out hover:text-white hover:bg-gradient-to-r hover:from-[#a5c1e7] hover:to-[#dd99c1] hover:border-transparent hover:shadow-lg hover:scale-[1.04] text-sm md:text-base"
       @click="step < steps.length - 1 ? nextStep() : submitHandler()"
     >
       {{ step < steps.length - 1 ? "下一題 ➡" : "完成並配對" }}
@@ -172,5 +172,20 @@ const submitHandler = async () => {
 .slide-fade-leave-to {
   opacity: 0;
   transform: translateX(-100%) rotate(-8deg) scale(0.9);
+}
+
+/* 手機觸控優化 */
+@media (max-width: 768px) {
+  button {
+    min-height: 44px;
+    touch-action: manipulation;
+  }
+}
+
+@media (max-width: 480px) {
+  button {
+    min-height: 48px;
+    font-size: 14px;
+  }
 }
 </style>
