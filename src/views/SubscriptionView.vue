@@ -5,6 +5,11 @@ import { UserIcon, FireIcon } from "@heroicons/vue/24/outline";
 import { onMounted, ref } from "vue";
 import { checkout } from "@/api/useSubscription.js";
 import { useUserStore } from "@/stores/user";
+import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
+import timezone from "dayjs/plugin/timezone";
+dayjs.extend(utc);
+dayjs.extend(timezone);
 
 // 使用者目前訂閱方案 id
 const userStore = useUserStore();
@@ -29,17 +34,10 @@ onMounted(async () => {
 
     // 如果不是免費會員，就計算訂閱到期日
     if (user.subscription_plan !== 1 && user.paid_at) {
-      const paidAt = new Date(user.paid_at);
-      const expire = new Date(paidAt);
-      // 測試用兩分鐘
-      expire.setTime(paidAt.getTime() + 2 * 60 * 1000);
-      const yyyy = expire.getFullYear();
-      const MM = String(expire.getMonth() + 1).padStart(2, "0");
-      const dd = String(expire.getDate()).padStart(2, "0");
-      const hh = String(expire.getHours()).padStart(2, "0");
-      const mm = String(expire.getMinutes()).padStart(2, "0");
+  const paidAt = dayjs.utc(user.paid_at); 
+  const expire = paidAt.add(2, "minute");
 
-      expireDate.value = `${yyyy}/${MM}/${dd} ${hh}:${mm}`;
+  expireDate.value = expire.tz("Asia/Taipei").format("YYYY/MM/DD HH:mm");
     }
   } catch (error) {
     console.error("無法取得會員資料", error);
