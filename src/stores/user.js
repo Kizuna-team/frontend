@@ -1,6 +1,6 @@
 import axios from "../api/axios";
 import { defineStore } from "pinia";
-import { ref, reactive } from "vue";
+import { ref, reactive, computed } from "vue";
 
 export const useUserStore = defineStore("user", () => {
 
@@ -29,6 +29,8 @@ export const useUserStore = defineStore("user", () => {
     profile.bio = profileDate.bio;
     profile.interests = profileDate.interests;
   }
+
+  const isLoggedIn = computed( () => !!accessToken.value);
 
   const register = async (usernameInput, passwordInput) => {
     try {
@@ -145,6 +147,7 @@ export const useUserStore = defineStore("user", () => {
     username,
     userId,
     profile,
+    isLoggedIn,
     getProfile,
     register,
     login,
