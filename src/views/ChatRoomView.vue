@@ -52,63 +52,66 @@ const handleClose = () => {
   isExpanded.value = false;
 };
 
-// 拖拽相關的響應式變數 
-const position = ref({ x: window.innerWidth - 340, y: window.innerHeight - 404 });
-const isDragging = ref(false); 
-const chatWindowRef = ref(null); 
-const dragOffset = ref({ x: 0, y: 0 }); 
-const animationFrame = ref(null); 1
+// 拖拽相關的響應式變數
+const position = ref({
+  x: window.innerWidth - 340,
+  y: window.innerHeight - 404,
+});
+const isDragging = ref(false);
+const chatWindowRef = ref(null);
+const dragOffset = ref({ x: 0, y: 0 });
+const animationFrame = ref(null);
+1;
 
-
-// 優化拖拽處理函數 
+// 優化拖拽處理函數
 const handleMouseDown = (e) => {
   // 防止在關閉按鈕上開始拖拽
-  if (e.target.closest('.close-button')) return;
-  
+  if (e.target.closest(".close-button")) return;
+
   e.preventDefault();
   isDragging.value = true;
-  
+
   // 計算滑鼠相對於窗口的偏移量
   const rect = chatWindowRef.value.getBoundingClientRect();
   dragOffset.value = {
     x: e.clientX - rect.left,
-    y: e.clientY - rect.top
+    y: e.clientY - rect.top,
   };
-  
+
   // 防止文字選取和其他默認行為
-  document.body.style.userSelect = 'none';
-  document.body.style.cursor = 'grabbing';
+  document.body.style.userSelect = "none";
+  document.body.style.cursor = "grabbing";
 };
 
 const updatePosition = (clientX, clientY) => {
   if (!isDragging.value) return;
-  
+
   const windowWidth = window.innerWidth;
   const windowHeight = window.innerHeight;
   const chatWidth = 320; // w-80 = 320px
   const chatHeight = 384; // h-96 = 384px
-  
+
   let newX = clientX - dragOffset.value.x;
   let newY = clientY - dragOffset.value.y;
-  
+
   // 限制在視窗範圍內，留一點邊距
   const margin = 10;
   newX = Math.max(margin, Math.min(newX, windowWidth - chatWidth - margin));
   newY = Math.max(margin, Math.min(newY, windowHeight - chatHeight - margin));
-  
+
   position.value = { x: newX, y: newY };
 };
 
 const handleMouseMove = (e) => {
   if (!isDragging.value) return;
-  
+
   e.preventDefault();
-  
+
   // 使用 requestAnimationFrame 來優化性能
   if (animationFrame.value) {
     cancelAnimationFrame(animationFrame.value);
   }
-  
+
   animationFrame.value = requestAnimationFrame(() => {
     updatePosition(e.clientX, e.clientY);
   });
@@ -116,47 +119,47 @@ const handleMouseMove = (e) => {
 
 const handleMouseUp = (e) => {
   if (!isDragging.value) return;
-  
+
   isDragging.value = false;
-  
+
   // 清理動畫幀
   if (animationFrame.value) {
     cancelAnimationFrame(animationFrame.value);
     animationFrame.value = null;
   }
-  
+
   // 恢復文檔樣式
-  document.body.style.userSelect = '';
-  document.body.style.cursor = '';
+  document.body.style.userSelect = "";
+  document.body.style.cursor = "";
 };
 
 // 處理觸控事件（手機平板支援）
 const handleTouchStart = (e) => {
-  if (e.target.closest('.close-button')) return;
-  
+  if (e.target.closest(".close-button")) return;
+
   e.preventDefault();
   isDragging.value = true;
-  
+
   const touch = e.touches[0];
   const rect = chatWindowRef.value.getBoundingClientRect();
   dragOffset.value = {
     x: touch.clientX - rect.left,
-    y: touch.clientY - rect.top
+    y: touch.clientY - rect.top,
   };
-  
-  document.body.style.userSelect = 'none';
+
+  document.body.style.userSelect = "none";
 };
 
 const handleTouchMove = (e) => {
   if (!isDragging.value) return;
-  
+
   e.preventDefault();
   const touch = e.touches[0];
-  
+
   if (animationFrame.value) {
     cancelAnimationFrame(animationFrame.value);
   }
-  
+
   animationFrame.value = requestAnimationFrame(() => {
     updatePosition(touch.clientX, touch.clientY);
   });
@@ -164,15 +167,15 @@ const handleTouchMove = (e) => {
 
 const handleTouchEnd = (e) => {
   if (!isDragging.value) return;
-  
+
   isDragging.value = false;
-  
+
   if (animationFrame.value) {
     cancelAnimationFrame(animationFrame.value);
     animationFrame.value = null;
   }
-  
-  document.body.style.userSelect = '';
+
+  document.body.style.userSelect = "";
 };
 
 const userStore = useUserStore();
@@ -215,7 +218,6 @@ const currentFriend = computed(() => {
     (room) => String(room.roomId) === String(currentRoom.value)
   );
 });
-
 
 const currentRoom = ref("");
 const newMessage = ref("");
@@ -263,27 +265,27 @@ onMounted(() => {
   socket.on("chatMessage", handleIncomingMessage);
   document.addEventListener("click", handleClickOutside);
 
-// 綁定優化的拖拽事件監聽器
+  // 綁定優化的拖拽事件監聽器
   // 滑鼠事件
-  document.addEventListener('mousemove', handleMouseMove, { passive: false });
-  document.addEventListener('mouseup', handleMouseUp);
-  
+  document.addEventListener("mousemove", handleMouseMove, { passive: false });
+  document.addEventListener("mouseup", handleMouseUp);
+
   // 觸控事件（手機平板支援）
-  document.addEventListener('touchmove', handleTouchMove, { passive: false });
-  document.addEventListener('touchend', handleTouchEnd);
+  document.addEventListener("touchmove", handleTouchMove, { passive: false });
+  document.addEventListener("touchend", handleTouchEnd);
 
   const handleResize = () => {
-  // 如果當前位置超出視窗範圍，則重新定位到右下角
-  const maxX = window.innerWidth - 340;
-  const maxY = window.innerHeight - 404;
-  
-  if (position.value.x > maxX || position.value.y > maxY) {
-    position.value = { x: maxX, y: maxY };
-  }
-};
+    // 如果當前位置超出視窗範圍，則重新定位到右下角
+    const maxX = window.innerWidth - 340;
+    const maxY = window.innerHeight - 404;
 
-window.addEventListener('resize', handleResize);
-  
+    if (position.value.x > maxX || position.value.y > maxY) {
+      position.value = { x: maxX, y: maxY };
+    }
+  };
+
+  window.addEventListener("resize", handleResize);
+
   // 等好友列表載入完後，再設定房間並 join
   watch(
     chatRooms,
@@ -320,24 +322,23 @@ onBeforeUnmount(() => {
   });
 });
 
- // 移除優化的拖拽事件監聽器
-  // 清理動畫幀
-  if (animationFrame.value) {
-    cancelAnimationFrame(animationFrame.value);
-  }
-  
-  // 滑鼠事件
-  document.removeEventListener('mousemove', handleMouseMove);
-  document.removeEventListener('mouseup', handleMouseUp);
-  
-  // 觸控事件
-  document.removeEventListener('touchmove', handleTouchMove);
-  document.removeEventListener('touchend', handleTouchEnd);
-  
-  // 恢復文檔樣式
-  document.body.style.userSelect = '';
-  document.body.style.cursor = '';
-  // ========================================================
+// 移除優化的拖拽事件監聽器
+// 清理動畫幀
+if (animationFrame.value) {
+  cancelAnimationFrame(animationFrame.value);
+}
+
+// 滑鼠事件
+document.removeEventListener("mousemove", handleMouseMove);
+document.removeEventListener("mouseup", handleMouseUp);
+
+// 觸控事件
+document.removeEventListener("touchmove", handleTouchMove);
+document.removeEventListener("touchend", handleTouchEnd);
+
+// 恢復文檔樣式
+document.body.style.userSelect = "";
+document.body.style.cursor = "";
 const handleClickOutside = (event) => {
   const panelElement = stickerPanelRef.value?.stickerPanelRef;
   const buttonElement = stickerButtonRef.value?.stickerButtonRef;
@@ -569,7 +570,9 @@ watch(newMessage, autoResize);
 <template>
   <div class="flex flex-col md:flex-row h-screen">
     <!-- 好友列表區域 -->
-    <div class="w-full md:w-80 bg-white border-b md:border-b-0 md:border-r border-gray-200 flex md:flex-col overflow-x-auto md:overflow-y-auto">
+    <div
+      class="w-full md:w-80 bg-white border-b md:border-b-0 md:border-r border-gray-200 flex md:flex-col overflow-x-auto md:overflow-y-auto"
+    >
       <div class="p-4 border-b border-gray-200 hidden md:block">
         <h1 class="text-xl font-semibold text-gray-800">聊天室</h1>
       </div>
@@ -580,12 +583,19 @@ watch(newMessage, autoResize);
           @click="currentRoom = room.roomId"
           :class="[
             'cursor-pointer border-b md:border-b-0 md:border-t border-gray-100 flex items-center md:items-start md:flex-row flex-col px-3 py-2 md:p-4 gap-2 transition-all',
-            currentRoom === room.roomId ? 'bg-[#f6ba42] text-white' : 'hover:bg-gray-50',
+            currentRoom === room.roomId
+              ? 'bg-[#f6ba42] text-white'
+              : 'hover:bg-gray-50',
           ]"
           class="shrink-0 min-w-[96px] md:min-w-0"
         >
-          <img :src="room.avatarUrl || '/default-chat-avatar.png'" class="object-cover w-10 h-10 border-2 border-white rounded-full" />
-          <div class="font-medium text-xs md:text-base text-center md:text-left">
+          <img
+            :src="room.avatarUrl || '/default-chat-avatar.png'"
+            class="object-cover w-10 h-10 border-2 border-white rounded-full"
+          />
+          <div
+            class="font-medium text-xs md:text-base text-center md:text-left"
+          >
             {{ room.name }}
           </div>
         </div>
@@ -593,9 +603,14 @@ watch(newMessage, autoResize);
     </div>
 
     <!-- 聊天訊息與輸入區域 -->
-    <div class="flex flex-col flex-1 min-h-0 max-h-[calc(100vh-160px)] md:max-h-full">
+    <div
+      class="flex flex-col flex-1 min-h-0 max-h-[calc(100vh-160px)] md:max-h-full"
+    >
       <!-- 訊息列表 -->
-      <div class="flex-1 p-4 space-y-4 overflow-y-auto bg-gray-50" ref="messagesContainer">
+      <div
+        class="flex-1 p-4 space-y-4 overflow-y-auto bg-gray-50"
+        ref="messagesContainer"
+      >
         <div v-if="chatStore.messages.length === 0" class="py-8 text-center">
           <div class="text-gray-500">還沒有訊息，開始聊天吧！</div>
         </div>
@@ -625,7 +640,10 @@ watch(newMessage, autoResize);
                   : 'bg-[#f6ba42] text-white shadow-sm',
               ]"
             >
-              <div v-if="msg.type === 'sticker'" class="flex flex-col items-center">
+              <div
+                v-if="msg.type === 'sticker'"
+                class="flex flex-col items-center"
+              >
                 <img
                   v-if="msg.stickerUrl"
                   :src="msg.stickerUrl"
@@ -635,7 +653,7 @@ watch(newMessage, autoResize);
                   :style="{ display: 'block' }"
                 />
                 <span v-show="!msg.stickerUrl" class="text-4xl">
-                  {{ msg.stickerEmoji || '🙂' }}
+                  {{ msg.stickerEmoji || "🙂" }}
                 </span>
               </div>
               <p>{{ msg.content || msg.text }}</p>
@@ -727,90 +745,112 @@ watch(newMessage, autoResize);
     </div>
   </div>
   <div class="fixed inset-0 z-50 pointer-events-none">
-          <div class="fixed z-50 bottom-20 right-20">
-            <!-- 收合狀態的圓點 -->
-            <div class="absolute transition-all duration-500" :class="isExpanded
-              ? 'opacity-0 scale-0 pointer-events-none'
-              : 'opacity-100 scale-100 pointer-events-auto'
-              ">
-              <div @click="handleExpand"
-                class="relative w-16 h-16 overflow-hidden transition-all duration-500 border rounded-full shadow-2xl cursor-pointer group backdrop-blur-xl bg-gradient-to-r from-blue-500/20 to-purple-500/20 border-white/30 hover:scale-110 hover:shadow-blue-500/25 hover:shadow-2xl">
-                <div
-                  class="absolute inset-0 transition-opacity duration-300 rounded-full opacity-0 bg-gradient-to-r from-blue-400/30 to-purple-400/30 blur-xl group-hover:opacity-100">
-                </div>
-                <div class="relative z-10 flex items-center justify-center w-full h-full">
-                  <Bot class="w-8 h-8 text-white drop-shadow-lg animate-pulse" />
-                </div>
-                <div
-                  class="absolute inset-0 rounded-full bg-gradient-to-r from-blue-400 to-purple-400 opacity-20 animate-ping">
-                </div>
-              </div>
-            </div>
-</div>
-      <div 
-        ref="chatWindowRef"
-        class="absolute transition-all duration-300 ease-out pointer-events-auto will-change-transform"
-        :class="{
-          'opacity-100 scale-100': isExpanded,
-          'opacity-0 scale-0 pointer-events-none': !isExpanded,
-          'cursor-grabbing': isDragging,
-          'transition-none': isDragging
-        }"
-        :style="{
-          left: `${position.x}px`,
-          top: `${position.y}px`,
-          position: 'fixed',
-          transform: isDragging ? 'translateZ(0)' : ''
-        }"
+    <div class="fixed z-50 bottom-20 right-20">
+      <!-- 收合狀態的圓點 -->
+      <div
+        class="absolute transition-all duration-500"
+        :class="
+          isExpanded
+            ? 'opacity-0 scale-0 pointer-events-none'
+            : 'opacity-100 scale-100 pointer-events-auto'
+        "
       >
         <div
-          class="relative flex flex-col overflow-hidden border shadow-2xl rounded-2xl w-80 h-96 backdrop-blur-xl bg-white/10 border-white/20">
-          <div class="absolute inset-0 bg-gradient-to-br from-blue-500/10 via-purple-500/10 to-pink-500/10"></div>
+          @click="handleExpand"
+          class="relative w-16 h-16 overflow-hidden transition-all duration-500 border rounded-full shadow-2xl cursor-pointer group backdrop-blur-xl bg-gradient-to-r from-blue-500/20 to-purple-500/20 border-white/30 hover:scale-110 hover:shadow-blue-500/25 hover:shadow-2xl"
+        >
           <div
-            class="relative z-50 flex items-center justify-between flex-shrink-0 p-4 border-b border-white/20 bg-white/5 backdrop-blur-sm select-none"
-            :class="{
-              'cursor-grabbing': isDragging,
-              'cursor-grab': !isDragging
-            }"
-            @mousedown="handleMouseDown"
-            @touchstart="handleTouchStart"
+            class="absolute inset-0 transition-opacity duration-300 rounded-full opacity-0 bg-gradient-to-r from-blue-400/30 to-purple-400/30 blur-xl group-hover:opacity-100"
+          ></div>
+          <div
+            class="relative z-10 flex items-center justify-center w-full h-full"
           >
-            <div class="flex items-center space-x-2">
-              <div
-                class="flex items-center justify-center w-8 h-8 rounded-full bg-gradient-to-r from-blue-400 to-purple-400">
-                <Sparkles class="w-4 h-4 text-white" />
-              </div>
-              <div>
-                <h3 class="text-sm font-medium text-gray-800">
-                  AI 聊天助手
-                </h3>
-                <p class="text-xs text-gray-600">智能對話建議</p>
-              </div>
+            <Bot class="w-8 h-8 text-white drop-shadow-lg animate-pulse" />
+          </div>
+          <div
+            class="absolute inset-0 rounded-full bg-gradient-to-r from-blue-400 to-purple-400 opacity-20 animate-ping"
+          ></div>
+        </div>
+      </div>
+    </div>
+    <div
+      ref="chatWindowRef"
+      class="absolute transition-all duration-300 ease-out pointer-events-auto will-change-transform"
+      :class="{
+        'opacity-100 scale-100': isExpanded,
+        'opacity-0 scale-0 pointer-events-none': !isExpanded,
+        'cursor-grabbing': isDragging,
+        'transition-none': isDragging,
+      }"
+      :style="{
+        left: `${position.x}px`,
+        top: `${position.y}px`,
+        position: 'fixed',
+        transform: isDragging ? 'translateZ(0)' : '',
+      }"
+    >
+      <div
+        class="relative flex flex-col overflow-hidden border shadow-2xl rounded-2xl w-80 h-96 backdrop-blur-xl bg-white/10 border-white/20"
+      >
+        <div
+          class="absolute inset-0 bg-gradient-to-br from-blue-500/10 via-purple-500/10 to-pink-500/10"
+        ></div>
+        <div
+          class="relative z-50 flex items-center justify-between flex-shrink-0 p-4 border-b border-white/20 bg-white/5 backdrop-blur-sm select-none"
+          :class="{
+            'cursor-grabbing': isDragging,
+            'cursor-grab': !isDragging,
+          }"
+          @mousedown="handleMouseDown"
+          @touchstart="handleTouchStart"
+        >
+          <div class="flex items-center space-x-2">
+            <div
+              class="flex items-center justify-center w-8 h-8 rounded-full bg-gradient-to-r from-blue-400 to-purple-400"
+            >
+              <Sparkles class="w-4 h-4 text-white" />
             </div>
-            <button @click="handleClose"
-              class="close-button relative z-50 p-2 transition-all duration-200 border rounded-full bg-red-500/20 hover:bg-red-500/40 hover:scale-110 border-red-400/30 group cursor-pointer">
-              <X class="w-4 h-4 text-white drop-shadow-lg group-hover:text-red-200" />
+            <div>
+              <h3 class="text-sm font-medium text-gray-800">AI 聊天助手</h3>
+              <p class="text-xs text-gray-600">智能對話建議</p>
+            </div>
+          </div>
+          <button
+            @click="handleClose"
+            class="close-button relative z-50 p-2 transition-all duration-200 border rounded-full bg-red-500/20 hover:bg-red-500/40 hover:scale-110 border-red-400/30 group cursor-pointer"
+          >
+            <X
+              class="w-4 h-4 text-white drop-shadow-lg group-hover:text-red-200"
+            />
+          </button>
+        </div>
+        <div class="relative z-10 flex-1 min-h-0 p-3 overflow-y-auto">
+          <div v-if="isLoading" class="py-8 text-sm text-center text-gray-600">
+            <Bot class="w-8 h-8 mx-auto mb-2 text-gray-600 opacity-70" />
+            正在分析你們的對話...
+          </div>
+          <textarea
+            type="text"
+            v-model="aiMessage"
+            class="w-full h-[200px] p-3 rounded-xl border border-white/30 bg-white/10 text-sm text-gray-800 placeholder-gray-400 resize-none focus:outline-none focus:ring-2 focus:ring-purple-300 backdrop-blur-sm shadow-inner"
+          ></textarea>
+        </div>
+        <div
+          class="relative z-20 flex-shrink-0 p-3 border-t border-white/20 bg-white/5 backdrop-blur-sm"
+        >
+          <div class="flex justify-center mt-2">
+            <button
+              @click="getSuggestion"
+              :disabled="isLoading"
+              class="h-10 px-3 py-1 text-xs text-gray-700 transition-colors border rounded-full bg-white/10 hover:bg-white/20 disabled:opacity-50 border-white/20"
+            >
+              {{ isLoading ? "分析中..." : "獲取聊天建議" }}
             </button>
-          </div>
-          <div class="relative z-10 flex-1 min-h-0 p-3 overflow-y-auto">
-            <div v-if="isLoading" class="py-8 text-sm text-center text-gray-600">
-              <Bot class="w-8 h-8 mx-auto mb-2 text-gray-600 opacity-70" />
-              正在分析你們的對話...
-            </div>
-            <textarea type="text" v-model="aiMessage"
-              class="w-full h-[200px] p-3 rounded-xl border border-white/30 bg-white/10 text-sm text-gray-800 placeholder-gray-400 resize-none focus:outline-none focus:ring-2 focus:ring-purple-300 backdrop-blur-sm shadow-inner"></textarea>
-          </div>
-          <div class="relative z-20 flex-shrink-0 p-3 border-t border-white/20 bg-white/5 backdrop-blur-sm">
-            <div class="flex justify-center mt-2">
-              <button @click="getSuggestion" :disabled="isLoading"
-                class="h-10 px-3 py-1 text-xs text-gray-700 transition-colors border rounded-full bg-white/10 hover:bg-white/20 disabled:opacity-50 border-white/20">
-                {{ isLoading ? "分析中..." : "獲取聊天建議" }}
-              </button>
-            </div>
           </div>
         </div>
       </div>
     </div>
+  </div>
 </template>
 
 <style>
