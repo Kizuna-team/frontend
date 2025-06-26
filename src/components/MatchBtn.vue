@@ -97,14 +97,16 @@ const superLikeHandler = async () => {
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"
-        fill="currentColor"
+        fill="none"
         viewBox="0 0 24 24"
-        class="w-8 h-8"
+        stroke-width="1.5"
+        stroke="currentColor"
+        class="size-6"
       >
         <path
-          fill-rule="evenodd"
-          d="M5.47 5.47a.75.75 0 0 1 1.06 0L12 10.94l5.47-5.47a.75.75 0 1 1 1.06 1.06L13.06 12l5.47 5.47a.75.75 0 1 1-1.06 1.06L12 13.06l-5.47 5.47a.75.75 0 0 1-1.06-1.06L10.94 12 5.47 6.53a.75.75 0 0 1 0-1.06Z"
-          clip-rule="evenodd"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          d="M6 18 18 6M6 6l12 12"
         />
       </svg>
     </button>
@@ -114,18 +116,22 @@ const superLikeHandler = async () => {
       <button
         :disabled="isDisabled"
         type="button"
-        class="text-pink-500 circle-btn bg-gradient-to-br from-[#8ecae6]/70 via-white/50 to-pink-200/70 hover:scale-110 disabled:opacity-40"
+        class="floating inner-glow text-darkblue transition-all duration-300 ease-out circle-btn bg-gradient-to-br from-[#ffb703]/70 via-white/50 to-[#fb8500]/70 backdrop-blur-sm shadow-lg hover:scale-110 hover:rotate-6 hover:shadow-lg hover:brightness-110 focus:outline-none focus:ring-2 focus:ring-accent/50 disabled:opacity-40"
         @click="superLikeHandler"
         aria-label="Super Like"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          fill="currentColor"
+          fill="none"
           viewBox="0 0 24 24"
-          class="w-8 h-8"
+          stroke-width="1.5"
+          stroke="currentColor"
+          class="size-6"
         >
           <path
-            d="m11.645 20.91-.007-.003-.022-.012a15.247 15.247 0 0 1-.383-.218 25.18 25.18 0 0 1-4.244-3.17C4.688 15.36 2.25 12.174 2.25 8.25 2.25 5.322 4.714 3 7.688 3A5.5 5.5 0 0 1 12 5.052 5.5 5.5 0 0 1 16.313 3c2.973 0 5.437 2.322 5.437 5.25 0 3.925-2.438 7.111-4.739 9.256a25.175 25.175 0 0 1-4.244 3.17 15.247 15.247 0 0 1-.383.219l-.022.012-.007.004-.003.001a.752.752 0 0 1-.704 0l-.003-.001Z"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M21.75 9v.906a2.25 2.25 0 0 1-1.183 1.981l-6.478 3.488M2.25 9v.906a2.25 2.25 0 0 0 1.183 1.981l6.478 3.488m8.839 2.51-4.66-2.51m0 0-1.023-.55a2.25 2.25 0 0 0-2.134 0l-1.022.55m0 0-4.661 2.51m16.5 1.615a2.25 2.25 0 0 1-2.25 2.25h-15a2.25 2.25 0 0 1-2.25-2.25V8.844a2.25 2.25 0 0 1 1.183-1.981l7.5-4.039a2.25 2.25 0 0 1 2.134 0l7.5 4.039a2.25 2.25 0 0 1 1.183 1.98V19.5Z"
           />
         </svg>
       </button>
@@ -134,7 +140,7 @@ const superLikeHandler = async () => {
     <!-- Like -->
     <button
       type="button"
-      class="text-darkblue circle-btn bg-gradient-to-br from-[#cdeffc] to-primary hover:scale-110"
+      class="text-pink-500 circle-btn bg-gradient-to-br from-[#8ecae6]/70 via-white/50 to-pink-200/70 hover:scale-110 disabled:opacity-40"
       @click="likeHandler"
       aria-label="Like"
     >
@@ -142,12 +148,14 @@ const superLikeHandler = async () => {
         xmlns="http://www.w3.org/2000/svg"
         fill="currentColor"
         viewBox="0 0 24 24"
-        class="w-8 h-8"
+        stroke-width="1.5"
+        stroke="currentColor"
+        class="size-6"
       >
         <path
-          fill-rule="evenodd"
-          d="M19.916 4.626a.75.75 0 0 1 .208 1.04l-9 13.5a.75.75 0 0 1-1.154.114l-6-6a.75.75 0 0 1 1.06-1.06l5.353 5.353 8.493-12.74a.75.75 0 0 1 1.04-.207Z"
-          clip-rule="evenodd"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z"
         />
       </svg>
     </button>
@@ -174,5 +182,19 @@ const superLikeHandler = async () => {
     filter: blur(4px);
     opacity: 0;
   }
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-4px);
+  }
+}
+
+.floating {
+  animation: float 3s ease-in-out infinite;
 }
 </style>
