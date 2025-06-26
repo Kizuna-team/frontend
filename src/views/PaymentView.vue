@@ -11,7 +11,6 @@ const route = useRoute();
 const isError = computed(() => route.query.error === "1");//error=1 失敗
 const errorMessage = computed(() => route.query.message || "付款失敗，請稍後再試");
 
-
 function goToProductList() {
   router.push("/product");
 }

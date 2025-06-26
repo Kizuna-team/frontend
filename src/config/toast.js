@@ -1,7 +1,7 @@
 const options = {
   // 基本設定
   position: 'top-center',     // 顯示位置
-  timeout: 3000,              // 3秒後自動消失
+  timeout: 2000,              // 2秒後自動消失
   closeOnClick: true,         // 點擊可關閉
   pauseOnHover: true,         // 滑鼠懸停時暫停
   hideProgressBar: false,     // 顯示進度條
@@ -11,10 +11,10 @@ const options = {
   // 各類型專用設定
   toastDefaults: {
     success: {
-      timeout: 3000,
+      timeout: 1500,
     },
     error: {
-      timeout: 5000, //error的設久一點
+      timeout: 2000, //error的設久一點
     },
   }
 }

@@ -39,10 +39,10 @@ const handleDelete = async (id) => {
     try {
       await store.deleteActivity(id); // 刪除 API
       await store.fetchMyActivities(); // 更新列表
-      alert("刪除成功！");
+      toast("刪除成功！");
     } catch (err) {
       console.error("刪除活動錯誤：", err);
-      alert("刪除失敗，請稍後再試！");
+      toast("刪除失敗，請稍後再試！");
     } finally {
       isLoading.value = false;
     }
@@ -57,7 +57,7 @@ const handleDeleteJoin = async (id) => {
     toast("取消活動參與成功");
   } catch (err) {
     console.error(err);
-    alert("取消活動參與失敗，請稍後再試！");
+    toast("取消活動參與失敗，請稍後再試！");
   } finally {
     isLoading.value = false;
   }
@@ -71,7 +71,13 @@ const handleDeleteJoin = async (id) => {
       v-if="isLoading"
       class="absolute inset-0 z-50 flex items-center justify-center bg-white/70 rounded-2xl"
     >
-      <div class="text-lg text-darkblue animate-pulse">處理中...</div>
+      <img src="@/assets/spinner.svg" alt="載入中..." class="w-16 h-16"/>
+    </div>
+    <div
+    v-else-if="error"
+    class="absolute inset-0 z-50 flex items-center justify-center bg-white/70 rounded-2xl"
+    >
+      <span class="text-lg text-center text-red-500">{{ error }}</span>
     </div>
     <div class="max-w-6xl px-4 py-8 mx-auto space-y-8">
       <div
@@ -101,9 +107,6 @@ const handleDeleteJoin = async (id) => {
         </button>
       </div>
 
-      <div v-if="loading" class="py-8 text-center text-gray-500">載入中...</div>
-      <div v-else-if="error" class="text-center text-red-500">{{ error }}</div>
-
       <div v-if="activeTab === 'created'" class="space-y-6">
         <div
           v-if="activities.length === 0"
@@ -129,11 +132,6 @@ const handleDeleteJoin = async (id) => {
               {{ activity.title }}
             </h3>
             <p class="flex items-center gap-2">
-              <UserIcon class="w-5 h-5 text-secondary shrink-0 -mt-0.5" />
-              <span class="font-semibold text-secondary">主辦人：</span>
-              {{ activity.created_by_username }}
-            </p>
-            <p class="flex items-center gap-2">
               <CalendarDaysIcon
                 class="w-5 h-5 text-secondary shrink-0 -mt-0.5"
               />
@@ -156,8 +154,15 @@ const handleDeleteJoin = async (id) => {
               {{ activity.location }}
             </p>
             <p class="text-sm">
-              <span class="font-semibold text-secondary">描述：</span>
+              <span class="font-semibold text-secondary">活動資訊：</span>
               {{ activity.description }}
+            </p>
+            <p class="text-sm">
+              <span class="font-semibold text-secondary"
+                >報名人數/上限人數：</span
+              >{{ activity.current_participants }}/{{
+                activity.max_participants
+              }}
             </p>
             <p class="text-xs text-gray-400">
               建立時間：{{ activity.created_at?.slice(0, 10) }}
@@ -230,7 +235,7 @@ const handleDeleteJoin = async (id) => {
               {{ activity.location }}
             </p>
             <p class="text-sm">
-              <span class="font-semibold text-secondary">描述：</span>
+              <span class="font-semibold text-secondary">活動資訊：</span>
               {{ activity.description }}
             </p>
           </div>
