@@ -1,6 +1,11 @@
 <script setup>
+import { useRouter } from 'vue-router';
+import { useUserStore } from '@/stores/user';
 import MemberCard from "./MemberCard.vue";
 
+
+const router = useRouter();
+const userStore = useUserStore();
 const animationDuration = 40;
 
 const members = [
@@ -13,6 +18,14 @@ const members = [
   { photo: "/people.jpg", firstName: "Mike", lastName: "Huang" },
   { photo: "/people.jpg", firstName: "Sandy", lastName: "Liu" },
 ];
+
+const handleClick = () => {
+  if(userStore.isLoggedIn){
+    router.push('/match/setup');
+  }else{
+    router.push('/register');
+  }
+};
 </script>
 
 <template>
@@ -50,15 +63,14 @@ const members = [
         </div>
       </div>
       <div class="mt-20">
-        <router-link to="/register">
           <button
+            @click.prevent="handleClick"
             type="button"
             class="py-[18px] text-2xl font-bold text-white transition-all duration-300 origin-center rounded-full shadow-xl w-80 bg-gradient-to-r from-secondary to-pink-500 hover:scale-110 hover:brightness-110 hover:animate-pulse"
           >
             立即開始配對<br />
             <span class="text-xl font-normal">Let’s Match!</span>
           </button>
-        </router-link>
       </div>
     </div>
   </section>
