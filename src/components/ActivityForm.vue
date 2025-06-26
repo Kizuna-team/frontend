@@ -303,7 +303,7 @@ async function handleDelete() {
         <div class="flex gap-4 mt-6">
           <button
             type="submit"
-            class="flex-1 min-w-[130px] w-[150px] h-[40px] px-2.5 py-1.5 font-bold text-white border-2 border-[#219ebc] bg-[#219ebc] rounded-full flex items-center justify-center gap-1 transition-all duration-300 hover:bg-white hover:text-[#219ebc] mx-auto"
+            class="flex-1 min-w-[130px] w-[150px] h-[40px] px-2.5 py-1.5 font-bold text-white border-2 border-secondary bg-secondary rounded-full flex items-center justify-center gap-1 transition-all duration-300 hover:bg-white hover:text-secondary mx-auto"
           >
             {{ isEditMode ? "更新活動" : "建立活動" }}
           </button>
@@ -311,7 +311,7 @@ async function handleDelete() {
             v-if="isEditMode"
             @click="handleDelete"
             type="button"
-            class="flex-1 px-4 py-2 font-bold text-white transition bg-red-500 rounded hover:bg-red-600"
+            class="flex-1 min-w-[130px] w-[150px] h-[40px] px-2.5 py-1.5 font-bold text-white border-2 border-red-400 bg-red-400 rounded-full flex items-center justify-center gap-1 transition-all duration-300 hover:bg-white hover:text-red-400 mx-auto"
           >
             刪除活動
           </button>
