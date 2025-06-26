@@ -34,7 +34,8 @@ onMounted(async () => {
 
     // 如果不是免費會員，就計算訂閱到期日
     if (user.subscription_plan !== 1 && user.paid_at) {
-  const paidAt = dayjs.utc(user.paid_at); 
+    // 後端傳來已經是 本地時間了 所以直接dayjs()
+  const paidAt = dayjs(user.paid_at); 
   const expire = paidAt.add(2, "minute");
 
   expireDate.value = expire.tz("Asia/Taipei").format("YYYY/MM/DD HH:mm");
