@@ -20,7 +20,7 @@ const kiwi = (msg = "通知") =>
     toastClassName: "toast-kiwi",
     icon: false,
     autoClose: 2000,
-    position: "bottom-left",
+    position: "top-right",
     hideProgressBar: true,
   });
 

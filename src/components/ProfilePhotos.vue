@@ -16,6 +16,7 @@ const myAvatar = ref(null);
 const showModal = ref(false);
 const fileInputRef = ref(null);
 const isUploading = ref(false);
+const isUploadingAll = ref(false);
 
 const chooseAvatar = () => (showModal.value = true);
 const closeModal = () => (showModal.value = false);
@@ -145,13 +146,24 @@ const uploadAll = async () => {
   });
 
   try {
-    const toastId = notify.loading("上傳照片中...");
+    // const toastId = notify.loading("上傳照片中...");
+    isUploadingAll.value = true;
     await Promise.all(uploadPromises);
-    notify.updateSuccess(toastId, "照片上傳完成！");
+    isUploadingAll.value = false;
+    setTimeout(() => {
+      notify.kiwi("照片已全部上傳完成！");
+    }, 600);
+
+    // notify.updateSuccess(toastId, "照片上傳完成！");
 
     return uploadedResults;
   } catch (err) {
+    notify.warn("上傳失敗");
     console.error("上傳過程發生錯誤", err);
+  } finally {
+    setTimeout(() => {
+      isUploadingAll.value = false;
+    }, 400); // 讓 loading 畫面撐一下再消失
   }
 };
 
@@ -291,6 +303,32 @@ defineExpose({ uploadAll });
         ✕
       </button>
       <span v-else class="text-2xl text-gray-400">+</span>
+      <!-- Loading 彈窗 -->
+      <div
+        v-if="isUploadingAll"
+        class="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-md bg-white/8"
+      >
+        <div
+          class="flex flex-col items-center justify-center w-64 h-64 p-6 bg-white rounded-[2rem] shadow-2xl bg-gradient-to-br from-white to-gray-50 ring-1 ring-gray-300 ring-opacity-40"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            class="w-16 h-16 mb-4 text-secondary animate-bounce motion-safe:animate-bounce delay-100 ease-in-out"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M7.5 7.5h-.75A2.25 2.25 0 0 0 4.5 9.75v7.5a2.25 2.25 0 0 0 2.25 2.25h7.5a2.25 2.25 0 0 0 2.25-2.25v-7.5a2.25 2.25 0 0 0-2.25-2.25h-.75m0-3-3-3m0 0-3 3m3-3v11.25m6-2.25h.75a2.25 2.25 0 0 1 2.25 2.25v7.5a2.25 2.25 0 0 1-2.25 2.25h-7.5a2.25 2.25 0 0 1-2.25-2.25v-.75"
+            />
+          </svg>
+
+          <p class="text-lg text-gray-600">照片上傳中...</p>
+        </div>
+      </div>
     </div>
   </div>
 </template>
