@@ -10,8 +10,8 @@ export const useActivityStore = defineStore("activity", () => {
   const joinActivities = ref([]);
 
   const getToken = () => {
-    return localStorage.getItem('token');
-  }
+    return localStorage.getItem("token");
+  };
 
   const fetchActivities = async () => {
     loading.value = true;
@@ -20,9 +20,9 @@ export const useActivityStore = defineStore("activity", () => {
       const allActivities = response.data;
 
       const today = new Date();
-      activities.value = allActivities.filter(activity => 
-      new Date(activity.date) >= today
-    );
+      activities.value = allActivities.filter(
+        (activity) => new Date(activity.date) >= today
+      );
     } catch (err) {
       error.value = err;
       console.error("Fetch error:", err);
@@ -30,13 +30,12 @@ export const useActivityStore = defineStore("activity", () => {
       loading.value = false;
     }
   };
-  // 抓該使用者創建的活動
   const fetchMyActivities = async () => {
     loading.value = true;
     try {
       const token = getToken();
       const response = await axios.get("/activities/my", {
-        headers: { Authorization: `Bearer ${token}` }
+        headers: { Authorization: `Bearer ${token}` },
       });
       activities.value = response.data;
     } catch (err) {
@@ -52,7 +51,7 @@ export const useActivityStore = defineStore("activity", () => {
     try {
       const token = getToken();
       const response = await axios.get(`/activities/${id}`, {
-        headers: { Authorization: `Bearer ${token}` }
+        headers: { Authorization: `Bearer ${token}` },
       });
       selectedActivity.value = response.data;
     } catch (err) {
@@ -67,7 +66,7 @@ export const useActivityStore = defineStore("activity", () => {
     try {
       const token = getToken();
       const response = await axios.put(`/activities/${id}`, updatedData, {
-        headers: { Authorization: `Bearer ${token}` }
+        headers: { Authorization: `Bearer ${token}` },
       });
     } catch (err) {
       error.value = err;
@@ -81,7 +80,7 @@ export const useActivityStore = defineStore("activity", () => {
     try {
       const token = getToken();
       const response = await axios.post("/activities", newActivity, {
-        headers: { Authorization: `Bearer ${token}` }
+        headers: { Authorization: `Bearer ${token}` },
       });
       await fetchActivities();
     } catch (err) {
@@ -96,7 +95,7 @@ export const useActivityStore = defineStore("activity", () => {
     try {
       const token = getToken();
       const response = await axios.delete(`/activities/${id}`, {
-        headers: { Authorization: `Bearer ${token}` }
+        headers: { Authorization: `Bearer ${token}` },
       });
     } catch (err) {
       error.value = err;
@@ -105,22 +104,22 @@ export const useActivityStore = defineStore("activity", () => {
     }
   };
 
-  const fetchMyJoinActivities = async() => {
-      try {
-        const res = await axios.get('/activities/me');
-        joinActivities.value = res.data;
-      } catch (err) {
-        console.error("取得參加活動失敗", err);
-      }
+  const fetchMyJoinActivities = async () => {
+    try {
+      const res = await axios.get("/activities/me");
+      joinActivities.value = res.data;
+    } catch (err) {
+      console.error("取得參加活動失敗", err);
     }
+  };
 
   const deleteJoinActivity = async (id) => {
-  try {
-    const res = await axios.delete(`/activities/join/${id}`)
-  } catch (error) {
-    console.error('刪除失敗', error)
-  }
-}
+    try {
+      const res = await axios.delete(`/activities/join/${id}`);
+    } catch (error) {
+      console.error("刪除失敗", error);
+    }
+  };
 
   return {
     selectedActivity,
@@ -136,6 +135,6 @@ export const useActivityStore = defineStore("activity", () => {
     createActivity,
     deleteActivity,
     fetchMyJoinActivities,
-    deleteJoinActivity
+    deleteJoinActivity,
   };
 });

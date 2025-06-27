@@ -8,8 +8,6 @@ const props = defineProps({
   },
 });
 
-
-// 安全拆解時間字串
 const [month, dayTime] = props.event?.time?.split?.("/") ?? ["", ""];
 const [day, hour] = dayTime?.split?.(" ") ?? ["", ""];
 </script>
@@ -20,23 +18,19 @@ const [day, hour] = dayTime?.split?.(" ") ?? ["", ""];
     :to="`/activities/${event.id}`"
     class="block group relative h-[420px] rounded-2xl overflow-hidden shadow-md border border-gray-200 hover:shadow-xl transition-all duration-500 hover:scale-[1.02]"
   >
-    <!-- 活動圖片 -->
     <img
       :src="event.image || '/default.jpg'"
       alt="event image"
       class="object-cover w-full h-full transition-transform duration-700 group-hover:scale-110"
     />
 
-    <!-- 黑色遮罩 -->
     <div
       class="absolute inset-0 transition-opacity duration-500 bg-gradient-to-t from-black/80 via-black/40 to-transparent opacity-60 group-hover:opacity-80"
     />
 
-    <!-- 活動資訊浮出 -->
     <div
       class="absolute bottom-0 left-0 z-10 flex flex-col items-start w-full gap-3 px-5 py-4 text-white transition-all duration-500 group-hover:translate-y-0 group-hover:opacity-100 sm:flex-row sm:items-center sm:gap-6"
     >
-      <!-- 左邊：日期 -->
       <div
         class="w-full leading-tight text-center transition-transform duration-500 transform sm:w-32 sm:text-left group-hover:translate-y-0 group-hover:scale-105"
       >
@@ -45,7 +39,6 @@ const [day, hour] = dayTime?.split?.(" ") ?? ["", ""];
         <div class="text-lg font-bold sm:text-xl text-white/80">{{ hour }}</div>
       </div>
 
-      <!-- 右邊：活動資訊 -->
       <div
         class="flex-1 w-full transition-all duration-500 transform group-hover:translate-x-0"
       >

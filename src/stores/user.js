@@ -19,7 +19,6 @@ export const useUserStore = defineStore("user", () => {
     bio: "",
   });
 
-  // 從資料庫抓 profile
   function getProfile(profileDate) {
     profile.gender = profileDate.gender;
     profile.age = profileDate.age;

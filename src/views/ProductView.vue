@@ -82,14 +82,12 @@ const handleAddCart = (product) => {
 const search = () => {
   let filtered = products.value;
 
-  //分類篩選
   if (selectedCategory.value !== "全部") {
     filtered = filtered.filter(
       (product) => product.category === selectedCategory.value
     );
   }
 
-  //搜尋關鍵字
   if (searchKeyword.value.trim() !== "") {
     const keyword = searchKeyword.value.trim().toLowerCase();
     filtered = filtered.filter(
@@ -188,7 +186,6 @@ onMounted(async () => {
       </button>
     </div>
     <div class="flex flex-wrap items-center gap-3 mb-6">
-      <!-- 搜尋框 -->
       <div class="relative flex-1 w-full sm:w-auto">
         <input
           v-model="searchKeyword"
@@ -217,7 +214,6 @@ onMounted(async () => {
         </div>
       </div>
 
-      <!-- 每頁顯示 -->
       <div class="flex items-center w-full gap-2 sm:w-auto">
         <label for="perPage" class="text-sm text-gray-600 whitespace-nowrap"
           >每頁顯示</label
@@ -234,7 +230,6 @@ onMounted(async () => {
       </div>
     </div>
 
-    <!-- 無結果 -->
     <div
       v-if="paginatedProducts.length === 0"
       class="py-16 text-center text-gray-500"
@@ -342,7 +337,6 @@ onMounted(async () => {
 </template>
 
 <style>
-/* 全域按鈕樣式 */
 .btn {
   @apply flex items-center justify-center w-full py-2 text-sm font-semibold rounded-full transition;
 }
@@ -354,7 +348,6 @@ onMounted(async () => {
   @apply bg-gray-300 text-gray-500 cursor-not-allowed border-transparent;
 }
 
-/* 旋轉輪播動效 */
 @keyframes slide {
   0% {
     transform: translateX(0);
@@ -367,7 +360,6 @@ onMounted(async () => {
   animation: slide linear infinite;
 }
 
-/* Loading Overlay */
 .loading-overlay {
   @apply fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50;
 }

@@ -1,7 +1,6 @@
 import axios from "@/api/axios";
 import { notify } from "@/utils/notify";
 
-// 取我的所有照片
 export const getPhotos = async () => {
   try {
     const res = await axios.get("/photos/me");
@@ -12,7 +11,6 @@ export const getPhotos = async () => {
   }
 };
 
-// 取他人指定的公開照
 export const getPublicPhotos = async () => {
   try {
     const res = await axios.get("/users/photos/:userId");
@@ -23,17 +21,14 @@ export const getPublicPhotos = async () => {
   }
 };
 
-// 只拿來上傳生活照（含 sequence）
 export const uploadPhoto = async (file, sequence = null, isAvatar = false) => {
   try {
     const formData = new FormData();
 
     formData.append("image", file);
 
-    //  傳給後端「這是不是大頭照」 記得轉成字串
     formData.append("isAvatar", isAvatar.toString());
 
-    //  有 sequence 才傳（生活照才需要）
     if (sequence !== null) {
       formData.append("sequence", sequence);
     }
@@ -55,7 +50,6 @@ export const deletePhoto = async (key) => {
   }
 };
 
-// 更換大頭照
 export const changeAvatar = async (imageKey) => {
   try {
     await axios.patch("/photos/me/avatar", {
@@ -68,11 +62,10 @@ export const changeAvatar = async (imageKey) => {
   }
 };
 
-// 撈取他人大頭照
 export const fetchTargetPhotos = async (userId) => {
   try {
     const res = await axios.get(`/photos/match/${userId}`);
-    return res.data; // 陣列：每張照片的 image_url / sequence 等
+    return res.data;
   } catch (err) {
     console.error("fetchTargetPhotos 錯誤:", err);
     throw err;

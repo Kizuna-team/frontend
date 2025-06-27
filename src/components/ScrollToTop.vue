@@ -6,7 +6,6 @@
       class="fixed bottom-6 right-6 z-50 flex items-center justify-center w-12 h-12 sm:w-14 sm:h-14 rounded-full shadow-lg transition-all duration-300 hover:scale-110 hover:shadow-xl bg-gradient-to-r bg-[#229EBC] hover:bg-[#1a7a94]"
       aria-label="返回頂部"
     >
-      <!-- 箭頭向上圖標 -->
       <svg
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 24 24"
@@ -17,44 +16,39 @@
         stroke-linejoin="round"
         class="w-5 h-5 sm:w-6 sm:h-6 text-white"
       >
-        <path d="m18 15-6-6-6 6"/>
+        <path d="m18 15-6-6-6 6" />
       </svg>
     </button>
   </Transition>
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted } from 'vue'
+import { ref, onMounted, onUnmounted } from "vue";
 
-// 控制按鈕顯示
-const showButton = ref(false)
+const showButton = ref(false);
 
-// 檢查滾動位置
 const checkScroll = () => {
-  showButton.value = window.scrollY > 300 // 滾動超過 300px 時顯示
-}
+  showButton.value = window.scrollY > 300;
+};
 
-// 滾動到頂部
 const scrollToTop = () => {
   window.scrollTo({
     top: 0,
-    behavior: 'smooth'
-  })
-}
+    behavior: "smooth",
+  });
+};
 
-// 生命週期
 onMounted(() => {
-  window.addEventListener('scroll', checkScroll)
-  checkScroll() // 初始檢查
-})
+  window.addEventListener("scroll", checkScroll);
+  checkScroll();
+});
 
 onUnmounted(() => {
-  window.removeEventListener('scroll', checkScroll)
-})
+  window.removeEventListener("scroll", checkScroll);
+});
 </script>
 
 <style scoped>
-/* 淡入淡出動畫 */
 .fade-enter-active,
 .fade-leave-active {
   transition: opacity 0.3s ease, transform 0.3s ease;

@@ -12,7 +12,6 @@ import ProfilePhotos from "@/components/ProfilePhotos.vue";
 
 const tab = ref("INTRO");
 const userProfileStore = useUserProfileStore();
-// const userProfile = userProfileStore.userProfile 地雷
 
 const cards = [{ title: "星座" }, { title: "MBTI" }, { title: "專業領域" }];
 
@@ -60,15 +59,12 @@ const jobOptions = [
   "金融與保險",
 ];
 
-// 暫存資料表單 (不會存後端)
-// 初始值 為空或預設的暫存資料 淺拷貝巢狀物件問題
 const showFormData = ref({ ...userProfileStore.userProfile });
 
 const resetFormData = () => {
   showFormData.value = { ...userProfileStore.userProfile };
 };
 
-// 更新完再同步回暫存資料
 onMounted(async () => {
   await userProfileStore.getProfile();
   resetFormData();

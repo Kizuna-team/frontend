@@ -16,7 +16,6 @@ const userProfileStore = useUserProfileStore();
 const { userProfile } = storeToRefs(userProfileStore);
 const router = useRouter();
 
-//  統一物件陣列
 const interestsOptions = [
   { id: 1, name: "音樂" },
   { id: 2, name: "藝術與手作" },
@@ -95,7 +94,7 @@ const form = ref({
   introvertOrExtrovert: "",
   pet: "",
   wakeUpTime: "",
-  ageRange: [18, 35], // 年齡區間 [最小, 最大]
+  ageRange: [18, 35],
 });
 
 const isSetting = ref(false);
@@ -280,7 +279,6 @@ const submitHandler = async () => {
   transform: translateX(-100%) rotate(-8deg) scale(0.9);
 }
 
-/* 手機觸控優化 */
 @media (max-width: 768px) {
   button {
     min-height: 44px;

@@ -14,7 +14,6 @@
           class="p-2 hover:bg-[#f6ba42] rounded-lg transition-colors flex flex-col items-center group"
           :title="sticker.name"
         >
-          <!-- 顯示貼圖圖片，如果載入失敗則顯示emoji -->
           <img
             :src="sticker.url"
             :alt="sticker.name"
@@ -22,7 +21,6 @@
             @error="handleImageError"
           />
           <span class="text-3xl hidden sticker-emoji">{{ sticker.emoji }}</span>
-         
         </button>
       </div>
     </div>
@@ -30,51 +28,44 @@
 </template>
 
 <script setup>
-import { ref, defineProps, defineEmits } from 'vue'
+import { ref, defineProps, defineEmits } from "vue";
 
 // Props
 const props = defineProps({
   show: {
     type: Boolean,
-    default: false
+    default: false,
   },
   stickers: {
     type: Array,
-    default: () => []
-  }
-})
+    default: () => [],
+  },
+});
 
-// Emits
-const emit = defineEmits(['select-sticker', 'close'])
+const emit = defineEmits(["select-sticker", "close"]);
 
-// Template refs
-const stickerPanelRef = ref(null)
+const stickerPanelRef = ref(null);
 
-// 選擇貼圖
 const selectSticker = (sticker) => {
-  emit('select-sticker', sticker)
-}
+  emit("select-sticker", sticker);
+};
 
-// 處理圖片載入錯誤
 const handleImageError = (event) => {
-  const img = event.target
-  const emojiSpan = img.nextElementSibling
-  
-  // 隱藏圖片，顯示emoji
-  img.style.display = 'none'
-  if (emojiSpan) {
-    emojiSpan.style.display = 'block'
-  }
-}
+  const img = event.target;
+  const emojiSpan = img.nextElementSibling;
 
-// 暴露 panel ref 給父組件使用
+  img.style.display = "none";
+  if (emojiSpan) {
+    emojiSpan.style.display = "block";
+  }
+};
+
 defineExpose({
-  stickerPanelRef
-})
+  stickerPanelRef,
+});
 </script>
 
 <style scoped>
-/* 貼圖面板動畫 */
 .sticker-panel {
   animation: slideUp 0.3s ease-out;
 }
@@ -90,7 +81,6 @@ defineExpose({
   }
 }
 
-/* 自定義滾動條樣式 */
 .overflow-y-auto::-webkit-scrollbar {
   width: 4px;
 }
@@ -109,7 +99,6 @@ defineExpose({
   background: #a8a8a8;
 }
 
-/* 貼圖按鈕 hover 效果 */
 .group:hover .sticker-image {
   transform: scale(1.1);
   transition: transform 0.2s ease;

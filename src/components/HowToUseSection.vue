@@ -15,7 +15,6 @@ onMounted(() => {
 <template>
   <section id="howToUse" class="bg-white py-14">
     <div class="max-w-6xl px-6 mx-auto">
-      <!-- 副標 -->
       <div class="mb-10 text-center" data-aos="fade-up">
         <p class="text-xl font-medium text-gray-800 md:text-2xl">
           第一次來？沒問題！三個步驟輕鬆展開探索旅程
@@ -25,21 +24,17 @@ onMounted(() => {
         </p>
       </div>
 
-      <!-- 步驟區塊 -->
       <div class="space-y-16">
-        <!-- Step 1 -->
         <div
           class="flex flex-col gap-8 pb-8 border-b border-gray-200 md:flex-row-reverse md:items-start md:justify-between"
           data-aos="fade-up"
           data-aos-delay="0"
         >
-          <!-- Number -->
           <div class="flex justify-center w-full md:w-1/2 md:justify-end">
             <div class="text-[160px] font-bold leading-none text-primary">
               01
             </div>
           </div>
-          <!-- 內容 -->
           <div class="w-full max-w-md md:w-1/2">
             <h4 class="text-2xl font-bold text-darkblue md:text-3xl">
               展現真實自我
@@ -53,19 +48,16 @@ onMounted(() => {
           </div>
         </div>
 
-        <!-- Step 2 -->
         <div
           class="flex flex-col gap-8 pb-8 border-b border-gray-200 md:flex-row md:items-start md:justify-between"
           data-aos="fade-up"
           data-aos-delay="200"
         >
-          <!-- Number -->
           <div class="flex justify-center w-full md:w-1/2 md:justify-start">
             <div class="text-[160px] font-bold leading-none text-secondary">
               02
             </div>
           </div>
-          <!-- 內容 -->
           <div class="w-full md:w-1/2">
             <h4 class="text-2xl font-bold text-darkblue md:text-3xl">
               找到你的興趣圈
@@ -79,19 +71,16 @@ onMounted(() => {
           </div>
         </div>
 
-        <!-- Step 3 -->
         <div
           class="flex flex-col gap-8 md:flex-row-reverse md:items-start md:justify-between"
           data-aos="fade-up"
           data-aos-delay="400"
         >
-          <!-- Number -->
           <div class="flex justify-center w-full md:w-1/2 md:justify-end">
             <div class="text-[160px] font-bold leading-none text-accent">
               03
             </div>
           </div>
-          <!-- 內容 -->
           <div class="w-full md:w-1/2">
             <h4 class="text-2xl font-bold text-darkblue md:text-3xl">
               開啟真實互動

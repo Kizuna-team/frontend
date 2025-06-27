@@ -1,4 +1,3 @@
-<!-- 照片邏輯 -->
 <script setup>
 import { notify } from "@/utils/notify";
 import { ref, onMounted, defineExpose } from "vue";
@@ -66,12 +65,11 @@ const handleAvatarUpload = async (e) => {
   if (!file) return;
   isUploading.value = true;
   try {
-    // 上傳圖片到 S3，取得 URL 和 key
-    const data = await uploadPhoto(file, null, true); // 大頭照不需要 sequence
+    const data = await uploadPhoto(file, null, true);
 
-    await changeAvatar(data.key); // 換頭貼 API
-    // 直接重抓所有圖片
+    await changeAvatar(data.key);
     await refreshPhotos();
+
     closeModal();
   } catch (err) {
     console.error("大頭貼上傳失敗", err);
@@ -82,7 +80,6 @@ const handleAvatarUpload = async (e) => {
   }
 };
 
-// 更換照片檔案並產生預覽
 const handleFileChange = (event, index) => {
   const file = event.target.files[0];
   if (!file) return;
@@ -93,11 +90,8 @@ const handleFileChange = (event, index) => {
   event.target.value = "";
 };
 
-// 移除照片、大頭照標記
 const removePhoto = async (index) => {
   const imageKey = photoList.value[index].key;
-
-  // 如果照片還沒上傳過（沒有 key），直接清空資料
   if (!imageKey) {
     photoList.value[index].file = null;
     photoList.value[index].preview = "";
@@ -105,7 +99,6 @@ const removePhoto = async (index) => {
   }
 
   try {
-    // 後端路由顯示方式這裡不可用完整網址，並傳編碼過的檔名
     await deletePhoto(encodeURIComponent(imageKey));
     photoList.value[index].file = null;
     photoList.value[index].preview = "";
@@ -116,14 +109,13 @@ const removePhoto = async (index) => {
   }
 };
 
-// 上傳後需要同步更新key
 const uploadAll = async () => {
   const uploadPromises = [];
   const uploadedResults = [];
 
   photoList.value.forEach((item, index) => {
     if (item.file) {
-      const sequence = index + 1; // 圖片欄位是從1開始編號
+      const sequence = index + 1;
       const uploadPromise = (async () => {
         try {
           const data = await uploadPhoto(item.file, sequence);
@@ -136,7 +128,7 @@ const uploadAll = async () => {
 
           photoList.value[index] = newPhoto;
           photoList.value = [...photoList.value];
-          uploadedResults.push(newPhoto); // 收集成功結果
+          uploadedResults.push(newPhoto);
           console.log(`第 ${index + 1} 張上傳成功`, data);
         } catch (err) {
           console.error(`第 ${index + 1} 張上傳失敗`, err);
@@ -172,7 +164,6 @@ defineExpose({ uploadAll, hasUploadedPhoto });
 </script>
 
 <template>
-  <!-- 大頭照圓形區塊 -->
   <div class="flex flex-col items-center my-5">
     <h2 class="mb-6 text-2xl font-bold text-center text-darkblue">
       上傳大頭照
@@ -196,7 +187,6 @@ defineExpose({ uploadAll, hasUploadedPhoto });
     </div>
   </div>
 
-  <!-- 彈窗 -->
   <div
     v-if="showModal"
     class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"
@@ -207,7 +197,6 @@ defineExpose({ uploadAll, hasUploadedPhoto });
         class="relative flex flex-col items-center justify-center p-6 bg-white w-72 h-72 cursor-pointer rounded-[2rem] border border-transparent shadow-2xl bg-gradient-to-br from-white to-gray-50 ring-1 ring-gray-300 ring-opacity-40 hover:shadow-3xl transition-shadow duration-300"
         @click="triggerAvatarInput"
       >
-        <!-- 右上角 ✕ 按鈕 -->
         <button
           @click.stop="closeModal"
           aria-label="Close modal"
@@ -260,7 +249,6 @@ defineExpose({ uploadAll, hasUploadedPhoto });
           {{ isUploading ? "大頭照上傳中..." : "點擊上傳大頭照" }}
         </p>
 
-        <!-- 隱藏檔案輸入 -->
         <input
           type="file"
           accept="image/*"
@@ -272,7 +260,6 @@ defineExpose({ uploadAll, hasUploadedPhoto });
     </div>
   </div>
 
-  <!-- 照片上傳區 -->
   <h2 class="mb-6 text-2xl font-bold text-center text-darkblue">上傳生活照</h2>
   <div class="grid grid-cols-3 gap-4 pb-4">
     <div
@@ -280,7 +267,6 @@ defineExpose({ uploadAll, hasUploadedPhoto });
       :key="index"
       class="relative flex items-center justify-center overflow-hidden border border-dashed cursor-pointer rounded-xl aspect-square"
     >
-      <!-- 預覽照片 -->
       <input
         type="file"
         class="absolute inset-0 opacity-0 cursor-pointer"
@@ -293,7 +279,6 @@ defineExpose({ uploadAll, hasUploadedPhoto });
         class="object-cover w-full h-full"
       />
 
-      <!-- 刪除按鈕 -->
       <button
         v-if="img.preview"
         @click.stop="removePhoto(index)"

@@ -7,14 +7,12 @@ const sendOrder = async (receiverId, messageText) => {
   const userStore = useUserStore();
 
   try {
-    // 組成要送給 API 的 items 格式
     const items = cartStore.cartItems.map((item) => ({
       product_id: item.id,
       quantity: item.quantity,
     }));
 
     const res = await axios.post("/order/gift-orders", {
-      // 寫死測試
       sender_id: userStore.userId,
       receiver_id: receiverId,
       items: items,

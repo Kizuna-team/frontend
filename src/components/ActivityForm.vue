@@ -6,9 +6,9 @@ import { storeToRefs } from "pinia";
 import { useUserStore } from "@/stores/user.js";
 import { useToast } from "vue-toastification";
 import AddressInput from "@/components/AddressInput.vue";
-const userStore = useUserStore(); //抓username
-const previewUrl = ref(""); // 圖片預覽網址
-const fileInputRef = ref(null); // 綁定 input 元件
+const userStore = useUserStore();
+const previewUrl = ref("");
+const fileInputRef = ref(null);
 const store = useActivityStore();
 const { selectedActivity } = storeToRefs(store);
 const { fetchActivityById, updateActivity, createActivity, deleteActivity } =
@@ -20,7 +20,7 @@ const activityId = route.params.id;
 const toast = useToast();
 const isLoading = ref(false);
 
-const isEditMode = computed(() => route.name === "activityEdit"); //computed
+const isEditMode = computed(() => route.name === "activityEdit");
 const formTitle = computed(() => (isEditMode.value ? "編輯活動" : "新增活動"));
 const form = ref({
   title: "",
@@ -53,7 +53,6 @@ function resetForm() {
   }
 }
 
-// 處理使用者選檔案
 function handleFileChange(event) {
   const file = event.target.files[0];
   imageFile.value = file;
@@ -83,7 +82,7 @@ watch(
           createdBy: selectedActivity.value?.createdBy || "",
           maxParticipants: selectedActivity.value?.max_participants || "",
         };
-        // 如果有舊圖片就顯示，沒有就空字串
+
         if (selectedActivity.value?.image_url) {
           previewUrl.value = selectedActivity.value.image_url;
         } else {
@@ -125,7 +124,7 @@ async function handleSubmit() {
   }
 
   if (!imageFile.value && !isEditMode.value) {
-  missingFields.push("活動圖片");
+    missingFields.push("活動圖片");
   }
 
   if (missingFields.length > 0) {
@@ -143,14 +142,15 @@ async function handleSubmit() {
     formData.append("createdBy", form.value.createdBy);
     formData.append("maxParticipants", form.value.maxParticipants);
     if (imageFile.value) {
-      formData.append("image", imageFile.value);} // 圖片也放進去
+      formData.append("image", imageFile.value);
+    }
     if (isEditMode.value) {
       const id = parseInt(route.params.id);
-      await updateActivity(id, formData); // 要用 FormData
+      await updateActivity(id, formData);
       toast("活動已更新！");
       router.push("/activities/my");
     } else {
-      await createActivity(formData); // 要用 FormData
+      await createActivity(formData);
       toast("活動已建立！");
       router.push("/activities/my");
     }
@@ -238,7 +238,9 @@ async function handleDelete() {
             accept="image/*"
             class="w-full px-4 py-2 bg-white border border-gray-300 rounded-xl file:mr-4 file:py-2 file:px-4 file:border-0 file:rounded-full file:bg-primary/20 file:text-primary hover:file:bg-primary/30"
           />
-          <p v-if="isEditMode" class="mt-1 text-xs text-gray-500 text-">目前圖片為預覽圖片，如需修改請重新選擇</p>
+          <p v-if="isEditMode" class="mt-1 text-xs text-gray-500 text-">
+            目前圖片為預覽圖片，如需修改請重新選擇
+          </p>
         </div>
         <div>
           <label

@@ -3,16 +3,16 @@ import { ref, watch, computed } from "vue";
 import { useActivityStore } from "@/stores/activity.js";
 import { useRoute } from "vue-router";
 import { storeToRefs } from "pinia";
-import { useToast } from 'vue-toastification'
+import { useToast } from "vue-toastification";
 const store = useActivityStore();
 const { loading, error, selectedActivity } = storeToRefs(store);
 const { fetchActivityById, updateActivity, createActivity, deleteActivity } =
   store;
 
 const route = useRoute();
-const toast = useToast()
+const toast = useToast();
 
-const isEditMode = computed(() => route.name === "activityEdit"); //computed
+const isEditMode = computed(() => route.name === "activityEdit");
 const formTitle = computed(() => (isEditMode.value ? "編輯活動" : "新增活動"));
 const form = ref({
   title: "",

@@ -1,5 +1,3 @@
-<!-- 按儲存 tempFormData 的內容覆蓋回 Store -->
-<!-- 顯示表單、處理輸入資料，不接觸 API -->
 <script setup>
 import { ref, watch } from "vue";
 
@@ -9,11 +7,8 @@ const props = defineProps({
 
 const emit = defineEmits(["update:modelValue"]);
 
-// 避免直接修改props
 const tempFormData = ref({ ...props.modelValue });
 
-// props 更新 就 自動更新暫存資料
-// 初始化時也會執行一次
 watch(
   () => props.modelValue,
   (newVal) => {
@@ -22,7 +17,6 @@ watch(
   { deep: true, immediate: true }
 );
 
-// 表單暫存資料改變 emit 父元件同步資料
 watch(
   tempFormData,
   (newVal) => {
@@ -32,7 +26,6 @@ watch(
   },
   { deep: true }
 );
-// label 顯示給使用者，value 送後端或存資料庫
 const genderOptions = [
   { label: "生理男", value: "male" },
   { label: "生理女", value: "female" },
@@ -71,7 +64,6 @@ const twCities = [
 
 <template>
   <div class="space-y-6">
-    <!-- 暱稱 -->
     <div class="form-card">
       <label class="flex items-center gap-1 form-label">
         <svg
@@ -98,7 +90,6 @@ const twCities = [
       />
     </div>
 
-    <!-- 性別 -->
     <div class="form-card">
       <label class="flex items-center gap-1 pb-2 form-label">
         <svg
@@ -135,7 +126,6 @@ const twCities = [
       </div>
     </div>
 
-    <!-- 感興趣的對象 -->
     <div class="form-card">
       <label class="flex items-center gap-1 pb-2 form-label">
         <svg
@@ -172,7 +162,6 @@ const twCities = [
       </div>
     </div>
 
-    <!-- 自我介紹 -->
     <div class="form-card">
       <label class="flex items-center gap-1 form-label">
         <svg
@@ -199,7 +188,6 @@ const twCities = [
       ></textarea>
     </div>
 
-    <!-- 年齡 & 居住地 -->
     <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
       <div class="form-card">
         <label class="flex items-center gap-1 form-label">

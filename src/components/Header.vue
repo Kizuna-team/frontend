@@ -16,19 +16,16 @@ const toast = useToast();
 const isMobileMenuOpen = ref(false);
 const isDropdownOpen = ref(false);
 
-//定義每個區域的滾動位置
 const sectionPositions = {
-  about: 1000, // 關於我們
-  tutorial: 2800, // 使用教學區
-  "activities-preview": 1800, // 探索活動
-  "match-preview": 3600, // 立即配對
+  about: 1000,
+  tutorial: 2800,
+  "activities-preview": 1800,
+  "match-preview": 3600,
 };
 
-// 處理導覽點擊事件
 const handleNavClick = async (event, sectionId) => {
   event.preventDefault();
   if (route.path === "/") {
-    // 如果在首頁，滾動到對應位置
     const targetPosition = sectionPositions[sectionId];
     if (targetPosition) {
       window.scrollTo({
@@ -37,10 +34,8 @@ const handleNavClick = async (event, sectionId) => {
       });
     }
   } else {
-    // 如果不在首頁，先跳轉到首頁
     await router.push("/");
 
-    // 等待頁面載入完成，然後滾動
     setTimeout(() => {
       const targetPosition = sectionPositions[sectionId];
       if (targetPosition) {
@@ -52,25 +47,20 @@ const handleNavClick = async (event, sectionId) => {
     }, 300);
   }
 
-  // 關閉手機選單
   isMobileMenuOpen.value = false;
 };
 
-// 需要隱藏中間導覽按鈕的頁面
 const hideNavButtonsPages = ["/login", "/register"];
 
-// 判斷是否需要隱藏中間導覽按鈕
 const shouldHideNavButtons = computed(() =>
   hideNavButtonsPages.includes(route.path)
 );
 
-// 判斷 header 是否滾動狀態
 const isScrolled = ref(false);
 window.addEventListener("scroll", () => {
   isScrolled.value = window.scrollY > 790;
 });
 
-// 白底頁面清單（可擴充）
 const lightBgPages = [
   "/match",
   "/activities",
@@ -98,9 +88,7 @@ const isLightBgPage = computed(() =>
   })
 );
 
-// 統一的文字顏色邏輯
 const getNavTextColor = computed(() => {
-  // 如果是白底頁面或者已經滾動，就使用黑色文字
   return isScrolled.value || isLightBgPage.value ? "black" : "white";
 });
 
@@ -118,7 +106,6 @@ const handleLogout = () => {
   router.push("/login");
 };
 
-// 切頁時關閉選單
 watch(route, () => {
   isMobileMenuOpen.value = false;
   isDropdownOpen.value = false;
@@ -132,7 +119,6 @@ watch(route, () => {
     <nav
       class="flex items-center justify-between px-6 py-4 custom-desktop-px-8"
     >
-      <!-- Logo -->
       <LiquidNavLink
         to="/"
         :colorMode="getNavTextColor"
@@ -147,7 +133,6 @@ watch(route, () => {
         class="items-center justify-center flex-1 space-x-6 custom-desktop-show"
       >
         <template v-if="!store.accessToken">
-          <!-- 保留 LiquidNavLink 樣式，但加入點擊事件處理 -->
           <LiquidNavLink
             to=""
             :colorMode="getNavTextColor"
@@ -195,10 +180,8 @@ watch(route, () => {
         </template>
       </div>
 
-      <!-- 如果隱藏中間按鈕，用空的 div 保持佈局 -->
       <div v-else class="flex-1 custom-desktop-show"></div>
 
-      <!-- 桌機版使用者選單 - 1250px 以上顯示 -->
       <div class="items-center justify-end space-x-4 custom-desktop-show">
         <template v-if="!store.accessToken">
           <LiquidNavLink to="/login" :colorMode="getNavTextColor"
@@ -209,7 +192,6 @@ watch(route, () => {
           >
         </template>
         <template v-else>
-          <!-- 訊息icon -->
           <LiquidNavLink to="/chat" :colorMode="getNavTextColor">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -225,7 +207,6 @@ watch(route, () => {
             </svg>
           </LiquidNavLink>
 
-          <!-- 購物車icon -->
           <LiquidNavLink to="/cart" :colorMode="getNavTextColor">
             <div class="relative">
               <span
@@ -426,7 +407,6 @@ watch(route, () => {
       </div>
     </nav>
 
-    <!-- 手機版選單 - 1250px 以下顯示，靠右對齊 -->
     <div
       class="custom-mobile-show transition-all duration-300 ease-in-out absolute right-0 top-full w-[140px] rounded-b-2xl z-50"
       :class="[
@@ -436,9 +416,7 @@ watch(route, () => {
       ]"
     >
       <div class="space-y-2 right-0 top-full w-[130px] rounded-b-2xl z-50">
-        <!-- 未登入時：顯示首頁區域導覽按鈕 -->
         <template v-if="!store.accessToken">
-          <!-- 關於我們 -->
           <LiquidNavLink
             to="#"
             :colorMode="getNavTextColor"
@@ -453,7 +431,6 @@ watch(route, () => {
             關於我們
           </LiquidNavLink>
 
-          <!-- 探索活動 -->
           <LiquidNavLink
             to="#"
             :colorMode="getNavTextColor"
@@ -468,7 +445,6 @@ watch(route, () => {
             探索活動
           </LiquidNavLink>
 
-          <!-- 使用教學 -->
           <LiquidNavLink
             to="#"
             :colorMode="getNavTextColor"
@@ -483,7 +459,6 @@ watch(route, () => {
             使用教學
           </LiquidNavLink>
 
-          <!-- 立即配對 -->
           <LiquidNavLink
             to="#"
             :colorMode="getNavTextColor"
@@ -498,7 +473,6 @@ watch(route, () => {
             立即配對
           </LiquidNavLink>
 
-          <!-- 登入/註冊按鈕 -->
           <LiquidNavLink
             to="/login"
             :colorMode="isScrolled || isLightBgPage ? 'black' : 'white'"
@@ -526,7 +500,6 @@ watch(route, () => {
           </LiquidNavLink>
         </template>
 
-        <!-- 已登入時：顯示功能頁面連結（去掉訊息和購物車） -->
         <template v-else>
           <LiquidNavLink
             to="/match"
@@ -654,38 +627,31 @@ watch(route, () => {
 </template>
 
 <style scoped>
-/* 自定義 1250px 斷點 */
 @media (max-width: 1250px) {
-  /* 手機版元素顯示 */
   .custom-mobile-show {
     display: flex !important;
   }
 
-  /* 桌機版元素隱藏 */
   .custom-desktop-show {
     display: none !important;
   }
 }
 
 @media (min-width: 1251px) {
-  /* 手機版元素隱藏 */
   .custom-mobile-show {
     display: none !important;
   }
 
-  /* 桌機版元素顯示 */
   .custom-desktop-show {
     display: flex !important;
   }
 
-  /* 桌機版更大的水平邊距 */
   .custom-desktop-px-8 {
     padding-left: 3rem;
     padding-right: 3rem;
   }
 }
 
-/* 預設狀態 - 確保初始載入正確 */
 .custom-mobile-show {
   display: flex;
 }

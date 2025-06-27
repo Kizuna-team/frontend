@@ -59,13 +59,11 @@ defineExpose({
 </template>
 
 <style scoped>
-/* 按鈕點擊動畫 */
 .p-2:active {
   transform: scale(0.95);
   transition: transform 0.1s ease;
 }
 
-/* 禁用狀態樣式 */
 .cursor-not-allowed:hover {
   background-color: transparent !important;
   color: rgb(156 163 175) !important;

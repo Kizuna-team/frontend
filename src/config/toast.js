@@ -1,22 +1,20 @@
 const options = {
-  // 基本設定
-  position: 'top-center',     // 顯示位置
-  timeout: 2000,              // 2秒後自動消失
-  closeOnClick: true,         // 點擊可關閉
-  pauseOnHover: true,         // 滑鼠懸停時暫停
-  hideProgressBar: false,     // 顯示進度條
-  icon: true,                 // 顯示圖示
-  transition: "Vue-Toastification__bounce",  // 彈跳動畫
+  position: "top-center",
+  timeout: 2000,
+  closeOnClick: true,
+  pauseOnHover: true,
+  hideProgressBar: false,
+  icon: true,
+  transition: "Vue-Toastification__bounce",
   maxToasts: 20,
-  // 各類型專用設定
   toastDefaults: {
     success: {
       timeout: 1500,
     },
     error: {
-      timeout: 2000, //error的設久一點
+      timeout: 2000,
     },
-  }
-}
+  },
+};
 
-export { options }
+export { options };

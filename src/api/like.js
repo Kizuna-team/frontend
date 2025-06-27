@@ -1,6 +1,5 @@
 import axios from "@/api/axios.js";
 
-// 送出 like 並取得有無配對結果 不喜歡0 喜歡1
 export const sendLike = async (targetId, status = 1) => {
   try {
     const res = await axios.post("/like/", {
@@ -16,7 +15,7 @@ export const sendLike = async (targetId, status = 1) => {
         message: res.data.message,
       };
     }
-    // 不是雙向喜歡
+
     return {
       matched: false,
       message: res.data.message,
@@ -49,8 +48,6 @@ export const sendSuperLike = async (targetId) => {
   }
 };
 
-// 取得 Super Like 使用狀態
-// { isMember, limit, remainingCount, isWithinLimit }
 export const fetchSuperLikeStatus = async () => {
   try {
     const res = await axios.get("/like/super-like/status");

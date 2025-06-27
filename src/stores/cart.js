@@ -2,10 +2,8 @@ import { defineStore } from "pinia";
 import { ref, computed } from "vue";
 
 export const useCartStore = defineStore("cart", () => {
-
   const cartItems = ref([]);
 
-  // header 中的購物車數字 icon 是吃這個值
   const totalQuantity = computed(() => {
     return cartItems.value.reduce((sum, item) => sum + item.quantity, 0);
   });
@@ -27,10 +25,10 @@ export const useCartStore = defineStore("cart", () => {
   };
 
   const removeFromCart = (itemId) => {
-  const index = cartItems.value.findIndex((item) => item.id === itemId);
-  if (index > -1) {
-    cartItems.value.splice(index, 1);
-  }
+    const index = cartItems.value.findIndex((item) => item.id === itemId);
+    if (index > -1) {
+      cartItems.value.splice(index, 1);
+    }
   };
 
   const updateQuantity = (itemId, newQuantity) => {

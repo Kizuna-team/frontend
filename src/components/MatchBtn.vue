@@ -3,7 +3,6 @@ import { notify } from "@/utils/notify";
 import { ref, onMounted } from "vue";
 import { fetchSuperLikeStatus } from "@/api/like.js";
 
-// 傳入對方的 userId，接著對對方 貼上喜歡/不喜歡的標籤 通知給父組件
 const { targetUser } = defineProps({
   targetUser: {
     type: Number,
@@ -28,10 +27,8 @@ const superLikeStatus = async () => {
 
     isMember.value = data.isMember;
     totalCount.value = data.remainingCount;
-    // 只要次數 <= 0 就要禁用
     isDisabled.value = totalCount.value <= 0;
 
-    // 解決可無限點的問題
     if (totalCount.value > 0) {
       msg.value = isMember.value
         ? `會員｜剩餘 ${totalCount.value} 次 Super Like`
@@ -49,7 +46,6 @@ const superLikeStatus = async () => {
       msg: msg.value,
     });
   } catch (error) {
-    // 錯誤要禁用按鈕
     isDisabled.value = true;
     console.error("取得 Super Like 狀態失敗", error);
     notify.warn("無法取得 Super Like 狀態");
@@ -70,7 +66,6 @@ const dislikeHandler = () => {
   emit("dislike", targetUser);
 };
 
-// Super-Like按鈕動畫
 const superLikeHandler = async () => {
   if (isDisabled.value) {
     notify.warn(msg.value);
@@ -90,7 +85,6 @@ const superLikeHandler = async () => {
   <div
     class="flex flex-wrap items-center justify-center gap-6 px-2 py-4 sm:gap-16"
   >
-    <!-- Dislike -->
     <button
       type="button"
       class="text-orange-700 circle-btn bg-gradient-to-br from-orange-100 to-orange-300 hover:scale-110"
@@ -113,7 +107,6 @@ const superLikeHandler = async () => {
       </svg>
     </button>
 
-    <!-- Super Like -->
     <div :class="{ 'puff-out-center': superLikeActive }">
       <button
         :aria-disabled="isDisabled"
@@ -144,7 +137,6 @@ const superLikeHandler = async () => {
       </button>
     </div>
 
-    <!-- Like -->
     <button
       type="button"
       class="text-pink-500 circle-btn bg-gradient-to-br from-[#8ecae6]/70 via-white/50 to-pink-200/70 hover:scale-110 disabled:opacity-40"

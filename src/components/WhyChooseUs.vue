@@ -35,7 +35,6 @@ onMounted(() => {
     id="whyChooseUs"
     class="flex flex-col items-center justify-between w-full min-h-screen gap-12 px-6 bg-white md:flex-row py-36 text-darkblue"
   >
-    <!-- 左側文字區 -->
     <div
       class="w-full px-6 space-y-8 text-left md:w-1/2 md:px-28"
       data-aos="fade-up"
@@ -58,7 +57,6 @@ onMounted(() => {
       </p>
     </div>
 
-    <!-- 右側卡片區 -->
     <div
       class="relative flex flex-col items-center w-full max-w-lg py-20 space-y-10 md:w-1/2 md:-ml-2"
     >

@@ -15,10 +15,9 @@ import CuteCat from '@/components/Cat.vue';
 
 const toast = useToast();
 const store = useActivityStore();
-// 把 store 裡的變數都轉為 ref
 const { activities, loading, error, joinActivities } = storeToRefs(store);
 const router = useRouter();
-const activeTab = ref("created"); // tabs: created or joined
+const activeTab = ref("created");
 const isLoading = ref(false);
 const expandedParticipants = ref({});
 const hoverActivityId = ref(null);
@@ -36,20 +35,18 @@ onMounted(() => {
   store.fetchMyJoinActivities();
 });
 
-// 編輯（導到編輯頁面，傳 id）
 const goEdit = (id) => {
   router.push(`/activities/edit/${id}`);
 };
 
-// 刪除（直接呼叫 store action）
 const handleDelete = async (id) => {
   const confirmed = confirm("確定要刪除嗎？");
   if (!confirmed) return;
 
   isLoading.value = true;
   try {
-    await store.deleteActivity(id); // 刪除 API
-    await store.fetchMyActivities(); // 更新列表
+    await store.deleteActivity(id);
+    await store.fetchMyActivities();
     alert("刪除成功！");
   } catch (err) {
     console.error("刪除活動錯誤：", err);
@@ -93,11 +90,16 @@ watch(hoverActivityId, (newId) => {
 
 <template>
   <div class="relative">
-    <!-- 遮罩 -->
-    <div v-if="isLoading" class="absolute inset-0 z-50 flex items-center justify-center bg-white/70 rounded-2xl">
+    <div
+      v-if="isLoading"
+      class="absolute inset-0 z-50 flex items-center justify-center bg-white/70 rounded-2xl"
+    >
       <img src="@/assets/spinner.svg" alt="載入中..." class="w-16 h-16" />
     </div>
-    <div v-else-if="error" class="absolute inset-0 z-50 flex items-center justify-center bg-white/70 rounded-2xl">
+    <div
+      v-else-if="error"
+      class="absolute inset-0 z-50 flex items-center justify-center bg-white/70 rounded-2xl"
+    >
       <span class="text-lg text-center text-red-500">{{ error }}</span>
     </div>
     <div class="max-w-6xl px-4 py-8 mx-auto space-y-8">

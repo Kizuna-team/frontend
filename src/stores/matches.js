@@ -10,7 +10,6 @@ export const useMatchStore = defineStore("match", () => {
     targetProfile.value = target;
   };
 
-  // 登出或離開配對畫面時清空記憶體內容
   const clearProfiles = () => {
     userProfile.value = null;
     targetProfile.value = null;

@@ -1,8 +1,7 @@
 <script setup>
-import { useRouter } from 'vue-router';
-import { useUserStore } from '@/stores/user';
+import { useRouter } from "vue-router";
+import { useUserStore } from "@/stores/user";
 import MemberCard from "./MemberCard.vue";
-
 
 const router = useRouter();
 const userStore = useUserStore();
@@ -20,10 +19,10 @@ const members = [
 ];
 
 const handleClick = () => {
-  if(userStore.isLoggedIn){
-    router.push('/match/setup');
-  }else{
-    router.push('/register');
+  if (userStore.isLoggedIn) {
+    router.push("/match/setup");
+  } else {
+    router.push("/register");
   }
 };
 </script>
@@ -40,13 +39,11 @@ const handleClick = () => {
         找到聊得來的夥伴，讓每次配對都更有意義
       </p>
 
-      <!-- 自動無限滑動區塊 -->
       <div class="w-full mt-12 overflow-hidden">
         <div
           class="flex gap-6 w-max animate-slide"
           :style="{ animationDuration: animationDuration + 's' }"
         >
-          <!-- 兩輪卡片實現無縫輪播 -->
           <template v-for="repeat in 2" :key="repeat">
             <div
               v-for="(member, index) in members"
@@ -63,21 +60,20 @@ const handleClick = () => {
         </div>
       </div>
       <div class="mt-20">
-          <button
-            @click.prevent="handleClick"
-            type="button"
-            class="py-[18px] text-2xl font-bold text-white transition-all duration-300 origin-center rounded-full shadow-xl w-80 bg-gradient-to-r from-secondary to-pink-500 hover:scale-110 hover:brightness-110 hover:animate-pulse"
-          >
-            立即開始配對<br />
-            <span class="text-xl font-normal">Let’s Match!</span>
-          </button>
+        <button
+          @click.prevent="handleClick"
+          type="button"
+          class="py-[18px] text-2xl font-bold text-white transition-all duration-300 origin-center rounded-full shadow-xl w-80 bg-gradient-to-r from-secondary to-pink-500 hover:scale-110 hover:brightness-110 hover:animate-pulse"
+        >
+          立即開始配對<br />
+          <span class="text-xl font-normal">Let’s Match!</span>
+        </button>
       </div>
     </div>
   </section>
 </template>
 
 <style scoped>
-/* 設定無限滑動動畫 */
 @keyframes slide {
   0% {
     transform: translateX(0%);
