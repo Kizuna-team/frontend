@@ -42,15 +42,12 @@ const fetchActivityStatuses = async () => {
       activityIds,
     });
 
-    // logInfo("後端回傳的活動狀態", res.data);
-
     const statusMap = {};
     for (const item of res.data.statuses) {
       statusMap[item.activityId] = item.status;
     }
 
     activityStatuses.value = statusMap;
-    // logInfo("整理後的 status map", activityStatuses.value);
   } catch (err) {
     notifyError(err, "查詢活動狀態失敗");
   }
@@ -61,7 +58,7 @@ const handleJoin = async (activityId, activity) => {
   const previousStatus = activityStatuses.value[activityId];
   activityStatuses.value[activityId] = "ALREADY_JOINED";
   activity.current_participants = Number(activity.current_participants) + 1;
-  // logInfo("目前人數", activity.current_participants);
+
   try {
     const res = await axios.post(`/activities/join/${activityId}`);
     notifySuccess(res.data.message);
@@ -151,7 +148,6 @@ watch(searchQuery, () => (currentPage.value = 1));
     <h1 class="mb-4 text-2xl font-bold text-darkblue">熱門活動列表</h1>
 
     <div class="flex flex-wrap items-center gap-3 mb-6">
-      <!-- 搜尋框 -->
       <div class="relative flex-1 w-full sm:w-auto">
         <input
           v-model="searchQuery"
@@ -179,7 +175,6 @@ watch(searchQuery, () => (currentPage.value = 1));
         </div>
       </div>
 
-      <!-- 每頁顯示 -->
       <div class="flex items-center w-full gap-2 sm:w-auto">
         <label for="perPage" class="text-sm text-gray-600 whitespace-nowrap"
           >每頁顯示</label
@@ -197,7 +192,6 @@ watch(searchQuery, () => (currentPage.value = 1));
       </div>
     </div>
 
-    <!-- 無結果 -->
     <div
       v-if="filteredActivities.length === 0"
       class="py-10 text-center text-gray-500"
@@ -225,7 +219,6 @@ watch(searchQuery, () => (currentPage.value = 1));
       <p class="mt-2 text-sm text-gray-400">請試試其他關鍵字</p>
     </div>
 
-    <!-- 活動卡片 -->
     <div
       v-else
       class="grid grid-cols-1 gap-6 p-4 sm:grid-cols-2 lg:grid-cols-3"
@@ -296,7 +289,6 @@ watch(searchQuery, () => (currentPage.value = 1));
       </div>
     </div>
 
-    <!-- 分頁按鈕 -->
     <div v-if="totalPages > 1" class="flex flex-wrap justify-center gap-1 mt-6">
       <button
         @click="goToPage(currentPage - 1)"

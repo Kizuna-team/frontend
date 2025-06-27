@@ -38,7 +38,6 @@ const formData = reactive({
   paymentMethod: "",
 });
 
-// 步驟配置
 const steps = [
   {
     title: "確認訂購內容",
@@ -76,7 +75,6 @@ const steps = [
   },
 ];
 
-// 使用 cartStore 的資料
 const totalPrice = computed(() => {
   return cartStore.cartItems.reduce(
     (sum, item) => sum + item.price * item.quantity,
@@ -92,7 +90,6 @@ const progressPercentage = computed(() => {
   return (currentStep.value / (steps.length - 1)) * 100;
 });
 
-// 使用 cartStore 的方法
 const updateQuantity = (id, newQuantity) => {
   if (newQuantity < 1) return;
   cartStore.updateQuantity(id, newQuantity);
@@ -103,7 +100,6 @@ const removeItem = (id) => {
 };
 
 const isValidStep = () => {
-  // 第一步是購物車檢視，只要有商品就算有效
   if (currentStep.value === 0) {
     return cartStore.cartItems.length > 0;
   }
@@ -112,9 +108,8 @@ const isValidStep = () => {
   if (!stepFields) return true;
 
   return stepFields.every((field) => {
-    // 如果是條件欄位，檢查是否需要驗證
     if (field.conditional && formData.paymentMethod !== field.conditional) {
-      return true; // 不需要驗證條件欄位
+      return true;
     }
     return formData[field.name];
   });
@@ -145,25 +140,21 @@ const handleSubmit = async () => {
     toast.error("請填寫所有必填欄位");
     return;
   }
-  // 組成訂單資料
-  // LINEPAY
   if (formData.paymentMethod === "LINEPAY") {
-    // 送出訂單前先抓到要送給誰
     const receiverId = formData.receiverId;
 
     try {
-      await sendOrder(receiverId, formData.message); //  送訂單 + 跳轉
+      await sendOrder(receiverId, formData.message);
     } catch (err) {
       toast.error("訂單建立失敗，請稍後再試");
     }
-    // PAYPAL
   } else if (formData.paymentMethod === "PAYPAL") {
     try {
       const items = cartStore.cartItems.map((item) => ({
         product_id: item.id,
         quantity: item.quantity,
       }));
-      
+
       const res = await axios.post("/paypal/create-order", {
         sender_id: userStore.userId,
         receiver_id: formData.receiverId,
@@ -180,7 +171,6 @@ const handleSubmit = async () => {
       toast.error("PayPal 付款失敗，請稍後再試");
     }
   } else {
-    // 處理其他付款方式
     const orderData = {
       ...formData,
       items: cartStore.cartItems.map((item) => ({
@@ -216,7 +206,6 @@ onMounted(() => {
 </script>
 <template>
   <div class="min-h-[60vh] flex justify-center px-4 sm:px-6 md:px-8">
-    <!-- 完成狀態 -->
     <div
       v-if="isCompleted"
       class="w-full max-w-md p-8 text-center bg-white shadow-2xl rounded-2xl"
@@ -240,7 +229,6 @@ onMounted(() => {
       </div>
     </div>
 
-    <!-- 表單主體 -->
     <div
       v-else
       class="bg-white rounded-2xl shadow-2xl p-4 sm:p-6 md:p-8 max-w-full md:max-w-2xl min-h-[70vh] w-full"
@@ -249,7 +237,6 @@ onMounted(() => {
         訂購流程
       </h1>
 
-      <!-- Progress Bar -->
       <div class="mb-8">
         <div class="relative">
           <div
@@ -313,14 +300,16 @@ onMounted(() => {
         </div>
       </div>
 
-      <!-- Form Steps -->
-      <form @submit.prevent="handleSubmit" data-test="submit-order" class="space-y-6">
+      <form
+        @submit.prevent="handleSubmit"
+        data-test="submit-order"
+        class="space-y-6"
+      >
         <div class="relative overflow-hidden">
           <div
             class="flex transition-transform duration-500 ease-in-out"
             :style="{ transform: `translateX(-${currentStep * 100}%)` }"
           >
-            <!-- 購物車步驟 -->
             <div v-if="currentStep === 0" class="flex-shrink-0 w-full px-4">
               <h3
                 class="flex items-center justify-center mb-6 text-xl font-semibold text-center text-gray-800"
@@ -343,7 +332,6 @@ onMounted(() => {
                   class="p-4 transition-shadow duration-300 bg-white border border-gray-200 shadow-sm rounded-xl hover:shadow-md"
                 >
                   <div class="flex flex-col gap-4 sm:flex-row sm:items-start">
-                    <!-- 圖片 -->
                     <div class="flex justify-center w-full sm:w-auto">
                       <img
                         :src="item.img"
@@ -352,13 +340,14 @@ onMounted(() => {
                       />
                     </div>
 
-                    <!-- 商品資訊 -->
                     <div
                       class="flex flex-col justify-between flex-1 text-center sm:text-left"
                     >
-                      <!-- 名稱與描述 -->
                       <div>
-                        <h4 class="text-lg font-semibold text-gray-800" data-test="product-name">
+                        <h4
+                          class="text-lg font-semibold text-gray-800"
+                          data-test="product-name"
+                        >
                           {{ item.name }}
                         </h4>
                         <p class="mt-1 text-sm text-gray-600">
@@ -366,16 +355,13 @@ onMounted(() => {
                         </p>
                       </div>
 
-                      <!-- 價格與數量 -->
                       <div
                         class="flex flex-col items-center justify-between gap-4 mt-4 sm:flex-row"
                       >
-                        <!-- 價格 -->
                         <div class="text-lg font-bold text-accent">
                           NT$ {{ item.price.toLocaleString() }}
                         </div>
 
-                        <!-- 數量調整 -->
                         <div class="flex items-center space-x-3">
                           <button
                             type="button"
@@ -445,7 +431,6 @@ onMounted(() => {
                         </div>
                       </div>
 
-                      <!-- 小計 -->
                       <div class="mt-2 text-right">
                         <span class="text-sm text-gray-500">小計: </span>
                         <span class="font-bold text-gray-800">
@@ -457,7 +442,6 @@ onMounted(() => {
                   </div>
                 </div>
 
-                <!-- 總計區域 -->
                 <div
                   class="p-6 mt-6 bg-gradient-to-r from-purple-50 to-indigo-50 rounded-xl"
                 >
@@ -469,13 +453,14 @@ onMounted(() => {
                     class="flex items-center justify-between text-xl font-bold text-darkblue"
                   >
                     <span>總計:</span>
-                    <span data-test="cart-total">NT$ {{ totalPrice.toLocaleString() }}</span>
+                    <span data-test="cart-total"
+                      >NT$ {{ totalPrice.toLocaleString() }}</span
+                    >
                   </div>
                 </div>
               </div>
             </div>
 
-            <!-- 其他表單步驟 -->
             <div
               v-for="(step, stepIndex) in steps"
               :key="stepIndex"
@@ -493,7 +478,6 @@ onMounted(() => {
                     :key="field.name"
                     class="space-y-2"
                   >
-                    <!-- 如果是條件欄位且條件不符合，則不顯示 -->
                     <template
                       v-if="
                         !field.conditional ||
@@ -508,7 +492,6 @@ onMounted(() => {
                         <span v-if="!field.conditional"> *</span>
                       </label>
 
-                      <!-- Textarea -->
                       <textarea
                         v-if="field.type === 'textarea'"
                         :id="field.name"
@@ -524,7 +507,6 @@ onMounted(() => {
                         :required="!field.conditional"
                       />
 
-                      <!-- Select -->
                       <select
                         v-else-if="field.type === 'select'"
                         :id="field.name"
@@ -542,7 +524,6 @@ onMounted(() => {
                         </option>
                       </select>
 
-                      <!-- Input -->
                       <input
                         v-else
                         :type="field.type"
@@ -566,7 +547,6 @@ onMounted(() => {
           </div>
         </div>
 
-        <!-- Controls -->
         <div
           class="flex flex-col-reverse items-center justify-between gap-4 pt-12 sm:flex-row"
         >

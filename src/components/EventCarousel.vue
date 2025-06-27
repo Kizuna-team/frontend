@@ -53,9 +53,7 @@ const handleJoinClick = () => {
 </script>
 
 <template>
-  <!-- 整體包裹區塊 -->
   <section class="px-4 text-center">
-    <!-- 標題區 -->
     <div
       class="flex flex-col items-center justify-center flex-1 px-4 pt-16 md:pt-18"
     >
@@ -74,7 +72,6 @@ const handleJoinClick = () => {
       </p>
     </div>
 
-    <!-- 輪播區 -->
     <div
       class="relative flex items-center justify-center w-full px-4 py-10 flex-2 md:px-20"
     >
@@ -96,7 +93,6 @@ const handleJoinClick = () => {
           <EventCard :event="event" />
         </SwiperSlide>
 
-        <!-- 左箭頭 -->
         <div
           class="absolute z-10 flex items-center justify-center w-12 h-12 transition -translate-y-1/2 rounded-full cursor-pointer custom-swiper-button-prev top-1/2 left-4 bg-secondary hover:bg-accent"
         >
@@ -116,7 +112,6 @@ const handleJoinClick = () => {
           </svg>
         </div>
 
-        <!-- 右箭頭 -->
         <div
           class="absolute z-10 flex items-center justify-center w-12 h-12 transition -translate-y-1/2 rounded-full cursor-pointer custom-swiper-button-next top-1/2 right-4 bg-secondary hover:bg-accent"
         >
@@ -139,22 +134,20 @@ const handleJoinClick = () => {
     </div>
   </section>
 
-  <!-- 按鈕區 -->
   <section class="flex items-center justify-center w-full py-10">
-      <button
-        @click="handleJoinClick"
-        type="button"
-        class="relative w-80 py-5 text-2xl font-bold text-white rounded-full bg-[#023047] overflow-hidden group"
-      >
-        <span class="relative z-10 block text-white">
-          立即報名<br />
-          <span class="block text-xl font-normal text-white/80">Join now</span>
-        </span>
+    <button
+      @click="handleJoinClick"
+      type="button"
+      class="relative w-80 py-5 text-2xl font-bold text-white rounded-full bg-[#023047] overflow-hidden group"
+    >
+      <span class="relative z-10 block text-white">
+        立即報名<br />
+        <span class="block text-xl font-normal text-white/80">Join now</span>
+      </span>
 
-        <!-- 底色滑動層 -->
-        <span
-          class="absolute inset-0 bg-[#fb8500] translate-y-full transition-transform duration-500 ease-in-out rounded-full opacity-0 group-hover:translate-y-0 group-hover:opacity-100"
-        ></span>
-      </button>
+      <span
+        class="absolute inset-0 bg-[#fb8500] translate-y-full transition-transform duration-500 ease-in-out rounded-full opacity-0 group-hover:translate-y-0 group-hover:opacity-100"
+      ></span>
+    </button>
   </section>
 </template>

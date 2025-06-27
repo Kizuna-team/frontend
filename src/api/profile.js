@@ -1,9 +1,4 @@
 import axios from "@/api/axios.js";
-
-//  Pinia store 裡引用並呼叫 fetchProfile()，把資料存進 userProfile
-//  在元件裡使用 Pinia 的 getProfile() 方法來觸發
-
-// GET 除了自己之外的所有使用者資料
 export const fetchAllProfiles = async () => {
   try {
     const res = await axios.get("/users/profile");
@@ -15,7 +10,6 @@ export const fetchAllProfiles = async () => {
   }
 };
 
-// GET 取得使用者個人編輯資料
 export const fetchProfile = async () => {
   try {
     const res = await axios.get("/profile/me");
@@ -26,7 +20,6 @@ export const fetchProfile = async () => {
   }
 };
 
-// GET 取得查看某人資料
 export const fetchCertainProfile = async () => {
   try {
     const res = await axios.get("users/profile/:id");
@@ -37,7 +30,6 @@ export const fetchCertainProfile = async () => {
   }
 };
 
-// POST 建立個人資料
 export const createProfileApi = async (data) => {
   try {
     const res = await axios.post("/profile/me", data);
@@ -48,11 +40,10 @@ export const createProfileApi = async (data) => {
   }
 };
 
-// Patch 更新使用者個人資料
 export const updateProfileApi = async (data) => {
   try {
     const res = await axios.patch("/profile/me", data);
-    return res.data; // 只回傳user資料，不操作 store
+    return res.data;
   } catch (error) {
     console.error("updateProfileApi 錯誤:", error);
     throw error;

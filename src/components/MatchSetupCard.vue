@@ -6,10 +6,9 @@ const props = defineProps({
   options: Array,
   modelValue: [Array, String, Number],
   multiple: Boolean,
-  type: String, // 如果是 'range' 則顯示輸入框
+  type: String,
 });
 
-// 等於接收父回傳值
 const selectedValue = defineModel();
 
 onMounted(() => {
@@ -27,7 +26,7 @@ const toggle = (option) => {
 
   if (props.multiple) {
     const arr = Array.isArray(selectedValue.value)
-      ? [...selectedValue.value] // 已存在的就移除
+      ? [...selectedValue.value]
       : [];
     const exists = arr.includes(optionId);
     console.log("是否已存在:", exists);

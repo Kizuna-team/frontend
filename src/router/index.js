@@ -144,17 +144,15 @@ const router = createRouter({
   ],
 });
 
-// 避免未登入直接進頁面
 router.beforeEach((to, from, next) => {
   const userStore = useUserStore();
 
-  // 強制轉成布林值 判斷是否有token
   const isLoggedIn = !!userStore.accessToken;
 
   if (to.meta.requiresAuth && !isLoggedIn) {
-    next({ name: "Login" }); // 沒登入就導登入頁
+    next({ name: "Login" });
   } else {
-    next(); // 其他狀況放行
+    next();
   }
 });
 

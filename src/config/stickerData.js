@@ -1,4 +1,3 @@
-// 貼圖數據配置文件
 export const defaultStickers = [
   {
     id: 1,
@@ -133,7 +132,6 @@ export const validateSticker = (sticker) => {
   );
 };
 
-// 新增自定義貼圖的輔助函數
 export const createSticker = (id, name, url, emoji) => {
   const sticker = { id, name, url, emoji };
 

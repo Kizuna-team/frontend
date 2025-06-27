@@ -1,13 +1,13 @@
 import axios from "./axios";
 import { useUserStore } from "@/stores/user";
-import { useToast } from 'vue-toastification'
+import { useToast } from "vue-toastification";
 
-const toast = useToast()
+const toast = useToast();
 export async function checkout(planId, price) {
   try {
     const response = await axios.post("/api/ecpay/create", { planId });
 
-    const formHtml = response.data; 
+    const formHtml = response.data;
     const div = document.createElement("div");
     div.innerHTML = formHtml;
     document.body.appendChild(div);

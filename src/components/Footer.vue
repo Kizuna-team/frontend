@@ -23,7 +23,6 @@ function toggleFAQ(index) {
   <footer class="py-10 text-gray-100 bg-black">
     <div class="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
       <div class="flex flex-col gap-10 md:flex-row md:justify-between">
-        <!-- Logo + 標語 -->
         <div class="text-center md:w-1/3 md:text-left">
           <img
             src="/logo.png"
@@ -35,7 +34,6 @@ function toggleFAQ(index) {
         </div>
 
         <div class="grid grid-cols-2 gap-8 text-sm md:grid-cols-4 md:w-2/3">
-          <!-- 認識 Kizuna -->
           <div>
             <h2 class="mb-3 font-bold text-white">關於我們</h2>
             <ul class="space-y-2">
@@ -50,7 +48,6 @@ function toggleFAQ(index) {
             </ul>
           </div>
 
-          <!-- 活動與訂閱 -->
           <div>
             <h2 class="mb-3 font-bold text-white">探索與互動</h2>
             <ul class="space-y-2">
@@ -68,7 +65,6 @@ function toggleFAQ(index) {
             </ul>
           </div>
 
-          <!-- FAQ 區塊 -->
           <div>
             <h2 class="mb-3 font-bold text-white">常見問答</h2>
             <ul class="space-y-2 text-gray-400">
@@ -92,7 +88,6 @@ function toggleFAQ(index) {
             </ul>
           </div>
 
-          <!-- 加入我們 -->
           <div>
             <h2 class="mb-3 font-bold text-white">加入我們</h2>
             <ul class="space-y-2">
@@ -106,7 +101,6 @@ function toggleFAQ(index) {
         </div>
       </div>
 
-      <!-- 版權 -->
       <hr class="my-8 border-gray-600" />
       <p class="text-xs text-center text-gray-500">
         &copy; 2025 Kizuna 保留所有權利

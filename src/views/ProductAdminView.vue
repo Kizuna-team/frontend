@@ -1,10 +1,10 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import axios from "@/api/axios";
-import { useToast } from 'vue-toastification'
+import { useToast } from "vue-toastification";
 
 const products = ref([]);
-const toast = useToast()
+const toast = useToast();
 
 onMounted(async () => {
   await fetchProducts();
@@ -21,7 +21,7 @@ const updateInventory = async (productId, newInventory) => {
       inventory: Number(newInventory),
     });
     toast("更新成功");
-    await fetchProducts(); // 重新載入資料
+    await fetchProducts();
   } catch (err) {
     console.error("更新庫存失敗", err);
     toast.error("更新失敗，請稍後再試");

@@ -2,11 +2,11 @@
 import { ref } from "vue";
 import { useUserStore } from "../stores/user";
 import { useRouter } from "vue-router";
-import { useToast } from 'vue-toastification'
+import { useToast } from "vue-toastification";
 
 const store = useUserStore();
 const router = useRouter();
-const toast = useToast()
+const toast = useToast();
 
 const username = ref("");
 const password = ref("");
@@ -42,7 +42,6 @@ const handleRegister = async () => {
   <div
     class="fixed inset-0 overflow-hidden bg-gradient-to-br from-[#8ecae6]/70 via-white/50 to-pink-200/70"
   >
-    <!-- 回登入按鈕 -->
     <router-link
       to="/login"
       class="fixed z-50 bottom-6 left-6 md:top-1/2 md:left-6 md:bottom-auto md:translate-y-[-50%]"
@@ -75,7 +74,6 @@ const handleRegister = async () => {
         <div class="flex justify-center mb-2">
           <img src="/logo.png" alt="Kizuna Logo" class="h-10" />
         </div>
-        <!-- 標題 -->
         <div class="mb-8 text-center">
           <h1 class="text-4xl font-extrabold tracking-tight text-gray-800">
             Join Kizuna
@@ -84,7 +82,6 @@ const handleRegister = async () => {
         </div>
 
         <form @submit.prevent="handleRegister" class="space-y-6">
-          <!-- 帳號 -->
           <div>
             <label class="relative flex items-center text-gray-700">
               <Mail class="absolute w-5 h-5 text-gray-400 left-3" />
@@ -97,7 +94,6 @@ const handleRegister = async () => {
             </label>
           </div>
 
-          <!-- Password -->
           <div>
             <label class="relative flex items-center text-gray-700">
               <Lock class="absolute w-5 h-5 text-gray-400 left-3" />
@@ -110,7 +106,6 @@ const handleRegister = async () => {
             </label>
           </div>
 
-          <!-- 註冊按鈕 -->
           <button
             type="submit"
             class="w-full py-3 text-white font-semibold rounded-full bg-gradient-to-r from-primary to-pink-300 hover:from-[#7bb8d9] hover:to-pink-400 shadow-lg hover:shadow-xl transition-all duration-200"

@@ -51,7 +51,6 @@ const nextUser = () => {
       </SwiperSlide>
     </Swiper>
 
-    <!-- 下一輪按鈕 -->
     <button
       type="button"
       class="absolute z-20 -translate-y-1/2 border border-white rounded-full shadow-md top-1/2 right-6 bg-white/60 backdrop-blur-sm circle-wrap hover:scale-110"
@@ -73,7 +72,6 @@ const nextUser = () => {
       </svg>
     </button>
 
-    <!-- 點擊放大預覽 Modal -->
     <Teleport to="body">
       <div
         v-if="selectedPhoto"
@@ -81,7 +79,6 @@ const nextUser = () => {
         @click.self="closePreview"
       >
         <div class="relative max-w-[90vw] max-h-[90vh]">
-          <!-- 預覽圖片 -->
           <img
             :src="selectedPhoto"
             alt="預覽圖片"

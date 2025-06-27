@@ -26,7 +26,6 @@
 </template>
 
 <style scoped>
-/* 背景漸層動畫 */
 @keyframes gradient-move {
   0% {
     background-position: 0% 50%;
@@ -39,7 +38,6 @@
   }
 }
 
-/* loading 畫面主樣式 */
 .loading-screen {
   background: linear-gradient(-45deg, #000000, #023047, #1b2b34, #0f0f0f);
   background-size: 600% 600%;
@@ -48,7 +46,6 @@
   animation-delay: 0s, 0s, 2.5s;
   animation-fill-mode: forwards;
 
-  /* 加遮罩漸變效果 */
   -webkit-mask-image: linear-gradient(
     to right,
     transparent 0%,
@@ -56,20 +53,17 @@
     transparent 100%
   );
 
-  /* 遮罩漸層效果 */
   -webkit-mask-size: 200% 100%;
   -webkit-mask-position: 0% 0%;
   -webkit-mask-repeat: no-repeat;
 }
 
-/* 文字動畫 */
 @keyframes draw-stroke {
   to {
     stroke-dashoffset: 0;
   }
 }
 
-/* 填色動畫 */
 @keyframes fill-in {
   from {
     fill: transparent;
@@ -79,7 +73,6 @@
   }
 }
 
-/* 文字動畫設定 */
 .draw-text {
   stroke: white;
   text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.3);
@@ -92,7 +85,6 @@
   transform-origin: center;
 }
 
-/* 淡出 + 上滑 */
 @keyframes slide-up-fade-out {
   0% {
     opacity: 1;
@@ -104,7 +96,6 @@
   }
 }
 
-/* 遮罩 reveal */
 @keyframes mask-reveal {
   0% {
     -webkit-mask-position: 0% 0%;

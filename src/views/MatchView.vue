@@ -18,7 +18,6 @@ const allProfiles = ref([]);
 const relaxed = ref(false);
 const limitUsers = 20;
 
-// 計算當前是第 X 位使用者
 const currentIndex = ref(0);
 const currentUser = computed(() => {
   return allProfiles.value.length > 0
@@ -26,7 +25,6 @@ const currentUser = computed(() => {
     : null;
 });
 
-// 加入篩選邏輯
 const fetchAllMatchedUsers = async () => {
   try {
     const res = await fetchMatchedUsers();
@@ -51,7 +49,6 @@ onMounted(async () => {
   console.log("當前的配對對象：", currentUser.value); // 資料載入後再印出
 });
 
-// 使用者資訊的開合
 const isShow = ref(false);
 const infoBtnTxt = ref("Show More");
 const infoToggle = () => {
@@ -59,8 +56,6 @@ const infoToggle = () => {
   infoBtnTxt.value = isShow.value ? "Hide Info" : "Show More";
 };
 
-// 切換到下一位使用者
-// (防止顯示人數不達20位)從可配對者和限制的數量中，挑比較小的那一個
 const nextUser = () => {
   const maxIndex = Math.min(allProfiles.value.length, limitUsers) - 1;
   if (currentIndex.value < maxIndex) {
@@ -71,12 +66,11 @@ const nextUser = () => {
   }
 };
 
-// 配對Modal super-like剩餘次數 上限遮罩
-const myOwnProfile = ref(null); // 自己的一整包資料
-const matchedTarget = ref(null); // 存取配對成功對象一整包資料
-const mutualLike = ref(false); // 是否互相喜歡
+const myOwnProfile = ref(null);
+const matchedTarget = ref(null);
+const mutualLike = ref(false);
 const restSuperLikes = ref(null);
-// 配對關閉 ｜ 彈跳配對視窗
+
 const isCovering = ref(false);
 const confirmModal = ref(false);
 
@@ -111,12 +105,11 @@ const dislikeFlag = async (targetId) => {
     await sendLike(targetId, 0);
     nextUser();
   } catch (error) {
-    alert("對象重複"); // 其他提示
+    alert("對象重複");
     console.error("使用者送出dislike發生錯誤", error);
   }
 };
 
-// SuperLike 按鈕畫面提示
 const isMember = ref(false);
 const totalSuperLike = ref(0);
 const isSuperLikeDisabled = ref(true);
@@ -135,7 +128,6 @@ const superLikeFlag = async (targetId) => {
       await sendSuperLike(targetId);
 
     if (forcedMatched) {
-      // 寫進 Pinia
       matchStore.setProfiles(myProfile, targetProfile);
 
       matchedTarget.value = targetProfile;
@@ -145,7 +137,6 @@ const superLikeFlag = async (targetId) => {
       notify.gradient(message);
     }
 
-    // 更新剩餘次數的 UI 或狀態
     if (remainingCount !== undefined) {
       restSuperLikes.value = remainingCount;
       const message = `已送出 Super Like💖
@@ -173,18 +164,15 @@ const superLikeFlag = async (targetId) => {
   }
 };
 
-// 關閉倒數遮罩
 const closeCover = () => {
   isCovering.value = false;
   stopCountdown();
 };
 
-// 清理定時器
 onUnmounted(() => {
   stopCountdown();
 });
 
-// 倒數計時畫面
 const countdownText = ref("");
 let countdownInterval = null;
 
@@ -213,7 +201,6 @@ const stopCountdown = () => {
   clearInterval(countdownInterval);
 };
 
-// 用戶僅關閉配對成功畫面 不做其他事
 const onCancel = () => {
   confirmModal.value = false;
   nextUser();

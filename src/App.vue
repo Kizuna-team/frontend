@@ -8,10 +8,8 @@ import { useToast } from "vue-toastification";
 const toast = useToast();
 
 const store = useUserStore();
-// 拿到當前路由
 const route = useRoute();
 
-// 根據 meta 控制 404 頁面 Header 是否顯示
 const showHeader = computed(() => {
   return !route.meta.hideHeader;
 });
@@ -32,7 +30,6 @@ const handleLogout = () => {
 
 <template>
   <div :class="{ 'home-page': $route.path === '/' }">
-    <!-- Header：根據路由條件顯示 -->
     <Header v-if="showHeader" />
     <main :class="mainClass">
       <RouterView />
@@ -41,7 +38,6 @@ const handleLogout = () => {
 </template>
 
 <style>
-/* 首頁的Loading效果 */
 .home-page .navbar-header {
   opacity: 0;
   transform: translateY(-20px);
