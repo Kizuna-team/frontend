@@ -15,6 +15,7 @@ const photoList = ref([]);
 const myAvatar = ref(null);
 const showModal = ref(false);
 const fileInputRef = ref(null);
+const isUploading = ref(false);
 
 const chooseAvatar = () => (showModal.value = true);
 const closeModal = () => (showModal.value = false);
@@ -61,23 +62,20 @@ const refreshPhotos = async () => {
 const handleAvatarUpload = async (e) => {
   const file = e.target.files[0];
   if (!file) return;
-
+  isUploading.value = true;
   try {
     // 上傳圖片到 S3，取得 URL 和 key
     const data = await uploadPhoto(file, null, true); // 大頭照不需要 sequence
 
-    // 設為大頭貼
     await changeAvatar(data.key); // 換頭貼 API
     // 直接重抓所有圖片
     await refreshPhotos();
-
-    // 關閉 modal 並提示
     closeModal();
-    alert("大頭貼設定成功");
   } catch (err) {
     console.error("大頭貼上傳失敗", err);
-    alert("大頭貼上傳失敗，請重試");
+    notify.error("大頭照上傳失敗，請重試");
   } finally {
+    isUploading.value = false;
     e.target.value = ""; // 清空 input 讓使用者可重傳同一張
   }
 };
@@ -198,7 +196,7 @@ defineExpose({ uploadAll });
         class="relative flex flex-col items-center justify-center p-6 bg-white w-72 h-72 cursor-pointer rounded-[2rem] border border-transparent shadow-2xl bg-gradient-to-br from-white to-gray-50 ring-1 ring-gray-300 ring-opacity-40 hover:shadow-3xl transition-shadow duration-300"
         @click="triggerAvatarInput"
       >
-        <!-- 右上角簡單的 ✕ 按鈕 -->
+        <!-- 右上角 ✕ 按鈕 -->
         <button
           @click.stop="closeModal"
           aria-label="Close modal"
@@ -207,23 +205,49 @@ defineExpose({ uploadAll });
           ✕
         </button>
 
-        <!-- 中央上傳icon (放大版) -->
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          class="w-24 h-24 mb-4 text-secondary"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke-width="1.5"
-          stroke="currentColor"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            d="m2.25 15.75 5.159-5.159a2.25 2.25 0 0 1 3.182 0l5.159 5.159m-1.5-1.5 1.409-1.409a2.25 2.25 0 0 1 3.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 0 0 1.5-1.5V6a1.5 1.5 0 0 0-1.5-1.5H3.75A1.5 1.5 0 0 0 2.25 6v12a1.5 1.5 0 0 0 1.5 1.5Zm10.5-11.25h.008v.008h-.008V8.25Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z"
-          />
-        </svg>
+        <!-- 中央上傳icon -->
+        <template v-if="isUploading">
+          <svg
+            class="w-16 h-16 text-secondary mb-4 animate-spin"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+          >
+            <circle
+              class="opacity-25"
+              cx="12"
+              cy="12"
+              r="10"
+              stroke="currentColor"
+              stroke-width="2"
+            />
+            <path
+              class="opacity-75"
+              fill="currentColor"
+              d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
+            />
+          </svg>
+        </template>
+        <template v-else>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="w-24 h-24 mb-4 text-secondary"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="m2.25 15.75 5.159-5.159a2.25 2.25 0 0 1 3.182 0l5.159 5.159m-1.5-1.5 1.409-1.409a2.25 2.25 0 0 1 3.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 0 0 1.5-1.5V6a1.5 1.5 0 0 0-1.5-1.5H3.75A1.5 1.5 0 0 0 2.25 6v12a1.5 1.5 0 0 0 1.5 1.5Zm10.5-11.25h.008v.008h-.008V8.25Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z"
+            />
+          </svg>
+        </template>
 
-        <p class="font-medium text-gray-600 select-none">點擊上傳大頭貼</p>
+        <p class="text-lg text-gray-600 select-none">
+          {{ isUploading ? "大頭照上傳中..." : "點擊上傳大頭照" }}
+        </p>
 
         <!-- 隱藏檔案輸入 -->
         <input

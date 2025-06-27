@@ -8,7 +8,7 @@ const gradient = (msg = "通知") =>
     type: "default",
     toastClassName: "toast-gradient",
     icon: false,
-    autoClose: 700,
+    autoClose: 1000,
     transition: "flip",
     position: "top-right",
     hideProgressBar: true,
