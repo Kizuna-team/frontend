@@ -3,13 +3,19 @@ import { ref, computed, onMounted, watch } from "vue";
 import { useActivityStore } from "@/stores/activity.js";
 import { storeToRefs } from "pinia";
 import axios from "../api/axios.js";
-import { useToast } from 'vue-toastification'
+import { useToast } from "vue-toastification";
+import { useRouter } from "vue-router";
 
 const store = useActivityStore();
 const { activities } = storeToRefs(store);
 const { fetchActivities } = store;
-const toast = useToast()
+const toast = useToast();
 const activityStatuses = ref({}); // { 1: 'FULL', 2: 'OPEN', 3: 'ALREADY_JOINED' }
+const router = useRouter();
+
+const goToActivityDetail = (activityId) => {
+  router.push(`/activities/${activityId}`);
+};
 
 const notifyError = (err, userMessage = "操作失敗") => {
   console.error("錯誤訊息：", err);
@@ -34,8 +40,8 @@ const fetchActivityStatuses = async () => {
     const res = await axios.post(
       `/activities/status`,
       {
-        userId,
-        activityIds,
+      userId,
+      activityIds,
       },
     );
 
@@ -54,6 +60,7 @@ const fetchActivityStatuses = async () => {
 };
 
 const handleJoin = async (activityId, activity) => {
+  event.stopPropagation()
   const previousStatus = activityStatuses.value[activityId];
   activityStatuses.value[activityId] = "ALREADY_JOINED";
   activity.current_participants = Number(activity.current_participants) + 1;
@@ -67,7 +74,7 @@ const handleJoin = async (activityId, activity) => {
   } catch (err) {
     activityStatuses.value[activityId] = previousStatus;
     activity.current_participants = Number(activity.current_participants) - 1;
-    
+
     if (err.response?.status === 409) {
       toast(err.response.data.message);
     } else {
@@ -91,7 +98,6 @@ function formatDateTime(isoString) {
   const min = String(d.getMinutes()).padStart(2, "0");
   return `${yyyy}/${mm}/${dd} ${hh}:${min}`;
 }
-
 
 const searchQuery = ref("");
 const currentPage = ref(1);
@@ -234,6 +240,7 @@ watch(searchQuery, () => (currentPage.value = 1));
         v-for="activity in paginatedActivities"
         :key="activity.id"
         class="flex flex-col overflow-hidden transition-all duration-300 bg-white shadow-md cursor-pointer rounded-2xl hover:shadow-xl hover:scale-105"
+        @click="goToActivityDetail(activity.id)"
       >
         <img
           v-if="activity.image_url"
@@ -272,7 +279,7 @@ watch(searchQuery, () => (currentPage.value = 1));
           </div>
           <button
             v-if="activityStatuses[activity.id] === 'OPEN'"
-            @click="handleJoin(activity.id, activity)"
+            @click="handleJoin(activity.id, activity, $event)"
             class="w-full py-2 mt-4 text-sm font-semibold text-white transition-all border-2 rounded-full bg-secondary hover:bg-white hover:text-secondary border-secondary"
           >
             加入活動
