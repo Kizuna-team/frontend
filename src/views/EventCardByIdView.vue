@@ -3,14 +3,81 @@ import { useRoute } from "vue-router";
 import { onMounted, ref } from "vue";
 import { useActivityStore } from "@/stores/activity";
 import { storeToRefs } from "pinia";
+import axios from "../api/axios.js";
+import { useToast } from 'vue-toastification'
+// Heroicons import
+import { 
+  ArrowLeftIcon, 
+  UserIcon, 
+  ClockIcon, 
+  MapPinIcon, 
+  UsersIcon, 
+  CalendarIcon,
+  ShareIcon,
+  ClipboardDocumentIcon,
+  PhotoIcon
+} from '@heroicons/vue/24/outline'
 
 const route = useRoute();
 const store = useActivityStore();
 const { fetchActivityById } = store;
 const { selectedActivity, loading } = storeToRefs(store);
+const toast = useToast()
 
 // 分享功能
 const showShareMenu = ref(false);
+// 活動狀態
+const activityStatus = ref(''); // 'OPEN', 'ALREADY_JOINED', 'FULL'
+
+// 獲取活動狀態
+const fetchActivityStatus = async () => {
+  const userId = localStorage.getItem("userId");
+  const activityId = route.params.id;
+
+  if (!userId || !activityId) return;
+
+  try {
+    const res = await axios.post(`/activities/status`, {
+      userId,
+      activityIds: [Number(activityId)], // 只查詢當前活動
+    });
+
+    if (res.data.statuses && res.data.statuses.length > 0) {
+      activityStatus.value = res.data.statuses[0].status;
+    }
+  } catch (err) {
+    console.error("查詢活動狀態失敗", err);
+  }
+};
+
+// 報名活動
+const handleJoin = async () => {
+  const activityId = Number(route.params.id);
+  const previousStatus = activityStatus.value;
+  
+  // 樂觀更新
+  activityStatus.value = "ALREADY_JOINED";
+  if (selectedActivity.value) {
+    selectedActivity.value.current_participants = Number(selectedActivity.value.current_participants) + 1;
+  }
+
+  try {
+    const res = await axios.post(`/activities/join/${activityId}`);
+    toast.success(res.data.message);
+  } catch (err) {
+    // 失敗時恢復
+    activityStatus.value = previousStatus;
+    if (selectedActivity.value) {
+      selectedActivity.value.current_participants = Number(selectedActivity.value.current_participants) - 1;
+    }
+    
+    if (err.response?.status === 409) {
+      toast.error(err.response.data.message);
+    } else {
+      toast.error("加入活動失敗");
+    }
+  }
+};
 
 // 分享功能
 const handleShare = () => {
@@ -22,7 +89,7 @@ const copyLink = async () => {
   try {
     const url = window.location.href;
     await navigator.clipboard.writeText(url);
-    alert('連結已複製到剪貼簿！');
+    toast.success('連結已複製到剪貼簿！');
     showShareMenu.value = false;
   } catch (err) {
     // 如果瀏覽器不支援 clipboard API，用舊方法
@@ -32,7 +99,7 @@ const copyLink = async () => {
     textArea.select();
     document.execCommand('copy');
     document.body.removeChild(textArea);
-    alert('連結已複製到剪貼簿！');
+    toast.success('連結已複製到剪貼簿！');
     showShareMenu.value = false;
   }
 };
@@ -61,8 +128,9 @@ const handleClickOutside = (event) => {
   }
 };
 
-onMounted(() => {
-  fetchActivityById(route.params.id);
+onMounted(async () => {
+  await fetchActivityById(route.params.id);
+  await fetchActivityStatus();
   document.addEventListener('click', handleClickOutside);
 });
 </script>
@@ -79,13 +147,11 @@ onMounted(() => {
       <!-- 返回按鈕 -->
       <div class="p-4">
         <button 
-          @click="$router.go(-1)"
+          @click="$router.push('/activities')"
           class="flex items-center text-gray-600 transition-colors hover:text-gray-800"
         >
-          <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
-          </svg>
-          返回
+          <ArrowLeftIcon class="w-5 h-5 mr-2" />
+          返回活動列表
         </button>
       </div>
 
@@ -100,9 +166,7 @@ onMounted(() => {
             class="object-cover w-full h-64 md:h-80"
           />
           <div v-else class="flex items-center justify-center w-full h-64 md:h-80 bg-gradient-to-br from-blue-400 to-purple-500">
-            <svg class="w-16 h-16 text-white opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-            </svg>
+            <PhotoIcon class="w-16 h-16 text-white opacity-50" />
           </div>
         </div>
 
@@ -114,9 +178,7 @@ onMounted(() => {
               {{ selectedActivity.title }}
             </h1>
             <div class="flex items-center text-gray-600">
-              <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-              </svg>
+              <UserIcon class="w-5 h-5 mr-2" />
               主辦人：{{ selectedActivity.created_by_username }}
             </div>
           </div>
@@ -125,9 +187,7 @@ onMounted(() => {
           <div class="grid gap-4 mb-6">
             <!-- 時間 -->
             <div class="flex items-start">
-              <svg class="w-5 h-5 mr-3 mt-0.5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
+              <ClockIcon class="w-5 h-5 mr-3 mt-0.5 text-blue-500" />
               <div>
                 <div class="font-medium text-gray-900">活動時間</div>
                 <div class="text-gray-600">
@@ -138,10 +198,7 @@ onMounted(() => {
 
             <!-- 地點 -->
             <div class="flex items-start">
-              <svg class="w-5 h-5 mr-3 mt-0.5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-              </svg>
+              <MapPinIcon class="w-5 h-5 mr-3 mt-0.5 text-red-500" />
               <div>
                 <div class="font-medium text-gray-900">活動地點</div>
                 <div class="text-gray-600">{{ selectedActivity.location }}</div>
@@ -150,9 +207,7 @@ onMounted(() => {
 
             <!-- 參加人數 -->
             <div class="flex items-start">
-              <svg class="w-5 h-5 mr-3 mt-0.5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-              </svg>
+              <UsersIcon class="w-5 h-5 mr-3 mt-0.5 text-green-500" />
               <div>
                 <div class="font-medium text-gray-900">參加人數</div>
                 <div class="flex items-center">
@@ -177,9 +232,7 @@ onMounted(() => {
 
             <!-- 創建時間 -->
             <div class="flex items-start">
-              <svg class="w-5 h-5 mr-3 mt-0.5 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-              </svg>
+              <CalendarIcon class="w-5 h-5 mr-3 mt-0.5 text-purple-500" />
               <div>
                 <div class="font-medium text-gray-900">創建時間</div>
                 <div class="text-gray-600">{{ selectedActivity.created_at }}</div>
@@ -197,17 +250,29 @@ onMounted(() => {
 
           <!-- 操作按鈕 -->
           <div class="flex flex-col gap-3 sm:flex-row">
-            <!-- 報名按鈕 -->
+            <!-- 報名按鈕 - 根據狀態顯示不同樣式 -->
             <button 
-              :disabled="Number(selectedActivity.current_participants) >= selectedActivity.max_participants"
-              :class="[
-                'flex-1 font-medium py-3 px-6 rounded-xl transition-colors',
-                Number(selectedActivity.current_participants) >= selectedActivity.max_participants
-                  ? 'bg-gray-400 cursor-not-allowed text-white'
-                  : 'bg-blue-600 hover:bg-blue-700 text-white'
-              ]"
+              v-if="activityStatus === 'OPEN'"
+              @click="handleJoin"
+              class="flex-1 px-6 py-3 font-medium text-white transition-colors bg-blue-600 hover:bg-blue-700 rounded-xl"
             >
-              {{ Number(selectedActivity.current_participants) >= selectedActivity.max_participants ? '已額滿' : '報名參加' }}
+              加入活動
+            </button>
+            
+            <button 
+              v-else-if="activityStatus === 'ALREADY_JOINED'"
+              disabled
+              class="flex-1 px-6 py-3 font-medium text-gray-400 border-2 border-gray-400 cursor-not-allowed rounded-xl"
+            >
+              已加入
+            </button>
+            
+            <button 
+              v-else-if="activityStatus === 'FULL'"
+              disabled
+              class="flex-1 px-6 py-3 font-medium text-red-400 border-2 border-red-400 cursor-not-allowed rounded-xl"
+            >
+              已額滿
             </button>
             
             <!-- 分享按鈕 -->
@@ -215,9 +280,7 @@ onMounted(() => {
               @click="handleShare"
               class="relative px-6 py-3 font-medium text-gray-700 transition-colors bg-gray-100 hover:bg-gray-200 rounded-xl"
             >
-              <svg class="w-5 h-5 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.367 2.684 3 3 0 00-5.367-2.684z" />
-              </svg>
+              <ShareIcon class="w-5 h-5 mx-auto" />
               
               <!-- 分享選單 -->
               <div 
@@ -228,9 +291,7 @@ onMounted(() => {
                   @click="copyLink"
                   class="flex items-center w-full px-3 py-2 text-sm text-gray-700 rounded-md hover:bg-gray-100"
                 >
-                  <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
-                  </svg>
+                  <ClipboardDocumentIcon class="w-4 h-4 mr-2" />
                   複製連結
                 </button>
                 
