@@ -10,7 +10,9 @@ const { targetUser } = defineProps({
     class="z-0 max-w-screen-sm p-6 mx-auto bg-white shadow-sm rounded-xl"
   >
     <!-- 基本資料 -->
-    <div class="flex flex-wrap items-center gap-2 mb-4 sm:gap-3">
+    <div
+      class="flex flex-wrap items-center gap-2 text-xl font-medium sm:gap-3 text-darkblue"
+    >
       <h3 class="text-xl font-bold sm:text-2xl text-darkblue">
         {{ targetUser.name }}
       </h3>
@@ -22,27 +24,27 @@ const { targetUser } = defineProps({
       </p>
     </div>
 
-    <!-- 分隔線 -->
     <hr class="my-4 border-t-2 border-primary/60" />
 
-    <!-- 關於我 -->
-    <h4 class="section-title">關於我</h4>
+    <!-- 性格標籤 -->
+    <h4 class="section-title">性格標籤</h4>
     <div class="flex flex-wrap gap-2 mb-4">
       <span class="personal-tag">{{ targetUser.mbti }}</span>
       <span class="personal-tag">{{ targetUser.zodiac }}</span>
     </div>
 
-    <!-- 專業領域 -->
-    <h4 class="section-title">專業領域</h4>
+    <hr class="my-4 border-t-2 border-primary/60" />
+
+    <!-- 我的專長 -->
+    <h4 class="section-title">我的專長</h4>
     <div class="flex flex-wrap gap-2 mb-4">
       <span class="personal-tag">{{ targetUser.job }}</span>
     </div>
 
-    <!-- 分隔線 -->
     <hr class="my-4 border-t-2 border-primary/60" />
 
-    <!-- 自我介紹 -->
-    <h4 class="section-title">自我介紹</h4>
+    <!-- 關於我 -->
+    <h4 class="section-title">關於我</h4>
     <p
       class="text-sm leading-relaxed text-gray-700 whitespace-pre-line sm:text-base"
     >

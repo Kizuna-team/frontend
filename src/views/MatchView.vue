@@ -207,7 +207,7 @@ const goToSubscription = () => {
 
 <template>
   <main
-    class="flex flex-col items-center justify-between w-full max-w-2xl px-4 pt-6 pb-10 mx-auto transition-all shadow-xl bg-white/95 backdrop-blur-md rounded-3xl ring-1 ring-gray-200/50"
+    class="flex flex-col items-center justify-between w-full max-w-2xl pt-6 pb-10 m-4 mx-auto transition-all shadow-xl bg-white/95 backdrop-blur-md rounded-3xl ring-1 ring-gray-200/50 sm:px-6 md:px-8"
   >
     <!-- 顯示對象滑滑區 -->
     <UserCard
@@ -227,10 +227,13 @@ const goToSubscription = () => {
     />
 
     <!-- 配對按鈕區 -->
-    <div class="w-full mt-6">
+    <div
+      class="flex flex-col items-center w-full gap-6 mt-6 md:flex-row md:justify-center md:items-start"
+    >
       <MatchBtn
         v-if="typeof currentUser?.userId === 'number'"
         :target-user="currentUser.userId"
+        class="w-full md:w-auto"
         @like="likeFlag"
         @dislike="dislikeFlag"
         @superLike="superLikeFlag"
@@ -239,10 +242,10 @@ const goToSubscription = () => {
     </div>
 
     <!-- 更多資訊 -->
-    <section class="w-full pt-6 mt-6 border-t border-gray-300/50">
+    <section class="w-full px-4 pt-6 mt-6 border-t sm:px-6 border-gray-300/50">
       <button
         type="button"
-        class="relative block px-6 py-2 mx-auto text-sm font-semibold transition border rounded-full shadow-md text-primary border-primary bg-primary/10 hover:bg-primary hover:text-white"
+        class="relative block w-full px-6 py-2 mx-auto text-sm font-semibold transition border rounded-full shadow-md md:w-auto text-primary border-primary bg-primary/10 hover:bg-primary hover:text-white"
         @click="infoToggle"
       >
         {{ infoBtnTxt }}
@@ -260,10 +263,14 @@ const goToSubscription = () => {
     class="fixed inset-0 z-50 flex flex-col items-center justify-center p-4 text-center bg-white/90 text-darkblue backdrop-blur-md"
     @click="closeCover"
   >
-    <p class="mb-3 text-lg font-medium">你已瀏覽完今日推薦配對</p>
-    <p class="mb-6 text-base tracking-wide text-secondary">
-      將於 {{ countdownText }} 後更新
-    </p>
+    <div
+      class="w-full max-w-sm mx-auto space-y-4 sm:max-w-md md:max-w-lg lg:max-w-xl"
+    >
+      <p class="mb-3 text-lg font-medium">你已瀏覽完今日推薦配對</p>
+      <p class="mb-6 text-base tracking-wide text-secondary">
+        將於 {{ countdownText }} 後更新
+      </p>
+    </div>
     <button
       class="px-6 py-2 font-semibold text-white transition-all rounded-full shadow-md bg-accent hover:bg-orange"
       @click.stop="goToSubscription"
