@@ -133,21 +133,23 @@ const submitHandler = async () => {
   <div
     class="relative flex flex-col items-center justify-center w-full min-h-screen px-4 py-4 md:px-6 lg:px-8"
   >
-    <TransitionGroup
-      name="slide-fade"
-      tag="div"
-      class="relative flex items-center justify-center w-full max-w-sm mb-2 md:max-w-md lg:max-w-lg"
-    >
-      <MatchSetupCard
-        v-if="steps[step]"
-        :key="step"
-        v-model="form[steps[step].key]"
-        :title="steps[step].title"
-        :options="steps[step].options"
-        :multiple="steps[step].multiple"
-        :type="steps[step].type"
-      />
-    </TransitionGroup>
+    <div class="min-h-[400px] w-full flex items-center justify-center">
+      <TransitionGroup
+        name="slide-fade"
+        tag="div"
+        class="relative flex items-center justify-center w-full max-w-sm mb-2 md:max-w-md lg:max-w-lg"
+      >
+        <MatchSetupCard
+          v-if="steps[step]"
+          :key="step"
+          v-model="form[steps[step].key]"
+          :title="steps[step].title"
+          :options="steps[step].options"
+          :multiple="steps[step].multiple"
+          :type="steps[step].type"
+        />
+      </TransitionGroup>
+    </div>
 
     <button
       class="px-6 py-3 md:px-8 md:py-3 rounded-full font-bold tracking-wide text-[#a5c1e7] border-[3px] border-[#a5c1e7] bg-white transition-all duration-500 ease-in-out hover:text-white hover:bg-gradient-to-r hover:from-[#a5c1e7] hover:to-[#dd99c1] hover:border-transparent hover:shadow-lg hover:scale-[1.04] text-sm md:text-base"
