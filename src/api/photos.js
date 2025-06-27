@@ -1,6 +1,5 @@
 import axios from "@/api/axios";
-import { useToast } from "vue-toastification";
-const toast = useToast();
+import { notify } from "@/utils/notify";
 
 // 取我的所有照片
 export const getPhotos = async () => {
@@ -62,7 +61,7 @@ export const changeAvatar = async (imageKey) => {
     await axios.patch("/photos/me/avatar", {
       key: imageKey,
     });
-    toast(" 大頭貼已更新 ");
+    notify.gradient("大頭貼已更新");
   } catch (err) {
     console.error("changeAvatar 錯誤", err);
     throw err;

@@ -1,4 +1,5 @@
 <script setup>
+import { notify } from "@/utils/notify";
 import { ref, onMounted } from "vue";
 import { fetchSuperLikeStatus } from "@/api/like.js";
 
@@ -71,7 +72,8 @@ const dislikeHandler = () => {
 // Super-Like按鈕動畫
 const superLikeHandler = async () => {
   if (isDisabled.value) {
-    alert(msg.value);
+    // alert(msg.value);
+    notify.warn(msg.value);
     return;
   }
   superLikeActive.value = false;
