@@ -6,7 +6,7 @@
 這邊先預祝大家可以透過本網站找到可以一起玩的好友、情人。  
 
 ## 線上開始使用
-[ [部署初版](https://kizuna-frontend.zeabur.app/) ]   
+👉 [點我前往試用](https://kizuna-frontend.zeabur.app)
   
 本專案為 Kizuna 交友網站的前端系統，您可以在完成「 註冊/登入(支援Google第三方登入) 」後，即可立即使用我們提供的多項服務，推薦流程建議先進入「 滑滑專區 」，  
 按下喜歡來和對方建立好友關係，成為好友後，您可以在「 商城下訂單 」給自己的好友，增加你們的親密度，禮物將會以 QRCODE形式 傳到對方的「 我的禮物 」，  
@@ -29,7 +29,7 @@
 ### 1. Clone 專案
 ```
 git clone https://github.com/Kizuna-team/frontend.git
-cd kizuna-frontend
+cd frontend
 ```
 
 ### 2. 安裝依賴套件
@@ -39,7 +39,7 @@ npm install
 
 ### 3. 加入環境變數
 
-請依據 `env.template`檔案提示加入相應的環境變數  
+請依據 `env.template` 檔案提示加入相應的環境變數  
     
   
 ### 4. 啟動開發伺服器
@@ -55,8 +55,8 @@ npm run dev
 ![image](https://github.com/user-attachments/assets/488a73f4-b0e0-4d9c-8fb3-fd7a1cdcbd4d)
 
 * 命名方式 以 使用者名稱 為例
-  * 資料庫欄位請使用 蛇式命名法 ( snacke-case ) => user_name
-  * `JavaScript` 使用 駝峰式命名法 => userName
+  * 資料庫欄位請使用 蛇式命名法 ( `snacke-case` ) => `user_name`
+  * `JavaScript` 使用 駝峰式命名法 => `userName`
 
 * `.vue`檔案 請以 `<script setup> + Composition API` 撰寫
 
