@@ -271,7 +271,7 @@ const goToSubscription = () => {
       class="w-full max-w-sm mx-auto space-y-4 sm:max-w-md md:max-w-lg lg:max-w-xl"
     >
       <p class="mb-3 text-lg font-medium">你已瀏覽完今日推薦配對</p>
-      <p class="mb-6 text-base tracking-wide text-secondary">
+      <p class="mb-6 text-lg tracking-wide text-secondary">
         將於 {{ countdownText }} 後更新
       </p>
     </div>

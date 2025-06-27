@@ -9,7 +9,6 @@ const { targetUser } = defineProps({
     v-if="targetUser"
     class="z-0 max-w-screen-sm p-6 mx-auto bg-white shadow-sm rounded-xl"
   >
-    <!-- 基本資料 -->
     <div
       class="flex flex-wrap items-center gap-2 text-xl font-medium sm:gap-3 text-darkblue"
     >
@@ -20,13 +19,12 @@ const { targetUser } = defineProps({
         {{ targetUser.age }} 歲
       </p>
       <p class="text-base text-gray-600 sm:text-lg">
-        {{ targetUser.location }}
+        {{ targetUser.city || "未選擇地區" }}
       </p>
     </div>
 
     <hr class="my-4 border-t-2 border-primary/60" />
 
-    <!-- 性格標籤 -->
     <h4 class="section-title">性格標籤</h4>
     <div class="flex flex-wrap gap-2 mb-4">
       <span class="personal-tag">{{ targetUser.mbti }}</span>
@@ -35,15 +33,13 @@ const { targetUser } = defineProps({
 
     <hr class="my-4 border-t-2 border-primary/60" />
 
-    <!-- 我的專長 -->
-    <h4 class="section-title">我的專長</h4>
+    <h4 class="section-title">專業領域</h4>
     <div class="flex flex-wrap gap-2 mb-4">
       <span class="personal-tag">{{ targetUser.job }}</span>
     </div>
 
     <hr class="my-4 border-t-2 border-primary/60" />
 
-    <!-- 關於我 -->
     <h4 class="section-title">關於我</h4>
     <p
       class="text-sm leading-relaxed text-gray-700 whitespace-pre-line sm:text-base"
