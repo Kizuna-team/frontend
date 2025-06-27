@@ -133,7 +133,9 @@ const submitHandler = async () => {
   <div
     class="relative flex flex-col items-center justify-center w-full min-h-screen px-4 py-4 md:px-6 lg:px-8"
   >
-    <div class="min-h-[400px] w-full flex items-center justify-center">
+    <div
+      class="relative w-full max-w-lg min-h-[420px] flex items-center justify-center"
+    >
       <TransitionGroup
         name="slide-fade"
         tag="div"
