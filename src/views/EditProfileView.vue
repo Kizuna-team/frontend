@@ -110,7 +110,7 @@ const handleUpload = async () => {
     await profilePhotosRef.value?.uploadAll();
     setTimeout(() => {
       router.push("/match/setup");
-    }, 1500);
+    }, 2200);
   } catch (err) {
     console.error(" 上傳失敗", err);
     alert("圖片上傳失敗");
