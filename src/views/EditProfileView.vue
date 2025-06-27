@@ -14,7 +14,7 @@ const tab = ref("INTRO");
 const userProfileStore = useUserProfileStore();
 // const userProfile = userProfileStore.userProfile 地雷
 
-const cards = [{ title: "星座" }, { title: "MBTI" }, { title: "工作" }];
+const cards = [{ title: "星座" }, { title: "MBTI" }, { title: "專業領域" }];
 
 const zodiacOptions = [
   { name: "牡羊座" },
@@ -55,6 +55,9 @@ const jobOptions = [
   "醫療與照護",
   "餐飲與零售",
   "商業與行政",
+  "媒體與傳播",
+  "觀光與休閒",
+  "金融與保險",
 ];
 
 // 暫存資料表單 (不會存後端)
@@ -65,7 +68,7 @@ const resetFormData = () => {
   showFormData.value = { ...userProfileStore.userProfile };
 };
 
-// 載入初始資料、更新後的正式資料，更新完再同步回暫存資料
+// 更新完再同步回暫存資料
 onMounted(async () => {
   await userProfileStore.getProfile();
   resetFormData();
@@ -96,13 +99,11 @@ const updateHandler = async () => {
   }
 };
 
-// 控制展開收合
 const activeIndex = ref(null);
 const foldToggle = (index) => {
   activeIndex.value = activeIndex.value === index ? null : index;
 };
 
-// 照片區
 const profilePhotosRef = ref(null);
 const handleUpload = async () => {
   try {
