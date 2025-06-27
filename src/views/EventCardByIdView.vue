@@ -5,7 +5,6 @@ import { useActivityStore } from "@/stores/activity";
 import { storeToRefs } from "pinia";
 import axios from "../api/axios.js";
 import { useToast } from 'vue-toastification'
-// Heroicons import
 import { 
   ArrowLeftIcon, 
   UserIcon, 
@@ -23,13 +22,9 @@ const store = useActivityStore();
 const { fetchActivityById } = store;
 const { selectedActivity, loading } = storeToRefs(store);
 const toast = useToast()
-
-// 分享功能
 const showShareMenu = ref(false);
-// 活動狀態
-const activityStatus = ref(''); // 'OPEN', 'ALREADY_JOINED', 'FULL'
+const activityStatus = ref('');
 
-// 獲取活動狀態
 const fetchActivityStatus = async () => {
   const userId = localStorage.getItem("userId");
   const activityId = route.params.id;
@@ -50,12 +45,9 @@ const fetchActivityStatus = async () => {
   }
 };
 
-// 報名活動
 const handleJoin = async () => {
   const activityId = Number(route.params.id);
   const previousStatus = activityStatus.value;
-  
-  // 樂觀更新
   activityStatus.value = "ALREADY_JOINED";
   if (selectedActivity.value) {
     selectedActivity.value.current_participants = Number(selectedActivity.value.current_participants) + 1;
@@ -79,12 +71,10 @@ const handleJoin = async () => {
   }
 };
 
-// 分享功能
 const handleShare = () => {
   showShareMenu.value = !showShareMenu.value;
 };
 
-// 複製連結
 const copyLink = async () => {
   try {
     const url = window.location.href;
@@ -104,7 +94,6 @@ const copyLink = async () => {
   }
 };
 
-// 分享到 LINE
 const shareToLine = () => {
   const url = window.location.href;
   const text = `${selectedActivity.value.title} - ${selectedActivity.value.description}`;
@@ -113,7 +102,6 @@ const shareToLine = () => {
   showShareMenu.value = false;
 };
 
-// 分享到 Facebook
 const shareToFacebook = () => {
   const url = window.location.href;
   const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`;
@@ -121,7 +109,6 @@ const shareToFacebook = () => {
   showShareMenu.value = false;
 };
 
-// 點擊外部關閉分享選單
 const handleClickOutside = (event) => {
   if (!event.target.closest('.relative')) {
     showShareMenu.value = false;
@@ -137,14 +124,11 @@ onMounted(async () => {
 
 <template>
   <div class="min-h-screen bg-gray-50">
-    <!-- 載入中狀態 -->
     <div v-if="loading" class="flex items-center justify-center min-h-screen">
       <div class="w-8 h-8 border-4 border-blue-500 rounded-full border-t-transparent animate-spin"></div>
     </div>
 
-    <!-- 活動詳情內容 -->
     <div v-else-if="selectedActivity" class="max-w-4xl mx-auto">
-      <!-- 返回按鈕 -->
       <div class="p-4">
         <button 
           @click="$router.push('/activities')"
@@ -155,9 +139,7 @@ onMounted(async () => {
         </button>
       </div>
 
-      <!-- 主要內容卡片 -->
       <div class="mx-4 mb-8 overflow-hidden bg-white shadow-sm rounded-2xl">
-        <!-- 活動圖片 -->
         <div class="relative">
           <img 
             v-if="selectedActivity.image_url" 
@@ -170,9 +152,7 @@ onMounted(async () => {
           </div>
         </div>
 
-        <!-- 活動資訊 -->
         <div class="p-6 md:p-8">
-          <!-- 標題與主辦人 -->
           <div class="mb-6">
             <h1 class="mb-3 text-2xl font-bold text-gray-900 md:text-3xl">
               {{ selectedActivity.title }}
@@ -183,9 +163,7 @@ onMounted(async () => {
             </div>
           </div>
 
-          <!-- 活動詳細資訊 -->
           <div class="grid gap-4 mb-6">
-            <!-- 時間 -->
             <div class="flex items-start">
               <ClockIcon class="w-5 h-5 mr-3 mt-0.5 text-blue-500" />
               <div>
@@ -196,7 +174,6 @@ onMounted(async () => {
               </div>
             </div>
 
-            <!-- 地點 -->
             <div class="flex items-start">
               <MapPinIcon class="w-5 h-5 mr-3 mt-0.5 text-red-500" />
               <div>
@@ -205,7 +182,6 @@ onMounted(async () => {
               </div>
             </div>
 
-            <!-- 參加人數 -->
             <div class="flex items-start">
               <UsersIcon class="w-5 h-5 mr-3 mt-0.5 text-green-500" />
               <div>
@@ -230,7 +206,6 @@ onMounted(async () => {
               </div>
             </div>
 
-            <!-- 創建時間 -->
             <div class="flex items-start">
               <CalendarIcon class="w-5 h-5 mr-3 mt-0.5 text-purple-500" />
               <div>
@@ -240,7 +215,6 @@ onMounted(async () => {
             </div>
           </div>
 
-          <!-- 活動描述 -->
           <div class="mb-8">
             <h3 class="mb-3 text-lg font-semibold text-gray-900">活動描述</h3>
             <div class="leading-relaxed text-gray-600 whitespace-pre-wrap">
@@ -248,9 +222,7 @@ onMounted(async () => {
             </div>
           </div>
 
-          <!-- 操作按鈕 -->
           <div class="flex flex-col gap-3 sm:flex-row">
-            <!-- 報名按鈕 - 根據狀態顯示不同樣式 -->
             <button 
               v-if="activityStatus === 'OPEN'"
               @click="handleJoin"
@@ -274,15 +246,13 @@ onMounted(async () => {
             >
               已額滿
             </button>
-            
-            <!-- 分享按鈕 -->
+
             <button 
               @click="handleShare"
               class="relative px-6 py-3 font-medium text-gray-700 transition-colors bg-gray-100 hover:bg-gray-200 rounded-xl"
             >
               <ShareIcon class="w-5 h-5 mx-auto" />
               
-              <!-- 分享選單 -->
               <div 
                 v-if="showShareMenu"
                 class="absolute right-0 z-10 p-2 mb-2 bg-white border border-gray-200 rounded-lg shadow-lg bottom-full min-w-48"
@@ -321,7 +291,6 @@ onMounted(async () => {
       </div>
     </div>
 
-    <!-- 活動不存在 -->
     <div v-else class="flex flex-col items-center justify-center min-h-screen text-gray-500">
       <svg class="w-16 h-16 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 12h6m-6-4h6m2 5.291A7.962 7.962 0 0112 15c-2.34 0-4.441-1.01-5.903-2.62l.15.291a7.962 7.962 0 0002.13 1.83C9.17 14.24 10.542 14.5 12 14.5c1.458 0 2.83-.26 3.62-.92a7.962 7.962 0 002.13-1.83l.15-.291C16.441 14.01 14.34 15 12 15s-4.441-1.01-5.903-2.62zM21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
