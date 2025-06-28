@@ -157,29 +157,10 @@ watch(
       <LiquidNavLink
         to="/"
         :colorMode="getNavTextColor"
-        class="text-xl font-bold"
+        class="text-xl font-bold flex-shrink-0"
       >
         Kizuna
       </LiquidNavLink>
-
-      <!-- 漢堡按鈕 - 1250px 以下顯示 -->
-      <button class="custom-mobile-show" @click="toggleMobileMenu">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke-width="1.5"
-          stroke="currentColor"
-          class="w-6 h-6"
-          :class="getNavTextColor === 'white' ? 'text-white' : 'text-black'"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"
-          />
-        </svg>
-      </button>
 
       <!-- 桌機導覽 - 1250px 以上顯示 在登入註冊頁面時隱藏中間按鈕 -->
       <div
@@ -242,7 +223,7 @@ watch(
       <!-- 如果隱藏中間按鈕，用空的 div 保持佈局 -->
       <div v-else class="flex-1 custom-desktop-show"></div>
 
-      <!-- 使用者選單 - 1250px 以上顯示 -->
+      <!-- 桌機版使用者選單 - 1250px 以上顯示 -->
       <div class="items-center justify-end space-x-4 custom-desktop-show">
         <template v-if="!store.accessToken">
           <LiquidNavLink to="/login" :colorMode="getNavTextColor"
@@ -409,11 +390,76 @@ watch(
           </div>
         </template>
       </div>
+
+      <!-- 手機版右側區域 - 1250px 以下顯示 -->
+      <div class="flex items-center space-x-4 custom-mobile-show">
+        <!-- 已登入時顯示訊息和購物車 icon -->
+        <template v-if="store.accessToken">
+          <!-- 訊息icon -->
+          <router-link to="/chat">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="currentColor"
+              class="w-6 h-6"
+              :class="getNavTextColor === 'white' ? 'text-white' : 'text-black'"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M4.804 21.644A6.707 6.707 0 0 0 6 21.75a6.721 6.721 0 0 0 3.583-1.029c.774.182 1.584.279 2.417.279 5.322 0 9.75-3.97 9.75-9 0-5.03-4.428-9-9.75-9s-9.75 3.97-9.75 9c0 2.409 1.025 4.587 2.674 6.192.232.226.277.428.254.543a3.73 3.73 0 0 1-.814 1.686.75.75 0 0 0 .44 1.223ZM8.25 10.875a1.125 1.125 0 1 0 0 2.25 1.125 1.125 0 0 0 0-2.25ZM10.875 12a1.125 1.125 0 1 1 2.25 0 1.125 1.125 0 0 1-2.25 0Zm4.875-1.125a1.125 1.125 0 1 0 0 2.25 1.125 1.125 0 0 0 0-2.25Z"
+                clip-rule="evenodd"
+              />
+            </svg>
+          </router-link>
+
+          <!-- 購物車icon -->
+          <router-link to="/cart" class="relative">
+            <span
+              v-if="cartStore.totalQuantity > 0"
+              class="absolute flex items-center justify-center min-w-[18px] h-[18px] px-1 text-xs font-semibold text-white rounded-full -top-1 -right-1 bg-[#E44C9B] z-10"
+            >
+              {{
+                cartStore.totalQuantity > 99 ? "99+" : cartStore.totalQuantity
+              }}
+            </span>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="currentColor"
+              class="w-6 h-6"
+              :class="getNavTextColor === 'white' ? 'text-white' : 'text-black'"
+            >
+              <path
+                d="M2.25 2.25a.75.75 0 0 0 0 1.5h1.386c.17 0 .318.114.362.278l2.558 9.592a3.752 3.752 0 0 0-2.806 3.63c0 .414.336.75.75.75h15.75a.75.75 0 0 0 0-1.5H5.378A2.25 2.25 0 0 1 7.5 15h11.218a.75.75 0 0 0 .674-.421 60.358 60.358 0 0 0 2.96-7.228.75.75 0 0 0-.525-.965A60.864 60.864 0 0 0 5.68 4.509l-.232-.867A1.875 1.875 0 0 0 3.636 2.25H2.25ZM3.75 20.25a1.5 1.5 0 1 1 3 0 1.5 1.5 0 0 1-3 0ZM16.5 20.25a1.5 1.5 0 1 1 3 0 1.5 1.5 0 0 1-3 0Z"
+              />
+            </svg>
+          </router-link>
+        </template>
+
+        <!-- 漢堡按鈕 -->
+        <button @click="toggleMobileMenu">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            class="w-6 h-6"
+            :class="getNavTextColor === 'white' ? 'text-white' : 'text-black'"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"
+            />
+          </svg>
+        </button>
+      </div>
     </nav>
 
     <!-- 手機版選單 - 1250px 以下顯示，靠右對齊 -->
     <div
-      class="custom-mobile-show transition-all duration-300 ease-in-out ml-auto mr-[2.5%] w-[35%] rounded-b-2xl"
+      class="custom-mobile-show transition-all duration-300 ease-in-out absolute right-0 top-full w-[140px] rounded-b-2xl z-50"
       :class="[
         isMobileMenuOpen
           ? 'max-h-screen opacity-100'
@@ -511,7 +557,7 @@ watch(
           </LiquidNavLink>
         </template>
 
-        <!-- 已登入時：顯示功能頁面連結 -->
+        <!-- 已登入時：顯示功能頁面連結（去掉訊息和購物車） -->
         <template v-else>
           <LiquidNavLink
             to="/match"
@@ -579,32 +625,6 @@ watch(
           </LiquidNavLink>
 
           <LiquidNavLink
-            to="/chat"
-            :colorMode="isScrolled || isLightBgPage ? 'black' : 'white'"
-            class="block !px-3 py-2 !text-[16px] overflow-hidden text-ellipsis whitespace-nowrap font-medium text-right transition-all duration-200 rounded-xl"
-            :class="[
-              isScrolled || isLightBgPage
-                ? 'bg-white/80 hover:bg-white hover:shadow-sm'
-                : 'bg-white/10 hover:bg-white/20',
-            ]"
-          >
-            訊息
-          </LiquidNavLink>
-
-          <LiquidNavLink
-            to="/cart"
-            :colorMode="isScrolled || isLightBgPage ? 'black' : 'white'"
-            class="block !px-3 py-2 !text-[16px] overflow-hidden text-ellipsis whitespace-nowrap font-medium text-right transition-all duration-200 rounded-xl"
-            :class="[
-              isScrolled || isLightBgPage
-                ? 'bg-white/80 hover:bg-white hover:shadow-sm'
-                : 'bg-white/10 hover:bg-white/20',
-            ]"
-          >
-            購物車
-          </LiquidNavLink>
-
-          <LiquidNavLink
             to="/subscription"
             :colorMode="isScrolled || isLightBgPage ? 'black' : 'white'"
             class="block !px-3 py-2 !text-[16px] overflow-hidden text-ellipsis whitespace-nowrap font-medium text-right transition-all duration-200 rounded-xl"
@@ -645,7 +665,7 @@ watch(
 
           <button
             @click="handleLogout"
-            class="relative block w-full !px-3 py-2 overflow-hidden !text-[16px] overflow-hidden text-ellipsis whitespace-nowrap text-lg font-medium text-right transition-all duration-200 duration-300 border shadow-xl group rounded-xl backdrop-blur-xl bg-white/10 border-white/20 hover:scale-105 hover:brightness-110"
+            class="relative block w-full !px-3 py-2 overflow-hidden !text-[16px] text-ellipsis whitespace-nowrap text-lg font-medium text-right transition-all duration-200 duration-300 border shadow-xl group rounded-xl backdrop-blur-xl bg-white/10 border-white/20 hover:scale-105 hover:brightness-110"
             :class="[
               isScrolled || isLightBgPage
                 ? 'text-gray-800 drop-shadow-[0_0_4px_rgba(0,0,0,0.3)] bg-white/80 hover:bg-white hover:shadow-sm'
@@ -669,7 +689,7 @@ watch(
 @media (max-width: 1250px) {
   /* 手機版元素顯示 */
   .custom-mobile-show {
-    display: block;
+    display: flex !important;
   }
 
   /* 桌機版元素隱藏 */
@@ -698,7 +718,7 @@ watch(
 
 /* 預設狀態 - 確保初始載入正確 */
 .custom-mobile-show {
-  display: block;
+  display: flex;
 }
 
 .custom-desktop-show {
