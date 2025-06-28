@@ -192,7 +192,7 @@ const twCities = [
         自我介紹
       </label>
       <textarea
-        v-model="tempFormData.value.bio"
+        v-model="tempFormData.bio"
         rows="4"
         placeholder="寫一些關於你..."
         class="resize-none form-input"
@@ -221,7 +221,7 @@ const twCities = [
         </label>
         <input
           type="number"
-          v-model.number="tempFormData.value.age"
+          v-model.number="tempFormData.age"
           class="form-input"
           placeholder="請選擇年齡"
           min="18"
@@ -251,7 +251,7 @@ const twCities = [
           </svg>
           居住地
         </label>
-        <select v-model="tempFormData.value.city" class="form-input">
+        <select v-model="tempFormData.city" class="form-input">
           <option disabled value="">選擇地區</option>
           <option v-for="city in twCities" :key="city" :value="city">
             {{ city }}
