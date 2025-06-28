@@ -1,5 +1,5 @@
 <script setup>
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import { onMounted, ref } from "vue";
 import { useActivityStore } from "@/stores/activity";
 import { useUserStore } from "@/stores/user";
@@ -19,6 +19,7 @@ import {
   PhotoIcon,
 } from "@heroicons/vue/24/outline";
 
+const router = useRouter();
 const route = useRoute();
 const router = useRouter();
 const store = useActivityStore();
@@ -87,6 +88,24 @@ const shareToFacebook = () => {
 const handleClickOutside = (event) => {
   if (!event.target.closest(".relative")) {
     showShareMenu.value = false;
+  }
+};
+
+const goToChat = async () => {
+  const userId = Number(localStorage.getItem("userId"));
+  const targetId = selectedActivity.value?.created_by_id;
+
+  if (!userId || !targetId) return;
+
+  try {
+    await axios.post("/friends/direct-add", {
+      targetId,
+    });
+
+    toast.success("去聊天");
+  } catch (err) {
+    console.error("直接加好友失敗", err);
+    toast.error("無法建立好友");
   }
 };
 
