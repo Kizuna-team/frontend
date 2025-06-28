@@ -16,8 +16,8 @@ const toast = useToast();
 const friendOptions = computed(() => [
   { value: "", label: "請選擇收件人" },
   ...friendStore.friendList.map((f) => ({
-    value: f.friend_id,
-    label: f.friend_name,
+    value: f.friendId,
+    label: f.name,
   })),
 ]);
 
