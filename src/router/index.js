@@ -10,8 +10,9 @@ import HomeView from "@/views/HomeView.vue";
 import LoginView from "@/views/LoginView.vue";
 import MatchView from "@/views/MatchView.vue";
 import MatchSetupView from "@/views/MatchSetupView.vue";
-import MyOrdersView from "@/views/MyOrdersView.vue"
+import MyOrdersView from "@/views/MyOrdersView.vue";
 import NotFound from "@/views/NotFound.vue";
+import OnboardingStepsView from "@/views/OnboardingStepsView.vue";
 import ProfileTwoView from "@/views/ProfileTwoView.vue";
 import ProductView from "@/views/ProductView.vue";
 import PaymentView from "@/views/PaymentView.vue";
@@ -104,6 +105,11 @@ const router = createRouter({
       path: "/order/confirm",
       name: "Payment",
       component: PaymentView,
+    },
+    {
+      path: "/onboarding",
+      name: "Onboarding",
+      component: OnboardingStepsView,
     },
     {
       path: "/super/products/inventory",

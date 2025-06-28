@@ -135,7 +135,7 @@ watch(route, () => {
       <LiquidNavLink
         to="/"
         :colorMode="getNavTextColor"
-        class="text-xl font-bold flex-shrink-0"
+        class="flex-shrink-0 text-xl font-bold"
       >
         Kizuna
       </LiquidNavLink>
