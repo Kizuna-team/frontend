@@ -12,13 +12,9 @@ const route = useRoute();
 const router = useRouter();
 const store = useUserStore();
 const cartStore = useCartStore();
-const badgeAnimateIncrease = ref(false)
-const badgeAnimateDecrease = ref(false)
 const toast = useToast();
 const isMobileMenuOpen = ref(false);
 const isDropdownOpen = ref(false);
-let previousQuantity = cartStore.totalQuantity;
-
 
 //定義每個區域的滾動位置
 const sectionPositions = {
@@ -126,24 +122,6 @@ watch(route, () => {
   isMobileMenuOpen.value = false;
   isDropdownOpen.value = false;
 });
-
-watch(
-  () => cartStore.totalQuantity,
-  (newVal) => {
-    if (newVal > previousQuantity) {
-      badgeAnimateIncrease.value = false
-      requestAnimationFrame(() => {
-        badgeAnimateIncrease.value = true
-      })
-    } else if (newVal < previousQuantity) {
-      badgeAnimateDecrease.value = false
-      requestAnimationFrame(() => {
-        badgeAnimateDecrease.value = true
-      })
-    }
-    previousQuantity = newVal
-  }
-)
 </script>
 
 <template>
@@ -255,17 +233,11 @@ watch(
             <div class="relative">
               <span
                 v-if="cartStore.totalQuantity > 0"
-                :class="[
-                  'absolute flex items-center justify-center min-w-[20px] h-5 px-1 text-xs font-semibold text-white rounded-full -top-2 -right-3 bg-[#E44C9B]',
-                  badgeAnimateIncrease ? 'animate-badge-increase' : '',
-                  badgeAnimateDecrease ? 'animate-badge-decrease' : ''
-                ]"
-                @animationend="() => {
-                  badgeAnimateIncrease = false
-                  badgeAnimateDecrease = false
-                }"
+                class="absolute flex items-center justify-center min-w-[20px] h-5 px-1 text-xs font-semibold text-white rounded-full -top-2 -right-3 bg-[#E44C9B]"
               >
-                {{ cartStore.totalQuantity > 99 ? '99+' : cartStore.totalQuantity }}
+                {{
+                  cartStore.totalQuantity > 99 ? "99+" : cartStore.totalQuantity
+                }}
               </span>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -466,7 +438,7 @@ watch(
           : 'max-h-0 opacity-0 overflow-hidden',
       ]"
     >
-      <div class="space-y-2">
+      <div class="space-y-2 right-0 top-full w-[130px] rounded-b-2xl z-50">
         <!-- 未登入時：顯示首頁區域導覽按鈕 -->
         <template v-if="!store.accessToken">
           <!-- 關於我們 -->
@@ -724,46 +696,4 @@ watch(
 .custom-desktop-show {
   display: none;
 }
-
-@keyframes badge-increase {
-  0% {
-    transform: scale(1);
-    opacity: 1;
-    box-shadow: 0 0 0 0 rgba(228, 76, 155, 0.7);
-  }
-  50% {
-    transform: scale(1.4);
-    opacity: 0.7;
-    box-shadow: 0 0 0 8px rgba(228, 76, 155, 0);
-  }
-  100% {
-    transform: scale(1);
-    opacity: 1;
-    box-shadow: 0 0 0 0 rgba(228, 76, 155, 0);
-  }
-}
-
-@keyframes badge-decrease {
-  0% {
-    transform: scale(1);
-    opacity: 1;
-  }
-  50% {
-    transform: scale(0.7);
-    opacity: 0.6;
-  }
-  100% {
-    transform: scale(1);
-    opacity: 1;
-  }
-}
-
-.animate-badge-increase {
-  animation: badge-increase 0.6s ease-out;
-}
-
-.animate-badge-decrease {
-  animation: badge-decrease 0.4s ease-in-out;
-}
-
 </style>
