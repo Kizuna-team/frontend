@@ -696,4 +696,45 @@ watch(route, () => {
 .custom-desktop-show {
   display: none;
 }
+
+@keyframes badge-increase {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+    box-shadow: 0 0 0 0 rgba(228, 76, 155, 0.7);
+  }
+  50% {
+    transform: scale(1.4);
+    opacity: 0.7;
+    box-shadow: 0 0 0 8px rgba(228, 76, 155, 0);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+    box-shadow: 0 0 0 0 rgba(228, 76, 155, 0);
+  }
+}
+
+@keyframes badge-decrease {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(0.7);
+    opacity: 0.6;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.animate-badge-increase {
+  animation: badge-increase 0.6s ease-out;
+}
+
+.animate-badge-decrease {
+  animation: badge-decrease 0.4s ease-in-out;
+}
 </style>
