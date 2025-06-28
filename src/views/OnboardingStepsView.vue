@@ -21,7 +21,7 @@ AOS.init();
 import { onMounted } from "vue";
 
 onMounted(() => {
-  AOS.init({ once: true }); // 滾動一次後不重複動畫
+  AOS.init({ once: true });
 });
 
 const steps = [
@@ -73,7 +73,6 @@ const onSlideChange = (swiper) => {
 
 <template>
   <section class="py-16 font-sans bg-white md:py-20 text-darkblue">
-    <!-- ✅ 手機版：標語置頂 -->
     <div class="w-full px-4 mb-10 space-y-3 text-center md:hidden">
       <p class="text-base font-semibold text-primary">
         「羈」於好感，所以相「絆」
@@ -94,9 +93,7 @@ const onSlideChange = (swiper) => {
     <div
       class="flex flex-col-reverse items-center max-w-6xl px-4 mx-auto md:flex-row md:items-stretch"
     >
-      <!-- ✅ 左側：桌機版標語 + 步驟說明 + CTA -->
       <div class="w-full space-y-6 text-center md:text-left md:w-2/3">
-        <!-- 桌機版標語 -->
         <div class="hidden space-y-3 md:block">
           <p class="text-lg font-semibold text-primary">
             「羈」於好感，所以相「絆」
@@ -117,7 +114,6 @@ const onSlideChange = (swiper) => {
           </p>
         </div>
 
-        <!-- 步驟說明 -->
         <div class="pt-6 mt-4 space-y-2 border-t border-gray-200">
           <p class="text-sm font-medium text-gray-400">
             第 {{ currentIndex + 1 }} 步 / Step {{ currentIndex + 1 }}
@@ -136,7 +132,6 @@ const onSlideChange = (swiper) => {
           </p>
         </div>
 
-        <!-- CTA 按鈕 -->
         <div class="pt-4">
           <button
             type="button"
@@ -148,7 +143,6 @@ const onSlideChange = (swiper) => {
         </div>
       </div>
 
-      <!-- ✅ 右側：Swiper 圖片 -->
       <div
         data-aos="zoom-in"
         class="w-full h-full md:w-1/3 max-w-[480px] mx-auto flex flex-col items-center"
@@ -170,7 +164,6 @@ const onSlideChange = (swiper) => {
           </SwiperSlide>
         </Swiper>
 
-        <!-- ✅ 手機版提示移到 swiper 外 -->
         <p
           data-aos="fade-up"
           data-aos-delay="500"
