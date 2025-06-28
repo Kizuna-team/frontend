@@ -133,9 +133,17 @@ onMounted(async () => {
 
         <div class="p-6 md:p-8">
           <div class="mb-6">
-            <h1 class="mb-3 text-2xl font-bold text-gray-900 md:text-3xl">
-              {{ selectedActivity.title }}
-            </h1>
+            <div class="flex items-center justify-between mb-3">
+              <h1 class="text-2xl font-bold text-gray-900 md:text-3xl">
+                {{ selectedActivity.title }}
+              </h1>
+              <button
+                @click="goToChat"
+                class="px-4 py-1 text-sm font-medium text-green-600 transition border border-green-600 rounded-lg hover:bg-green-50"
+              >
+                聊一聊
+              </button>
+            </div>
             <div class="flex items-center text-gray-600">
               <UserIcon class="w-5 h-5 mr-2" />
               主辦人：{{ selectedActivity.created_by_username }}
