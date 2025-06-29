@@ -59,7 +59,7 @@ const toggle = (option) => {
         </button>
       </div>
 
-      <div v-if="type === 'range'" class="mt-4 flex gap-4">
+      <div v-if="props.type === 'range'" class="flex gap-4 mt-4">
         <label>
           最小年齡：
           <input
@@ -67,7 +67,7 @@ const toggle = (option) => {
             min="18"
             max="70"
             v-model.number="(selectedValue.value ||= [18, 35])[0]"
-            class="border px-2 py-1 rounded"
+            class="px-2 py-1 border rounded"
           />
         </label>
 
@@ -78,7 +78,7 @@ const toggle = (option) => {
             min="18"
             max="70"
             v-model.number="(selectedValue.value ||= [18, 35])[1]"
-            class="border px-2 py-1 rounded"
+            class="px-2 py-1 border rounded"
           />
         </label>
       </div>
