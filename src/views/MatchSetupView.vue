@@ -248,7 +248,7 @@ const submitHandler = async () => {
         <p class="text-xl text-gray-600">
           {{
             showRelaxedNotice
-              ? "條件已放寬，重新篩選中..."
+              ? "已放寬條件，重新篩選中..."
               : "正在篩選對象中..."
           }}
         </p>

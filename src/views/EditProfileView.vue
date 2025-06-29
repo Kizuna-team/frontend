@@ -78,24 +78,35 @@ const updateHandler = async () => {
   try {
     let updatedUser;
 
-    // 沒有id就是第一次建立用post，送出暫存資料更新正式資料
+    // 沒有id就是第一次建立用post
     if (!userProfileStore.userProfile.userId) {
       updatedUser = await userProfileStore.createProfile(showFormData.value);
     } else {
       updatedUser = await userProfileStore.updateProfile(showFormData.value);
     }
-    // 更新資料後 需要把後端儲存成功的資料重新設回表單
+
     // 拿的是普通物件，不是 ref .value 是 undefined
     // await userProfileStore.getProfile(); 這行可能導致舊資料重新覆蓋
-    // resetFormData();
-    // 用最新資料更新畫面表單
 
     console.log("updatedUser:", updatedUser); //  確認這邊不是 undefined
-    showFormData.value = { ...updatedUser };
-    notify.gradient("編輯成功！");
+
+    if (updatedUser) {
+      showFormData.value = { ...updatedUser };
+      notify.gradient("編輯成功！");
+    } else {
+      notify.warn("建立失敗！欄位請勿為空");
+    }
   } catch (error) {
     console.error("updateHandler 發生錯誤：", error);
-    alert(userProfileStore.error || "更新失敗");
+    const errs = userProfileStore.error;
+
+    if (Array.isArray(errs)) {
+      errs.forEach((msg) => notify.warn(msg));
+    } else if (typeof errs === "string") {
+      notify.warn(errs);
+    } else {
+      notify.warn("發生錯誤：回傳非預期格式");
+    }
   }
 };
 
@@ -107,14 +118,24 @@ const foldToggle = (index) => {
 const profilePhotosRef = ref(null);
 const handleUpload = async () => {
   try {
+    const hasPhoto = profilePhotosRef.value?.hasUploadedPhoto();
+
+    if (!hasPhoto) {
+      notify.warn("至少上傳一張生活照");
+      return;
+    }
     // 等待圖片全部上傳
     await profilePhotosRef.value?.uploadAll();
-    setTimeout(() => {
-      router.push("/match/setup");
-    }, 2200);
+
+    notify.kiwi("照片已全部上傳完成！前往引導頁面");
+
+    // 明確控制跳轉頁面的時機
+    await new Promise((resolve) => setTimeout(resolve, 1300));
+
+    router.push("/onboarding");
   } catch (err) {
+    notify.warn("圖片上傳失敗");
     console.error(" 上傳失敗", err);
-    alert("圖片上傳失敗");
   }
 };
 </script>

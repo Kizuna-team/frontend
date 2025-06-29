@@ -10,7 +10,15 @@ import {
 } from "@/api/photos";
 
 // 在refreshPhotos() 裡正式建立 6 格
-const photoList = ref([]);
+const photoList = ref(
+  Array(6)
+    .fill()
+    .map(() => ({
+      file: null,
+      preview: "",
+      key: null,
+    }))
+);
 
 const myAvatar = ref(null);
 const showModal = ref(false);
@@ -31,25 +39,18 @@ const refreshPhotos = async () => {
   try {
     const images = await getPhotos();
 
-    // 清空資料
-    myAvatar.value = null;
-    photoList.value = Array(6)
-      .fill()
-      .map(() => ({
-        file: null,
-        preview: "",
-        key: null,
-      }));
+    const avatarPhoto = images.find((img) => img.is_avatar);
+    if (avatarPhoto) {
+      myAvatar.value = {
+        preview: avatarPhoto.image_url,
+        key: avatarPhoto.image_key,
+      };
+    }
 
-    // 分類圖片
+    // 依序更新生活照
     let photoIndex = 0;
     images.forEach((item) => {
-      if (item.is_avatar) {
-        myAvatar.value = {
-          preview: item.image_url,
-          key: item.image_key,
-        };
-      } else if (photoIndex < photoList.value.length) {
+      if (!item.is_avatar && photoIndex < photoList.value.length) {
         photoList.value[photoIndex].preview = item.image_url;
         photoList.value[photoIndex].key = item.image_key;
         photoIndex++;
@@ -146,15 +147,9 @@ const uploadAll = async () => {
   });
 
   try {
-    // const toastId = notify.loading("上傳照片中...");
     isUploadingAll.value = true;
     await Promise.all(uploadPromises);
     isUploadingAll.value = false;
-    setTimeout(() => {
-      notify.kiwi("照片已全部上傳完成！");
-    }, 600);
-
-    // notify.updateSuccess(toastId, "照片上傳完成！");
 
     return uploadedResults;
   } catch (err) {
@@ -167,9 +162,13 @@ const uploadAll = async () => {
   }
 };
 
+const hasUploadedPhoto = () => {
+  return photoList.value.some((photo) => photo.file || photo.preview);
+};
+
 // 讓外部元件可以呼叫 uploadAll，editProfileView.view 有呼叫
 onMounted(refreshPhotos);
-defineExpose({ uploadAll });
+defineExpose({ uploadAll, hasUploadedPhoto });
 </script>
 
 <template>
@@ -220,7 +219,7 @@ defineExpose({ uploadAll });
         <!-- 中央上傳icon -->
         <template v-if="isUploading">
           <svg
-            class="w-16 h-16 text-secondary mb-4 animate-spin"
+            class="w-16 h-16 mb-4 text-secondary animate-spin"
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
             viewBox="0 0 24 24"
@@ -317,7 +316,7 @@ defineExpose({ uploadAll });
             viewBox="0 0 24 24"
             stroke-width="1.5"
             stroke="currentColor"
-            class="w-16 h-16 mb-4 text-secondary animate-bounce motion-safe:animate-bounce delay-100 ease-in-out"
+            class="w-16 h-16 mb-4 ease-in-out delay-100 text-secondary animate-bounce motion-safe:animate-bounce"
           >
             <path
               stroke-linecap="round"
