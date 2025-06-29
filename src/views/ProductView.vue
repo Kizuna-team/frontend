@@ -38,7 +38,7 @@ const totalPages = computed(() =>
 const visiblePages = computed(() => {
   const total = totalPages.value;
   const current = currentPage.value;
-  if (total <= 7) return Array.from({ length: total }, (_, i) => i + 1);
+  if (total <= 5) return Array.from({ length: total }, (_, i) => i + 1);
   const pages = [1];
   if (current > 4) pages.push("...");
   const start = Math.max(2, current - 1);

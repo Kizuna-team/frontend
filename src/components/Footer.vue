@@ -45,7 +45,7 @@ function toggleFAQ(index) {
                 >
               </li>
               <li>
-                <a href="#howToUse" class="hover:text-[#8ecae6]">使用教學</a>
+                <a href="/onboarding" class="hover:text-[#8ecae6]">使用教學</a>
               </li>
             </ul>
           </div>
