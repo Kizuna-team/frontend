@@ -96,21 +96,49 @@ const form = ref({
 });
 
 const nextStep = () => {
+  if (
+    step.value === 0 &&
+    (!Array.isArray(form.value.interests) || form.value.interests.length === 0)
+  ) {
+    notify.warn("請挑選至少一個感興趣的選項");
+    return;
+  }
+
+  if (step.value === 1 && !form.value.musicMatch) {
+    notify.warn("此為必填欄位");
+    return;
+  }
+
+  if (step.value === 2 && !form.value.introvertOrExtrovert) {
+    notify.warn("此為必填欄位");
+    return;
+  }
+
+  if (step.value === 3 && !form.value.pet) {
+    notify.warn("此為必填欄位");
+    return;
+  }
+
+  if (step.value === 4 && !form.value.wakeUpTime) {
+    notify.warn("此為必填欄位");
+    return;
+  }
+
+  if (step.value === 5) {
+    const [ageMin, ageMax] = [...form.value.ageRange].sort((a, b) => a - b);
+    if (ageMax - ageMin < 6) {
+      notify.warn("請設定至少 6 歲的年齡區間");
+      return;
+    }
+  }
+
   if (step.value < steps.length - 1) step.value++;
   else submitHandler();
 };
 
 const submitHandler = async () => {
   try {
-    if (
-      !Array.isArray(form.value.interests) ||
-      form.value.interests.length === 0
-    ) {
-      notify.warn("請挑選至少一個感興趣的選項");
-      return;
-    }
-
-    console.log("📝 送出前 form 資料：", form);
+    console.log(" 送出前 form 資料：", form);
 
     const [ageMin, ageMax] = [...form.value.ageRange].sort((a, b) => a - b);
     if (ageMax - ageMin < 6) {
@@ -140,6 +168,7 @@ const submitHandler = async () => {
       gender: userProfileStore.userProfile.gender,
       orientation: userProfileStore.userProfile.orientation,
     });
+
     isSetting.value = true;
     // notify.kiwi("設定就緒，準備開始配對...");
     setTimeout(() => {
