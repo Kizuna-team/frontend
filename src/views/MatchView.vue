@@ -30,11 +30,15 @@ const currentUser = computed(() => {
 const fetchAllMatchedUsers = async () => {
   try {
     const res = await fetchMatchedUsers();
-    console.log("拿到資料：", res); // ✅ { relaxed, data }
+    console.log("拿到資料：", res);
+
     allProfiles.value = res.data;
     relaxed.value = res.relaxed;
     console.log("當前的配對對象：", allProfiles.value[0]);
 
+    if (res.data.length === 0) {
+      notify.gradient("找不到符合條件的人，請稍後再試或放寬條件");
+    }
     return res.data;
   } catch (error) {
     console.error("載入使用者資料失敗", error);
