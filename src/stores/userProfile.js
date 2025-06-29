@@ -19,11 +19,10 @@ export const useUserProfileStore = defineStore("userProfile", () => {
     bio: "",
     orientation: "",
     age: null,
-    location: "",
+    city: "",
     zodiac: "",
     mbti: "",
     job: "",
-    interests: [],
   });
 
   // 資料載入中狀態、錯誤狀態提示

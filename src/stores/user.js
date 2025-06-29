@@ -3,12 +3,11 @@ import { defineStore } from "pinia";
 import { ref, reactive, computed } from "vue";
 
 export const useUserStore = defineStore("user", () => {
-
   const accessToken = ref(localStorage.getItem("accessToken") || "");
   const refreshToken = ref(localStorage.getItem("refreshToken") || "");
   const username = ref(localStorage.getItem("username") || "");
   const userId = ref(localStorage.getItem("userId") || "");
-  
+
   const subscriptionPlan = ref(
     localStorage.getItem("subscriptionPlan") || "free"
   );
@@ -16,21 +15,19 @@ export const useUserStore = defineStore("user", () => {
   const profile = reactive({
     gender: "",
     age: null,
-    location: "",
+    city: "",
     bio: "",
-    interests: [],
   });
 
   // 從資料庫抓 profile
   function getProfile(profileDate) {
     profile.gender = profileDate.gender;
     profile.age = profileDate.age;
-    profile.location = profileDate.location;
+    profile.city = profileDate.city;
     profile.bio = profileDate.bio;
-    profile.interests = profileDate.interests;
   }
 
-  const isLoggedIn = computed( () => !!accessToken.value);
+  const isLoggedIn = computed(() => !!accessToken.value);
 
   const register = async (usernameInput, passwordInput) => {
     try {
@@ -93,9 +90,8 @@ export const useUserStore = defineStore("user", () => {
     userId.value = null;
     profile.age = null;
     profile.gender = "";
-    profile.location = "";
+    profile.city = "";
     profile.bio = "";
-    profile.interests = [];
 
     localStorage.removeItem("accessToken");
     localStorage.removeItem("refreshToken");
