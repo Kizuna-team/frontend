@@ -37,13 +37,10 @@ const fetchActivityStatuses = async () => {
   if (!userId || activityIds.length === 0) return;
 
   try {
-    const res = await axios.post(
-      `/activities/status`,
-      {
+    const res = await axios.post(`/activities/status`, {
       userId,
       activityIds,
-      },
-    );
+    });
 
     // logInfo("後端回傳的活動狀態", res.data);
 
@@ -60,17 +57,14 @@ const fetchActivityStatuses = async () => {
 };
 
 const handleJoin = async (activityId, activity) => {
-  event.stopPropagation()
+  event.stopPropagation();
   const previousStatus = activityStatuses.value[activityId];
   activityStatuses.value[activityId] = "ALREADY_JOINED";
   activity.current_participants = Number(activity.current_participants) + 1;
   // logInfo("目前人數", activity.current_participants);
   try {
-    const res = await axios.post(
-      `/activities/join/${activityId}`,
-    );
+    const res = await axios.post(`/activities/join/${activityId}`);
     notifySuccess(res.data.message);
-    
   } catch (err) {
     activityStatuses.value[activityId] = previousStatus;
     activity.current_participants = Number(activity.current_participants) - 1;
@@ -125,7 +119,7 @@ const visiblePages = computed(() => {
   const total = totalPages.value;
   const current = currentPage.value;
   let pages = [];
-  if (total <= 7) {
+  if (total <= 5) {
     pages = Array.from({ length: total }, (_, i) => i + 1);
   } else {
     pages.push(1);

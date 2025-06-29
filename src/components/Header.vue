@@ -86,6 +86,7 @@ const lightBgPages = [
   "/subscription",
   "/subscribe-plan",
   "/my-orders",
+  "/onboarding",
 ];
 
 const isLightBgPage = computed(() =>
@@ -163,11 +164,7 @@ watch(route, () => {
             探索活動
           </LiquidNavLink>
 
-          <LiquidNavLink
-            to=""
-            :colorMode="getNavTextColor"
-            @click="(e) => handleNavClick(e, 'tutorial')"
-          >
+          <LiquidNavLink to="/onboarding" :colorMode="getNavTextColor">
             使用教學
           </LiquidNavLink>
 
