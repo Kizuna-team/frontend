@@ -51,7 +51,7 @@ export const createProfileApi = async (data) => {
 // Patch 更新使用者個人資料
 export const updateProfileApi = async (data) => {
   try {
-    const res = await axios.patch("/profile/me", data);
+    const res = await axios.patch("/profile/me/", data);
     return res.data; // 只回傳user資料，不操作 store
   } catch (error) {
     console.error("updateProfileApi 錯誤:", error);
