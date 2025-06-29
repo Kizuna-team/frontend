@@ -104,8 +104,12 @@ const submitHandler = async () => {
   try {
     console.log(" 送出前 form 資料：", form);
 
-    const [ageMin, ageMax] = form.value.ageRange.sort((a, b) => a - b);
+    const [ageMin, ageMax] = [...form.value.ageRange].sort((a, b) => a - b);
 
+    if (ageMax - ageMin < 6) {
+      notify.warn("請設定至少 6 歲的年齡區間");
+      return;
+    }
     await axios.post("/user-filter/interests", {
       interestIds: form.value.interests,
     });
