@@ -8,7 +8,7 @@ import MatchBtn from "@/components/MatchBtn.vue";
 import UserIntro from "@/components/UserIntro.vue";
 import MatchedDoneModal from "@/components/MatchedDoneModal.vue";
 import { sendLike, sendSuperLike } from "@/api/like.js";
-import { fetchAllProfiles } from "@/api/profile.js";
+import { fetchMatchedUsers } from "@/api/recommend.js";
 import { useRouter } from "vue-router";
 
 const router = useRouter();
@@ -16,16 +16,18 @@ const matchStore = useMatchStore();
 
 const allProfiles = ref([]);
 const limitUsers = 20;
+const relaxed = ref(false); // 提示是否放寬篩選條件
 
 // 計算當前是第 X 位使用者
 const currentIndex = ref(0);
 const currentUser = computed(() => allProfiles.value[currentIndex.value]);
 
-// 未加入篩選邏輯 > 人選區
-const fetchAllUsers = async () => {
+// 加入篩選邏輯
+const fetchAllMatchedUsers = async () => {
   try {
-    const data = await fetchAllProfiles();
+    const data = await fetchMatchedUsers();
     allProfiles.value = data.users;
+    relaxed.value = data.relaxed;
     return data;
   } catch (error) {
     console.error("載入使用者資料失敗", error);
@@ -33,7 +35,7 @@ const fetchAllUsers = async () => {
 };
 
 onMounted(async () => {
-  await fetchAllUsers();
+  await fetchAllMatchedUsers();
   console.log("拿到資料：", allProfiles.value); // 現在可以看到 allProfiles 的值了
   console.log("當前的配對對象：", currentUser.value); // 資料載入後再印出
 });
