@@ -11,9 +11,10 @@ import {
   saveUserPreferenceApi,
 } from "@/api/userFilter.js";
 import { fetchMatchedUsers } from "@/api/recommend.js";
-const router = useRouter();
+
 const userProfileStore = useUserProfileStore();
-const { userId, gender, orientation } = storeToRefs(userProfileStore);
+const { userProfile } = storeToRefs(userProfileStore);
+const router = useRouter();
 
 //  統一物件陣列
 const interestsOptions = [
@@ -130,7 +131,10 @@ const nextStep = () => {
   }
 
   if (step.value === 5) {
+    console.log("目前 step =", step.value);
     const [ageMin, ageMax] = [...form.value.ageRange].sort((a, b) => a - b);
+    console.log("年齡區間 = ", form.value.ageRange);
+
     if (ageMax - ageMin < 5) {
       notify.warn("請設定至少 5 歲的年齡區間");
       return;
@@ -142,38 +146,38 @@ const nextStep = () => {
 };
 
 onMounted(async () => {
-  if (!userId.value) {
-    await userProfileStore.fetchProfile();
-  }
+  await userProfileStore.getProfile();
+  console.log("👤 使用者資料 =", userProfile.value);
 
-  if (!userId.value) {
+  const userId = userProfile.value?.userId;
+  if (!userId) {
     notify.warn("使用者尚未登入");
     return;
   }
 
-  await fetchMatchedUsers(userId.value);
+  await fetchMatchedUsers();
 });
 
 const submitHandler = async () => {
+  const [ageMin, ageMax] = [...form.value.ageRange].sort((a, b) => a - b);
+  if (ageMax - ageMin < 5) {
+    notify.warn("年齡區間太窄，請至少設 5 歲以上範圍");
+    return;
+  }
+
   try {
     console.log(" 送出前 form 資料：", form);
-
-    const [ageMin, ageMax] = [...form.value.ageRange].sort((a, b) => a - b);
-    if (ageMax - ageMin < 5) {
-      notify.warn("請設定至少 5 歲的年齡區間");
-      return;
-    }
     await saveUserInterestsApi(form.value.interests);
     await saveUserPreferenceApi({
       ...form.value,
       ageMin,
       ageMax,
-      gender: gender.value,
-      orientation: orientation.value, // 預設男女都可以
+      gender: userProfile.value.gender,
+      orientation: userProfile.value.orientation, // 預設男女都可以
     });
 
     // 預先確認是否有放寬條件
-    const res = await fetchMatchedUsers(userId.value);
+    const res = await fetchMatchedUsers();
     if (res.relaxed) {
       showRelaxedNotice.value = true;
     }

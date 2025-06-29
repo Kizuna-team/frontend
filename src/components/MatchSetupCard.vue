@@ -1,5 +1,5 @@
 <script setup>
-import { defineModel } from "vue";
+import { defineModel, onMounted } from "vue";
 
 const props = defineProps({
   title: String,
@@ -11,6 +11,15 @@ const props = defineProps({
 
 // 等於接收父回傳值
 const selectedValue = defineModel();
+
+onMounted(() => {
+  if (
+    props.type === "range" &&
+    (!selectedValue.value || selectedValue.value.length !== 2)
+  ) {
+    selectedValue.value = [18, 35];
+  }
+});
 
 // 切換選項 更新 selectedValue 解析 option 取Id
 const toggle = (option) => {
@@ -66,7 +75,7 @@ const toggle = (option) => {
             type="number"
             min="18"
             max="70"
-            v-model.number="(selectedValue.value ||= [18, 35])[0]"
+            v-model.number="selectedValue[0]"
             class="px-2 py-1 border rounded"
           />
         </label>
@@ -77,7 +86,7 @@ const toggle = (option) => {
             type="number"
             min="18"
             max="70"
-            v-model.number="(selectedValue.value ||= [18, 35])[1]"
+            v-model.number="selectedValue[1]"
             class="px-2 py-1 border rounded"
           />
         </label>

@@ -15,20 +15,27 @@ const router = useRouter();
 const matchStore = useMatchStore();
 
 const allProfiles = ref([]);
-const limitUsers = 20;
-const relaxed = ref(false); // 提示是否放寬篩選條件
+const relaxed = ref(false);
+const limitUsers = 30;
 
 // 計算當前是第 X 位使用者
 const currentIndex = ref(0);
-const currentUser = computed(() => allProfiles.value[currentIndex.value]);
+const currentUser = computed(() => {
+  return allProfiles.value.length > 0
+    ? allProfiles.value[currentIndex.value]
+    : null;
+});
 
 // 加入篩選邏輯
 const fetchAllMatchedUsers = async () => {
   try {
-    const data = await fetchMatchedUsers();
-    allProfiles.value = data.users;
-    relaxed.value = data.relaxed;
-    return data;
+    const res = await fetchMatchedUsers();
+    console.log("拿到資料：", res); // ✅ { relaxed, data }
+    allProfiles.value = res.data;
+    relaxed.value = res.relaxed;
+    console.log("當前的配對對象：", allProfiles.value[0]);
+
+    return res.data;
   } catch (error) {
     console.error("載入使用者資料失敗", error);
   }

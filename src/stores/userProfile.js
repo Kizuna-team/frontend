@@ -42,6 +42,8 @@ export const useUserProfileStore = defineStore("userProfile", () => {
     error.value = null;
     try {
       const data = await fetchProfile();
+      console.log("🎯 fetchProfile 回傳：", data);
+
       setProfile(data.user); // 不會遺失沒有回傳的欄位
     } catch (err) {
       error.value = "取得資料失敗";
