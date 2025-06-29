@@ -1,16 +1,19 @@
 <script setup>
 import { notify } from "@/utils/notify";
-import { ref } from "vue";
+import { onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
 import { useUserProfileStore } from "@/stores/userProfile";
-import MatchSetupCard from "@/components/MatchSetupCard.vue";
-import axios from "@/api/axios";
 import { storeToRefs } from "pinia";
 
+import MatchSetupCard from "@/components/MatchSetupCard.vue";
+import {
+  saveUserInterestsApi,
+  saveUserPreferenceApi,
+} from "@/api/userFilter.js";
+import { fetchMatchedUsers } from "@/api/recommend.js";
 const router = useRouter();
 const userProfileStore = useUserProfileStore();
-const { gender, orientation } = storeToRefs(useUserProfileStore);
-// const userId = localStorage.getItem("userId");
+const { userId, gender, orientation } = storeToRefs(userProfileStore);
 
 //  統一物件陣列
 const interestsOptions = [
@@ -84,7 +87,6 @@ const steps = [
   },
 ];
 
-const isSetting = ref(false);
 const step = ref(0);
 const form = ref({
   interests: [],
@@ -94,6 +96,9 @@ const form = ref({
   wakeUpTime: "",
   ageRange: [18, 35], // 年齡區間 [最小, 最大]
 });
+
+const isSetting = ref(false);
+const showRelaxedNotice = ref(false);
 
 const nextStep = () => {
   if (
@@ -126,8 +131,8 @@ const nextStep = () => {
 
   if (step.value === 5) {
     const [ageMin, ageMax] = [...form.value.ageRange].sort((a, b) => a - b);
-    if (ageMax - ageMin < 6) {
-      notify.warn("請設定至少 6 歲的年齡區間");
+    if (ageMax - ageMin < 5) {
+      notify.warn("請設定至少 5 歲的年齡區間");
       return;
     }
   }
@@ -136,41 +141,44 @@ const nextStep = () => {
   else submitHandler();
 };
 
+onMounted(async () => {
+  if (!userId.value) {
+    await userProfileStore.fetchProfile();
+  }
+
+  if (!userId.value) {
+    notify.warn("使用者尚未登入");
+    return;
+  }
+
+  await fetchMatchedUsers(userId.value);
+});
+
 const submitHandler = async () => {
   try {
     console.log(" 送出前 form 資料：", form);
 
     const [ageMin, ageMax] = [...form.value.ageRange].sort((a, b) => a - b);
-    if (ageMax - ageMin < 6) {
-      notify.warn("請設定至少 6 歲的年齡區間");
+    if (ageMax - ageMin < 5) {
+      notify.warn("請設定至少 5 歲的年齡區間");
       return;
     }
-    await axios.post("/user-filter/interests", {
-      interestIds: form.value.interests,
-    });
-
-    await axios.post("/user-filter/preference", {
-      musicMatch: form.value.musicMatch,
-      introvertOrExtrovert: form.value.introvertOrExtrovert,
-      pet: form.value.pet,
-      wakeUpTime: form.value.wakeUpTime,
+    await saveUserInterestsApi(form.value.interests);
+    await saveUserPreferenceApi({
+      ...form.value,
       ageMin,
       ageMax,
-      gender: gender,
-      orientation: [0, 1, 2].includes(orientation) ? orientation : 2, // 預設男女都可以
-    });
-    console.log("🐛 各欄位值：", {
-      interests: form.value.interests,
-      musicMatch: form.value.musicMatch,
-      introvertOrExtrovert: form.value.introvertOrExtrovert,
-      pet: form.value.pet,
-      wakeUpTime: form.value.wakeUpTime,
-      gender: userProfileStore.userProfile.gender,
-      orientation: userProfileStore.userProfile.orientation,
+      gender: gender.value,
+      orientation: orientation.value, // 預設男女都可以
     });
 
+    // 預先確認是否有放寬條件
+    const res = await fetchMatchedUsers(userId.value);
+    if (res.relaxed) {
+      showRelaxedNotice.value = true;
+    }
+
     isSetting.value = true;
-    // notify.kiwi("設定就緒，準備開始配對...");
     setTimeout(() => {
       router.push("/match");
       isSetting.value = false;
@@ -233,7 +241,13 @@ const submitHandler = async () => {
           />
         </svg>
 
-        <p class="text-xl text-gray-600">正在篩選對象中...</p>
+        <p class="text-xl text-gray-600">
+          {{
+            showRelaxedNotice
+              ? "條件已放寬，重新篩選中..."
+              : "正在篩選對象中..."
+          }}
+        </p>
       </div>
     </div>
 
