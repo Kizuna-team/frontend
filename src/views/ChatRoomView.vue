@@ -630,7 +630,7 @@ watch(newMessage, autoResize);
               v-if="Number(msg.senderId) !== Number(userStore.userId)"
               class="pl-2 mb-1 text-xs font-medium text-gray-600"
             >
-              {{ currentFriend.friendName || `User${Number(msg.senderId)}` }}
+              {{ currentFriend.name || `User${Number(msg.senderId)}` }}
             </div>
             <div
               :class="[
