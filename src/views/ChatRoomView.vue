@@ -224,6 +224,8 @@ const newMessage = ref("");
 const aiMessage = ref("");
 // 用來做訊息自動滾動
 const messagesContainer = ref(null);
+// 記住已經載入過的房間
+const fetchedRoomIds = ref(new Set());
 
 // 當前使用者資訊
 const currentUser = computed(() => ({
@@ -537,29 +539,28 @@ watch(
         userName: currentUser.value.name || `User${userStore.userId}`,
       });
 
-      // 清空當前訊息
-      chatStore.clearMessages?.();
-
-      // 載入歷史訊息
-      try {
-        const res = await axios.get(`/messages/${newRoom}`);
-        res.data.messages.forEach((msg) => {
-          chatStore.addMessage({
-            ...msg,
-            senderId: msg.sender_id,
-            roomId: msg.room_id,
-            timestamp: msg.created_at,
-            time: formatTime(new Date(msg.created_at)),
-            type: msg.type || "text",
-            stickerUrl: msg.sticker_url || null,
-            stickerEmoji: msg.sticker_emoji || null,
+      if (!fetchedRoomIds.value.has(newRoom)) {
+        chatStore.clearMessages?.();
+        // 載入歷史訊息
+        try {
+          const res = await axios.get(`/messages/${newRoom}`);
+          res.data.messages.forEach((msg) => {
+            chatStore.addMessage({
+              ...msg,
+              senderId: msg.sender_id,
+              roomId: msg.room_id,
+              timestamp: msg.created_at,
+              time: formatTime(new Date(msg.created_at)),
+              type: msg.type || "text",
+              stickerUrl: msg.sticker_url || null,
+              stickerEmoji: msg.sticker_emoji || null,
+            });
           });
-        });
-      } catch (err) {
-        console.error("載入歷史訊息失敗", err);
+          fetchedRoomIds.value.add(newRoom);
+        } catch (err) {
+          console.error("載入歷史訊息失敗", err);
+        }
       }
-
-      console.log("切換到新房間:", newRoom);
     }
   }
 );
@@ -571,31 +572,20 @@ watch(newMessage, autoResize);
   <div class="flex flex-col md:flex-row h-screen">
     <!-- 好友列表區域 -->
     <div
-      class="w-full md:w-80 bg-white border-b md:border-b-0 md:border-r border-gray-200 flex md:flex-col overflow-x-auto md:overflow-y-auto"
-    >
+      class="w-full md:w-80 bg-white border-b md:border-b-0 md:border-r border-gray-200 flex md:flex-col overflow-x-auto md:overflow-y-auto">
       <div class="p-4 border-b border-gray-200 hidden md:block">
         <h1 class="text-xl font-semibold text-gray-800">聊天室</h1>
       </div>
       <div class="flex md:flex-col flex-row md:flex-1">
-        <div
-          v-for="room in chatRooms"
-          :key="room.roomId"
-          @click="currentRoom = room.roomId"
-          :class="[
-            'cursor-pointer border-b md:border-b-0 md:border-t border-gray-100 flex items-center md:items-start md:flex-row flex-col px-3 py-2 md:p-4 gap-2 transition-all',
-            currentRoom === room.roomId
-              ? 'bg-[#f6ba42] text-white'
-              : 'hover:bg-gray-50',
-          ]"
-          class="shrink-0 min-w-[96px] md:min-w-0"
-        >
-          <img
-            :src="room.avatarUrl || '/default-chat-avatar.png'"
-            class="object-cover w-10 h-10 border-2 border-white rounded-full"
-          />
-          <div
-            class="font-medium text-xs md:text-base text-center md:text-left"
-          >
+        <div v-for="room in chatRooms" :key="room.roomId" @click="currentRoom = room.roomId" :class="[
+          'cursor-pointer border-b md:border-b-0 md:border-t border-gray-100 flex items-center md:items-start md:flex-row flex-col px-3 py-2 md:p-4 gap-2 transition-all',
+          currentRoom === room.roomId
+            ? 'bg-[#f6ba42] text-white'
+            : 'hover:bg-gray-50',
+        ]" class="shrink-0 min-w-[96px] md:min-w-0">
+          <img :src="room.avatarUrl || '/default-chat-avatar.png'"
+            class="object-cover w-10 h-10 border-2 border-white rounded-full" />
+          <div class="font-medium text-xs md:text-base text-center md:text-left">
             {{ room.name }}
           </div>
         </div>
@@ -603,68 +593,44 @@ watch(newMessage, autoResize);
     </div>
 
     <!-- 聊天訊息與輸入區域 -->
-    <div
-      class="flex flex-col flex-1 min-h-0 max-h-[calc(100vh-160px)] md:max-h-full"
-    >
+    <div class="flex flex-col flex-1 min-h-0 max-h-[calc(100vh-160px)] md:max-h-full">
       <!-- 訊息列表 -->
-      <div
-        class="flex-1 p-4 space-y-4 overflow-y-auto bg-gray-50"
-        ref="messagesContainer"
-      >
+      <div class="flex-1 p-4 space-y-4 overflow-y-auto bg-gray-50" ref="messagesContainer">
         <div v-if="chatStore.messages.length === 0" class="py-8 text-center">
           <div class="text-gray-500">還沒有訊息，開始聊天吧！</div>
         </div>
 
-        <div
-          v-for="msg in chatStore.currentRoomMessages"
-          :key="msg.id || msg.timestamp"
-          :class="[
-            'flex',
-            Number(msg.senderId) === Number(userStore.userId)
-              ? 'justify-end'
-              : 'justify-start',
-          ]"
-        >
+        <div v-for="msg in chatStore.currentRoomMessages" :key="msg.id || msg.timestamp" :class="[
+          'flex',
+          Number(msg.senderId) === Number(userStore.userId)
+            ? 'justify-end'
+            : 'justify-start',
+        ]">
           <div class="flex flex-col">
-            <div
-              v-if="Number(msg.senderId) !== Number(userStore.userId)"
-              class="pl-2 mb-1 text-xs font-medium text-gray-600"
-            >
+            <div v-if="Number(msg.senderId) !== Number(userStore.userId)"
+              class="pl-2 mb-1 text-xs font-medium text-gray-600">
               {{ currentFriend.name || `User${Number(msg.senderId)}` }}
             </div>
-            <div
-              :class="[
-                'rounded-2xl px-4 py-2 max-w-xs lg:max-w-md break-words',
-                Number(msg.senderId) === Number(userStore.userId)
-                  ? 'bg-white text-gray-800 shadow-sm'
-                  : 'bg-[#f6ba42] text-white shadow-sm',
-              ]"
-            >
-              <div
-                v-if="msg.type === 'sticker'"
-                class="flex flex-col items-center"
-              >
-                <img
-                  v-if="msg.stickerUrl"
-                  :src="msg.stickerUrl"
-                  :alt="msg.stickerEmoji || 'sticker'"
-                  class="object-contain w-16 h-16"
-                  @error="handleStickerError"
-                  :style="{ display: 'block' }"
-                />
+            <div :class="[
+              'rounded-2xl px-4 py-2 max-w-xs lg:max-w-md break-words',
+              Number(msg.senderId) === Number(userStore.userId)
+                ? 'bg-white text-gray-800 shadow-sm'
+                : 'bg-[#f6ba42] text-white shadow-sm',
+            ]">
+              <div v-if="msg.type === 'sticker'" class="flex flex-col items-center">
+                <img v-if="msg.stickerUrl" :src="msg.stickerUrl" :alt="msg.stickerEmoji || 'sticker'"
+                  class="object-contain w-16 h-16" @error="handleStickerError" :style="{ display: 'block' }" />
                 <span v-show="!msg.stickerUrl" class="text-4xl">
                   {{ msg.stickerEmoji || "🙂" }}
                 </span>
               </div>
               <p>{{ msg.content || msg.text }}</p>
-              <div
-                :class="[
-                  'text-xs mt-1',
-                  Number(msg.senderId) === Number(userStore.userId)
-                    ? 'text-gray-500 text-right'
-                    : 'text-white opacity-75',
-                ]"
-              >
+              <div :class="[
+                'text-xs mt-1',
+                Number(msg.senderId) === Number(userStore.userId)
+                  ? 'text-gray-500 text-right'
+                  : 'text-white opacity-75',
+              ]">
                 {{ msg.time }}
               </div>
             </div>
@@ -674,70 +640,32 @@ watch(newMessage, autoResize);
 
       <!-- 訊息輸入欄 -->
       <div class="relative flex-shrink-0 p-4 bg-white border-t border-gray-200">
-        <StickerPanel
-          ref="stickerPanelRef"
-          :show="showStickerPanel"
-          :stickers="defaultStickers"
-          @select-sticker="handleStickerSelect"
-        />
+        <StickerPanel ref="stickerPanelRef" :show="showStickerPanel" :stickers="defaultStickers"
+          @select-sticker="handleStickerSelect" />
         <div class="flex flex-wrap items-end gap-2 sm:gap-3">
-          <StickerButton
-            ref="stickerButtonRef"
-            :disabled="!isUserLoggedIn"
-            :active="showStickerPanel"
-            @toggle="toggleStickerPanel"
-          />
-          <button
-            @click="startVoiceInput"
-            aria-label="語音輸入"
-            class="p-2 rounded-lg transition-colors text-gray-600 hover:bg-gray-100 hover:text-[#f6ba42]"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke-width="1.5"
-              stroke="currentColor"
-              class="w-6 h-6"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                d="M12 18.75a6 6 0 0 0 6-6v-1.5m-6 7.5a6 6 0 0 1-6-6v-1.5m6 7.5v3.75m-3.75 0h7.5M12 15.75a3 3 0 0 1-3-3V4.5a3 3 0 1 1 6 0v8.25a3 3 0 0 1-3 3Z"
-              />
+          <StickerButton ref="stickerButtonRef" :disabled="!isUserLoggedIn" :active="showStickerPanel"
+            @toggle="toggleStickerPanel" />
+          <button @click="startVoiceInput" aria-label="語音輸入"
+            class="p-2 rounded-lg transition-colors text-gray-600 hover:bg-gray-100 hover:text-[#f6ba42]">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+              stroke="currentColor" class="w-6 h-6">
+              <path stroke-linecap="round" stroke-linejoin="round"
+                d="M12 18.75a6 6 0 0 0 6-6v-1.5m-6 7.5a6 6 0 0 1-6-6v-1.5m6 7.5v3.75m-3.75 0h7.5M12 15.75a3 3 0 0 1-3-3V4.5a3 3 0 1 1 6 0v8.25a3 3 0 0 1-3 3Z" />
             </svg>
           </button>
           <div class="relative flex-1">
-            <input
-              type="text"
-              placeholder="輸入訊息或使用語音..."
-              @keydown.enter="handleEnter"
-              v-model="newMessage"
-              class="w-full px-4 py-2 border border-gray-300 rounded-lg outline-none focus:ring-2 focus:ring-[#f6ba42] focus:border-transparent"
-            />
-            <div
-              v-if="isListening"
-              class="z-[99] absolute inset-y-0 right-2 flex items-center"
-            >
-              <Vue3Lottie
-                :animationData="voiceInputAnimation"
-                :height="48"
-                :width="48"
-                :loop="true"
-                :autoPlay="true"
-              />
+            <input type="text" placeholder="輸入訊息或使用語音..." @keydown.enter="handleEnter" v-model="newMessage"
+              class="w-full px-4 py-2 border border-gray-300 rounded-lg outline-none focus:ring-2 focus:ring-[#f6ba42] focus:border-transparent" />
+            <div v-if="isListening" class="z-[99] absolute inset-y-0 right-2 flex items-center">
+              <Vue3Lottie :animationData="voiceInputAnimation" :height="48" :width="48" :loop="true" :autoPlay="true" />
             </div>
           </div>
-          <button
-            @click="sendMessage"
-            :disabled="!newMessage.trim()"
-            :class="[
-              'px-4 py-2 rounded-lg font-medium transition-colors',
-              newMessage.trim()
-                ? 'bg-[#f6ba42] hover:bg-[#ed8b34] text-white'
-                : 'bg-gray-300 text-gray-500 cursor-not-allowed',
-            ]"
-          >
+          <button @click="sendMessage" :disabled="!newMessage.trim()" :class="[
+            'px-4 py-2 rounded-lg font-medium transition-colors',
+            newMessage.trim()
+              ? 'bg-[#f6ba42] hover:bg-[#ed8b34] text-white'
+              : 'bg-gray-300 text-gray-500 cursor-not-allowed',
+          ]">
             送出
           </button>
         </div>
@@ -747,67 +675,48 @@ watch(newMessage, autoResize);
   <div class="fixed inset-0 z-50 pointer-events-none">
     <div class="fixed z-50 bottom-20 right-20">
       <!-- 收合狀態的圓點 -->
-      <div
-        class="absolute transition-all duration-500"
-        :class="
-          isExpanded
-            ? 'opacity-0 scale-0 pointer-events-none'
-            : 'opacity-100 scale-100 pointer-events-auto'
-        "
-      >
-        <div
-          @click="handleExpand"
-          class="relative w-16 h-16 overflow-hidden transition-all duration-500 border rounded-full shadow-2xl cursor-pointer group backdrop-blur-xl bg-gradient-to-r from-blue-500/20 to-purple-500/20 border-white/30 hover:scale-110 hover:shadow-blue-500/25 hover:shadow-2xl"
-        >
+      <div class="absolute transition-all duration-500" :class="isExpanded
+          ? 'opacity-0 scale-0 pointer-events-none'
+          : 'opacity-100 scale-100 pointer-events-auto'
+        ">
+        <div @click="handleExpand"
+          class="relative w-16 h-16 overflow-hidden transition-all duration-500 border rounded-full shadow-2xl cursor-pointer group backdrop-blur-xl bg-gradient-to-r from-blue-500/20 to-purple-500/20 border-white/30 hover:scale-110 hover:shadow-blue-500/25 hover:shadow-2xl">
           <div
-            class="absolute inset-0 transition-opacity duration-300 rounded-full opacity-0 bg-gradient-to-r from-blue-400/30 to-purple-400/30 blur-xl group-hover:opacity-100"
-          ></div>
-          <div
-            class="relative z-10 flex items-center justify-center w-full h-full"
-          >
+            class="absolute inset-0 transition-opacity duration-300 rounded-full opacity-0 bg-gradient-to-r from-blue-400/30 to-purple-400/30 blur-xl group-hover:opacity-100">
+          </div>
+          <div class="relative z-10 flex items-center justify-center w-full h-full">
             <Bot class="w-8 h-8 text-white drop-shadow-lg animate-pulse" />
           </div>
           <div
-            class="absolute inset-0 rounded-full bg-gradient-to-r from-blue-400 to-purple-400 opacity-20 animate-ping"
-          ></div>
+            class="absolute inset-0 rounded-full bg-gradient-to-r from-blue-400 to-purple-400 opacity-20 animate-ping">
+          </div>
         </div>
       </div>
     </div>
-    <div
-      ref="chatWindowRef"
-      class="absolute transition-all duration-300 ease-out pointer-events-auto will-change-transform"
-      :class="{
+    <div ref="chatWindowRef"
+      class="absolute transition-all duration-300 ease-out pointer-events-auto will-change-transform" :class="{
         'opacity-100 scale-100': isExpanded,
         'opacity-0 scale-0 pointer-events-none': !isExpanded,
         'cursor-grabbing': isDragging,
         'transition-none': isDragging,
-      }"
-      :style="{
+      }" :style="{
         left: `${position.x}px`,
         top: `${position.y}px`,
         position: 'fixed',
         transform: isDragging ? 'translateZ(0)' : '',
-      }"
-    >
+      }">
       <div
-        class="relative flex flex-col overflow-hidden border shadow-2xl rounded-2xl w-80 h-96 backdrop-blur-xl bg-white/10 border-white/20"
-      >
-        <div
-          class="absolute inset-0 bg-gradient-to-br from-blue-500/10 via-purple-500/10 to-pink-500/10"
-        ></div>
+        class="relative flex flex-col overflow-hidden border shadow-2xl rounded-2xl w-80 h-96 backdrop-blur-xl bg-white/10 border-white/20">
+        <div class="absolute inset-0 bg-gradient-to-br from-blue-500/10 via-purple-500/10 to-pink-500/10"></div>
         <div
           class="relative z-50 flex items-center justify-between flex-shrink-0 p-4 border-b border-white/20 bg-white/5 backdrop-blur-sm select-none"
           :class="{
             'cursor-grabbing': isDragging,
             'cursor-grab': !isDragging,
-          }"
-          @mousedown="handleMouseDown"
-          @touchstart="handleTouchStart"
-        >
+          }" @mousedown="handleMouseDown" @touchstart="handleTouchStart">
           <div class="flex items-center space-x-2">
             <div
-              class="flex items-center justify-center w-8 h-8 rounded-full bg-gradient-to-r from-blue-400 to-purple-400"
-            >
+              class="flex items-center justify-center w-8 h-8 rounded-full bg-gradient-to-r from-blue-400 to-purple-400">
               <Sparkles class="w-4 h-4 text-white" />
             </div>
             <div>
@@ -815,13 +724,9 @@ watch(newMessage, autoResize);
               <p class="text-xs text-gray-600">智能對話建議</p>
             </div>
           </div>
-          <button
-            @click="handleClose"
-            class="close-button relative z-50 p-2 transition-all duration-200 border rounded-full bg-red-500/20 hover:bg-red-500/40 hover:scale-110 border-red-400/30 group cursor-pointer"
-          >
-            <X
-              class="w-4 h-4 text-white drop-shadow-lg group-hover:text-red-200"
-            />
+          <button @click="handleClose"
+            class="close-button relative z-50 p-2 transition-all duration-200 border rounded-full bg-red-500/20 hover:bg-red-500/40 hover:scale-110 border-red-400/30 group cursor-pointer">
+            <X class="w-4 h-4 text-white drop-shadow-lg group-hover:text-red-200" />
           </button>
         </div>
         <div class="relative z-10 flex-1 min-h-0 p-3 overflow-y-auto">
@@ -829,21 +734,13 @@ watch(newMessage, autoResize);
             <Bot class="w-8 h-8 mx-auto mb-2 text-gray-600 opacity-70" />
             正在分析你們的對話...
           </div>
-          <textarea
-            type="text"
-            v-model="aiMessage"
-            class="w-full h-[200px] p-3 rounded-xl border border-white/30 bg-white/10 text-sm text-gray-800 placeholder-gray-400 resize-none focus:outline-none focus:ring-2 focus:ring-purple-300 backdrop-blur-sm shadow-inner"
-          ></textarea>
+          <textarea type="text" v-model="aiMessage"
+            class="w-full h-[200px] p-3 rounded-xl border border-white/30 bg-white/10 text-sm text-gray-800 placeholder-gray-400 resize-none focus:outline-none focus:ring-2 focus:ring-purple-300 backdrop-blur-sm shadow-inner"></textarea>
         </div>
-        <div
-          class="relative z-20 flex-shrink-0 p-3 border-t border-white/20 bg-white/5 backdrop-blur-sm"
-        >
+        <div class="relative z-20 flex-shrink-0 p-3 border-t border-white/20 bg-white/5 backdrop-blur-sm">
           <div class="flex justify-center mt-2">
-            <button
-              @click="getSuggestion"
-              :disabled="isLoading"
-              class="h-10 px-3 py-1 text-xs text-gray-700 transition-colors border rounded-full bg-white/10 hover:bg-white/20 disabled:opacity-50 border-white/20"
-            >
+            <button @click="getSuggestion" :disabled="isLoading"
+              class="h-10 px-3 py-1 text-xs text-gray-700 transition-colors border rounded-full bg-white/10 hover:bg-white/20 disabled:opacity-50 border-white/20">
               {{ isLoading ? "分析中..." : "獲取聊天建議" }}
             </button>
           </div>
@@ -857,6 +754,7 @@ watch(newMessage, autoResize);
 ::-webkit-scrollbar {
   height: 4px;
 }
+
 ::-webkit-scrollbar-thumb {
   background: #ccc;
   border-radius: 2px;
@@ -889,6 +787,7 @@ watch(newMessage, autoResize);
 .overflow-y-auto::-webkit-scrollbar-thumb:hover {
   background: #a8a8a8;
 }
+
 /* 拖拽相關樣式 */
 .cursor-grab {
   cursor: grab;
