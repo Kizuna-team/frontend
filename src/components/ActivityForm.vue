@@ -125,8 +125,8 @@ async function handleSubmit() {
     }
   }
 
-  if (!imageFile.value) {
-    missingFields.push("活動圖片");
+  if (!imageFile.value && !isEditMode.value) {
+  missingFields.push("活動圖片");
   }
 
   if (missingFields.length > 0) {
@@ -149,8 +149,10 @@ async function handleSubmit() {
     formData.append("createdBy", form.value.createdBy);
     formData.append("maxParticipants", form.value.maxParticipants);
     if (imageFile.value) {
-      formData.append("image", imageFile.value); // 圖片也放進去
-    }
+      formData.append("image", imageFile.value);} // 圖片也放進去
+    // } else if (isEditMode.value && selectedActivity.value?.image_url) {
+    //   formData.append("imageUrl", selectedActivity.value.image_url); // 傳原圖 URL
+    // }
     if (isEditMode.value) {
       const id = parseInt(route.params.id);
       await updateActivity(id, formData); // 要用 FormData
@@ -247,6 +249,7 @@ async function handleDelete() {
             accept="image/*"
             class="w-full px-4 py-2 bg-white border border-gray-300 rounded-xl file:mr-4 file:py-2 file:px-4 file:border-0 file:rounded-full file:bg-primary/20 file:text-primary hover:file:bg-primary/30"
           />
+          <p class="mt-1 text-xs text-gray-500 text-">目前圖片為預覽圖片，如需修改請重新選擇</p>
         </div>
         <div>
           <label
