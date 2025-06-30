@@ -1,7 +1,7 @@
 <script setup>
 import { ref, watch, computed } from "vue";
 import { useActivityStore } from "@/stores/activity.js";
-import { useRoute,useRouter } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import { storeToRefs } from "pinia";
 import { useUserStore } from "@/stores/user.js";
 import { useToast } from "vue-toastification";
@@ -47,7 +47,7 @@ function resetForm() {
   };
   imageFile.value = null;
   previewUrl.value = null;
-  
+
   if (fileInputRef.value) {
     fileInputRef.value.value = "";
   }
@@ -189,17 +189,19 @@ async function handleDelete() {
 
 <template>
   <div
-  v-if="isLoading"
-  class="fixed inset-0 z-50 flex items-center justify-center bg-white/70"
+    v-if="isLoading"
+    class="fixed inset-0 z-50 flex items-center justify-center bg-white/70"
   >
     <img src="@/assets/spinner.svg" alt="處理中..." class="w-16 h-16" />
   </div>
-  <div>
-    <div class="max-w-xl p-8 mx-auto mt-6 shadow-md rounded-2xl">
-      <div class="mb-6">
-        <label class="mb-2 mr-2 text-lg font-bold text-darkblue"
-          >主辦人：</label
-        >
+  <div
+    class="min-h-screen px-4 py-10 sm:px-6 lg:px-8 bg-gradient-to-b from-[#8ecae6]/10 to-white"
+  >
+    <div
+      class="max-w-xl p-8 mx-auto mt-6 shadow-lg bg-white/80 backdrop-blur-md rounded-2xl"
+    >
+      <div class="mb-6 text-lg text-darkblue">
+        <label class="block mb-1 font-bold">主辦人：</label>
         <span class="text-gray-500">
           {{
             isEditMode
@@ -213,7 +215,7 @@ async function handleDelete() {
         <img
           v-if="previewUrl"
           :src="previewUrl"
-          class="object-cover w-full border h-80 rounded-xl"
+          class="object-cover w-full border border-gray-200 h-80 rounded-xl"
         />
       </div>
 
@@ -221,20 +223,20 @@ async function handleDelete() {
         {{ formTitle }}
       </h2>
 
-      <form @submit.prevent="handleSubmit" class="space-y-4">
+      <form @submit.prevent="handleSubmit" class="space-y-5">
         <div>
-          <label for="title" class="block mb-2 text-lg font-bold text-darkblue"
+          <label for="title" class="block mb-1 text-lg font-bold text-darkblue"
             >活動標題：</label
           >
           <input
             id="title"
             v-model="form.title"
             placeholder="請輸入活動標題"
-            class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
+            class="w-full px-4 py-2 border border-gray-300 rounded-xl focus:outline-primary"
           />
         </div>
         <div>
-          <label for="image" class="block mb-2 text-lg font-bold text-darkblue"
+          <label for="image" class="block mb-1 text-lg font-bold text-darkblue"
             >活動圖片：</label
           >
           <input
@@ -243,44 +245,44 @@ async function handleDelete() {
             type="file"
             @change="handleFileChange"
             accept="image/*"
-            class="w-full border border-gray-300"
+            class="w-full px-4 py-2 bg-white border border-gray-300 rounded-xl file:mr-4 file:py-2 file:px-4 file:border-0 file:rounded-full file:bg-primary/20 file:text-primary hover:file:bg-primary/30"
           />
         </div>
         <div>
           <label
             for="location"
-            class="block mb-2 text-lg font-bold text-darkblue"
+            class="block mb-1 text-lg font-bold text-darkblue"
             >活動地點：</label
           >
           <AddressInput v-model="form.location" />
         </div>
         <div>
-          <label for="date" class="block mb-2 text-lg font-bold text-darkblue"
-            >活動日期：</label
-          >
+          <label for="date" class="block mb-1 text-lg font-bold text-darkblue">
+            活動日期：
+          </label>
           <input
             id="date"
             v-model="form.date"
             type="date"
             :min="today"
-            class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:text-secondary"
+            class="w-full px-4 py-2 border border-gray-300 rounded-xl focus:outline-primary"
           />
         </div>
         <div>
-          <label for="time" class="block mb-2 text-lg font-bold text-darkblue"
-            >活動時間：</label
-          >
+          <label for="time" class="block mb-1 text-lg font-bold text-darkblue">
+            活動時間：
+          </label>
           <input
             id="time"
             type="time"
             v-model="form.time"
-            class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:text-secondary"
+            class="w-full px-4 py-2 border border-gray-300 rounded-xl focus:outline-primary"
           />
         </div>
         <div>
           <label
             for="max-participants"
-            class="block mb-2 text-lg font-bold text-darkblue"
+            class="block mb-1 text-lg font-bold text-darkblue"
             >活動人數上限：</label
           >
           <input
@@ -288,26 +290,27 @@ async function handleDelete() {
             min="2"
             type="number"
             v-model.number="form.maxParticipants"
+            placeholder="請輸入 2 人以上"
             class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:text-secondary"
           />
         </div>
         <div>
           <label
             for="description"
-            class="block mb-2 text-lg font-bold text-darkblue"
+            class="block mb-1 text-lg font-bold text-darkblue"
             >活動描述：</label
           >
           <textarea
             id="description"
             v-model="form.description"
             placeholder="請輸入活動描述"
-            class="w-full h-24 px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:text-secondary"
+            class="w-full px-4 py-2 border border-gray-300 rounded-xl focus:outline-primary"
           ></textarea>
         </div>
-        <div class="flex gap-4 mt-6">
+        <div class="flex flex-col justify-center gap-4 pt-6 sm:flex-row">
           <button
             type="submit"
-            class="flex-1 min-w-[130px] w-[150px] h-[40px] px-2.5 py-1.5 font-bold text-white border-2 border-secondary bg-secondary rounded-full flex items-center justify-center gap-1 transition-all duration-300 hover:bg-white hover:text-secondary mx-auto"
+            class="w-full px-6 py-2 font-bold text-white transition border-2 rounded-full sm:w-auto bg-secondary hover:bg-white hover:text-secondary border-secondary"
           >
             {{ isEditMode ? "更新活動" : "建立活動" }}
           </button>
@@ -315,7 +318,7 @@ async function handleDelete() {
             v-if="isEditMode"
             @click="handleDelete"
             type="button"
-            class="flex-1 min-w-[130px] w-[150px] h-[40px] px-2.5 py-1.5 font-bold text-white border-2 border-red-400 bg-red-400 rounded-full flex items-center justify-center gap-1 transition-all duration-300 hover:bg-white hover:text-red-400 mx-auto"
+            class="w-full px-6 py-2 font-bold text-white transition bg-red-400 border-2 border-red-400 rounded-full sm:w-auto hover:bg-white hover:text-red-400"
           >
             刪除活動
           </button>
