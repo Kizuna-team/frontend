@@ -2,6 +2,7 @@
 import { ref, onMounted, nextTick } from "vue";
 import MapSelector from "./MapSelector.vue";
 import { loadGoogleMapsAPI } from "@/api/googleMapsApi";
+import { GOOGLE_MAPS_CONFIG } from "@/config/googleMaps";
 
 const props = defineProps({
   modelValue: String,
@@ -32,8 +33,8 @@ const initAutocomplete = () => {
     autocompleteInstance.value = new google.maps.places.Autocomplete(
       inputRef.value,
       {
-        componentRestrictions: { country: "TW" },
-        fields: ["formatted_address"],
+        componentRestrictions: { country: GOOGLE_MAPS_CONFIG.country },
+        fields: ["formatted_address"], // 簡化：只要地址，不要 geometry
         types: ["establishment", "geocode"],
       }
     );
