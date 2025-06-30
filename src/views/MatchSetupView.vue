@@ -256,7 +256,7 @@ const submitHandler = async () => {
     </div>
 
     <button
-      class="px-6 py-3 md:px-8 md:py-3 rounded-full font-bold tracking-wide text-[#a5c1e7] border-[3px] border-[#a5c1e7] bg-white transition-all duration-500 ease-in-out hover:text-white hover:bg-gradient-to-r hover:from-[#a5c1e7] hover:to-[#dd99c1] hover:border-transparent hover:shadow-lg hover:scale-[1.04] text-sm md:text-base"
+      class="px-6 py-3 md:px-8 md:py-3 rounded-full font-bold tracking-wide border-[3px] border-[#a5c1e7] text-[#a5c1e7] text-sm md:text-base transition-all duration-300 ease-in-out bg-white hover:text-white hover:bg-gradient-to-r hover:from-[#a5c1e7] hover:to-[#dd99c1] hover:border-transparent hover:shadow-lg hover:scale-[1.04] hover:bg-origin-border hover:bg-clip-padding"
       @click="step < steps.length - 1 ? nextStep() : submitHandler()"
     >
       {{ step < steps.length - 1 ? "下一題" : "完成並配對" }}
