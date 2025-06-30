@@ -10,5 +10,6 @@ const catAnimation = JSON.parse(JSON.stringify(rawCat))
     :animationData="catAnimation"
     :loop="true"
     :autoplay="true"
+    :width="150"
   />
 </template>

@@ -166,7 +166,7 @@ watch(hoverActivityId, (newId) => {
               <span class="font-semibold text-secondary">報名人數/上限人數：</span>
               {{ activity.current_participants }}/{{ activity.max_participants }}
 
-            <div v-if="hoverActivityId === activity.id" class="scale-50 absolute right-[50px] top-1/2 -translate-y-1/2">
+            <div v-if="hoverActivityId === activity.id" class="scale-50 absolute right-[50px] top-1/4 -translate-y-1/2 md:right-[-50px] md:scale-100 ">
               <CuteCat />
             </div>
             </p>
