@@ -184,7 +184,7 @@ const submitHandler = async () => {
 
     isSetting.value = true;
     setTimeout(() => {
-      router.push("/match");
+      router.push("/match/result");
       isSetting.value = false;
     }, 800);
   } catch (err) {
