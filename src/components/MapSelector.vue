@@ -212,23 +212,33 @@ const confirmSelection = () => {
   }
 };
 
-const closeModal = () => {
+const resetModalState = () => {
   clearMarker();
   selectedMapAddress.value = "";
   searchInput.value = "";
   if (searchInputRef.value) {
     searchInputRef.value.value = "";
   }
+  
+  if (autocompleteInstance.value) {
+    google.maps.event.clearInstanceListeners(autocompleteInstance.value);
+    autocompleteInstance.value = null;
+  }
+};
+
+const closeModal = () => {
+  resetModalState();
   emit("close");
 };
 
-// 監聽彈窗顯示
 watch(
   () => props.show,
   async (show) => {
     if (show && isMapLoaded.value) {
       await nextTick();
       setTimeout(initMap, 300);
+    } else if (!show) {
+      resetModalState();
     }
   }
 );
