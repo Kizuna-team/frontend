@@ -31,11 +31,39 @@ export const useUserProfileStore = defineStore("userProfile", () => {
 
   // 保留沒傳回來的欄位，再覆蓋被編輯的
   // 帶入後端傳回的「使用者資料物件」
+  // const setProfile = (data) => {
+  //   userProfile.value = { ...userProfile.value, ...data };
+  // };
+
   const setProfile = (data) => {
-    userProfile.value = { ...userProfile.value, ...data };
+    const allowedFields = [
+      "userId",
+      "name",
+      "gender",
+      "bio",
+      "orientation",
+      "age",
+      "city",
+      "zodiac",
+      "mbti",
+      "job",
+    ];
+
+    const filteredData = {};
+    // 只修改允許修改的欄位
+
+    allowedFields.forEach((field) => {
+      if (field in data) {
+        filteredData[field] = data[field];
+      }
+    });
+    userProfile.value = {
+      ...userProfile.value,
+      ...filteredData,
+    };
   };
 
-  // 從後端取得個人資料，顯示「載入中」將錯誤狀態清空，最後都結束在載入中
+  // 「載入中」將錯誤狀態清空，最後結束在載入中
   // data 是 { message, user }
   const getProfile = async () => {
     loading.value = true;
