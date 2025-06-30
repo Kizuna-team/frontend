@@ -93,13 +93,13 @@ const router = createRouter({
     },
     {
       path: "/match",
-      name: "Match",
-      component: MatchView,
-    },
-    {
-      path: "/match/setup",
       name: "MatchSetup",
       component: MatchSetupView,
+    },
+    {
+      path: "/match/result",
+      name: "MatchResult",
+      component: MatchView,
     },
     {
       path: "/order/confirm",
