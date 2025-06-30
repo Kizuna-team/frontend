@@ -246,7 +246,7 @@ async function handleDelete() {
             accept="image/*"
             class="w-full px-4 py-2 bg-white border border-gray-300 rounded-xl file:mr-4 file:py-2 file:px-4 file:border-0 file:rounded-full file:bg-primary/20 file:text-primary hover:file:bg-primary/30"
           />
-          <p class="mt-1 text-xs text-gray-500 text-">目前圖片為預覽圖片，如需修改請重新選擇</p>
+          <p v-if="isEditMode" class="mt-1 text-xs text-gray-500 text-">目前圖片為預覽圖片，如需修改請重新選擇</p>
         </div>
         <div>
           <label
