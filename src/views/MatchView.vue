@@ -16,7 +16,7 @@ const matchStore = useMatchStore();
 
 const allProfiles = ref([]);
 const relaxed = ref(false);
-const limitUsers = 30;
+const limitUsers = 20;
 
 // 計算當前是第 X 位使用者
 const currentIndex = ref(0);
@@ -45,6 +45,10 @@ const fetchAllMatchedUsers = async () => {
 
 onMounted(async () => {
   await fetchAllMatchedUsers();
+  console.log("配對筆數：", allProfiles.value.length);
+
+  console.log("拿到資料：", allProfiles.value); // 現在可以看到 allProfiles 的值了
+  console.log("當前的配對對象：", currentUser.value); // 資料載入後再印出
 });
 
 // 使用者資訊的開合
@@ -88,12 +92,12 @@ const likeFlag = async (targetId) => {
       mutualLike.value = true;
       confirmModal.value = true;
     } else {
-      alert(message); // 其他提示
+      notify.gradient(message); // 其他提示
       nextUser(); //如果要改成動畫提示訊息的話這邊要用setTimeout 等動畫跑完
     }
   } catch (error) {
     if (error.response && error.response.status === 409) {
-      alert(error.response.data.message || "已表達 等待對方回應");
+      notify.kiwi(error.response.data.message || "等待對方回應...");
       setTimeout(() => {
         nextUser();
       }, 1500);
@@ -144,7 +148,7 @@ const superLikeFlag = async (targetId) => {
     // 更新剩餘次數的 UI 或狀態
     if (remainingCount !== undefined) {
       restSuperLikes.value = remainingCount;
-      const message = `已送出 Super Like！
+      const message = `已送出 Super Like💖
       剩下${restSuperLikes.value}次`;
       notify.gradient(message);
     }
@@ -154,12 +158,14 @@ const superLikeFlag = async (targetId) => {
       const status = error.response.status;
 
       if (status === 409) {
-        alert(error.response.data.message || "已表達 等待對方回應");
+        notify.kiwi(
+          error.response.data.message || "已發送過，等待對方回應中..."
+        );
         nextUser();
       }
 
       if (status === 403) {
-        alert(error.response.data.message || "今日使用次數已達上限");
+        notify.warn(error.response.data.message || "今日使用次數已達上限");
         restSuperLikes.value = 0; // 把剩餘數量設為0禁用按鈕
       }
     }

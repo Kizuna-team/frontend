@@ -34,12 +34,12 @@ const superLikeStatus = async () => {
     // 解決可無限點的問題
     if (totalCount.value > 0) {
       msg.value = isMember.value
-        ? `剩餘 ${totalCount.value} 次 Super Like`
-        : `剩餘 ${totalCount.value} 次 Super Like (非會員專屬)`;
+        ? `會員｜剩餘 ${totalCount.value} 次 Super Like`
+        : `非會員｜剩餘 ${totalCount.value} 次 Super Like`;
     } else {
       msg.value = isMember.value
-        ? "今日 Super Like 次數已用完"
-        : "尚未開啟高級會員功能 (今日次數已用完)";
+        ? "會員今日 Super Like 次數已用完"
+        : "免費次數已用完！立即前往升級高級會員";
     }
 
     emit("superLikeStatus", {
@@ -52,6 +52,7 @@ const superLikeStatus = async () => {
     // 錯誤要禁用按鈕
     isDisabled.value = true;
     console.error("取得 Super Like 狀態失敗", error);
+    notify.warn("無法取得 Super Like 狀態");
   }
 };
 
@@ -72,7 +73,6 @@ const dislikeHandler = () => {
 // Super-Like按鈕動畫
 const superLikeHandler = async () => {
   if (isDisabled.value) {
-    // alert(msg.value);
     notify.warn(msg.value);
     return;
   }
@@ -116,9 +116,14 @@ const superLikeHandler = async () => {
     <!-- Super Like -->
     <div :class="{ 'puff-out-center': superLikeActive }">
       <button
-        :disabled="isDisabled"
+        :aria-disabled="isDisabled"
         type="button"
-        class="floating inner-glow text-darkblue transition-all duration-300 ease-out circle-btn bg-gradient-to-br from-[#ffb703]/70 via-white/50 to-[#fb8500]/70 backdrop-blur-sm shadow-lg hover:scale-110 hover:rotate-6 hover:shadow-lg hover:brightness-110 focus:outline-none focus:ring-2 focus:ring-accent/50 disabled:opacity-40"
+        :class="[
+          'floating inner-glow text-darkblue transition-all duration-300 ease-out circle-btn bg-gradient-to-br from-[#ffb703]/70 via-white/50 to-[#fb8500]/70 backdrop-blur-sm shadow-lg focus:outline-none focus:ring-2 focus:ring-accent/50',
+          isDisabled
+            ? 'cursor-not-allowed brightness-75 saturate-50 opacity-50 blur-[1px]'
+            : 'hover:scale-110 hover:rotate-6 hover:shadow-lg hover:brightness-110',
+        ]"
         @click="superLikeHandler"
         aria-label="Super Like"
       >
