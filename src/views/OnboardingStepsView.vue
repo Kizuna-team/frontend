@@ -135,7 +135,7 @@ const onSlideChange = (swiper) => {
         <div class="pt-4">
           <button
             type="button"
-            @click="$router.push('/register')"
+            @click="$router.push('/match/setup')"
             class="inline-block px-6 py-3 text-white transition rounded-full shadow-md bg-primary hover:bg-secondary"
           >
             完成這五步，遇見更契合的他／她
