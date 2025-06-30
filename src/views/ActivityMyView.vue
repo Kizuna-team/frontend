@@ -153,14 +153,14 @@ watch(hoverActivityId, (newId) => {
             </p>
             <p class="flex items-center gap-2">
               <MapPinIcon class="w-5 h-5 text-secondary shrink-0 -mt-0.5" />
-              <span class="font-semibold text-secondary">地點：</span>
+              <span class="font-semibold text-secondary whitespace-nowrap">地點：</span>
               {{ activity.location }}
             </p>
             <p class="text-sm">
               <span class="font-semibold text-secondary">活動資訊：</span>
               {{ activity.description }}
             </p>
-            <p class="text-sm cursor-pointer select-none hover:font-bold transition-all duration-200 flex items-center gap-2 relative"
+            <p class="relative flex items-center gap-2 text-sm transition-all duration-200 cursor-pointer select-none hover:font-bold"
               @click="expandedParticipants[activity.id] = !expandedParticipants[activity.id]"
               @mouseenter="handleHover(activity.id)" @mouseleave="handleLeave">
               <span class="font-semibold text-secondary">報名人數/上限人數：</span>
@@ -171,9 +171,9 @@ watch(hoverActivityId, (newId) => {
             </div>
             </p>
             <ul v-if="expandedParticipants[activity.id] && activity.participants?.length"
-              class="mt-2 flex flex-wrap gap-2 text-sm text-gray-700">
+              class="flex flex-wrap gap-2 mt-2 text-sm text-gray-700">
               <li v-for="(name, index) in activity.participants" :key="index"
-                class="px-3 py-1 bg-gray-100 rounded-full hover:bg-blue-100 transition-all duration-200">
+                class="px-3 py-1 transition-all duration-200 bg-gray-100 rounded-full hover:bg-blue-100">
                 {{ name }}
               </li>
             </ul>
@@ -182,13 +182,13 @@ watch(hoverActivityId, (newId) => {
             </p>
           </div>
 
-          <div class="flex flex-col w-full gap-3 mt-4 sm:w-auto sm:items-end sm:mt-0">
+          <div class="flex flex-col w-full gap-3 mt-4 md:w-[150px] shrink-0">
             <button @click="goEdit(activity.id)"
-              class="w-full sm:w-[150px] h-[40px] flex items-center justify-center gap-1 font-bold transition-all duration-300 rounded-full border-2 border-secondary bg-secondary text-white hover:bg-white hover:text-secondary hover:scale-105">
+              class="w-full h-[40px] flex items-center justify-center gap-1 font-bold transition-all duration-300 rounded-full border-2 border-secondary bg-secondary text-white hover:bg-white hover:text-secondary hover:scale-105">
               <PencilSquareIcon class="w-5 h-5" /> 編輯
             </button>
             <button @click="handleDelete(activity.id)"
-              class="w-full sm:w-[150px] h-[40px] flex items-center justify-center gap-1 font-bold transition-all duration-300 rounded-full border-2 border-secondary bg-secondary text-white hover:bg-white hover:text-secondary hover:scale-105">
+              class="w-full h-[40px] flex items-center justify-center gap-1 font-bold transition-all duration-300 rounded-full border-2 border-secondary bg-secondary text-white hover:bg-white hover:text-secondary hover:scale-105">
               <TrashIcon class="w-5 h-5" /> 刪除
             </button>
           </div>
@@ -211,7 +211,7 @@ watch(hoverActivityId, (newId) => {
             </h3>
             <p class="flex items-center gap-2">
               <CalendarDaysIcon class="w-5 h-5 text-secondary shrink-0 -mt-0.5" />
-              <span class="font-semibold text-secondary">日期：</span>
+              <span class="font-semibold text-secondary whitespace-nowrap">日期：</span>
               {{
                 new Date(activity.date).toLocaleString("zh-TW", {
                   year: "numeric",
@@ -226,7 +226,7 @@ watch(hoverActivityId, (newId) => {
             </p>
             <p class="flex items-center gap-2">
               <MapPinIcon class="w-5 h-5 text-secondary shrink-0 -mt-0.5" />
-              <span class="font-semibold text-secondary">地點：</span>
+              <span class="font-semibold text-secondary whitespace-nowrap">地點：</span>
               {{ activity.location }}
             </p>
             <p class="text-sm">
@@ -235,9 +235,9 @@ watch(hoverActivityId, (newId) => {
             </p>
           </div>
 
-          <div class="flex flex-col w-full gap-3 mt-4 sm:w-auto sm:items-end sm:mt-0">
+          <div class="flex flex-col w-full gap-3 mt-4 md:w-[150px] shrink-0">
             <button @click="handleDeleteJoin(activity.id)"
-              class="w-full sm:w-[150px] h-[40px] flex items-center justify-center gap-1 font-bold transition-all duration-300 rounded-full border-2 border-secondary bg-secondary text-white hover:bg-white hover:text-secondary hover:scale-105">
+              class="w-full h-[40px] flex items-center justify-center gap-1 font-bold transition-all duration-300 rounded-full border-2 border-secondary bg-secondary text-white hover:bg-white hover:text-secondary hover:scale-105">
               <TrashIcon class="w-5 h-5" /> 取消參加
             </button>
           </div>
