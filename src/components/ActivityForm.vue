@@ -150,9 +150,6 @@ async function handleSubmit() {
     formData.append("maxParticipants", form.value.maxParticipants);
     if (imageFile.value) {
       formData.append("image", imageFile.value);} // 圖片也放進去
-    // } else if (isEditMode.value && selectedActivity.value?.image_url) {
-    //   formData.append("imageUrl", selectedActivity.value.image_url); // 傳原圖 URL
-    // }
     if (isEditMode.value) {
       const id = parseInt(route.params.id);
       await updateActivity(id, formData); // 要用 FormData
