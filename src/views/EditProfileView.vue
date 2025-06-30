@@ -78,8 +78,8 @@ const updateHandler = async () => {
   try {
     let updatedUser;
 
-    // 沒有id就是第一次建立用post
-    if (!userProfileStore.userProfile.userId) {
+    // 沒有 name 就是第一次建立用post
+    if (!userProfileStore.userProfile.name) {
       updatedUser = await userProfileStore.createProfile(showFormData.value);
     } else {
       updatedUser = await userProfileStore.updateProfile(showFormData.value);
