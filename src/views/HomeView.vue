@@ -13,20 +13,25 @@ const isLoading = ref(true);
 onMounted(() => {
   setTimeout(() => {
     isLoading.value = false;
-  }, 4500);
+  }, 3000);
 });
 </script>
 
 <template>
   <div class="bg-gray-100">
-    <LoadingScreen v-if="isLoading" />
-    <template v-else>
+    <!-- Loading Screen 覆蓋層 -->
+    <LoadingScreen v-show="isLoading" class="fixed inset-0 z-50" />
+    <!-- 主要內容 - 立即開始渲染和載入資源 -->
+    <div
+      :class="{ 'opacity-0': isLoading, 'opacity-100': !isLoading }"
+      class="transition-opacity duration-500"
+    >
       <HeroSection />
       <WhyChooseUs />
       <EventCarousel />
       <HowToUseSection />
       <MemberShowcase :members="myMemberList" />
       <Footer />
-    </template>
+    </div>
   </div>
 </template>

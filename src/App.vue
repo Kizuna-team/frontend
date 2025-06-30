@@ -46,7 +46,7 @@ const handleLogout = () => {
   opacity: 0;
   transform: translateY(-20px);
   animation: navbar-appear 0.8s ease forwards;
-  animation-delay: 5.2s;
+  animation-delay: 3s;
 }
 
 @keyframes navbar-appear {
