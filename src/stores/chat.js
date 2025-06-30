@@ -17,9 +17,6 @@ export const userChatStore = defineStore("chat", () => {
 
   // 新增訊息 接收到訊息時 順便將時間格式化
   const addMessage = (message) => {
-    console.log("chatStore.addMessage 被呼叫");
-    console.log("接收到的訊息:", message);
-
     // 確保訊息有必要的屬性
     const formattedMessage = {
       id: message.id || Date.now(),
@@ -49,20 +46,17 @@ export const userChatStore = defineStore("chat", () => {
 
   // 設置目前房間
   const setCurrentRoom = (roomId) => {
-    console.log("設置當前房間:", roomId);
     currentRoomId.value = roomId;
   };
 
   // 更新線上用戶列表
   const updateOnlineUsers = (users) => {
     onlineUsers.value = users;
-    console.log("更新線上用戶:", users);
   };
 
   // 設置連接狀態
   const setConnectionStatus = (status) => {
     isConnected.value = status;
-    console.log("連接狀態:", status);
   };
 
   // 訊息數量

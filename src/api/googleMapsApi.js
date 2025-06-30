@@ -19,7 +19,6 @@ const loadGoogleMapsAPI = () => {
   // 檢查是否已經有 script 標籤
   const existingScript = document.querySelector('script[src*="maps.googleapis.com"]')
   if (existingScript) {
-    console.log('Google Maps script 已存在，等待載入完成')
     return new Promise((resolve, reject) => {
       const checkLoaded = () => {
         if (window.google && window.google.maps && window.google.maps.Map) {
@@ -48,7 +47,6 @@ const loadGoogleMapsAPI = () => {
       const checkReady = () => {
         if (window.google && window.google.maps && window.google.maps.Map) {
           isLoading = false
-          console.log('Google Maps API 載入並初始化完成')
           resolve()
         } else {
           setTimeout(checkReady, 50)

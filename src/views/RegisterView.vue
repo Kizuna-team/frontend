@@ -12,8 +12,6 @@ const username = ref("");
 const password = ref("");
 
 const handleRegister = async () => {
-  // debug
-  // console.log('開始註冊', username.value);
   if (!username.value || !password.value) {
     toast.error("請輸入帳號與密碼");
     return;
@@ -29,8 +27,6 @@ const handleRegister = async () => {
   }
 
   const res = await store.register(username.value, password.value);
-  // debug
-  // console.log(res);
   if (res.success) {
     toast(res.message || "註冊成功，請登入");
     router.push("/login");

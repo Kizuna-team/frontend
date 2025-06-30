@@ -10,7 +10,7 @@ const userStore = useUserStore(); //抓username
 const previewUrl = ref(""); // 圖片預覽網址
 const fileInputRef = ref(null); // 綁定 input 元件
 const store = useActivityStore();
-const { loading, error, selectedActivity } = storeToRefs(store);
+const { selectedActivity } = storeToRefs(store);
 const { fetchActivityById, updateActivity, createActivity, deleteActivity } =
   store;
 
@@ -71,7 +71,6 @@ watch(
   async () => {
     if (isEditMode.value) {
       const id = route.params.id;
-      // console.log(selectedActivity)
       try {
         await fetchActivityById(id);
         form.value = {
@@ -91,7 +90,7 @@ watch(
           previewUrl.value = "";
         }
       } catch (err) {
-        console.log(err);
+        console.error(err);
       }
     } else {
       form.value = {
@@ -134,11 +133,6 @@ async function handleSubmit() {
     return;
   }
 
-  // console.log("maxParticipants：", form.value.maxParticipants);
-
-  // for (let pair of formData.entries()) {
-  // console.log(pair[0] + ": " + pair[1]);
-  // }
   isLoading.value = true;
   try {
     const formData = new FormData();
@@ -163,7 +157,6 @@ async function handleSubmit() {
 
     resetForm();
   } catch (err) {
-    console.log("提交活動時發生錯誤", err);
     toast.error(isEditMode.value ? "更新失敗" : "建立失敗");
   } finally {
     isLoading.value = false;
@@ -178,7 +171,6 @@ async function handleDelete() {
     toast("活動已刪除！");
     router.push("/activities/my");
   } catch (err) {
-    console.log("刪除活動失敗", err);
     toast.error("刪除失敗，請稍後再試");
   } finally {
     isLoading.value = false;

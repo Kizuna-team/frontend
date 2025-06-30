@@ -27,7 +27,6 @@ watch(
   async () => {
     if (isEditMode.value) {
       const id = route.params.id;
-      // console.log(selectedActivity)
       try {
         await fetchActivityById(id);
         form.value = {
@@ -38,7 +37,7 @@ watch(
           createdBy: selectedActivity.value?.createdBy || "",
         };
       } catch (err) {
-        console.log(err);
+        console.error(err);
       }
     } else {
       form.value = {
@@ -60,7 +59,6 @@ async function handleSubmit() {
       await updateActivity(id, form.value);
       toast("活動已更新！");
     } catch (err) {
-      console.log("更新活動時發生錯誤", err);
       toast.error("更新失敗，請稍後再試");
     }
   } else {
@@ -68,7 +66,6 @@ async function handleSubmit() {
       await createActivity(form.value);
       toast("活動已建立！");
     } catch (err) {
-      console.log("建立活動時發生錯誤", err);
       toast.error("建立失敗，請稍後再試");
     }
   }
@@ -80,7 +77,6 @@ async function handleDelete() {
     await deleteActivity(id, form.value);
     toast("活動已刪除！");
   } catch (err) {
-    console.log("刪除活動失敗", err);
     toast.error("刪除失敗，請稍後再試");
   }
 }

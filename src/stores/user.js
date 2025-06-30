@@ -110,8 +110,6 @@ export const useUserStore = defineStore("user", () => {
 
   const loginWithGoogle = async (idToken) => {
     try {
-      console.log("google嘗試登入中 idToken", idToken);
-
       const res = await axios.post("/auth/google", { credential: idToken });
 
       const {
@@ -119,7 +117,6 @@ export const useUserStore = defineStore("user", () => {
         refreshToken: newFreshToken,
         user,
       } = res.data;
-      console.log("從後端傳回來的response:", res.data);
 
       accessToken.value = newAccessToken;
       refreshToken.value = newFreshToken;

@@ -31,8 +31,6 @@ const handleLeave = () => {
   hoverActivityId.value = null;
 };
 
-console.log("joinActivity:", joinActivities.value);
-// console.log("myActivities:", activities);
 onMounted(() => {
   store.fetchMyActivities();
   store.fetchMyJoinActivities();

@@ -25,9 +25,6 @@ onMounted(async () => {
       },
     });
     const user = res.data.user;
-
-    console.log(user)
-
     // 存入 store 裡（如果你要用的話）
     userStore.setSubscription(user.subscription_plan);
 

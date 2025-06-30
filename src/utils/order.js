@@ -13,11 +13,6 @@ const sendOrder = async (receiverId, messageText) => {
       quantity: item.quantity,
     }));
 
-    console.log(items);
-    console.log(receiverId);
-
-    console.log("送出的祝福語：", messageText);
-
     const res = await axios.post("/order/gift-orders", {
       // 寫死測試
       sender_id: userStore.userId,
@@ -27,15 +22,11 @@ const sendOrder = async (receiverId, messageText) => {
     });
 
     if (res.data.success) {
-      console.log(res.data);
       // 成功後跳轉 LINE Pay 頁面
       window.location.href = res.data.paymentUrl;
     } else {
       message.value = "建立訂單失敗：" + res.data.message;
     }
-    // console.log("跳轉到linepay掃描頁面，網址：", res.data.paymentUrl);
-    // // 這行超重要：跳轉到 LINE Pay 頁面
-    // window.location.href = res.data.paymentUrl;
   } catch (err) {
     console.error("送禮失敗 請稍後再試 失敗原因:", err);
   }

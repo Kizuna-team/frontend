@@ -109,7 +109,7 @@ onMounted(async () => {
     products.value = res.data;
     displayedProducts.value = res.data;
   } catch (err) {
-    console.log("讀取商品失敗", err);
+    console.error("讀取商品失敗", err);
   } finally {
     isLoading.value = false;
   }

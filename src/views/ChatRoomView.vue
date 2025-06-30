@@ -205,7 +205,6 @@ const fetchChatRooms = async () => {
   try {
     const res = await axios.get("/friendLists");
     chatRooms.value = res.data.friends;
-    console.log(chatRooms.value);
   } catch (error) {
     console.error("無法取得聊天室列表", error);
   }
@@ -412,8 +411,6 @@ const sendMessage = async () => {
     timestamp: now.toISOString(), // 原始 ISO
     time: formatTime(now), // 格式化成 "下午 xx:xx"
   };
-
-  console.log(localMessage);
 
   // !!透過 socket 廣播出去（後端會寫入資料庫)，再廣播給所有人!!
   socket.emit("chatMessage", {

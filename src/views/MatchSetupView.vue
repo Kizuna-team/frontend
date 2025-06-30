@@ -131,9 +131,7 @@ const nextStep = () => {
   }
 
   if (step.value === 5) {
-    console.log("目前 step =", step.value);
     const [ageMin, ageMax] = [...form.value.ageRange].sort((a, b) => a - b);
-    console.log("年齡區間 = ", form.value.ageRange);
 
     if (ageMax - ageMin < 5) {
       notify.warn("請設定至少 5 歲的年齡區間");
@@ -147,7 +145,7 @@ const nextStep = () => {
 
 onMounted(async () => {
   await userProfileStore.getProfile();
-  console.log("👤 使用者資料 =", userProfile.value);
+  console.log("使用者資料 =", userProfile.value);
 
   const userId = userProfile.value?.userId;
   if (!userId) {

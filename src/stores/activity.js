@@ -23,7 +23,6 @@ export const useActivityStore = defineStore("activity", () => {
       activities.value = allActivities.filter(activity => 
       new Date(activity.date) >= today
     );
-    console.log("Filtered activities:", activities.value);
     } catch (err) {
       error.value = err;
       console.error("Fetch error:", err);
@@ -39,9 +38,7 @@ export const useActivityStore = defineStore("activity", () => {
       const response = await axios.get("/activities/my", {
         headers: { Authorization: `Bearer ${token}` }
       });
-      console.log(response.data);
       activities.value = response.data;
-      console.log("我的活動列表:", response.data);
     } catch (err) {
       error.value = err;
       console.error("載入我的活動失敗:", err);
@@ -58,10 +55,8 @@ export const useActivityStore = defineStore("activity", () => {
         headers: { Authorization: `Bearer ${token}` }
       });
       selectedActivity.value = response.data;
-      console.log("取得的活動資料:", response.data);
     } catch (err) {
       error.value = err;
-      console.log("取得活動資料失敗", err);
     } finally {
       loading.value = false;
     }
@@ -74,10 +69,8 @@ export const useActivityStore = defineStore("activity", () => {
       const response = await axios.put(`/activities/${id}`, updatedData, {
         headers: { Authorization: `Bearer ${token}` }
       });
-      console.log("更新成功:", response.data);
     } catch (err) {
       error.value = err;
-      console.log("更新失敗:", err);
     } finally {
       loading.value = false;
     }
@@ -90,12 +83,9 @@ export const useActivityStore = defineStore("activity", () => {
       const response = await axios.post("/activities", newActivity, {
         headers: { Authorization: `Bearer ${token}` }
       });
-      console.log("新增成功:", response.data);
-      // 可選：新增後自動刷新活動列表
       await fetchActivities();
     } catch (err) {
       error.value = err;
-      console.log("新增失敗:", err);
     } finally {
       loading.value = false;
     }
@@ -108,10 +98,8 @@ export const useActivityStore = defineStore("activity", () => {
       const response = await axios.delete(`/activities/${id}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
-      console.log("刪除成功:", response.data);
     } catch (err) {
       error.value = err;
-      console.log("刪除失敗:", err);
     } finally {
       loading.value = false;
     }
@@ -120,7 +108,6 @@ export const useActivityStore = defineStore("activity", () => {
   const fetchMyJoinActivities = async() => {
       try {
         const res = await axios.get('/activities/me');
-        console.log(res.data)
         joinActivities.value = res.data;
       } catch (err) {
         console.error("取得參加活動失敗", err);
@@ -130,7 +117,6 @@ export const useActivityStore = defineStore("activity", () => {
   const deleteJoinActivity = async (id) => {
   try {
     const res = await axios.delete(`/activities/join/${id}`)
-    console.log('刪除成功', res.data)
   } catch (error) {
     console.error('刪除失敗', error)
   }

@@ -16,8 +16,6 @@ const fetchProducts = async () => {
 };
 
 const updateInventory = async (productId, newInventory) => {
-  console.log("更新商品 ID:", productId);
-  console.log("新庫存數量:", newInventory);
   try {
     await axios.put(`admin/products/${productId}/inventory`, {
       inventory: Number(newInventory),

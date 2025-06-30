@@ -163,16 +163,12 @@ const handleSubmit = async () => {
         product_id: item.id,
         quantity: item.quantity,
       }));
-
-      console.log("發送到 PayPal API:", items);
-
+      
       const res = await axios.post("/paypal/create-order", {
         sender_id: userStore.userId,
         receiver_id: formData.receiverId,
         items: items,
       });
-
-      console.log("PayPal API 回應:", res.data);
 
       if (res.data.success && res.data.approveUrl) {
         window.location.href = res.data.approveUrl;
@@ -196,7 +192,6 @@ const handleSubmit = async () => {
       totalPrice: totalPrice.value,
       totalQuantity: totalQuantity.value,
     };
-    console.log("訂單資料:", orderData);
     isCompleted.value = true;
   }
 };

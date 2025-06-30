@@ -21,8 +21,6 @@ onMounted(() => {
     localStorage.setItem("refreshToken", refreshToken);
     localStorage.setItem("userId", userId);
     localStorage.setItem("username", username);
-
-    console.log("Google login: Token 已存入 Pinia + localStorage");
   }
 });
 </script>
