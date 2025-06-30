@@ -113,6 +113,7 @@ const handlePlaceSelect = () => {
 
     // 設定地址
     selectedMapAddress.value = place.formatted_address;
+    searchInput.value = place.formatted_address;
 
     toast.success("找到位置");
   }
