@@ -1,6 +1,6 @@
 import { GOOGLE_MAPS_CONFIG } from "@/config/googleMaps";
 
-let isLoading = false;
+// 全域變數追蹤載入狀態
 let loadPromise = null;
 
 const loadGoogleMapsAPI = () => {
@@ -8,42 +8,23 @@ const loadGoogleMapsAPI = () => {
     return Promise.resolve();
   }
 
-  if (isLoading && loadPromise) {
-    return loadPromise;
-  }
-
-  const existingScript = document.querySelector(
-    'script[src*="maps.googleapis.com"]'
-  );
-  if (existingScript) {
-    return new Promise((resolve, reject) => {
-      const checkLoaded = () => {
-        if (window.google && window.google.maps && window.google.maps.Map) {
-          resolve();
-        } else {
-          setTimeout(checkLoaded, 100);
-        }
-      };
-      checkLoaded();
-    });
-  }
-
-  isLoading = true;
+  // 如果正在載入，返回相同的 Promise
+  if (loadPromise) return loadPromise;
 
   loadPromise = new Promise((resolve, reject) => {
+    // 建立 script 標籤
     const script = document.createElement("script");
     script.src = `https://maps.googleapis.com/maps/api/js?key=${
       GOOGLE_MAPS_CONFIG.apiKey
     }&libraries=${GOOGLE_MAPS_CONFIG.libraries.join(",")}&language=${
       GOOGLE_MAPS_CONFIG.language
-    }&region=${GOOGLE_MAPS_CONFIG.region}&loading=async`;
+    }&region=${GOOGLE_MAPS_CONFIG.region}`;
     script.async = true;
     script.defer = true;
 
     script.onload = () => {
       const checkReady = () => {
         if (window.google && window.google.maps && window.google.maps.Map) {
-          isLoading = false;
           resolve();
         } else {
           setTimeout(checkReady, 50);
@@ -53,11 +34,10 @@ const loadGoogleMapsAPI = () => {
     };
 
     script.onerror = () => {
-      isLoading = false;
       loadPromise = null;
       reject(new Error("Google Maps API 載入失敗"));
     };
-
+    // 將 script 加入到頁面
     document.head.appendChild(script);
   });
 
@@ -76,7 +56,6 @@ const getAddressFromCoordinates = (lat, lng) => {
     geocoder.geocode(
       {
         location: { lat, lng },
-        language: "zh-TW",
       },
       (results, status) => {
         if (status === "OK" && results && results.length > 0) {

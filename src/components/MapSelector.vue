@@ -5,7 +5,7 @@ import {
   loadGoogleMapsAPI,
   getAddressFromCoordinates,
 } from "@/api/googleMapsApi";
-import { DEFAULT_MAP_OPTIONS } from "@/config/googleMaps";
+import { DEFAULT_MAP_OPTIONS, GOOGLE_MAPS_CONFIG } from "@/config/googleMaps";
 
 const props = defineProps({
   show: {
@@ -25,6 +25,9 @@ const selectedMapAddress = ref("");
 const mapInstance = ref(null);
 const currentMarker = ref(null);
 const isMapLoaded = ref(false);
+const searchInput = ref("");
+const searchInputRef = ref(null);
+const autocompleteInstance = ref(null);
 
 onMounted(async () => {
   try {
@@ -68,9 +71,50 @@ const initMap = async () => {
     });
 
     mapInstance.value.addListener("click", handleMapClick);
+    initSearchAutocomplete();
   } catch (error) {
     console.error("地圖初始化失敗:", error);
     toast.error("地圖初始化失敗");
+  }
+};
+
+const initSearchAutocomplete = () => {
+  if (!searchInputRef.value || !window.google?.maps?.places) return;
+
+  try {
+    autocompleteInstance.value = new google.maps.places.Autocomplete(
+      searchInputRef.value,
+      {
+        componentRestrictions: { country: GOOGLE_MAPS_CONFIG.country },
+        fields: ["formatted_address", "geometry"],
+        types: ["establishment", "geocode"],
+      }
+    );
+
+    autocompleteInstance.value.addListener("place_changed", handlePlaceSelect);
+  } catch (error) {
+    console.error("搜尋框 Autocomplete 初始化失敗:", error);
+  }
+};
+
+const handlePlaceSelect = () => {
+  const place = autocompleteInstance.value.getPlace();
+
+  if (place.geometry && place.formatted_address) {
+    const lat = place.geometry.location.lat();
+    const lng = place.geometry.location.lng();
+
+    // 移動地圖到選擇位置
+    mapInstance.value.setCenter({ lat, lng });
+    mapInstance.value.setZoom(16);
+
+    // 放置標記
+    placeMarker(lat, lng);
+
+    // 設定地址
+    selectedMapAddress.value = place.formatted_address;
+
+    toast.success("找到位置");
   }
 };
 
@@ -79,8 +123,10 @@ const handleMapClick = async (event) => {
   const lng = event.latLng.lng();
 
   try {
+    // 清除舊圖標並放置新圖標
     placeMarker(lat, lng);
 
+    // 取得地址
     const address = await getAddressFromCoordinates(lat, lng);
     selectedMapAddress.value = address;
   } catch (error) {
@@ -90,6 +136,7 @@ const handleMapClick = async (event) => {
 };
 
 const placeMarker = (lat, lng) => {
+  // 先清除舊圖標
   clearMarker();
 
   try {
@@ -100,8 +147,10 @@ const placeMarker = (lat, lng) => {
       animation: window.google.maps.Animation.DROP,
     });
 
+    // 地圖重新渲染方法
     forceMapRefresh();
 
+    // 將地圖中心移動到圖標位置
     mapInstance.value.setCenter({ lat, lng });
   } catch (error) {
     console.error("圖標建立失敗:", error);
@@ -129,11 +178,13 @@ const forceMapRefresh = () => {
       const lat = center.lat();
       const lng = center.lng();
 
+      // 移動極小距離觸發重新渲染
       mapInstance.value.setCenter({
         lat: lat + 0.000001,
         lng: lng + 0.000001,
       });
 
+      // 立即移回原位
       setTimeout(() => {
         mapInstance.value.setCenter({ lat, lng });
       }, 10);
@@ -147,6 +198,10 @@ const clearSelection = () => {
   clearMarker();
   forceMapRefresh();
   selectedMapAddress.value = "";
+  searchInput.value = "";
+  if (searchInputRef.value) {
+    searchInputRef.value.value = "";
+  }
   toast.info("已清除選擇，點擊地圖重新選擇位置");
 };
 
@@ -160,9 +215,14 @@ const confirmSelection = () => {
 const closeModal = () => {
   clearMarker();
   selectedMapAddress.value = "";
+  searchInput.value = "";
+  if (searchInputRef.value) {
+    searchInputRef.value.value = "";
+  }
   emit("close");
 };
 
+// 監聽彈窗顯示
 watch(
   () => props.show,
   async (show) => {
@@ -193,6 +253,16 @@ watch(
       </div>
 
       <div class="p-6">
+        <div class="relative mb-4">
+          <input
+            ref="searchInputRef"
+            v-model="searchInput"
+            @keydown.enter.prevent
+            type="text"
+            placeholder="搜尋地址或地點名稱..."
+            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#219ebc] focus:border-transparent outline-none"
+          />
+        </div>
         <div id="map" class="w-full border rounded-lg h-80"></div>
 
         <div v-if="selectedMapAddress" class="p-3 mt-3 rounded-lg bg-gray-50">
@@ -213,7 +283,7 @@ watch(
         </div>
 
         <p v-else class="mt-3 text-sm text-gray-500">
-          點擊地圖上的任意位置來選擇地點
+          搜尋地址（會自動顯示建議）或點擊地圖上的任意位置來選擇地點
         </p>
       </div>
 
