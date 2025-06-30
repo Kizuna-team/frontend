@@ -83,6 +83,23 @@ const statusColor = (status) => {
       return "bg-gray-200 text-gray-700 text-sm";
   }
 };
+
+// ✅ QR Code Modal 控制區塊
+const qrModalVisible = ref(false);
+const qrModalSrc = ref("");
+
+const showQrModal = (src) => {
+  qrModalSrc.value = src;
+  qrModalVisible.value = true;
+};
+
+const closeQrModal = () => {
+  qrModalVisible.value = false;
+};
+
+const handleEsc = (e) => {
+  if (e.key === "Escape") closeQrModal();
+};
 </script>
 
 <template>
@@ -206,9 +223,9 @@ const statusColor = (status) => {
       </div>
 
       <div
-        class="flex items-center justify-between gap-4 p-4 border border-gray-200 rounded-xl"
+        class="flex flex-col gap-4 p-4 border border-gray-200 rounded-xl sm:flex-row sm:items-start sm:gap-6 sm:justify-between"
       >
-        <div class="flex items-center gap-4">
+        <div class="flex items-center flex-1 gap-4">
           <img
             :src="item.imageUrl || '/default.jpg'"
             class="object-cover w-20 h-20 rounded-xl"
@@ -224,17 +241,34 @@ const statusColor = (status) => {
 
         <div
           v-if="item.message"
-          class="font-semibold text-gray-700 whitespace-nowrap"
+          class="text-sm font-semibold text-gray-700 break-words sm:flex-1"
         >
-          💌 {{ item.message }}
+          {{ item.message }}
         </div>
 
-        <img
-          src="https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=yeet"
-          alt="QR Code"
-          class="w-24 h-24 shrink-0"
-        />
+        <div class="flex justify-center sm:justify-end">
+          <img
+            :src="`https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=${item.orderId}`"
+            alt="QR Code"
+            class="w-24 h-24 cursor-pointer shrink-0"
+            @click="
+              showQrModal(
+                `https://api.qrserver.com/v1/create-qr-code/?size=240x240&data=${item.orderId}`
+              )
+            "
+          />
+        </div>
       </div>
+    </div>
+  </div>
+  <!-- QR Code Modal -->
+  <div
+    v-if="qrModalVisible"
+    class="fixed inset-0 z-50 flex items-center justify-center bg-black/50"
+    @click.self="closeQrModal"
+  >
+    <div class="p-6 bg-white shadow-xl rounded-xl">
+      <img :src="qrModalSrc" alt="放大 QR Code" class="w-60 h-60" />
     </div>
   </div>
 </template>
