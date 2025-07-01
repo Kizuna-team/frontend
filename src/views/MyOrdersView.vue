@@ -8,6 +8,43 @@ const orders = ref([]);
 const displayOrders = ref([]);
 const activeTab = ref("sent");
 const loading = ref(false);
+const retryPayment = async (order) => {
+  try {
+
+    const senderRes = await axios.get(`/get-user-id?username=${order.receiverName}`);
+    const receiverId = senderRes.data?.userId;
+
+    console.log("送出 payload:", {
+      sender_id: userStore.userId,
+      receiver_id: receiverId,
+      items: order.items.map(item => ({
+        product_id: item.productId,
+        quantity: item.quantity
+      })),
+      message: order.message || '',
+    });
+
+    const res = await axios.post("/order/gift-orders", {
+      sender_id: userStore.userId,
+      receiver_id: receiverId,
+      items: order.items.map(item => ({
+        product_id: item.productId,
+        quantity: item.quantity
+      })),
+      message: order.message,
+    });
+
+    if (res.data.success) {
+       await axios.delete(`/order/delete/${order.orderId}`);
+      // 成功後跳轉 LINE Pay 頁面
+      window.location.href = res.data.paymentUrl;
+    } else {
+      message.value = "建立訂單失敗：" + res.data.message;
+    }
+  } catch (err) {
+    console.error('重新付款失敗', err);
+  }
+};
 
 watchEffect(() => {
   if (activeTab.value === "received") {
@@ -104,57 +141,39 @@ const handleEsc = (e) => {
 
 <template>
   <div class="max-w-4xl px-4 py-8 mx-auto space-y-8">
-    <div
-      class="flex justify-center gap-8 text-lg font-semibold border-b border-gray-200"
-    >
-      <button
-        @click="activeTab = 'sent'"
-        :class="[
-          'pb-2 transition relative',
-          activeTab === 'sent'
-            ? 'text-secondary border-b-4 border-secondary font-bold scale-105'
-            : 'text-gray-400 hover:text-darkblue',
-        ]"
-      >
+    <div class="flex justify-center gap-8 text-lg font-semibold border-b border-gray-200">
+      <button @click="activeTab = 'sent'" :class="[
+        'pb-2 transition relative',
+        activeTab === 'sent'
+          ? 'text-secondary border-b-4 border-secondary font-bold scale-105'
+          : 'text-gray-400 hover:text-darkblue',
+      ]">
         我送出的
       </button>
-      <button
-        @click="activeTab = 'received'"
-        :class="[
-          'pb-2 transition relative',
-          activeTab === 'received'
-            ? 'text-secondary border-b-4 border-secondary font-bold scale-105'
-            : 'text-gray-400 hover:text-darkblue',
-        ]"
-      >
+      <button @click="activeTab = 'received'" :class="[
+        'pb-2 transition relative',
+        activeTab === 'received'
+          ? 'text-secondary border-b-4 border-secondary font-bold scale-105'
+          : 'text-gray-400 hover:text-darkblue',
+      ]">
         我收到的
       </button>
     </div>
 
     <div v-if="loading" class="py-8 text-center text-gray-500">載入中...</div>
 
-    <div
-      v-else-if="orders.length === 0"
-      class="py-16 text-center text-gray-400"
-    >
+    <div v-else-if="orders.length === 0" class="py-16 text-center text-gray-400">
       尚未有任何{{ activeTab === "sent" ? "購買" : "收禮" }}紀錄
     </div>
-
     <div v-if="activeTab === 'sent'" class="space-y-6">
-      <div
-        v-for="order in orders"
-        :key="order.orderId"
-        class="p-5 transition duration-200 bg-white shadow-md rounded-2xl hover:shadow-lg"
-      >
+      <div v-for="order in orders" :key="order.orderId"
+        class="p-5 transition duration-200 bg-white shadow-md rounded-2xl hover:shadow-lg space-y-2">
         <div class="flex items-center justify-between mb-2">
           <div class="text-sm text-gray-600">
             訂單編號：<span class="font-mono">{{ order.orderId }}</span>
           </div>
-          <div
-            v-if="activeTab === 'sent'"
-            class="px-2 py-1 text-xs font-semibold rounded"
-            :class="statusColor(order.status)"
-          >
+          <div v-if="activeTab === 'sent'" class="px-2 py-1 text-xs font-semibold rounded"
+            :class="statusColor(order.status)">
             {{ statusLabel(order.status) }}
           </div>
         </div>
@@ -170,21 +189,10 @@ const handleEsc = (e) => {
           </span>
         </div>
 
-        <div
-          v-if="activeTab === 'sent'"
-          class="relative p-3 border border-gray-200 rounded-xl"
-        >
+        <div v-if="activeTab === 'sent'" class="p-3 border border-gray-200 rounded-xl">
           <div class="flex flex-col gap-4">
-            <div
-              v-for="(item, index) in order.items"
-              :key="index"
-              class="flex items-center gap-4"
-            >
-              <img
-                :src="item.imageUrl || '/default.jpg'"
-                alt="product"
-                class="object-cover w-20 h-20 rounded-xl"
-              />
+            <div v-for="(item, index) in order.items" :key="index" class="flex items-center gap-4">
+              <img :src="item.imageUrl || '/default.jpg'" alt="product" class="object-cover w-20 h-20 rounded-xl" />
               <div>
                 <div class="text-base font-semibold text-gray-800">
                   {{ item.productName }}
@@ -195,23 +203,25 @@ const handleEsc = (e) => {
               </div>
             </div>
           </div>
+        </div>
 
-          <div
-            class="absolute text-base font-semibold text-gray-800 bottom-3 right-4"
-          >
-            贈送金額：NT$ {{ order.amount }}
-          </div>
+        <div class="text-base font-semibold text-gray-800 text-right">
+          贈送金額：NT$ {{ order.amount }}
+        </div>
+
+        <div v-if="activeTab === 'sent' && order.status === 'pending'" class="text-right">
+          <button class="mt-2 px-4 py-2 text-sm font-semibold text-white bg-orange rounded hover:bg-yellow"
+            @click="retryPayment(order)">
+            重新付款
+          </button>
         </div>
       </div>
     </div>
   </div>
 
   <div v-if="activeTab === 'received'" class="space-y-6">
-    <div
-      v-for="item in displayOrders"
-      :key="`${item.orderId}-${item.productName}`"
-      class="p-6 space-y-4 bg-white shadow-md rounded-2xl hover:shadow-lg"
-    >
+    <div v-for="item in displayOrders" :key="`${item.orderId}-${item.productName}`"
+      class="p-6 space-y-4 bg-white shadow-md rounded-2xl hover:shadow-lg">
       <div class="text-sm text-gray-600">
         訂單編號：<span class="font-mono">{{ item.orderId }}</span>
       </div>
@@ -223,14 +233,9 @@ const handleEsc = (e) => {
       </div>
 
       <div
-        class="flex flex-col gap-4 p-4 border border-gray-200 rounded-xl sm:flex-row sm:items-start sm:gap-6 sm:justify-between"
-      >
+        class="flex flex-col gap-4 p-4 border border-gray-200 rounded-xl sm:flex-row sm:items-start sm:gap-6 sm:justify-between">
         <div class="flex items-center flex-1 gap-4">
-          <img
-            :src="item.imageUrl || '/default.jpg'"
-            class="object-cover w-20 h-20 rounded-xl"
-            alt="商品圖片"
-          />
+          <img :src="item.imageUrl || '/default.jpg'" class="object-cover w-20 h-20 rounded-xl" alt="商品圖片" />
           <div>
             <div class="text-base font-semibold text-gray-800">
               {{ item.productName }}
@@ -239,34 +244,24 @@ const handleEsc = (e) => {
           </div>
         </div>
 
-        <div
-          v-if="item.message"
-          class="text-sm font-semibold text-gray-700 break-words sm:flex-1"
-        >
+        <div v-if="item.message" class="text-sm font-semibold text-gray-700 break-words sm:flex-1">
           {{ item.message }}
         </div>
 
         <div class="flex justify-center sm:justify-end">
-          <img
-            :src="`https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=${item.orderId}`"
-            alt="QR Code"
-            class="w-24 h-24 cursor-pointer shrink-0"
-            @click="
+          <img :src="`https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=${item.orderId}`" alt="QR Code"
+            class="w-24 h-24 cursor-pointer shrink-0" @click="
               showQrModal(
                 `https://api.qrserver.com/v1/create-qr-code/?size=240x240&data=${item.orderId}`
               )
-            "
-          />
+              " />
         </div>
       </div>
     </div>
   </div>
   <!-- QR Code Modal -->
-  <div
-    v-if="qrModalVisible"
-    class="fixed inset-0 z-50 flex items-center justify-center bg-black/50"
-    @click.self="closeQrModal"
-  >
+  <div v-if="qrModalVisible" class="fixed inset-0 z-50 flex items-center justify-center bg-black/50"
+    @click.self="closeQrModal">
     <div class="p-6 bg-white shadow-xl rounded-xl">
       <img :src="qrModalSrc" alt="放大 QR Code" class="w-60 h-60" />
     </div>
