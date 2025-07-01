@@ -77,8 +77,16 @@ export const useUserProfileStore = defineStore("userProfile", () => {
       setProfile(res.user);
       return res.user;
     } catch (err) {
-      error.value = "建立個人資料失敗";
       console.error("建立個人資料失敗", err);
+
+      //  統一錯誤格式：讓 error.value 一律是 array
+      const msg =
+        err?.response?.data?.errors ||
+        err?.response?.data?.message ||
+        "建立個人資料失敗"; //  預設錯誤
+
+      error.value = Array.isArray(msg) ? msg : [msg];
+      return null;
     } finally {
       loading.value = false;
     }
@@ -92,8 +100,14 @@ export const useUserProfileStore = defineStore("userProfile", () => {
       setProfile(data.user);
       return data.user;
     } catch (err) {
-      error.value = "更新資料失敗";
+      const errors = err?.response?.data?.errors;
+      const fallback = err?.response?.data?.message || "更新資料失敗";
+
+      // 儲存錯誤到 pinia 的 error
+      error.value = Array.isArray(errors) ? errors : [fallback];
+
       console.error("更新使用者資料失敗", err);
+      return null;
     } finally {
       loading.value = false;
     }

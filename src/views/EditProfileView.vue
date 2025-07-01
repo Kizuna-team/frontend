@@ -91,19 +91,11 @@ const updateHandler = async () => {
       notify.gradient("編輯成功，前往上傳照片...");
       tab.value = "PHOTO";
     } else {
-      notify.warn("建立失敗！欄位請勿為空");
+      const errs = userProfileStore.error || [];
+      errs.forEach((msg) => notify.warn(msg));
     }
   } catch (error) {
     console.error("updateHandler 發生錯誤：", error);
-    const errs = userProfileStore.error;
-
-    if (Array.isArray(errs)) {
-      errs.forEach((msg) => notify.warn(msg));
-    } else if (typeof errs === "string") {
-      notify.warn(errs);
-    } else {
-      notify.warn("發生錯誤：回傳非預期格式");
-    }
   }
 };
 
