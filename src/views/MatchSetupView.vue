@@ -131,6 +131,10 @@ const nextStep = () => {
 
   if (step.value === 5) {
     const [ageMin, ageMax] = [...form.value.ageRange].sort((a, b) => a - b);
+    if (ageMin < 18 || ageMax > 70) {
+      notify.warn("年齡需介於 18～70 歲之間");
+      return;
+    }
 
     if (ageMax - ageMin < 5) {
       notify.warn("請設定至少 5 歲的年齡區間");
@@ -157,6 +161,11 @@ onMounted(async () => {
 
 const submitHandler = async () => {
   const [ageMin, ageMax] = [...form.value.ageRange].sort((a, b) => a - b);
+  if (ageMin < 18 || ageMax > 70) {
+    notify.warn("年齡需介於 18～70 歲之間");
+    return;
+  }
+
   if (ageMax - ageMin < 5) {
     notify.warn("年齡區間太窄，請至少設 5 歲以上範圍");
     return;
@@ -185,8 +194,9 @@ const submitHandler = async () => {
       isSetting.value = false;
     }, 800);
   } catch (err) {
-    notify.warn("設定失敗，無法進入配對");
-    console.error(err);
+    const msg = err?.response?.data?.message || "設定失敗，無法進入配對";
+    notify.warn(msg);
+    console.error("設定偏好失敗：", err);
   }
 };
 </script>
@@ -200,6 +210,7 @@ const submitHandler = async () => {
     >
       <TransitionGroup
         name="slide-fade"
+        tag="div"
         class="relative flex items-center justify-center w-full max-w-sm mb-2 md:max-w-md lg:max-w-lg"
       >
         <MatchSetupCard
