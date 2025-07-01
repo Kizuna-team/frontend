@@ -49,8 +49,8 @@ onMounted(async () => {
   console.log("當前的配對對象：", currentUser.value); // 資料載入後再印出
 });
 
-const isShow = ref(false);
-const infoBtnTxt = ref("Show More");
+const isShow = ref(true);
+const infoBtnTxt = ref("Hide Info");
 const infoToggle = () => {
   isShow.value = !isShow.value;
   infoBtnTxt.value = isShow.value ? "Hide Info" : "Show More";

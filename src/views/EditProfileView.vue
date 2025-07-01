@@ -88,7 +88,8 @@ const updateHandler = async () => {
 
     if (updatedUser) {
       showFormData.value = { ...updatedUser };
-      notify.gradient("編輯成功！");
+      notify.gradient("編輯成功，前往上傳照片...");
+      tab.value = "PHOTO";
     } else {
       notify.warn("建立失敗！欄位請勿為空");
     }
@@ -128,7 +129,7 @@ const handleUpload = async () => {
     // 明確控制跳轉頁面的時機
     await new Promise((resolve) => setTimeout(resolve, 1300));
 
-    router.push("/onboarding");
+    router.push("/match/setup");
   } catch (err) {
     notify.warn("圖片上傳失敗");
     console.error(" 上傳失敗", err);

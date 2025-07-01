@@ -92,13 +92,13 @@ const router = createRouter({
       component: MyOrdersView,
     },
     {
-      path: "/match",
+      path: "/match/setup",
       name: "MatchSetup",
       component: MatchSetupView,
     },
     {
-      path: "/match/result",
-      name: "MatchResult",
+      path: "/match",
+      name: "Match",
       component: MatchView,
     },
     {
