@@ -20,7 +20,7 @@ const members = [
 
 const handleClick = () => {
   if (userStore.isLoggedIn) {
-    router.push("/match/setup");
+    router.push("/match");
   } else {
     router.push("/register");
   }

@@ -181,7 +181,7 @@ const submitHandler = async () => {
 
     isSetting.value = true;
     setTimeout(() => {
-      router.push("/match/result");
+      router.push("/onboarding");
       isSetting.value = false;
     }, 800);
   } catch (err) {
