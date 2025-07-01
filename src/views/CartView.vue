@@ -314,7 +314,7 @@ onMounted(() => {
       </div>
 
       <!-- Form Steps -->
-      <form @submit.prevent="handleSubmit" class="space-y-6">
+      <form @submit.prevent="handleSubmit" data-test="submit-order" class="space-y-6">
         <div class="relative overflow-hidden">
           <div
             class="flex transition-transform duration-500 ease-in-out"
@@ -358,7 +358,7 @@ onMounted(() => {
                     >
                       <!-- 名稱與描述 -->
                       <div>
-                        <h4 class="text-lg font-semibold text-gray-800">
+                        <h4 class="text-lg font-semibold text-gray-800" data-test="product-name">
                           {{ item.name }}
                         </h4>
                         <p class="mt-1 text-sm text-gray-600">
@@ -424,6 +424,7 @@ onMounted(() => {
                           <button
                             type="button"
                             @click="removeItem(item.id)"
+                            data-test="remove-button"
                             class="flex items-center justify-center w-8 h-8 ml-2 text-red-600 bg-red-100 rounded-full hover:bg-red-200"
                           >
                             <svg
@@ -468,7 +469,7 @@ onMounted(() => {
                     class="flex items-center justify-between text-xl font-bold text-darkblue"
                   >
                     <span>總計:</span>
-                    <span>NT$ {{ totalPrice.toLocaleString() }}</span>
+                    <span data-test="cart-total">NT$ {{ totalPrice.toLocaleString() }}</span>
                   </div>
                 </div>
               </div>
