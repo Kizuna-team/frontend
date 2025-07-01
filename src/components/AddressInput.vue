@@ -34,7 +34,7 @@ const initAutocomplete = () => {
       inputRef.value,
       {
         componentRestrictions: { country: GOOGLE_MAPS_CONFIG.country },
-        fields: ["formatted_address"], // 簡化：只要地址，不要 geometry
+        fields: ["formatted_address"],
         types: ["establishment", "geocode"],
       }
     );

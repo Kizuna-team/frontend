@@ -104,14 +104,11 @@ const handlePlaceSelect = () => {
     const lat = place.geometry.location.lat();
     const lng = place.geometry.location.lng();
 
-    // 移動地圖到選擇位置
     mapInstance.value.setCenter({ lat, lng });
     mapInstance.value.setZoom(16);
 
-    // 放置標記
     placeMarker(lat, lng);
 
-    // 設定地址
     selectedMapAddress.value = place.formatted_address;
     searchInput.value = place.formatted_address;
 
@@ -124,10 +121,8 @@ const handleMapClick = async (event) => {
   const lng = event.latLng.lng();
 
   try {
-    // 清除舊圖標並放置新圖標
     placeMarker(lat, lng);
 
-    // 取得地址
     const address = await getAddressFromCoordinates(lat, lng);
     selectedMapAddress.value = address;
   } catch (error) {
@@ -137,7 +132,6 @@ const handleMapClick = async (event) => {
 };
 
 const placeMarker = (lat, lng) => {
-  // 先清除舊圖標
   clearMarker();
 
   try {
@@ -148,10 +142,8 @@ const placeMarker = (lat, lng) => {
       animation: window.google.maps.Animation.DROP,
     });
 
-    // 地圖重新渲染方法
     forceMapRefresh();
 
-    // 將地圖中心移動到圖標位置
     mapInstance.value.setCenter({ lat, lng });
   } catch (error) {
     console.error("圖標建立失敗:", error);
@@ -184,7 +176,6 @@ const forceMapRefresh = () => {
         lat: lat + 0.000001,
         lng: lng + 0.000001,
       });
-
       // 立即移回原位
       setTimeout(() => {
         mapInstance.value.setCenter({ lat, lng });

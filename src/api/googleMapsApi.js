@@ -1,6 +1,5 @@
 import { GOOGLE_MAPS_CONFIG } from "@/config/googleMaps";
 
-// 全域變數追蹤載入狀態
 let loadPromise = null;
 
 const loadGoogleMapsAPI = () => {
@@ -8,11 +7,9 @@ const loadGoogleMapsAPI = () => {
     return Promise.resolve();
   }
 
-  // 如果正在載入，返回相同的 Promise
   if (loadPromise) return loadPromise;
 
   loadPromise = new Promise((resolve, reject) => {
-    // 建立 script 標籤
     const script = document.createElement("script");
     script.src = `https://maps.googleapis.com/maps/api/js?key=${
       GOOGLE_MAPS_CONFIG.apiKey
@@ -37,7 +34,6 @@ const loadGoogleMapsAPI = () => {
       loadPromise = null;
       reject(new Error("Google Maps API 載入失敗"));
     };
-    // 將 script 加入到頁面
     document.head.appendChild(script);
   });
 
