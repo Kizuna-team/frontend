@@ -1,5 +1,5 @@
 {
-  "name": "2025-kizuna-frontend",
+  "name": "kizuna-frontend",
   "version": "1.0.0",
   "description": "kizuna(frontend)",
   "type": "module",
@@ -8,30 +8,32 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "lint": "eslint . --fix"
+    "lint": "eslint . --fix",
+    "test": "vitest"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/sin-huang/2025-kizuna-project.git"
+    "url": "git+https://https://github.com/Kizuna-team/frontend.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/sin-huang/2025-kizuna-project/issues"
-  },
-  "homepage": "https://github.com/sin-huang/2025-kizuna-project#readme",
+  "homepage": "https://github.com/github.com/Kizuna-team/frontend#readme",
   "devDependencies": {
+    "@pinia/testing": "^1.0.2",
     "@tailwindcss/postcss": "^4.1.7",
     "@tailwindcss/vite": "^4.1.6",
     "@vitejs/plugin-vue": "^5.2.3",
+    "@vue/test-utils": "^2.4.6",
     "autoprefixer": "^10.4.21",
     "eslint": "^8.57.1",
     "eslint-plugin-vue": "^9.18.1",
+    "jsdom": "^26.1.0",
     "postcss": "^8.5.3",
     "tailwindcss": "^3.4.17",
     "vite": "^6.2.4",
     "vite-plugin-vue-devtools": "^7.7.6",
+    "vitest": "^3.2.4",
     "vue-eslint-parser": "^10.1.3"
   },
   "dependencies": {
