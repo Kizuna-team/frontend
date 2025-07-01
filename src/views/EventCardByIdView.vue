@@ -102,7 +102,7 @@ const goToChat = async () => {
       targetId,
     });
 
-    toast.success("去聊天");
+    router.push("/chat");
   } catch (err) {
     console.error("直接加好友失敗", err);
     toast.error("無法建立好友");
