@@ -51,12 +51,7 @@ const retryPayment = async (order) => {
       try {
         await axios.delete(`/order/delete/${order.orderId}`);
       } catch (deleteError) {
-        // 刪除失敗不影響付款，只記錄警告
-        console.warn(
-          "⚠️ 舊訂單刪除失敗，但付款流程繼續:",
-          deleteError.response?.status
-        );
-        // 可以考慮不處理這個錯誤，或者記錄到後端日誌中
+        console.warn(deleteError.response?.status);
       }
       // 成功後跳轉 LINE Pay 頁面
       window.location.href = res.data.paymentUrl;
@@ -303,31 +298,36 @@ const isDeleting = (orderId) => {
           v-if="activeTab === 'sent' && order.status === 'pending'"
           class="text-right"
         >
-          <button
-            class="px-4 py-2 text-sm font-semibold transition-all duration-200 transform rounded"
-            :class="[
-              isRetrying(order.orderId) || isDeleting(order.orderId)
-                ? 'bg-gray-400 text-gray-600 cursor-not-allowed'
-                : 'text-white bg-orange hover:bg-yellow hover:scale-105 hover:shadow-lg active:scale-95',
-            ]"
-            :disabled="isRetrying(order.orderId) || isDeleting(order.orderId)"
-            @click="retryPayment(order)"
+          <div
+            v-if="activeTab === 'sent' && order.status === 'pending'"
+            class="flex justify-end gap-3 mt-4"
           >
-            {{ isRetrying(order.orderId) ? "載入中" : "重新付款" }}
-          </button>
+            <button
+              class="px-6 py-2 text-sm font-semibold transition-all border-2 rounded-full"
+              :class="[
+                isRetrying(order.orderId) || isDeleting(order.orderId)
+                  ? 'bg-gray-400 text-gray-600 border-gray-400 cursor-not-allowed'
+                  : 'text-white bg-orange border-orange hover:bg-white hover:text-orange',
+              ]"
+              :disabled="isRetrying(order.orderId) || isDeleting(order.orderId)"
+              @click="retryPayment(order)"
+            >
+              {{ isRetrying(order.orderId) ? "處理中..." : "重新付款" }}
+            </button>
 
-          <button
-            class="px-4 py-2 text-sm font-semibold transition-all duration-200 transform rounded"
-            :class="[
-              isDeleting(order.orderId) || isRetrying(order.orderId)
-                ? 'bg-gray-400 text-gray-600 cursor-not-allowed'
-                : 'text-white bg-red-500 hover:bg-red-600 hover:scale-105 hover:shadow-lg active:scale-95',
-            ]"
-            :disabled="isDeleting(order.orderId) || isRetrying(order.orderId)"
-            @click="deleteOrder(order)"
-          >
-            {{ isDeleting(order.orderId) ? "載入中" : "刪除訂單" }}
-          </button>
+            <button
+              class="px-6 py-2 text-sm font-semibold transition-all border-2 rounded-full"
+              :class="[
+                isDeleting(order.orderId) || isRetrying(order.orderId)
+                  ? 'bg-gray-400 text-gray-600 border-gray-400 cursor-not-allowed'
+                  : 'text-white bg-red-500 border-red-500 hover:bg-white hover:text-red-500',
+              ]"
+              :disabled="isDeleting(order.orderId) || isRetrying(order.orderId)"
+              @click="deleteOrder(order)"
+            >
+              {{ isDeleting(order.orderId) ? "處理中..." : "刪除訂單" }}
+            </button>
+          </div>
         </div>
       </div>
     </div>
