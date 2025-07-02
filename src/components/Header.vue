@@ -56,6 +56,8 @@ const shouldHideNavButtons = computed(() =>
   hideNavButtonsPages.includes(route.path)
 );
 
+const isChatPage = computed(() => route.path === "/chat");
+
 const isScrolled = ref(false);
 window.addEventListener("scroll", () => {
   isScrolled.value = window.scrollY > 790;
@@ -72,7 +74,7 @@ const lightBgPages = [
   "/register",
   "/edit-profile",
   "/cart",
-  "/chat",
+  "/chat", 
   "/subscription",
   "/subscribe-plan",
   "/my-orders",
@@ -114,7 +116,11 @@ watch(route, () => {
 
 <template>
   <header
-    class="fixed top-0 left-0 z-50 w-full transition-all duration-300 navbar-header"
+    class="z-50 w-full transition-all duration-300 navbar-header"
+    :class="{
+      'fixed top-0 left-0': !isChatPage, 
+      'relative': isChatPage, 
+    }"
   >
     <nav
       class="flex items-center justify-between px-6 py-4 custom-desktop-px-8"

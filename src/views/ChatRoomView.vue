@@ -515,7 +515,7 @@ watch(newMessage, autoResize);
 </script>
 
 <template>
-  <div class="flex flex-col md:flex-row h-screen">
+  <div class="flex flex-col md:flex-row h-[calc(100vh-80px)]">
     <!-- 好友列表區域 -->
     <div
       class="w-full md:w-80 bg-white border-b md:border-b-0 md:border-r border-gray-200 flex md:flex-col overflow-x-auto md:overflow-y-auto"
