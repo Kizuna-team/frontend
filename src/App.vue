@@ -16,9 +16,16 @@ const showHeader = computed(() => {
 
 const mainClass = computed(() => {
   const fullWidthPaths = ["/", "/subscription"];
-  return fullWidthPaths.includes(route.path)
-    ? "w-full"
-    : "max-w-[1000px] mx-auto mt-32";
+  
+  if (fullWidthPaths.includes(route.path)) {
+    return "w-full";
+  }
+  
+  if (route.path === "/chat") {
+    return "max-w-[1000px] mx-auto mt-4"; 
+  }
+  
+  return "max-w-[1000px] mx-auto mt-32";
 });
 
 const handleLogout = () => {
