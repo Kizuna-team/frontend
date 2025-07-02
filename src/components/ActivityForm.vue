@@ -79,7 +79,7 @@ watch(
           date: selectedActivity.value?.date?.slice(0, 10) || "",
           time: selectedActivity.value?.date?.slice(11, 16) || "",
           description: selectedActivity.value?.description || "",
-          createdBy: selectedActivity.value?.createdBy || "",
+          createdBy: selectedActivity.value?.created_by_username || "",
           maxParticipants: selectedActivity.value?.max_participants || "",
         };
 
