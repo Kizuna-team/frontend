@@ -15,6 +15,9 @@ const cartStore = useCartStore();
 const toast = useToast();
 const isMobileMenuOpen = ref(false);
 const isDropdownOpen = ref(false);
+const badgeAnimateIncrease = ref(false);
+const badgeAnimateDecrease = ref(false);
+let previousQuantity = cartStore.totalQuantity;
 
 const sectionPositions = {
   about: 1000,
@@ -110,6 +113,24 @@ watch(route, () => {
   isMobileMenuOpen.value = false;
   isDropdownOpen.value = false;
 });
+
+watch(
+  () => cartStore.totalQuantity,
+  (newVal) => {
+    if (newVal > previousQuantity) {
+      badgeAnimateIncrease.value = false
+      requestAnimationFrame(() => {
+        badgeAnimateIncrease.value = true
+      })
+    } else if (newVal < previousQuantity) {
+      badgeAnimateDecrease.value = false
+      requestAnimationFrame(() => {
+        badgeAnimateDecrease.value = true
+      })
+    }
+    previousQuantity = newVal
+  }
+)
 </script>
 
 <template>
@@ -211,7 +232,15 @@ watch(route, () => {
             <div class="relative">
               <span
                 v-if="cartStore.totalQuantity > 0"
-                class="absolute flex items-center justify-center min-w-[20px] h-5 px-1 text-xs font-semibold text-white rounded-full -top-2 -right-3 bg-[#E44C9B]"
+                :class="[
+                  'absolute flex items-center justify-center min-w-[20px] h-5 px-1 text-xs font-semibold text-white rounded-full -top-2 -right-3 bg-[#E44C9B]',
+                  badgeAnimateIncrease ? 'animate-badge-increase' : '',
+                  badgeAnimateDecrease ? 'animate-badge-decrease' : ''
+                ]"
+                @animationend="() => {
+                  badgeAnimateIncrease = false
+                  badgeAnimateDecrease = false
+                }"
               >
                 {{
                   cartStore.totalQuantity > 99 ? "99+" : cartStore.totalQuantity
