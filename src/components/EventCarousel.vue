@@ -1,18 +1,22 @@
 <script setup>
 import { Swiper, SwiperSlide } from "swiper/vue";
 import { Navigation, Autoplay } from "swiper/modules";
+import { storeToRefs } from "pinia";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/autoplay";
 
 import { ref, onMounted } from "vue";
 import EventCard from "./EventCard.vue";
-import { fetchActivities } from "../api/activities.js";
 import { useUserStore } from "@/stores/user.js";
 import { useRouter } from "vue-router";
 import { useToast } from "vue-toastification";
+import { useActivityStore } from "@/stores/activity.js";
 
-const events = ref([]);
+
+const store = useActivityStore();
+const { activities } = storeToRefs(store);
+const { fetchActivities } = store;
 const userStore = useUserStore();
 const router = useRouter();
 const toast = useToast();
@@ -20,7 +24,7 @@ const toast = useToast();
 onMounted(async () => {
   try {
     const data = await fetchActivities();
-    events.value = data.map((act) => {
+    activities.value = data.map((act) => {
       const date = new Date(act.date);
       const month = String(date.getMonth() + 1).padStart(2, "0");
       const day = String(date.getDate()).padStart(2, "0");
@@ -76,7 +80,7 @@ const handleJoinClick = () => {
       class="relative flex items-center justify-center w-full px-4 py-10 flex-2 md:px-20"
     >
       <Swiper
-        v-if="events.length >= 4"
+        v-if="activities.length >= 4"
         :modules="[Navigation, Autoplay]"
         :slides-per-view="1.5"
         :space-between="30"
@@ -89,8 +93,8 @@ const handleJoinClick = () => {
         }"
         class="w-full max-w-6xl"
       >
-        <SwiperSlide v-for="event in events" :key="event.id">
-          <EventCard :event="event" />
+        <SwiperSlide v-for="activity in activities" :key="activity.id">
+          <EventCard :activity="activity" />
         </SwiperSlide>
 
         <div

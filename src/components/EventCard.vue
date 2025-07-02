@@ -2,25 +2,25 @@
 import { defineProps, computed } from "vue";
 
 const props = defineProps({
-  event: {
+  activity: {
     type: Object,
     required: true,
   },
 });
 
-const [month, dayTime] = props.event?.time?.split?.("/") ?? ["", ""];
+const [month, dayTime] = props.activity?.time?.split?.("/") ?? ["", ""];
 const [day, hour] = dayTime?.split?.(" ") ?? ["", ""];
 </script>
 
 <template>
   <router-link
-    v-if="event && event.time"
-    :to="`/activities/${event.id}`"
+    v-if="activity && activity.time"
+    :to="`/activities/${activity.id}`"
     class="block group relative h-[420px] rounded-2xl overflow-hidden shadow-md border border-gray-200 hover:shadow-xl transition-all duration-500 hover:scale-[1.02]"
   >
     <img
-      :src="event.image || '/default.jpg'"
-      alt="event image"
+      :src="activity.image || '/default.jpg'"
+      alt="activity image"
       class="object-cover w-full h-full transition-transform duration-700 group-hover:scale-110"
     />
 
@@ -45,12 +45,12 @@ const [day, hour] = dayTime?.split?.(" ") ?? ["", ""];
         <h3
           class="mb-1 text-2xl font-bold leading-snug tracking-wide truncate sm:text-3xl drop-shadow"
         >
-          {{ event.title }}
+          {{ activity.title }}
         </h3>
         <p
           class="text-base transition-all duration-500 sm:text-xl text-white/80 group-hover:translate-y-0 group-hover:opacity-100"
         >
-          {{ event.venue }}
+          {{ activity.venue }}
         </p>
       </div>
     </div>

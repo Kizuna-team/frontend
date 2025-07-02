@@ -20,9 +20,11 @@ export const useActivityStore = defineStore("activity", () => {
       const allActivities = response.data;
 
       const today = new Date();
-      activities.value = allActivities.filter(
-        (activity) => new Date(activity.date) >= today
-      );
+      const upcoming = allActivities.filter(
+      (activity) => new Date(activity.date) >= today
+    );
+    activities.value = upcoming;
+    return upcoming;
     } catch (err) {
       error.value = err;
       console.error("Fetch error:", err);
