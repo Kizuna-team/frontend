@@ -6,7 +6,6 @@ import { useUserStore } from "@/stores/user";
 import { storeToRefs } from "pinia";
 import axios from "../api/axios.js";
 import { useToast } from "vue-toastification";
-import { useRouter } from "vue-router";
 import {
   ArrowLeftIcon,
   UserIcon,
@@ -19,7 +18,6 @@ import {
   PhotoIcon,
 } from "@heroicons/vue/24/outline";
 
-const router = useRouter();
 const route = useRoute();
 const router = useRouter();
 const store = useActivityStore();
