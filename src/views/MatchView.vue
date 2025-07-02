@@ -1,6 +1,7 @@
 <!-- 父組件 控制配對流程與切換使用者 -->
 <script setup>
 import { notify } from "@/utils/notify";
+import { handleApiError } from "@/utils/handleApiError";
 import { ref, computed, onUnmounted, onMounted } from "vue";
 import { useMatchStore } from "@/stores/matches.js";
 import UserCard from "@/components/UserCard.vue";
@@ -102,11 +103,13 @@ const likeFlag = async (targetId) => {
 
 const dislikeFlag = async (targetId) => {
   try {
-    await sendLike(targetId, 0);
-    nextUser();
-  } catch (error) {
-    alert("對象重複");
-    console.error("使用者送出dislike發生錯誤", error);
+    await handleApiError(() => sendLike(targetId, 0), true, {
+      409: "已回應，等待對方回應中...",
+    });
+  } catch (err) {
+    console.warn("dislike 發生錯誤:", err);
+  } finally {
+    nextUser(); // 不管成不成功，都往下個人走
   }
 };
 
