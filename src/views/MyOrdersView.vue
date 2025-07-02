@@ -13,6 +13,8 @@ const retryingOrders = ref(new Set());
 const deletingOrders = ref(new Set());
 const toast = useToast();
 const retryPayment = async (order) => {
+  if (window.isProcessing) return;
+  window.isProcessing = true;
   if (retryingOrders.value.has(order.orderId)) {
     return;
   }
@@ -60,10 +62,12 @@ const retryPayment = async (order) => {
       window.location.href = res.data.paymentUrl;
     } else {
       message.value = "建立訂單失敗：" + res.data.message;
+      window.isProcessing = false;
     }
   } catch (err) {
     console.error("重新付款失敗", err);
     message.value = "重新付款失敗，請稍後再試";
+    window.isProcessing = false;
   } finally {
     retryingOrders.value.delete(order.orderId);
   }
