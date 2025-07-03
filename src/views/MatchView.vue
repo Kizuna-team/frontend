@@ -88,15 +88,16 @@ const likeFlag = async (targetId) => {
       confirmModal.value = true;
     } else {
       notify.gradient(message); // 其他提示
-      nextUser(); //如果要改成動畫提示訊息的話這邊要用setTimeout 等動畫跑完
-    }
-  } catch (error) {
-    if (error.response && error.response.status === 409) {
-      notify.kiwi(error.response.data.message || "等待對方回應...");
       setTimeout(() => {
         nextUser();
-      }, 1500);
+      }, 1000); //如果要改成動畫提示訊息的話這邊要用setTimeout 等動畫跑完
     }
+  } catch (error) {
+    notify.kiwi(error.response.data.message || "等待對方回應...");
+    setTimeout(() => {
+      nextUser();
+    }, 1500);
+
     console.error("送出like發生錯誤", error);
   }
 };
@@ -104,7 +105,7 @@ const likeFlag = async (targetId) => {
 const dislikeFlag = async (targetId) => {
   try {
     await handleApiError(() => sendLike(targetId, 0), true, {
-      409: "已回應，等待對方回應中...",
+      409: "您已回應過，等待對方回應中...",
     });
   } catch (err) {
     console.warn("dislike 發生錯誤:", err);
