@@ -21,6 +21,8 @@ const activeTab = ref("created");
 const isLoading = ref(false);
 const expandedParticipants = ref({});
 const hoverActivityId = ref(null);
+const showDeleteConfirm = ref(false);
+const deleteId = ref(null);
 
 const handleHover = (id) => {
   hoverActivityId.value = id;
@@ -39,18 +41,21 @@ const goEdit = (id) => {
   router.push(`/activities/edit/${id}`);
 };
 
-const handleDelete = async (id) => {
-  const confirmed = confirm("確定要刪除嗎？");
-  if (!confirmed) return;
+const handleDelete = (id) => {
+  deleteId.value = id;
+  showDeleteConfirm.value = true;
+};
 
+const confirmDelete = async () => {
+  showDeleteConfirm.value = false;
   isLoading.value = true;
   try {
-    await store.deleteActivity(id);
+    await store.deleteActivity(deleteId.value);
     await store.fetchMyActivities();
-    alert("刪除成功！");
+    toast.success("刪除成功！");
   } catch (err) {
     console.error("刪除活動錯誤：", err);
-    alert("刪除失敗，請稍後再試！");
+    toast.error("刪除失敗，請稍後再試！");
   } finally {
     isLoading.value = false;
   }
@@ -89,7 +94,23 @@ watch(hoverActivityId, (newId) => {
 </script>
 
 <template>
-  <div class="relative">
+  <div class="relative">˝
+    <div v-if="showDeleteConfirm" class="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+      <div class="p-6 bg-white rounded-lg shadow-xl">
+        <h3 class="mb-4 text-lg font-semibold">確認刪除</h3>
+        <p class="mb-6">確定要刪除這個活動嗎？</p>
+        <div class="flex justify-end gap-3">
+          <button @click="showDeleteConfirm = false" 
+            class="px-4 py-2 font-bold text-white transition-all duration-300 bg-gray-400 border-2 border-gray-400 rounded-full hover:bg-white hover:text-gray-400 hover:scale-105">
+            取消
+          </button>
+          <button @click="confirmDelete" 
+            class="px-4 py-2 font-bold text-white transition-all duration-300 bg-red-500 border-2 border-red-500 rounded-full hover:bg-white hover:text-red-500 hover:scale-105">
+            刪除
+          </button>
+        </div>
+      </div>
+    </div>
     <div
       v-if="isLoading"
       class="absolute inset-0 z-50 flex items-center justify-center bg-white/70 rounded-2xl"
