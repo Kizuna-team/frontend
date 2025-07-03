@@ -23,7 +23,7 @@ const msg = ref("");
 const superLikeStatus = async () => {
   try {
     const data = await fetchSuperLikeStatus();
-    console.log("💡 API 回傳 SuperLike 狀態:", data);
+    // console.log("API 回傳 SuperLike 狀態:", data);
 
     isMember.value = data.isMember;
     totalCount.value = data.remainingCount;

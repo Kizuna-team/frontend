@@ -44,10 +44,10 @@ const fetchAllMatchedUsers = async () => {
 
 onMounted(async () => {
   await fetchAllMatchedUsers();
-  console.log("配對筆數：", allProfiles.value.length);
+  // console.log("配對筆數：", allProfiles.value.length);
 
-  console.log("拿到資料：", allProfiles.value); // 現在可以看到 allProfiles 的值了
-  console.log("當前的配對對象：", currentUser.value); // 資料載入後再印出
+  // console.log("拿到資料：", allProfiles.value); // 現在可以看到 allProfiles 的值了
+  // console.log("當前的配對對象：", currentUser.value); // 資料載入後再印出
 });
 
 const isShow = ref(true);

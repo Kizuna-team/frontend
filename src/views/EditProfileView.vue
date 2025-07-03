@@ -84,8 +84,6 @@ const updateHandler = async () => {
     // 拿的是普通物件，不是 ref .value 是 undefined
     // await userProfileStore.getProfile(); 這行可能導致舊資料重新覆蓋
 
-    console.log("updatedUser:", updatedUser); //  確認這邊不是 undefined
-
     if (updatedUser) {
       showFormData.value = { ...updatedUser };
       notify.gradient("編輯成功，前往上傳照片...");

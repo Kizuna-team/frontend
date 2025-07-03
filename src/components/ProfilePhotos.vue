@@ -103,7 +103,6 @@ const removePhoto = async (index) => {
     photoList.value[index].file = null;
     photoList.value[index].preview = "";
     photoList.value[index].key = "";
-    console.log(" 圖片刪除成功");
   } catch (err) {
     console.error(" 圖片刪除失敗", err);
   }
@@ -129,9 +128,9 @@ const uploadAll = async () => {
           photoList.value[index] = newPhoto;
           photoList.value = [...photoList.value];
           uploadedResults.push(newPhoto);
-          console.log(`第 ${index + 1} 張上傳成功`, data);
+          // console.log(`第 ${index + 1} 張上傳成功`, data);
         } catch (err) {
-          console.error(`第 ${index + 1} 張上傳失敗`, err);
+          // console.error(`第 ${index + 1} 張上傳失敗`, err);
         }
       })();
       uploadPromises.push(uploadPromise);
