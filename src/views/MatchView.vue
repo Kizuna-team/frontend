@@ -77,35 +77,38 @@ const confirmModal = ref(false);
 
 const likeFlag = async (targetId) => {
   try {
-    const { matched, message, targetProfile, myProfile } = await sendLike(
-      targetId
+    const { matched, message, targetProfile, myProfile } = await handleApiError(
+      () => sendLike(targetId),
+      true,
+      {
+        409: "已回應過，等待對方回應中...",
+      }
     );
     if (matched) {
       matchedTarget.value = targetProfile;
       myOwnProfile.value = myProfile;
-
       mutualLike.value = true;
       confirmModal.value = true;
     } else {
-      notify.gradient(message); // 其他提示
+      notify.gradient(message);
       setTimeout(() => {
         nextUser();
-      }, 1000); //如果要改成動畫提示訊息的話這邊要用setTimeout 等動畫跑完
+      }, 1000); //如果要改成動畫提示訊息的話這邊要用setTimeout
     }
-  } catch (error) {
-    notify.kiwi(error.response.data.message || "等待對方回應...");
+  } catch (err) {
+    console.warn("送出 like 發生錯誤:", err);
     setTimeout(() => {
       nextUser();
     }, 1500);
 
-    console.error("送出like發生錯誤", error);
+    console.error("送出like發生錯誤", err);
   }
 };
 
 const dislikeFlag = async (targetId) => {
   try {
     await handleApiError(() => sendLike(targetId, 0), true, {
-      409: "您已回應過，等待對方回應中...",
+      409: "已回應過，等待對方回應中...",
     });
   } catch (err) {
     console.warn("dislike 發生錯誤:", err);
@@ -129,7 +132,10 @@ const handleSuperLikeStatus = (status) => {
 const superLikeFlag = async (targetId) => {
   try {
     const { forcedMatched, remainingCount, message, targetProfile, myProfile } =
-      await sendSuperLike(targetId);
+      await handleApiError(() => sendSuperLike(targetId), true, {
+        409: "已回應過，等待對方回應中...",
+        403: "今日使用次數已達上限",
+      });
 
     if (forcedMatched) {
       matchStore.setProfiles(myProfile, targetProfile);
@@ -148,23 +154,11 @@ const superLikeFlag = async (targetId) => {
       notify.gradient(message);
     }
     nextUser();
-  } catch (error) {
-    if (error.response) {
-      const status = error.response.status;
-
-      if (status === 409) {
-        notify.kiwi(
-          error.response.data.message || "已發送過，等待對方回應中..."
-        );
-        nextUser();
-      }
-
-      if (status === 403) {
-        notify.warn(error.response.data.message || "今日使用次數已達上限");
-        restSuperLikes.value = 0; // 把剩餘數量設為0禁用按鈕
-      }
+  } catch (err) {
+    console.error("使用者送出super like發生錯誤:", err);
+    if (err?.response?.status === 403) {
+      restSuperLikes.value = 0; // 把剩餘數量設為0禁用按鈕
     }
-    console.error("使用者送出super like發生錯誤", error);
   }
 };
 
