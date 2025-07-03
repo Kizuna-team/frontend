@@ -28,7 +28,7 @@ export const handleApiError = async (fn, isNotify = true, customMsg = {}) => {
           notify.warn(message || "查無此資料");
           break;
         case 409:
-          notify.warn(message || "已重複操作");
+          notify.kiwi(message || "已重複操作");
           break;
         case 500:
           notify.warn(message || "伺服器錯誤，請稍後再試");
