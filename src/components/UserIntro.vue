@@ -27,15 +27,15 @@ const { targetUser } = defineProps({
 
     <h4 class="section-title">性格標籤</h4>
     <div class="flex flex-wrap gap-2 mb-4">
-      <span class="personal-tag">{{ targetUser.mbti }}</span>
-      <span class="personal-tag">{{ targetUser.zodiac }}</span>
+      <span class="personal-tag">{{ targetUser.mbti || "未提供MBTI" }}</span>
+      <span class="personal-tag">{{ targetUser.zodiac || "未提供星座" }}</span>
     </div>
 
     <hr class="my-4 border-t-2 border-primary/60" />
 
     <h4 class="section-title">專業領域</h4>
     <div class="flex flex-wrap gap-2 mb-4">
-      <span class="personal-tag">{{ targetUser.job }}</span>
+      <span class="personal-tag">{{ targetUser.job || "未提供職業" }}</span>
     </div>
 
     <hr class="my-4 border-t-2 border-primary/60" />
