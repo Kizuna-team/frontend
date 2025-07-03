@@ -6,6 +6,12 @@ export const userChatStore = defineStore("chat", () => {
   const currentRoomId = ref(null);
   const onlineUsers = ref([]);
   const isConnected = ref(false);
+  const fetchedRoomIds = ref(new Set());
+  const chatRooms = ref([]);
+
+  function setChatRooms(rooms) {
+    chatRooms.value = rooms;
+  }
 
   const formatTime = (date) => {
     return date.toLocaleTimeString("zh-TW", {
@@ -67,6 +73,11 @@ export const userChatStore = defineStore("chat", () => {
     currentRoomMessages,
     messageCount,
     onlineUserCount,
+
+    fetchedRoomIds,
+    chatRooms,
+
+    setChatRooms,
 
     addMessage,
     setCurrentRoom,

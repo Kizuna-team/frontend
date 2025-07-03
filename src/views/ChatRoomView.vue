@@ -18,7 +18,9 @@ import voiceInputAnimation from "@/assets/voice.json";
 import StickerPanel from "@/components/StickerPanel.vue";
 import StickerButton from "@/components/StickerButton.vue";
 import { defaultStickers } from "@/config/stickerData.js";
+import { storeToRefs } from "pinia";
 
+const chatStore = userChatStore();
 const socket = io(import.meta.env.VITE_API_BASE_URL, {
   autoConnect: true,
   reconnection: true,
@@ -33,6 +35,7 @@ const isExpanded = ref(false);
 const messages = ref([]);
 const isLoading = ref(false);
 const messagesEndRef = ref(null);
+const { fetchedRoomIds } = storeToRefs(chatStore);
 
 const scrollToBottom = () => {
   nextTick(() => {
@@ -167,7 +170,6 @@ const handleTouchEnd = (e) => {
 };
 
 const userStore = useUserStore();
-const chatStore = userChatStore();
 const roomId = ref("");
 
 const textareaRef = ref(null);
@@ -180,7 +182,7 @@ const autoResize = () => {
   element.style.height = element.scrollHeight + "px";
 };
 
-const chatRooms = ref([]);
+const { chatRooms } = storeToRefs(chatStore);
 
 const showStickerPanel = ref(false);
 const stickerPanelRef = ref(null);
@@ -206,8 +208,6 @@ const newMessage = ref("");
 const aiMessage = ref("");
 
 const messagesContainer = ref(null);
-// 記住已經載入過的房間
-const fetchedRoomIds = ref(new Set());
 
 const currentUser = computed(() => ({
   id: userStore.userId,
@@ -577,7 +577,7 @@ watch(newMessage, autoResize);
               v-if="Number(msg.senderId) !== Number(userStore.userId)"
               class="pl-2 mb-1 text-xs font-medium text-gray-600"
             >
-              {{ currentFriend.name || `User${Number(msg.senderId)}` }}
+              {{ currentFriend?.name || `User${Number(msg.senderId)}` }}
             </div>
             <div
               :class="[
