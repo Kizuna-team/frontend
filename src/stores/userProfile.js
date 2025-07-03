@@ -72,7 +72,6 @@ export const useUserProfileStore = defineStore("userProfile", () => {
     error.value = null;
 
     try {
-      console.log("初次建立的資料:", newUserData);
       const res = await createProfileApi(newUserData);
       setProfile(res.user);
       return res.user;

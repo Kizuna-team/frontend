@@ -2,7 +2,6 @@ import axios from "@/api/axios.js";
 export const fetchAllProfiles = async () => {
   try {
     const res = await axios.get("/users/profile");
-    console.log("後端資料:", res.data);
     return res.data;
   } catch (error) {
     console.error("fetchAllProfiles 錯誤:", error);

@@ -29,15 +29,12 @@ const toggle = (option) => {
       ? [...selectedValue.value]
       : [];
     const exists = arr.includes(optionId);
-    console.log("是否已存在:", exists);
     selectedValue.value = exists
       ? arr.filter((i) => i !== optionId)
       : [...arr, optionId];
   } else {
     selectedValue.value = optionId;
   }
-
-  console.log("更新後 selectedValue.value:", selectedValue.value);
 };
 </script>
 

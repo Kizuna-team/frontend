@@ -12,7 +12,7 @@ export const handleApiError = async (fn, isNotify = true, customMsg = {}) => {
         (typeof customMsg === "object" && customMsg[status]) ||
         (typeof customMsg === "string" ? customMsg : serverMsg);
 
-      console.log("handleApiError 通知訊息：", message);
+      // console.log("handleApiError 通知訊息：", message);
 
       switch (status) {
         case 400:

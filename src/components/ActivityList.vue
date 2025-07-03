@@ -22,10 +22,6 @@ const notifyError = (err, userMessage = "操作失敗") => {
   toast.error(userMessage);
 };
 
-const logInfo = (message, data) => {
-  console.log(message, data);
-};
-
 const notifySuccess = (message) => {
   toast.success(message);
 };

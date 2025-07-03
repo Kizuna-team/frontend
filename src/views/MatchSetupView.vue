@@ -148,8 +148,6 @@ const nextStep = () => {
 
 onMounted(async () => {
   await userProfileStore.getProfile();
-  console.log("使用者資料 =", userProfile.value);
-
   const userId = userProfile.value?.userId;
   if (!userId) {
     notify.warn("使用者尚未登入");
@@ -172,7 +170,6 @@ const submitHandler = async () => {
   }
 
   try {
-    console.log(" 送出前 form 資料：", form);
     await saveUserInterestsApi(form.value.interests);
     await saveUserPreferenceApi({
       ...form.value,
