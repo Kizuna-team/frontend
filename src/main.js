@@ -6,9 +6,6 @@ import Toast from "vue-toastification";
 import "vue-toastification/dist/index.css";
 import { options } from "./config/toast.js";
 
-// 匯入 toast 客製樣式
-import "./assets/toast.css";
-
 import App from "./App.vue";
 import router from "./router";
 

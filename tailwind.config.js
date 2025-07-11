@@ -1,5 +1,6 @@
 export default {
   content: ["./index.html", "./src/**/*.{vue,js,ts,jsx,tsx,css}"],
+  safelist: ["toast-warn", "toast-kiwi", "toast-gradient"],
   theme: {
     extend: {
       fontSize: {

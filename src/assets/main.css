@@ -39,36 +39,29 @@ a,
 
 @layer components {
   .toast-gradient {
-    @apply bg-gradient-to-r from-primary to-pink-300
-           hover:from-[#7bb8d9] hover:to-pink-400
-           text-white font-bold rounded-xl
-           shadow-lg hover:shadow-xl
-           transition-all duration-200;
+    background: linear-gradient(to right, #d0ecf6, #fde2ec) !important;
+    color: #023047 !important;
+    font-weight: bold !important;
+    border-radius: 0.75rem !important;
+    padding: 1rem !important;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08) !important;
   }
 
-  .toast-orange {
-    @apply bg-gradient-to-r from-orange to-accent
-           text-white font-bold rounded-xl
-           shadow-lg hover:shadow-xl
-           transition-all duration-200;
+  .toast-warn {
+    background: linear-gradient(to right, #fff4cc, #ffe0b2) !important;
+    color: #b45309 !important;
+    font-weight: bold !important;
+    border-radius: 0.75rem !important;
+    padding: 1rem !important;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08) !important;
   }
 
-  .toast-darkblue {
-    @apply bg-gradient-to-r from-darkblue to-secondary
-           text-white font-bold rounded-xl
-           shadow-lg hover:shadow-xl
-           transition-all duration-200;
-  }
-
-  .toast-glass {
-    background: rgba(255, 255, 255, 0.2);
-    backdrop-filter: blur(12px);
-    border: 1px solid rgba(255, 255, 255, 0.4);
-    color: #023047;
-    border-radius: 1rem;
-    font-weight: bold;
-    padding: 12px;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
-    transition: all 0.3s ease;
+  .toast-kiwi {
+    background: linear-gradient(to right, #f0fcd4, #c1e1a6) !important;
+    color: #2f5d34 !important;
+    font-weight: bold !important;
+    border-radius: 0.75rem !important;
+    padding: 1rem !important;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08) !important;
   }
 }
